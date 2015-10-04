@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="robots" content="noindex" />
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=no" />
+    <title>Anime 2016 - Event Scheduling Calculator</title>
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:400,700,400italic" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <img src="logo.png" alt="JPOP Foundation - www.animecon.nl" />
+    <section>
+      <header>
+        <h1>Event Scheduling Calculator</h1>
+        <h2>Tools for determining the amount of time to schedule for a large event given a set of requirements.</h2>
+      </header>
+      <ol>
+        <li>
+          <label for="type">Type</label>
+          <select id="type">
+            <option value="1">Stage rehearsal</option>
+            <option value="1">Tech preparation</option>
+            <option value="0">Event</option>
+          </select>
+        </li>
+        <li>
+          <label for="duration">Duration?</label>
+          <select id="duration">
+            <option value="0">--</option>
+          </select>
+        </li>
+        <li>
+          <label for="clear-room">Clear room beforehand?</label>
+          <input type="checkbox" id="clear-room" />
+        </li>
+        <li>
+          <label for="wait-outside">Public to wait outside?</label>
+          <input type="checkbox" id="wait-outside" />
+        </li>
+      </ol>
+      <footer>
+        Schedule <strong>60 minutes</strong>.
+      </footer>
+    </section>
+    <section>
+      <header>
+        <h1>Explanation</h1>
+      </header>
+      <p>
+        Large events, usually scheduled in the World Forum Theatre usually
+        attract large amounts of visitors and have special requirements on when
+        people can be in the theatre.
+      </p>
+      <p>
+        A buffer will need to be included for such events. For short events of less than
+        half an hour we'll schedule ten minutes of buffer, 15 minutes for
+        events up to an hour, 20 minutes for events up to an hour and a half and
+        30 minutes for events longer than that.
+      </p>
+      <p>
+        If the theatre needs to be cleared of visitors prior to the event, an
+        additional ten minutes will be scheduled. If the visitors need to wait
+        outside prior to the event, an additional 15 minutes will be scheduled.
+      </p>
+      <p>
+        The total time to schedule will be rounded up to the nearest ten minute
+        mark. Talk to <a href="mailto:neil@animecon.nl">Neil</a> for additional
+        background on these numbers.
+      </p>
+    </section>
+    <script>
+      (function() {
+        var event_type = document.querySelector('#type'),
+            event_duration = document.querySelector('#duration'),
+            event_clear_room = document.querySelector('#clear-room'),
+            event_wait_outside = document.querySelector('#wait-outside'),
+            footer = document.querySelector('section > footer'),
+            footer_value = document.querySelector('section > footer > strong');
+
+        function FormatTime(time, skipMinutes) {
+          if (!skipMinutes && time < 60)
+            return time + ' minutes';
+
+          var hours = Math.floor(time / 60),
+              minutes = time % 60;
+
+          return hours + ':' + ('0' + minutes).slice(-2) + ' hours';
+        }
+
+        for (var duration = 30; duration <= 4 * 60; duration += 10) {
+          var option = document.createElement('option');
+          option.text = FormatTime(duration, true);
+          option.value = duration;
+
+          event_duration.appendChild(option);
+        }
+
+        function OnEventDetailsChanged() {
+          var should_enable_audience_options =
+                  event_type.options[event_type.selectedIndex].value == '1';
+
+          // Toggle availability of the audience options based on the event type.
+          event_clear_room.disabled = !should_enable_audience_options;
+          event_wait_outside.disabled = !should_enable_audience_options;
+
+          if (!should_enable_audience_options)
+            event_clear_room.checked = event_wait_outside.checked = false;
+
+          var planned_event_duration = parseInt(
+                  event_duration.options[event_duration.selectedIndex].value, 10),
+              should_clear_room = event_clear_room.checked,
+              should_wait_outside = event_wait_outside.checked;
+
+          // If the event has no duration, don't display the time to schedule.
+          if (!planned_event_duration) {
+            footer.classList.remove('visible');
+            return;
+          }
+
+          var total_duration = planned_event_duration;
+
+          // Include the buffer based on the event's duration.
+          if (planned_event_duration <= 30)
+            total_duration += 10;
+          else if (planned_event_duration <= 60)
+            total_duration += 15;
+          else if (planned_event_duration <= 90)
+            total_duration += 20;
+          else
+            total_duration += 30;
+
+          // If the room should be cleared prior to the event, add ten minutes.
+          if (should_clear_room)
+            total_duration += 10;
+
+          // If the audience should wait outside, add 15 minutes.
+          if (should_wait_outside)
+            total_duration += 15;
+
+          // Round up to the nearest 10-minute mark.
+          total_duration = Math.ceil(total_duration / 10) * 10;
+
+          // Update the total time's value and make sure that it's visible.
+          footer_value.textContent = FormatTime(total_duration);
+          footer.classList.add('visible');
+        }
+
+        [event_type, event_duration, event_clear_room, event_wait_outside].forEach(
+          function(element) {
+            element.addEventListener('change', OnEventDetailsChanged, false);
+          });
+
+      })();
+    </script>
+  </body>
+</html>
