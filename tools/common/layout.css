@@ -6,8 +6,9 @@ body {
 }
 
 /** Metrics **/
-h1, h2, h3 { font-weight: normal; }
-h1 { font-size: 24px; }
+h1 { font-weight: normal; font-size: 24px; }
+h2 { font-size: 20px; }
+h3 { font-size: 16px; }
 p { font-size: 16px; }
 
 /** Colors **/
@@ -67,9 +68,19 @@ section > h1 {
   height: 72px;
 }
 
+section > h2, section > h3 {
+  padding: 0 16px;
+  margin: 0;
+}
+
 /** Content styling **/
 section > p {
   margin: 16px;
+}
+
+section > ul {
+  padding: 0 16px;
+  margin-left: 24px;
 }
 
 /** Footer styling **/

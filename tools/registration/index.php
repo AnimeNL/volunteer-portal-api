@@ -7,8 +7,19 @@ require_once __DIR__ . '/../common/parsedown.php';
 
 setlocale(LC_ALL, 'nl_NL.utf8');
 
-$lastUpdated = strftime('%A %e %B', filemtime(__DIR__ . '/introductie.md'));
-$content = file_get_contents(__DIR__ . '/introductie.md');
+$page  = 'index';
+$pages = [
+  'index'   => 'introductie.md',
+  'hotel'   => 'hotel.md',
+  'rooster' => 'rooster.md',
+];
+
+if (isset ($_GET['page']) && array_key_exists($_GET['page'], $pages))
+  $page = $_GET['page'];
+
+
+$lastUpdated = strftime('%A %e %B', filemtime(__DIR__ . '/' . $pages[$page]));
+$content = file_get_contents(__DIR__ . '/' . $pages[$page]);
 
 ?>
 <!doctype html>
@@ -27,7 +38,6 @@ $content = file_get_contents(__DIR__ . '/introductie.md');
       <img src="/tools/common/logo.png" alt="Anime 2016 - All Aboard!" />
     </header>
     <section>
-      <h1>Steward registratieformulier</h1>
 <?php echo Parsedown::instance()->text($content); ?> 
     </section>
     <footer>

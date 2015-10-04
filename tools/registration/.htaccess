@@ -1,0 +1,2 @@
+RewriteEngine On
+RewriteRule (hotel|index|rooster).html$ index.php?page=$1
