@@ -1,0 +1,93 @@
+html, body { margin: 0px; }
+
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: #eaeaea;
+}
+
+/** Metrics **/
+h1, h2, h3 { font-weight: normal; }
+h1 { font-size: 24px; }
+p { font-size: 16px; }
+
+/** Colors **/
+a {
+  color: #E65100;
+  text-decoration: none;
+}
+
+/** Header styling **/
+header {
+  background: url(/tools/common/background.jpg) right / cover;
+  box-sizing: border-box;
+
+  padding-top: 30px;
+  height: 350px;
+}
+
+header > img {
+  display: block;
+  margin: 0 auto;
+}
+
+/** Content positional styling **/
+header > h1, section, footer {
+  margin-left: auto;
+  margin-right: auto;
+
+  width: 80%;
+  max-width: 1280px;
+}
+
+section:first-of-type {
+  margin-top: -72px;
+}
+
+@media (min-width: 1200px) {
+  section:first-of-type::before {
+    content: url(/tools/common/plane.png);
+    position: absolute;
+
+    margin: -210px 0 0 -150px;
+  }
+
+  section:first-of-type > h1::before {
+    content: url(/tools/common/marieke.png);
+    position: absolute;
+
+    margin: -133px -100px 0 0;
+    right: 0;
+  }
+}
+
+section, footer {
+  background-color: white;
+  padding-bottom: 1px;
+  margin-top: 16px;
+  position: relative;
+
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+}
+
+/** Content header styling **/
+section > h1 {
+  background-color: #17223c;
+  color: white;
+
+  margin: 0px;
+  line-height: 72px;
+  text-indent: 16px;
+}
+
+/** Content styling **/
+section > p {
+  margin: 16px;
+}
+
+/** Footer styling **/
+footer > p {
+  font-size: .8em;
+  padding: 8px 8px 7px 8px;
+  margin: 0px;
+}
+
