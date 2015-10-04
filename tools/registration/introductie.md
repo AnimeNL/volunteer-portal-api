@@ -1,8 +1,8 @@
 # Steward registratieformulier
 
 Stewards zijn de gastheren en -vrouwen van het festival; de eerste linie in het geval van problemen.
-Als je mee wilt helpen met _crowd control_, leeftijd- en veiligheidcontroles, escortes voor de VIPs
-en onze beveiliging en EHBO'ers bij wilt staan, dan zijn we naar jou op zoek!
+Als je mee wilt helpen met _crowd management_, leeftijd- en veiligheidcontroles, escortes voor de
+VIPs en onze beveiliging en EHBO'ers bij wilt staan, dan zijn we naar jou op zoek!
 
 Meld je hier direct aan als je deel wilt worden van een te gekke groep vrijwilligers die er samen
 voor zorgen dat ook Anime 2016 weer een veilig en te gek festival wordt.
