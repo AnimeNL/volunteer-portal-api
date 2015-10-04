@@ -43,23 +43,6 @@ section:first-of-type {
   margin-top: -72px;
 }
 
-@media (min-width: 1200px) {
-  section:first-of-type::before {
-    content: url(/tools/common/plane.png);
-    position: absolute;
-
-    margin: -210px 0 0 -150px;
-  }
-
-  section:first-of-type > h1::before {
-    content: url(/tools/common/marieke.png);
-    position: absolute;
-
-    margin: -133px -100px 0 0;
-    right: 0;
-  }
-}
-
 section, footer {
   background-color: white;
   padding-bottom: 1px;
@@ -77,6 +60,11 @@ section > h1 {
   margin: 0px;
   line-height: 72px;
   text-indent: 16px;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  height: 72px;
 }
 
 /** Content styling **/
