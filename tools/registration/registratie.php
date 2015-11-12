@@ -4,7 +4,7 @@
 // be found in the LICENSE file.
 
 if ($_SERVER['REQUEST_METHOD'] != 'POST' || !isset($_POST['naam']) || empty($_POST['naam']) ||
-    !isset($_POST['haarkleur']) || !filter_var($_POST['haarkleur'], FILTER_VALIDATE_EMAIL)) {
+    !empty($_POST['email']) || !isset($_POST['haarkleur']) || !filter_var($_POST['haarkleur'], FILTER_VALIDATE_EMAIL)) {
     Header('Location: registratie.html#error');
     exit;
 }
