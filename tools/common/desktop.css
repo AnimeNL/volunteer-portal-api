@@ -15,4 +15,8 @@
     margin: -233px -107px 0 0;
     right: 0;
   }
+
+  body {
+    overflow-y: scroll;
+  }
 }

@@ -9,14 +9,15 @@ setlocale(LC_ALL, 'nl_NL.utf8');
 
 $page  = 'index';
 $pages = [
-  'index'   => 'introductie.md',
-  'hotel'   => 'hotel.md',
-  'rooster' => 'rooster.md',
+  'index'        => 'introductie.md',
+  'hotel'        => 'hotel.md',
+  'rooster'      => 'rooster.md',
+  'registratie'  => 'registratie.md',
+  'registratie2' => 'registratie-gedaan.md',
 ];
 
 if (isset ($_GET['page']) && array_key_exists($_GET['page'], $pages))
   $page = $_GET['page'];
-
 
 $lastUpdated = strftime('%A %e %B', filemtime(__DIR__ . '/' . $pages[$page]));
 $content = file_get_contents(__DIR__ . '/' . $pages[$page]);
@@ -32,6 +33,7 @@ $content = file_get_contents(__DIR__ . '/' . $pages[$page]);
     <link rel="stylesheet" href="/tools/common/layout.css" />
     <link rel="stylesheet" href="/tools/common/desktop.css" media="screen and (min-device-width: 768px)" />
     <link rel="stylesheet" href="/tools/common/mobile.css" media="screen and (max-device-width: 767px)" />
+    <link rel="stylesheet" href="/tools/registration/registration.css" />
   </head>
   <body>
     <header>

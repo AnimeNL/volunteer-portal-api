@@ -13,7 +13,8 @@ ook een uitgeprint rooster indien je al die techniek maar niets vindt.
 
 ## Hoe ziet zo'n rooster er uit?
 
-Dit is het rooster van één van de stewards tijdens Anime 2015.
+Het volgende rooster was van één van de Anime 2015 stewards, en is indicatief voor de roosters die
+we voor Anime 2016 verwachten.
 
 ### Vrijdag
   * 11:00 - 12:00 - Steward briefing
@@ -36,8 +37,8 @@ Het festival gaat non-stop door, dus ondanks dat de meeste bezoekers 's nachts r
 blijven er genoeg bezoekers en evenementen over om te zorgen dat de stewards zich niet hoeven te
 vervelen.
 
-Dit jaar leidt **Remy** onze nachtploeg. Nachtstewards kunnen heerlijk uitslapen tot een uur of
-vier 's middags, maar zullen daarna regelmatige shifts hebben tot aan het ontbijt. Als je een echt
-nachtmens bent dan kun je overwegen om hieraan mee te doen!
+Dit jaar leidt Remy onze nachtploeg. Nachtstewards kunnen heerlijk uitslapen tot een uur of vier 's
+middags, maar zullen daarna regelmatige shifts hebben tot aan het ontbijt. Als je een echt nachtmens
+bent dan kun je overwegen om hieraan mee te doen!
 
 [« Vorige pagina](index.html)
