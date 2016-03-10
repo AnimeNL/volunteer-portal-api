@@ -41,7 +41,7 @@ $commands = [
     'git reset --hard origin/master',
 
     // Remove any left-over files that are not part of the checkout, and not in .gitignore.
-    'git clean -f -d -x',
+    'git clean -f -d',
 
     // Write the latest commit SHA to the VERSION file.
     'git rev-parse HEAD > VERSION'
