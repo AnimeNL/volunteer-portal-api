@@ -9,23 +9,20 @@ gezelliger is! Je zult deze kamer delen met één of twee andere stewards.
 
 Dit jaar zullen we slechts een beperkt aantal kamers in het
 [Novotel](http://www.novotel.com/gb/hotel-5389-novotel-den-haag-world-forum/index.shtml) hebben,
-maar genoeg kamers in de [Bel Air](http://www.worldhotelbelair.com/) en
-[Crowne Plaza](http://www.ihg.com/crowneplaza/hotels/us/en/den-haag/dnhpr/hoteldetail) hotels.
+maar genoeg kamers in de [Marriott](http://www.marriott.co.uk/hotels/travel/rtmmc-the-hague-marriott-hotel/)
+en [Crowne Plaza](http://www.ihg.com/crowneplaza/hotels/us/en/den-haag/dnhpr/hoteldetail) hotels.
 
-## Indicatieve prijzen
+## Prijzen
 
-De precieze prijzen van dit jaar kunnen we je nog niet vertellen, en deze kunnen afhankelijk zijn
-van het hotel waar je in zit, alsmede of je wel of geen ontbijt wilt.
-
-Om je toch een indicatie te geven, dit waren de kosten voor stewards in het
-[Novotel](http://www.novotel.com/gb/hotel-5389-novotel-den-haag-world-forum/index.shtml) vorig jaar:
+De prijzen voor de kamers, exclusief de verplichte stadsbelasting, zijn als volgt. De precieze
+kosten zijn afhankelijk van het hotel waar je boeking terecht komt.
 
 **2-persoons kamer**:
-  € 68,– per nacht met ontbijt,
-  € 52,– per nacht zonder ontbijt.
+- € 107,– per nacht zonder ontbijt. _(€ 53,50 p.p.p.n.)_
+- € 145,– tot € 153,50 per nacht met ontbijt. _(€ 72,50 - € 76.75 p.p.p.n.)_
 
 **3-persoons kamer**:
-  € 59,– per nacht met ontbijt,
-  € 42,– per nacht zonder ontbijt.
+- € 142,– per nacht zonder ontbijt. _(€ 47.33 p.p.p.n.)_
+- € 200,50 tot € 204,50 per nacht met ontbijt. _(€ 66,83 - € 68,17 p.p.p.n.)_
 
 [« Vorige pagina](index.html)
