@@ -50,7 +50,7 @@ vrijwilligerswerk.
     </li>
     <li>
       <label for="stewardtraining">Stewardtraining in 2015 gevolgd? <span style="color: red">*</span></label>
-      <input type="checkbox" required name="stewardtraining" id="stewardtraining" />
+      <input type="checkbox" name="stewardtraining" id="stewardtraining" />
     </li>
     <li>
       <label for="ervaring">Verdere relevante ervaring?</label>
