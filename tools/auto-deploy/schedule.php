@@ -33,20 +33,4 @@ if (hash_hmac($algorithm, $payload, SECRET) != $hash)
 
 // -------------------------------------------------------------------------------------------------
 
-$commands = [
-    // Updates the local copy of the repository with the most recent remote changes.
-    'git fetch --all',
-
-    // Resets the repository to the state the remote currently is in.
-    'git reset --hard origin/master',
-
-    // Remove any left-over files that are not part of the checkout, and not in .gitignore.
-    'git clean -f -d',
-
-    // Write the latest commit SHA to the VERSION file.
-    'git rev-parse HEAD > VERSION'
-];
-
-$directory = realpath(__DIR__ . '/../../');
-foreach ($commands as $command)
-    echo shell_exec('cd ' . $directory . ' && ' . $command);
+file_put_contents('scheduled.txt', time());
