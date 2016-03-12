@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="AnimeNL coding standard">
+    <description>The AnimeNL coding standard</description>
+
+    <file>anime/</file>
+    <file>index.php</file>
+
+    <rule ref="PSR2"/>
+</ruleset>
