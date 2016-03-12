@@ -38,7 +38,7 @@ class EnvironmentTest extends \PHPUnit_Framework_TestCase {
         $this->assertFalse($invalidHostEnvironment->isValid());
 
         $unknownHostEnvironment = Environment::createForHostname('unknown.domain.com');
-        $this->assertFalse($unknownHostEnvironment->isValid());        
+        $this->assertFalse($unknownHostEnvironment->isValid());
     }
 
     // Verifies that a given array of settings can be appropriately reflected by the getters made

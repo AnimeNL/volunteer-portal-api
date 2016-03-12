@@ -5,5 +5,44 @@
     <file>anime/</file>
     <file>index.php</file>
 
-    <rule ref="PSR2"/>
+    <!-- PSR-2 is the basis of our coding standard. -->
+    <rule ref="PSR2">
+        <!-- Override: Allow any kind of line endings. Git will enforce consistency (Unix style)
+             when committing a file, so it's a bit senseless to break lint for non-Unix users. -->
+        <exclude name="Generic.Files.LineEndings"/>
+
+        <!-- Override: Allow inline control structures (with a maximum of a single line). -->
+        <exclude name="Generic.ControlStructures.InlineControlStructure"/>
+
+        <!-- Override: Opening braces of a function should not be on their own line. -->
+        <exclude name="Squiz.Functions.MultiLineFunctionDeclaration.BraceOnSameLine" />
+
+        <!-- Override: Opening braces of a class should not be on their own line. -->
+        <exclude name="PSR2.Classes.ClassDeclaration.OpenBraceNewLine"/>
+    </rule>
+
+    <!-- Disallow the long array() syntax, force use of [] instead. -->
+    <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
+
+    <!-- Force a space after a type cast. -->
+    <rule ref="Generic.Formatting.SpaceAfterCast"/>
+
+    <!-- Require that the opening braces of a function is on the same line as the declaration. -->
+    <rule ref="Generic.Functions.OpeningFunctionBraceKernighanRitchie"/>
+
+    <!-- Make sure that the McCabe cyclomatic complexity of functions is reasonable. -->
+    <rule ref="Generic.Metrics.CyclomaticComplexity">
+        <property name="complexity">5</property>
+        <property name="absoluteComplexity">15</property>
+    </rule>
+
+    <!-- Make sure that nesting within methods continues to be reasonable. -->
+    <rule ref="Generic.Metrics.NestingLevel">
+        <property name="nestingLevel">3</property>
+        <property name="absoluteNestingLevel">5</property>
+    </rule>
+
+    <!-- Do not allow the PHP silencing operator (@) to be used. -->
+    <rule ref="Generic.PHP.NoSilencedErrors"/>
+
 </ruleset>

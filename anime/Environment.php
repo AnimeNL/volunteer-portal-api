@@ -15,7 +15,7 @@ class Environment {
 
     // Initializes a new environment for the |$hostname|. An invalid Environment instance will be
     // returned when there are no known settings for the |$hostname|.
-    public static function createForHostname(string $hostname): Environment {
+    public static function createForHostname(string $hostname) : Environment {
         if (!preg_match('/^([a-z0-9]+\.?){2,3}/s', $hostname))
             return new Environment(false);  // invalid format for the |$hostname|.
 
@@ -34,7 +34,7 @@ class Environment {
 
     // Initializes a new environment for |$settings|, only intended for use by tests. The |$valid|
     // boolean indicates whether the created environment should be valid.
-    public static function createForTests(bool $valid, array $settings): Environment {
+    public static function createForTests(bool $valid, array $settings) : Environment {
         return new Environment($valid, $settings);
     }
 
@@ -56,17 +56,17 @@ class Environment {
     }
 
     // Returns whether this Environment instance represents a valid environment.
-    public function isValid(): bool {
+    public function isValid() : bool {
         return $this->valid;
     }
 
     // Returns the display name associated with this environment.
-    public function getName(): string {
+    public function getName() : string {
         return $this->name;
     }
 
     // Returns the canonical hostname (origin) associated with this environment.
-    public function getHostname(): string {
+    public function getHostname() : string {
         return $this->hostname;
     }
 }
