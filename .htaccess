@@ -17,6 +17,13 @@ php_value error_reporting -1
 RedirectMatch 404 /\.git
 RedirectMatch 404 /\.gitignore
 
+# Disallow access to other files that don't have to be web-accessible.
+RedirectMatch 404 /configuration/
+RedirectMatch 404 /composer.json
+RedirectMatch 404 /composer.lock
+RedirectMatch 404 /phpcs.xml
+RedirectMatch 404 /phpunit.xml
+
 # Vanity URLs for the tools hosted on these domains.
 RewriteRule ^hallo$ /hallo/ [R=301]
 RewriteRule ^hallo/?(.*) /tools/registration/$1 [L]
