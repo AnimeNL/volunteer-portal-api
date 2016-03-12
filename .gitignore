@@ -1,3 +1,5 @@
+vendor/
 Thumbs.db
 VERSION
+composer.lock
 sftp-config.json
