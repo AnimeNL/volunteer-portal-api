@@ -11,15 +11,15 @@ namespace Anime;
 // allow split data sources based on the hostname.
 class Environment {
     // Directory in which the configuration files for the environments have been stored.
-    const ConfigurationDirectory = __DIR__ . '/../configuration/environments/';
+    const CONFIGURATION_DIRECTORY = __DIR__ . '/../configuration/environments/';
 
     // Initializes a new environment for the |$hostname|. An invalid Environment instance will be
     // returned when there are no known settings for the |$hostname|.
-    static function createForHostname(string $hostname): Environment {
+    public static function createForHostname(string $hostname): Environment {
         if (!preg_match('/^([a-z0-9]+\.?){2,3}/s', $hostname))
             return new Environment(false);  // invalid format for the |$hostname|.
 
-        $settingFile = Environment::ConfigurationDirectory . $hostname . '.json';
+        $settingFile = Environment::CONFIGURATION_DIRECTORY . $hostname . '.json';
         if (!file_exists($settingFile) || !is_readable($settingFile))
             return new Environment(false);  // the |$hostname| does not have a configuration file.
 
@@ -34,7 +34,7 @@ class Environment {
 
     // Initializes a new environment for |$settings|, only intended for use by tests. The |$valid|
     // boolean indicates whether the created environment should be valid.
-    static function createForTests(bool $valid, array $settings): Environment {
+    public static function createForTests(bool $valid, array $settings): Environment {
         return new Environment($valid, $settings);
     }
 
@@ -69,4 +69,4 @@ class Environment {
     public function getHostname(): string {
         return $this->hostname;
     }
-};
+}

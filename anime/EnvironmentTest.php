@@ -5,15 +5,13 @@
 
 namespace Anime;
 
-require_once __DIR__ . '/Environment.php';
-
 class EnvironmentTest extends \PHPUnit_Framework_TestCase {
     // Verifies that all configuration files available in this installation can be loaded as valid
     // environments, avoiding silent breakages of less frequently used environments.
     public function testValidConfigurationFiles() {
         $hostnamesTested = 0;
 
-        foreach (new \DirectoryIterator(Environment::ConfigurationDirectory) as $iter) {
+        foreach (new \DirectoryIterator(Environment::CONFIGURATION_DIRECTORY) as $iter) {
             if (!$iter->isFile() || $iter->getExtension() != 'json')
                 continue;
 
@@ -64,4 +62,4 @@ class EnvironmentTest extends \PHPUnit_Framework_TestCase {
         $environment = Environment::createForTests(false /* valid */, []);
         $this->assertFalse($environment->isValid());
     }
-};
+}
