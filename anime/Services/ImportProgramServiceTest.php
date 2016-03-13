@@ -21,9 +21,7 @@ class ImportProgramServiceTest extends \PHPUnit_Framework_TestCase {
 
     // Verifies that the verification routines throws exceptions when we expect them.
     public function testAssumptionVerificationExceptions() {
-        $service = new ImportProgramService([
-            'frequency'     => 42
-        ]);
+        $service = $this->createDefaultService();
 
         // Assumption: The |$input| data is an array with at least one entry.
         $this->assertException(function () use ($service) {
@@ -90,13 +88,11 @@ class ImportProgramServiceTest extends \PHPUnit_Framework_TestCase {
     // Verifies that the service has the ability to merge together split entries in the programme,
     // and removes any suffixes from the event name(s) while doing so.
     public function testMergeSplitEntries() {
-        $service = new ImportProgramService([
-            'frequency'     => 42
-        ]);
+        $service = $this->createDefaultService();
 
         // Make sure that this test runs well regardless of which timezone it's being ran in.
         $currentTimezone = date_default_timezone_get();
-        date_default_timezone_set('Etc/GMT-1');
+        date_default_timezone_set('Etc/GMT-1');  // yay for posix style signs
 
         // The entries. This contains two events, one of which is split.
         $entries = [
@@ -148,9 +144,69 @@ class ImportProgramServiceTest extends \PHPUnit_Framework_TestCase {
         date_default_timezone_set($currentTimezone);
     }
 
+    // Verifies that the conversion from the AnimeCon data format to our intermediate representation
+    // works correctly and still contains the expected information.
+    public function testIntermediateFormatConversion() {
+        $service = $this->createDefaultService();
+
+        $this->assertEquals([
+            [
+                'id'            => 42424,
+                'name'          => 'Example event',
+                'description'   => 'Description of event',
+                'begin'         => 1465430400,
+                'end'           => 1465432200,
+                'location'      => 'Asia',
+                'floor'         => -1,
+                'hidden'        => false
+            ],
+            [
+                'id'            => 84848,
+                'name'          => 'Another event',
+                'description'   => 'Description of another event',
+                'begin'         => 1465433100,
+                'end'           => 1465434000,
+                'location'      => 'Atlantic \/ Dealer Room',
+                'floor'         => 2,
+                'hidden'        => true
+            ]
+        ], $service->convertToIntermediateProgramFormat([
+            [
+                'name'      => 'Example event',
+                'start'     => '2016-06-09T01:00:00+01:00',
+                'end'       => '2016-06-09T01:30:00+01:00',
+                'location'  => 'Asia',
+                'comment'   => 'Description of event',
+                'hidden'    => 0,
+                'floor'     => 'floor--1',
+                'eventId'   => 42424,
+                'opening'   => 0
+            ],
+            [
+                'name'      => 'Another event',
+                'start'     => '2016-06-09T00:45:00+00:00',
+                'end'       => '2016-06-09T01:00:00+00:00',
+                'location'  => 'Atlantic \/ Dealer Room',
+                'comment'   => 'Description of another event',
+                'hidden'    => 1,
+                'floor'     => 'floor-2',
+                'eventId'   => 84848,
+                'opening'   => 0
+            ]
+        ]));
+    }
+
+    // Creates a default instance of the service with void information to make validation happy.
+    // Only use this if you won't be using the infrastructure of the service manager.
+    private function createDefaultService() : ImportProgramService {
+        return new ImportProgramService([
+            'frequency'     => 42
+        ]);
+    }
+
     // Writes |$data| as JSON to a file, then creates an ImportProgramService instance to parse it,
     // executes the service and reads back the result data from the destination.
-    private function importFromData($data) {
+    private function importFromData($data) : array {
         $source = tempnam(sys_get_temp_dir(), 'anime_');
         $destination = tempnam(sys_get_temp_dir(), 'anime_');
 

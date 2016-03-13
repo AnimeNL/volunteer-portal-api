@@ -92,7 +92,9 @@ class ImportProgramService implements Service {
         // First merge split entries together into a single entry.
         $this->mergeSplitEntries($input);
 
-        // TODO: Translate the |$input| to the intermediate format.
+        // Translate the |$input| data into our own intermediate program format.
+        $program = $this->convertToIntermediateProgramFormat($input);
+
         // TODO: Store the intermediate format to a file indicated in the |$this->options| array.
         return true;
     }
@@ -185,5 +187,26 @@ class ImportProgramService implements Service {
             preg_replace('/\s+(opening|closing)\s*$/si', '', $openingEntry['name']);
 
         return $openingEntry;
+    }
+
+    // Converts |$entries| to the intermediate event format used by this portal. It basically takes
+    // the naming and values of the AnimeCon format and converts it into something more sensible.
+    // This method has public visibility for testing purposes only.
+    public function convertToIntermediateProgramFormat(array $entries) : array {
+        $program = [];
+        foreach ($entries as $entry) {
+            $program[] = [
+                'id'            => $entry['eventId'],
+                'name'          => $entry['name'],
+                'description'   => $entry['comment'],
+                'begin'         => strtotime($entry['start']),
+                'end'           => strtotime($entry['end']),
+                'location'      => $entry['location'],
+                'floor'         => (int) (substr($entry['floor'], 6)),
+                'hidden'        => !!$entry['hidden']
+            ];
+        }
+
+        return $program;
     }
 }
