@@ -127,7 +127,7 @@ class ImportTeamService implements Service {
         });
 
         // Write the resulting |$team| array to the destination file.
-        file_put_contents(__DIR__ . '/' . $this->options['destination'], json_encode($team));
+        file_put_contents($this->options['destination'], json_encode($team));
 
         return true;
     }

@@ -45,5 +45,109 @@ namespace Anime\Services;
 // included in this service that the input must pass before it will be considered for importing.
 // Failures will raise an exception, because they will need manual consideration.
 class ImportProgramService implements Service {
+    // Array containing the fields in a program entry that must be present for this importing
+    // service to work correctly. The verification step will make sure that they're all present.
+    const REQUIRED_FIELDS = ['name', 'start', 'end', 'location', 'comment', 'hidden', 'floor',
+                             'eventId', 'opening'];
 
+    private $options;
+
+    // Initializes the service with |$options|, defined in the website's configuration file.
+    public function __construct(array $options) {
+        if (!array_key_exists('frequency', $options))
+            throw new \Exception('The ImportProgramService requires a `frequency` option.');
+
+        $this->options = $options;
+    }
+
+    // Returns a textual identifier for identifying this service.
+    public function getIdentifier() : string {
+        return 'import-program-service';
+    }
+
+    // Returns the frequency at which the service should run. This is defined in the configuration
+    // because we may want to run it more frequently as the event comes closer.
+    public function getFrequencyMinutes() : int {
+        return $this->options['frequency'];
+    }
+
+    // Actually imports the program from the API endpoint defined in the options. The information
+    // will be distilled per the class-level documentation block's quirks and written to the
+    // destination file in accordance with our own intermediate format.
+    public function execute() : bool {
+        $sourceFile = $this->options['source'];
+
+        $inputData = file_get_contents($sourceFile);
+        if ($inputData === false)
+            throw new \Exception('Unable to load the source data: ' . $sourceFile);
+
+        $input = json_decode($inputData, true);
+        if ($input === null)
+            throw new \Exception('Unable to decode the source data as json.');
+
+        // Will throw an exception when an assumption fails, to make sure that the log files (and
+        // the associated alert e-mails) contain sufficient information to push for a fix.
+        $this->validateInputAssumptions($input);
+
+        // TODO: Actually do something with the |$input|.
+
+        return true;
+    }
+
+    // Validates the assumptions, as documented in the class-level documentation block, in the data
+    // made available per |$input|. Will throw an exception when one of the assumptions fails.
+    // This method has public visibility for testing purposes only.
+    public function validateInputAssumptions(array $input) {
+        // Assumption: The |$input| data is an array with at least one entry.
+        if (!count($input))
+            throw new \Exception('The input must be an array containing at least one entry.');
+
+        // Assumption: All fields that we use in the translation exist in the entries.
+        foreach ($input as $entryId => $entry) {
+            // Generate an Id to use in the exception message so that the item can be indicated.
+            $eventId = array_key_exists('eventId', $entry) ? $entry['eventId'] : ':' . $entryId;
+
+            foreach (ImportProgramService::REQUIRED_FIELDS as $field) {
+                if (array_key_exists($field, $entry))
+                    continue;
+
+                throw new \Exception('Missing field "' . $field . '" for entry ' . $eventId . '.');
+            }
+        }
+
+        $partialEvents = ['openings' => [], 'closings' => []];
+
+        // Assumption: Entries set to be the `opening` of an event have an associated `closing`.
+        foreach ($input as $entry) {
+            $eventId = $entry['eventId'];
+            switch($entry['opening']) {
+                case -1:
+                    $partialEvents['closings'][] = $eventId;
+                    break;
+                case 0:
+                    // This is a one-off event entry. No coalescing necessary.
+                    break;
+                case 1:
+                    $partialEvents['openings'][] = $eventId;
+                    break;
+                default:
+                    throw new \Exception('Invalid value for "opening" for entry ' . $eventId . '.');
+            }
+        }
+
+        sort($partialEvents['openings']);
+        sort($partialEvents['closings']);
+
+        if ($partialEvents['openings'] !== $partialEvents['closings'])
+            throw new \Exception('There are opening or closing events without a counter-part.');
+
+        // Assumption: All floors are in the format of "floor-" {-1, 0, 1, 2}.
+        foreach ($input as $entry) {
+            $eventId = $entry['eventId'];
+            if (!preg_match('/floor\-(\-1|0|1|2)/s', $entry['floor']))
+                throw new \Exception('Invalid value for "floor" for entry ' . $eventId . '.');
+        }
+
+        // All assumptions have been verified.
+    }
 }

@@ -10,7 +10,8 @@
     },
     "require-dev": {
         "phpunit/phpunit": "5.2.*",
-        "squizlabs/php_codesniffer": "2.5.*"
+        "squizlabs/php_codesniffer": "2.5.*",
+        "vladahejda/phpunit-assert-exception": "1.0.0"
     },
     "scripts": {
         "lint": "php vendor/squizlabs/php_codesniffer/scripts/phpcs --colors --standard=phpcs.xml",
