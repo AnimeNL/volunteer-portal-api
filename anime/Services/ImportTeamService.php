@@ -96,6 +96,9 @@ class ImportTeamService implements Service {
             // Full name
             $name = trim($line[0]);
 
+            if (!strlen($name))
+                continue;  // ignore lines without names
+
             // Type ({ Staff, Senior, Volunteer })
             $type = trim($line[1]);
 
@@ -124,7 +127,7 @@ class ImportTeamService implements Service {
         });
 
         // Write the resulting |$team| array to the destination file.
-        file_put_contents($this->options['destination'], json_encode($team));
+        file_put_contents(__DIR__ . '/' . $this->options['destination'], json_encode($team));
 
         return true;
     }
