@@ -13,7 +13,12 @@ class ServiceManagerTest extends \PHPUnit_Framework_TestCase {
         // @codingStandardsIgnoreStart
         // CodeSniffer does not yet understand formatting of anonymous classes.
         return new class implements ServiceLog {
+            public $finished = 0;
             public $log = [];
+
+            public function onFinish() {
+                $this->finished++;
+            }
 
             public function onServiceExecuted(string $identifier, float $runtime) {
                 $this->log[] = ['executed', $identifier];
@@ -163,5 +168,7 @@ class ServiceManagerTest extends \PHPUnit_Framework_TestCase {
             ['failure', 'id-fails'],
             ['exception', 'id-throws', 'Division by zero']
         ], $serviceLog->log);
+
+        $this->assertEquals(1, $serviceLog->finished);
     }
 }

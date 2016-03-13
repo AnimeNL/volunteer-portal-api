@@ -100,5 +100,7 @@ class ServiceManager {
 
             $this->state[$identifier] = $time;
         }
+
+        $this->serviceLog->onFinish();
     }
 }
