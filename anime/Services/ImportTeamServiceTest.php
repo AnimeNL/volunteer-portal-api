@@ -6,9 +6,7 @@
 namespace Anime\Services;
 
 class ImportTeamServiceTest extends \PHPUnit_Framework_TestCase {
-    /**
-     * Verifies that the given configuration options will be reflected in the getters.
-     */
+    // Verifies that the given configuration options will be reflected in the getters.
     public function testOptionGetters() {
         $service = new ImportTeamService([
             'destination'   => '/path/to/destination/file',
@@ -21,10 +19,8 @@ class ImportTeamServiceTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals('import-team-service', $service->getIdentifier());
     }
 
-    /**
-     * Verifies that a generic set of information can successfully be imported by the service, as
-     * well as the guaranteed alphabetical ordering by full name in the generated file.
-     */
+    // Verifies that a generic set of information can successfully be imported by the service, as
+    // well as the guaranteed alphabetical ordering by full name in the generated file.
     public function testBasicImportTest() {
         $result = $this->importFromData([
             ['John Doe', 'Volunteer', 'john@doe.co.uk', '+447000000000', '201 (Cool Hotel)', 'Visible'],
@@ -51,32 +47,24 @@ class ImportTeamServiceTest extends \PHPUnit_Framework_TestCase {
         ], $result);
     }
 
-    /**
-     * Verifies that an invalid value for 'type' will throw an exception.
-     *
-     * @expectedException \Exception
-     */
+    // Verifies that an invalid value for 'type' will throw an exception.
+    /** @expectedException \Exception */
     public function testTypeValidation() {
         $result = $this->importFromData([
             ['John Doe', 'FooType', 'john@doe.co.uk', '+447000000000', '201 (Cool Hotel)', 'Visible'],
         ]);
     }
 
-    /**
-     * Verifies that an invalid value for 'visible' will throw an exception.
-     *
-     * @expectedException \Exception
-     */
+    // Verifies that an invalid value for 'visible' will throw an exception.
+    /** @expectedException \Exception */
     public function testVisibilityValidation() {
         $result = $this->importFromData([
             ['John Doe', 'Staff', 'john@doe.co.uk', '+447000000000', '201 (Cool Hotel)', 'FooVisibility'],
         ]);
     }
 
-    /**
-     * Writes |$data| in CSV form to a file, then creates an ImportTeamService instance to parse it,
-     * executes the service and reads back the result data from the destination.
-     */
+    // Writes |$data| in CSV form to a file, then creates an ImportTeamService instance to parse it,
+    // executes the service and reads back the result data from the destination.
     private function importFromData($data) {
         $source = tempnam(sys_get_temp_dir(), 'anime_');
         $destination = tempnam(sys_get_temp_dir(), 'anime_');
