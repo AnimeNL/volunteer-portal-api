@@ -1,5 +1,6 @@
 {
     "serviceLog": {
+        "alerts": true,
         "from": "Your Portal <info@example.com>",
         "recipients": [ "you@example.com" ],
         "subject": "An error has occurred on your portal"

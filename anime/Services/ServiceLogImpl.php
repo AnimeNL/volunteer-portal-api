@@ -46,6 +46,10 @@ class ServiceLogImpl implements ServiceLog {
 
         $configuration = Configuration::getInstance();
 
+        // E-mail alerts can be disabled by the configuration, but force-enable them for tests.
+        if (!$configuration->get('serviceLog/alerts') && !$this->isTest)
+            return;
+
         // Compose an e-mail message for sending out an alert message. The recipients of this
         // message are defined in the main configuration file.
         $alert = new Message();
