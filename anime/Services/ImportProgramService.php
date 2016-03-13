@@ -89,8 +89,11 @@ class ImportProgramService implements Service {
         // the associated alert e-mails) contain sufficient information to push for a fix.
         $this->validateInputAssumptions($input);
 
-        // TODO: Actually do something with the |$input|.
+        // First merge split entries together into a single entry.
+        $this->mergeSplitEntries($input);
 
+        // TODO: Translate the |$input| to the intermediate format.
+        // TODO: Store the intermediate format to a file indicated in the |$this->options| array.
         return true;
     }
 
@@ -141,5 +144,46 @@ class ImportProgramService implements Service {
             throw new \Exception('There are opening or closing events without a counter-part.');
 
         // All assumptions have been verified.
+    }
+
+    // Merges split entries in |$entries| together into a single entry. The `opening` value will be
+    // considered for this, together with the `eventId` value for determining event uniqueness. Any
+    // "opening" or "closing" suffix from the event's name will be removed.
+    // This method has public visibility for testing purposes only.
+    public function mergeSplitEntries(array &$entries) {
+        $openings = [];
+
+        foreach ($entries as $index => $entry) {
+            $eventId = $entry['eventId'];
+
+            if ($entry['opening'] === 1 /* opening */) {
+                $openings[$eventId] = $index;
+                continue;
+            }
+
+            if ($entry['opening'] === -1 /* closing */) {
+                if (!array_key_exists($eventId, $openings))
+                    throw new \Exception('yo');
+
+                $entries[$openings[$eventId]] =
+                    $this->mergeEntries($entries[$openings[$eventId]], $entry);
+                array_splice($entries, $index, 1);
+            }
+        }
+    }
+
+    // Merges the |$openingEntry| and |$closingEntry| together into a single entry, modifying the
+    // name where applicable, and returns the resulting entry again.
+    private function mergeEntries(array $openingEntry, array $closingEntry) : array {
+        $eventStart = min(strtotime($openingEntry['start']), strtotime($closingEntry['start']));
+        $eventEnd = max(strtotime($openingEntry['end']), strtotime($closingEntry['end']));
+
+        $openingEntry['start'] = date('c', $eventStart);
+        $openingEntry['end'] = date('c', $eventEnd);
+
+        $openingEntry['name'] =
+            preg_replace('/\s+(opening|closing)\s*$/si', '', $openingEntry['name']);
+
+        return $openingEntry;
     }
 }

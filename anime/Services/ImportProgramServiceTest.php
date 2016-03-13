@@ -85,7 +85,67 @@ class ImportProgramServiceTest extends \PHPUnit_Framework_TestCase {
             $service->validateInputAssumptions([$invalidFloorEntry]);
 
         }, null, null, 'Invalid value for "floor" for entry 42.');
+    }
 
+    // Verifies that the service has the ability to merge together split entries in the programme,
+    // and removes any suffixes from the event name(s) while doing so.
+    public function testMergeSplitEntries() {
+        $service = new ImportProgramService([
+            'frequency'     => 42
+        ]);
+
+        // Make sure that this test runs well regardless of which timezone it's being ran in.
+        $currentTimezone = date_default_timezone_get();
+        date_default_timezone_set('Etc/GMT-1');
+
+        // The entries. This contains two events, one of which is split.
+        $entries = [
+            [
+                'name'      => 'Event opening',
+                'start'     => '2016-03-13T22:00:00+01:00',
+                'end'       => '2016-03-13T22:00:00+01:00',
+                'eventId'   => 42,
+                'opening'   => 1 /* opening */
+            ],
+            [
+                'name'      => 'Another event opening',
+                'start'     => '2016-03-13T17:00:00+01:00',
+                'end'       => '2016-03-13T17:45:00+01:00',
+                'eventId'   => 84,
+                'opening'   => 0 /* event */
+            ],
+            [
+                'name'      => 'Event closing',
+                'start'     => '2016-03-13T23:00:00+01:00',
+                'end'       => '2016-03-13T23:00:00+01:00',
+                'eventId'   => 42,
+                'opening'   => -1 /* closing */
+            ]
+        ];
+
+        // Ask the server to merge the entries for us.
+        $service->mergeSplitEntries($entries);
+
+        // Verify that two events are remaining, with the merged one's suffix removed.
+        $this->assertEquals([
+            [
+                'name'      => 'Event',
+                'start'     => '2016-03-13T22:00:00+01:00',
+                'end'       => '2016-03-13T23:00:00+01:00',
+                'eventId'   => 42,
+                'opening'   => 1 /* opening */
+            ],
+            [
+                'name'      => 'Another event opening',
+                'start'     => '2016-03-13T17:00:00+01:00',
+                'end'       => '2016-03-13T17:45:00+01:00',
+                'eventId'   => 84,
+                'opening'   => 0 /* event */
+            ]
+        ], $entries);
+
+        // Restore the timezone to the value it held before the change.
+        date_default_timezone_set($currentTimezone);
     }
 
     // Writes |$data| as JSON to a file, then creates an ImportProgramService instance to parse it,
