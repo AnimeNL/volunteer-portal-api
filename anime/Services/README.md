@@ -21,4 +21,5 @@ will write such results to a file, and inform a given set of people about the fa
 ## What are some examples of services?
 The following list contains the services implemented under this framework:
 
-- None yet. That's up next.
+- **[ImportTeamService](/anime/Services/ImportTeamService.php)**: Imports information about the
+  members in a team from the published CSV representation of a Google Spreadsheet sheet.
