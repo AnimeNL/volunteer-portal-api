@@ -13,10 +13,12 @@ class ImportProgramServiceTest extends \PHPUnit_Framework_TestCase {
     // Verifies that the frequency of the service can be configured in the configuration options.
     public function testFrequencyOption() {
         $service = new ImportProgramService([
-            'frequency'     => 42
+            'destination'   => null,
+            'frequency'     => 1337,
+            'source'        => null
         ]);
 
-        $this->assertEquals(42, $service->getFrequencyMinutes());
+        $this->assertEquals(1337, $service->getFrequencyMinutes());
     }
 
     // Verifies that the verification routines throws exceptions when we expect them.
@@ -166,7 +168,7 @@ class ImportProgramServiceTest extends \PHPUnit_Framework_TestCase {
                 'description'   => 'Description of another event',
                 'begin'         => 1465433100,
                 'end'           => 1465434000,
-                'location'      => 'Atlantic \/ Dealer Room',
+                'location'      => 'Atlantic / Dealer Room',
                 'floor'         => 2,
                 'hidden'        => true
             ]
@@ -180,18 +182,78 @@ class ImportProgramServiceTest extends \PHPUnit_Framework_TestCase {
                 'hidden'    => 0,
                 'floor'     => 'floor--1',
                 'eventId'   => 42424,
-                'opening'   => 0
+                'opening'   => 0 /* event */
             ],
             [
                 'name'      => 'Another event',
                 'start'     => '2016-06-09T00:45:00+00:00',
                 'end'       => '2016-06-09T01:00:00+00:00',
-                'location'  => 'Atlantic \/ Dealer Room',
+                'location'  => 'Atlantic / Dealer Room',
                 'comment'   => 'Description of another event',
                 'hidden'    => 1,
                 'floor'     => 'floor-2',
                 'eventId'   => 84848,
-                'opening'   => 0
+                'opening'   => 0 /* event */
+            ]
+        ]));
+    }
+
+    // Verifies that the import program services works from end-to-end.
+    public function testImportProgramService() {
+        $this->assertEquals([
+            [
+                'id'            => 42424,
+                'name'          => 'Example event',
+                'description'   => 'Description of event',
+                'begin'         => 1465430400,
+                'end'           => 1465434000,
+                'location'      => 'Asia',
+                'floor'         => -1,
+                'hidden'        => false
+            ],
+            [
+                'id'            => 84848,
+                'name'          => 'Another event',
+                'description'   => 'Description of another event',
+                'begin'         => 1465433100,
+                'end'           => 1465434000,
+                'location'      => 'Atlantic / Dealer Room',
+                'floor'         => 2,
+                'hidden'        => true
+            ]
+        ], $this->importFromData([
+            [
+                'name'      => 'Example event opening',
+                'start'     => '2016-06-09T01:00:00+01:00',
+                'end'       => '2016-06-09T01:00:00+01:00',
+                'location'  => 'Asia',
+                'comment'   => 'Description of event',
+                'hidden'    => 0,
+                'floor'     => 'floor--1',
+                'eventId'   => 42424,
+                'opening'   => 1 /* opening */
+            ],
+            [
+                'name'      => 'Another event',
+                'start'     => '2016-06-09T00:45:00+00:00',
+                'end'       => '2016-06-09T01:00:00+00:00',
+                'location'  => 'Atlantic / Dealer Room',
+                'comment'   => 'Description of another event',
+                'hidden'    => 1,
+                'floor'     => 'floor-2',
+                'eventId'   => 84848,
+                'opening'   => 0 /* event */
+            ],
+            [
+                'name'      => 'Example event closing',
+                'start'     => '2016-06-09T02:00:00+01:00',
+                'end'       => '2016-06-09T02:00:00+01:00',
+                'location'  => 'Asia',
+                'comment'   => 'Description of event',
+                'hidden'    => 0,
+                'floor'     => 'floor--1',
+                'eventId'   => 42424,
+                'opening'   => -1 /* closing */
             ]
         ]));
     }
@@ -200,7 +262,9 @@ class ImportProgramServiceTest extends \PHPUnit_Framework_TestCase {
     // Only use this if you won't be using the infrastructure of the service manager.
     private function createDefaultService() : ImportProgramService {
         return new ImportProgramService([
-            'frequency'     => 42
+            'destination'   => null,
+            'frequency'     => 42,
+            'source'        => null
         ]);
     }
 

@@ -54,8 +54,14 @@ class ImportProgramService implements Service {
 
     // Initializes the service with |$options|, defined in the website's configuration file.
     public function __construct(array $options) {
+        if (!array_key_exists('destination', $options))
+            throw new \Exception('The ImportProgramService requires a `destination` option.');
+
         if (!array_key_exists('frequency', $options))
             throw new \Exception('The ImportProgramService requires a `frequency` option.');
+
+        if (!array_key_exists('source', $options))
+            throw new \Exception('The ImportProgramService requires a `source` option.');
 
         $this->options = $options;
     }
@@ -95,7 +101,12 @@ class ImportProgramService implements Service {
         // Translate the |$input| data into our own intermediate program format.
         $program = $this->convertToIntermediateProgramFormat($input);
 
-        // TODO: Store the intermediate format to a file indicated in the |$this->options| array.
+        $programData = json_encode($program);
+
+        // Write the |$programData| to the destination file indicated in the configuration.
+        if (file_put_contents($this->options['destination'], $programData) != strlen($programData))
+            throw new \Exception('Unable to write the program data to the destination file.');
+
         return true;
     }
 
