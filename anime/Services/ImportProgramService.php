@@ -102,6 +102,8 @@ class ImportProgramService implements Service {
         if (!count($input))
             throw new \Exception('The input must be an array containing at least one entry.');
 
+        $partialEvents = ['openings' => [], 'closings' => []];
+
         // Assumption: All fields that we use in the translation exist in the entries.
         foreach ($input as $entryId => $entry) {
             // Generate an Id to use in the exception message so that the item can be indicated.
@@ -113,13 +115,11 @@ class ImportProgramService implements Service {
 
                 throw new \Exception('Missing field "' . $field . '" for entry ' . $eventId . '.');
             }
-        }
 
-        $partialEvents = ['openings' => [], 'closings' => []];
+            // Assumption: All floors are in the format of "floor-" {-1, 0, 1, 2}.
+            if (!preg_match('/floor\-(\-1|0|1|2)/s', $entry['floor']))
+                throw new \Exception('Invalid value for "floor" for entry ' . $eventId . '.');
 
-        // Assumption: Entries set to be the `opening` of an event have an associated `closing`.
-        foreach ($input as $entry) {
-            $eventId = $entry['eventId'];
             switch($entry['opening']) {
                 case -1:
                     $partialEvents['closings'][] = $eventId;
@@ -130,23 +130,15 @@ class ImportProgramService implements Service {
                 case 1:
                     $partialEvents['openings'][] = $eventId;
                     break;
-                default:
-                    throw new \Exception('Invalid value for "opening" for entry ' . $eventId . '.');
             }
         }
 
         sort($partialEvents['openings']);
         sort($partialEvents['closings']);
 
+        // Assumption: Entries set to be the `opening` of an event have an associated `closing`.
         if ($partialEvents['openings'] !== $partialEvents['closings'])
             throw new \Exception('There are opening or closing events without a counter-part.');
-
-        // Assumption: All floors are in the format of "floor-" {-1, 0, 1, 2}.
-        foreach ($input as $entry) {
-            $eventId = $entry['eventId'];
-            if (!preg_match('/floor\-(\-1|0|1|2)/s', $entry['floor']))
-                throw new \Exception('Invalid value for "floor" for entry ' . $eventId . '.');
-        }
 
         // All assumptions have been verified.
     }

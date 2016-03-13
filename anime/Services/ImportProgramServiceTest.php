@@ -77,14 +77,6 @@ class ImportProgramServiceTest extends \PHPUnit_Framework_TestCase {
 
         }, null, null, 'There are opening or closing events without a counter-part.');
 
-        $this->assertException(function () use ($service, $entry) {
-            $invalidValueEntry = $entry;
-            $invalidValueEntry['opening'] = 42;
-
-            $service->validateInputAssumptions([$invalidValueEntry]);
-
-        }, null, null, 'Invalid value for "opening" for entry 42.');
-
         // Assumption: All floors are in the format of "floor-" {-1, 0, 1, 2}.
         $this->assertException(function () use ($service, $entry) {
             $invalidFloorEntry = $entry;
