@@ -14,9 +14,11 @@ require '../../vendor/autoload.php';
 
 $serviceLog = new ServiceLogImpl();
 $serviceManager = new ServiceManager($serviceLog);
+$serviceManager->loadState();
 
 // Register all the services known to the configuration file with the |$serviceManager|.
 foreach (Configuration::getInstance()->get('services') as $service)
     $serviceManager->registerService(new $service['class']($service['options']));
 
 $serviceManager->execute();
+$serviceManager->saveState();

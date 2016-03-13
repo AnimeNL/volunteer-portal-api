@@ -41,6 +41,7 @@ class ImportProgramServiceTest extends \PHPUnit_Framework_TestCase {
             'hidden'    => 0,
             'floor'     => 'floor-0',
             'eventId'   => 42,
+            'tsId'      => 42,
             'opening'   => 0
         ];
 
@@ -102,21 +103,21 @@ class ImportProgramServiceTest extends \PHPUnit_Framework_TestCase {
                 'name'      => 'Event opening',
                 'start'     => '2016-03-13T22:00:00+01:00',
                 'end'       => '2016-03-13T22:00:00+01:00',
-                'eventId'   => 42,
+                'tsId'      => 42,
                 'opening'   => 1 /* opening */
             ],
             [
                 'name'      => 'Another event opening',
                 'start'     => '2016-03-13T17:00:00+01:00',
                 'end'       => '2016-03-13T17:45:00+01:00',
-                'eventId'   => 84,
+                'tsId'      => 84,
                 'opening'   => 0 /* event */
             ],
             [
                 'name'      => 'Event closing',
                 'start'     => '2016-03-13T23:00:00+01:00',
                 'end'       => '2016-03-13T23:00:00+01:00',
-                'eventId'   => 42,
+                'tsId'      => 42,
                 'opening'   => -1 /* closing */
             ]
         ];
@@ -130,14 +131,14 @@ class ImportProgramServiceTest extends \PHPUnit_Framework_TestCase {
                 'name'      => 'Event',
                 'start'     => '2016-03-13T22:00:00+01:00',
                 'end'       => '2016-03-13T23:00:00+01:00',
-                'eventId'   => 42,
+                'tsId'      => 42,
                 'opening'   => 1 /* opening */
             ],
             [
                 'name'      => 'Another event opening',
                 'start'     => '2016-03-13T17:00:00+01:00',
                 'end'       => '2016-03-13T17:45:00+01:00',
-                'eventId'   => 84,
+                'tsId'      => 84,
                 'opening'   => 0 /* event */
             ]
         ], $entries);
@@ -153,7 +154,6 @@ class ImportProgramServiceTest extends \PHPUnit_Framework_TestCase {
 
         $this->assertEquals([
             [
-                'id'            => 42424,
                 'name'          => 'Example event',
                 'description'   => 'Description of event',
                 'begin'         => 1465430400,
@@ -163,7 +163,6 @@ class ImportProgramServiceTest extends \PHPUnit_Framework_TestCase {
                 'hidden'        => false
             ],
             [
-                'id'            => 84848,
                 'name'          => 'Another event',
                 'description'   => 'Description of another event',
                 'begin'         => 1465433100,
@@ -202,7 +201,6 @@ class ImportProgramServiceTest extends \PHPUnit_Framework_TestCase {
     public function testImportProgramService() {
         $this->assertEquals([
             [
-                'id'            => 42424,
                 'name'          => 'Example event',
                 'description'   => 'Description of event',
                 'begin'         => 1465430400,
@@ -212,7 +210,6 @@ class ImportProgramServiceTest extends \PHPUnit_Framework_TestCase {
                 'hidden'        => false
             ],
             [
-                'id'            => 84848,
                 'name'          => 'Another event',
                 'description'   => 'Description of another event',
                 'begin'         => 1465433100,
@@ -231,6 +228,7 @@ class ImportProgramServiceTest extends \PHPUnit_Framework_TestCase {
                 'hidden'    => 0,
                 'floor'     => 'floor--1',
                 'eventId'   => 42424,
+                'tsId'      => 42424,
                 'opening'   => 1 /* opening */
             ],
             [
@@ -242,6 +240,7 @@ class ImportProgramServiceTest extends \PHPUnit_Framework_TestCase {
                 'hidden'    => 1,
                 'floor'     => 'floor-2',
                 'eventId'   => 84848,
+                'tsId'      => 84848,
                 'opening'   => 0 /* event */
             ],
             [
@@ -253,6 +252,7 @@ class ImportProgramServiceTest extends \PHPUnit_Framework_TestCase {
                 'hidden'    => 0,
                 'floor'     => 'floor--1',
                 'eventId'   => 42424,
+                'tsId'      => 42424,
                 'opening'   => -1 /* closing */
             ]
         ]));

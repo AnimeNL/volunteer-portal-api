@@ -26,7 +26,7 @@ namespace Anime\Services;
 //     'locationId'  Internal id of the location in the AnimeCon database.
 //     'floor'       Floor on which the event takes place. Prefixed with 'floor-'. {-1, 0, 1, 2}.
 //     'floorTitle'  Description of the floor on which the event takes place.
-//     'tsId'        I have absolutely no idea.
+//     'tsId'        Unique identifier for the instance of the event.
 //     'eventId'     Internal id of this event in the AnimeCon database.
 //     'opening'     `0` for a one-shot event, `1` for an event's opening, `-1` for its closing.
 //
@@ -48,7 +48,7 @@ class ImportProgramService implements Service {
     // Array containing the fields in a program entry that must be present for this importing
     // service to work correctly. The verification step will make sure that they're all present.
     const REQUIRED_FIELDS = ['name', 'start', 'end', 'location', 'comment', 'hidden', 'floor',
-                             'eventId', 'opening'];
+                             'eventId', 'tsId', 'opening'];
 
     private $options;
 
@@ -160,28 +160,30 @@ class ImportProgramService implements Service {
     }
 
     // Merges split entries in |$entries| together into a single entry. The `opening` value will be
-    // considered for this, together with the `eventId` value for determining event uniqueness. Any
+    // considered for this, together with the `tsId` value for determining event uniqueness. Any
     // "opening" or "closing" suffix from the event's name will be removed.
     // This method has public visibility for testing purposes only.
     public function mergeSplitEntries(array &$entries) {
         $openings = [];
 
-        foreach ($entries as $index => $entry) {
-            $eventId = $entry['eventId'];
+        for ($index = 0; $index < count($entries);) {
+            $entry = $entries[$index];
+            $tsId = $entry['tsId'];
 
             if ($entry['opening'] === 1 /* opening */) {
-                $openings[$eventId] = $index;
+                $openings[$tsId] = $index;
+            } else if ($entry['opening'] === -1 /* closing */) {
+                if (!array_key_exists($tsId, $openings))
+                    throw new \Exception('Unpaired opening/closing event sequence.');
+
+                $entries[$openings[$tsId]] =
+                    $this->mergeEntries($entries[$openings[$tsId]], $entry);
+                array_splice($entries, $index, 1);
                 continue;
             }
 
-            if ($entry['opening'] === -1 /* closing */) {
-                if (!array_key_exists($eventId, $openings))
-                    throw new \Exception('yo');
-
-                $entries[$openings[$eventId]] =
-                    $this->mergeEntries($entries[$openings[$eventId]], $entry);
-                array_splice($entries, $index, 1);
-            }
+            $index++;
+            continue;
         }
     }
 
@@ -207,7 +209,6 @@ class ImportProgramService implements Service {
         $program = [];
         foreach ($entries as $entry) {
             $program[] = [
-                'id'            => $entry['eventId'],
                 'name'          => $entry['name'],
                 'description'   => $entry['comment'],
                 'begin'         => strtotime($entry['start']),
