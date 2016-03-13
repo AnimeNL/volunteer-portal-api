@@ -207,6 +207,14 @@ class ImportProgramService implements Service {
             ];
         }
 
+        // Sort the |$program| array in ascending order by begin time, then by name.
+        usort($program, function ($lhs, $rhs) {
+            if ($lhs['begin'] === $rhs['begin'])
+                return strcmp($lhs['name'], $rhs['name']);
+
+            return $lhs['begin'] > $rhs['begin'] ? 1 : -1;
+        });
+
         return $program;
     }
 }
