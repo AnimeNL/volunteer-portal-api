@@ -7,6 +7,11 @@ declare(strict_types=1);
 
 namespace Anime\Services;
 
+use Anime\Configuration;
+
+use Nette\Mail\Message;
+use Nette\Mail\SendmailMailer;
+
 // Default implementation of the ServiceLog interface that will write failures to a |ERROR_LOG| and
 // inform a set of people of the failure by sending e-mail messages. Writing of the log, as well as
 // sending e-mail alerts, will be done lazily after the service manager's execution queue is empty.
@@ -14,7 +19,17 @@ class ServiceLogImpl implements ServiceLog {
     // File in which the service log will write error messages.
     const ERROR_LOG = __DIR__ . '/error.log';
 
-    private $messages = [];
+    private $isTest;
+    private $mailer;
+    private $messages;
+
+    // Initializes the default service log. A |$mailerForTesting| may be provided when running a
+    // test. It has the side-effect of supressing file writes to the |ERROR_LOG|.
+    public function __construct($mailerForTesting = null) {
+        $this->isTest = !!$mailerForTesting;
+        $this->mailer = $mailerForTesting ?: new SendmailMailer();
+        $this->messages = [];
+    }
 
     // Called when the service manager has flushed the execution queue. Log any new error messages
     // to the |ERROR_LOG| file and send an alert to the people configured to receive it.
@@ -24,11 +39,24 @@ class ServiceLogImpl implements ServiceLog {
 
         $contents = implode(PHP_EOL, $this->messages) . PHP_EOL;
 
-        // Ideally we would verify that the write was successful, but there's few things we can do
-        // when it failed. An alert e-mail will be send momentarily regardless.
-        file_put_contents(self::ERROR_LOG, $contents, FILE_APPEND);
+        // Only write the |$contents| to the file when this is not ran as part of a unit test.
+        // Ideally we would verify that the write was successful, but there's no good fallback.
+        if (!$this->isTest)
+            file_put_contents(self::ERROR_LOG, $contents, FILE_APPEND);
 
-        // TODO: Send an alert for failed services.
+        $configuration = Configuration::getInstance();
+
+        // Compose an e-mail message for sending out an alert message. The recipients of this
+        // message are defined in the main configuration file.
+        $alert = new Message();
+        $alert->setFrom($configuration->get('serviceLog/from'))
+              ->setSubject($configuration->get('serviceLog/subject'))
+              ->setBody($contents);
+
+        foreach ($configuration->get('serviceLog/recipients') as $recipient)
+            $alert->addTo($recipient);
+
+        $this->mailer->send($alert);
     }
 
     // Called when the service identified by |$identifier| has finished executing. The |$runtime|
