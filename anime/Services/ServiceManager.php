@@ -13,10 +13,13 @@ class ServiceManager {
     // File in which the Service Manager will write the current state.
     const STATE_FILE = __DIR__ . '/state.json';
 
+    private $serviceLog;
     private $services;
     private $state;
 
-    public function __construct() {
+    // Initializes a new service manager using |$serviceLog| for sharing success status.
+    public function __construct(ServiceLog $serviceLog) {
+        $this->serviceLog = $serviceLog;
         $this->services = [];
         $this->state = [];
     }
@@ -80,9 +83,20 @@ class ServiceManager {
         foreach ($executionQueue as $service) {
             $identifier = $service->getIdentifier();
 
-            // TODO: Become more robust for failures whilst executing services.
-            // TODO: Write failures in service execution to a log of sorts.
-            $service->execute();
+            $startTime = microtime(true);
+            try {
+                $success = $service->execute();
+                $runtime = microtime(true) - $startTime;
+
+                if ($success)
+                    $this->serviceLog->onServiceExecuted($identifier, $runtime);
+                else
+                    $this->serviceLog->onServiceFailure($identifier, $runtime);
+
+            } catch (\Throwable $throwable) {
+                $runtime = microtime(true) - $startTime;
+                $this->serviceLog->onServiceException($identifier, $runtime, $throwable);
+            }
 
             $this->state[$identifier] = $time;
         }
