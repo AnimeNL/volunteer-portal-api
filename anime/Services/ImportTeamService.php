@@ -12,20 +12,28 @@ namespace Anime\Services;
 //
 // This service has the following configuration options that must be supplied:
 //
-//     'frequency'   Frequency at which to execute the service (in minutes). This value should most
-//                   likely be adjusted to run more frequently as the event comes closer.
+//     'destination'  File to which the parsed team information should be written in JSON format.
 //
-//     'identifier'  Identifier which the service will be identified by, as this code base can be
-//                   used to power volunteer portals for e.g. both gophers and stewards.
+//     'frequency'    Frequency at which to execute the service (in minutes). This value should most
+//                    likely be adjusted to run more frequently as the event comes closer.
 //
-//     'source'      Absolute URL to the published CSV of the Google Spreadsheet meeting the format
-//                   restrictions mentioned below.
+//     'identifier'   Identifier which the service will be identified by, as this code base can be
+//                    used to power volunteer portals for e.g. both gophers and stewards.
+//
+//     'source'       Absolute URL to the published CSV of the Google Spreadsheet meeting the format
+//                    restrictions mentioned below.
 //
 // It is important that this sheet follows a consistent format. Consider the following rules when
 // setting up a spreadsheet to match this.
 //
 //     (1) The first row of the data will be ignored (use it for displaying a warning);
-//     (2) ...
+//     (2) The rest of the rows expect these exact columns, in order:
+//         (a) Full name
+//         (b) Type ({ Staff, Senior, Volunteer })
+//         (c) E-mail address
+//         (d) Telephone number
+//         (e) Hotel room
+//         (f) Visibility ({ Visible, Hidden })
 //
 // The parser is strict in regards to these rules, but linient for the actual data values. The
 // conditions, as well known mistakes, are tested in the ImportTeamServiceTest.
@@ -34,6 +42,9 @@ class ImportTeamService implements Service {
 
     // Initializes the service with |$options|, defined in the website's configuration file.
     public function __construct(array $options) {
+        if (!array_key_exists('destination', $options))
+            throw new \Exception('The ImportTeamService requires a `destination` option.');
+
         if (!array_key_exists('frequency', $options))
             throw new \Exception('The ImportTeamService requires a `frequency` option.');
 
@@ -62,7 +73,59 @@ class ImportTeamService implements Service {
     // exported Google Spreadsheet sheet in CSV format. The class level comment contains more
     // detailed description about the expected data.
     public function execute() : bool {
-        // TODO: Actually import the team data.
+        $sourceFile = $this->options['source'];
+
+        $inputArray = file($sourceFile);
+        if ($inputArray === false)
+            throw new \Exception('Unable to load the source data: ' . $sourceFile);
+
+        $team = [];
+
+        // Ignore the first line of the input.
+        array_shift($inputArray);
+
+        // Iterate over the rest of the lines, parse them eagerly.
+        foreach (array_map('str_getcsv', $inputArray) as $line) {
+            if (!count($line))
+                continue;  // ignore empty lines
+
+            // Only make sure that it's not less than required in order to be forward compatible.
+            if (count($line) < 6)
+                throw new \Exception('Invalid data line found in: ' . $sourceFile);
+
+            // Full name
+            $name = trim($line[0]);
+
+            // Type ({ Staff, Senior, Volunteer })
+            $type = trim($line[1]);
+
+            if (!in_array($type, ['Staff', 'Senior', 'Volunteer']))
+                throw new \Exception('Invalid type in "' . $sourceFile . '" for ' . $name);
+
+            // Visibility ({ Visible, Hidden })
+            $visibility = trim($line[5]);
+
+            if (!in_array($visibility, ['Visible', 'Hidden']))
+                throw new \Exception('Invalid visibility in "' . $sourceFile . '" for ' . $name);
+
+            $team[] = [
+                'name'      => $name,
+                'type'      => $type,
+                'email'     => trim($line[2]),
+                'telephone' => trim($line[3]),
+                'hotel'     => trim($line[4]),
+                'visible'   => trim($line[5]) !== 'Hidden'
+            ];
+        }
+
+        // Sort the team's members by name to guarantee a consistent data file.
+        usort($team, function ($lhs, $rhs) {
+            return strcmp($lhs['name'], $rhs['name']);
+        });
+
+        // Write the resulting |$team| array to the destination file.
+        file_put_contents($this->options['destination'], json_encode($team));
+
         return true;
     }
 }
