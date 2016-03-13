@@ -20,6 +20,9 @@
         <!-- Override: Opening braces of a class should not be on their own line. -->
         <exclude name="PSR2.Classes.ClassDeclaration.OpenBraceNewLine"/>
 
+        <!-- Override: Not allowing "else if" (over "elseif") is silly. -->
+        <exclude name="PSR2.ControlStructures.ElseIfDeclaration"/>
+
         <!-- Override: The space-after-keyword sniff is broken in case of no-brace "else"s. -->
         <exclude name="Squiz.ControlStructures.ControlSignature.SpaceAfterKeyword"/>
     </rule>
