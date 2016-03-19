@@ -6,6 +6,9 @@
 namespace Anime\Services;
 
 class ImportTeamServiceTest extends \PHPUnit_Framework_TestCase {
+    // Trait providing the `assertException` method.
+    use \VladaHejda\AssertException;
+
     // Verifies that the given configuration options will be reflected in the getters.
     public function testOptionGetters() {
         $service = new ImportTeamService([
@@ -48,19 +51,25 @@ class ImportTeamServiceTest extends \PHPUnit_Framework_TestCase {
     }
 
     // Verifies that an invalid value for 'type' will throw an exception.
-    /** @expectedException \Exception */
     public function testTypeValidation() {
-        $result = $this->importFromData([
-            ['John Doe', 'FooType', 'john@doe.co.uk', '+447000000000', '201 (Cool Hotel)', 'Visible'],
-        ]);
+        $test = function () {
+            $this->importFromData([
+                ['John Doe', 'FooType', 'john@doe.co.uk', '+447000000000', '201 (Cool Hotel)', 'Visible'],
+            ]);
+        };
+
+        $this->assertException($test->bindTo($this));
     }
 
     // Verifies that an invalid value for 'visible' will throw an exception.
-    /** @expectedException \Exception */
     public function testVisibilityValidation() {
-        $result = $this->importFromData([
-            ['John Doe', 'Staff', 'john@doe.co.uk', '+447000000000', '201 (Cool Hotel)', 'FooVisibility'],
-        ]);
+        $test = function () {
+            $this->importFromData([
+                ['John Doe', 'Staff', 'john@doe.co.uk', '+447000000000', '201 (Cool Hotel)', 'FooVisibility'],
+            ]);
+        };
+
+        $this->assertException($test->bindTo($this));
     }
 
     // Writes |$data| in CSV form to a file, then creates an ImportTeamService instance to parse it,
@@ -89,8 +98,7 @@ class ImportTeamServiceTest extends \PHPUnit_Framework_TestCase {
                 'source'        => $source
             ]);
 
-            if (!$service->execute())
-                throw new \Exception('Unable to execute the ImportTeamService.');
+            $service->execute();
 
             return json_decode(file_get_contents($destination), true /* associative */);
 

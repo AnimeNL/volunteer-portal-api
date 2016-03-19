@@ -80,7 +80,7 @@ class ImportProgramService implements Service {
     // Actually imports the program from the API endpoint defined in the options. The information
     // will be distilled per the class-level documentation block's quirks and written to the
     // destination file in accordance with our own intermediate format.
-    public function execute() : bool {
+    public function execute() {
         $sourceFile = $this->options['source'];
 
         $inputData = file_get_contents($sourceFile);
@@ -106,8 +106,6 @@ class ImportProgramService implements Service {
         // Write the |$programData| to the destination file indicated in the configuration.
         if (file_put_contents($this->options['destination'], $programData) != strlen($programData))
             throw new \Exception('Unable to write the program data to the destination file.');
-
-        return true;
     }
 
     // Validates the assumptions, as documented in the class-level documentation block, in the data

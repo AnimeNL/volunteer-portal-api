@@ -33,7 +33,6 @@ class ServiceLogTest extends \PHPUnit_Framework_TestCase {
 
         $serviceLog = new ServiceLogImpl($mailer);
         $serviceLog->onServiceExecuted('id-success', 0.123);
-        $serviceLog->onServiceFailure('id-fails', 1.234);
 
         try {
             functionThatDoesNotExist();
@@ -48,9 +47,8 @@ class ServiceLogTest extends \PHPUnit_Framework_TestCase {
 
         $body = $mailer->message->getBody();
 
-        // Confirm that the |$body| mentions the identifiers of the services that failed and threw
-        // an exception, as well as the log message associated with the exception.
-        $this->assertContains('id-fails', $body);
+        // Confirm that the |$body| mentions the identifiers of the services that threw an exception
+        // as well as the log message associated with the exception.
         $this->assertContains('id-throws', $body);
         $this->assertContains('functionThatDoesNotExist', $body);
     }

@@ -88,10 +88,7 @@ class ServiceManager {
                 $success = $service->execute();
                 $runtime = microtime(true) - $startTime;
 
-                if ($success)
-                    $this->serviceLog->onServiceExecuted($identifier, $runtime);
-                else
-                    $this->serviceLog->onServiceFailure($identifier, $runtime);
+                $this->serviceLog->onServiceExecuted($identifier, $runtime);
 
             } catch (\Throwable $throwable) {
                 $runtime = microtime(true) - $startTime;

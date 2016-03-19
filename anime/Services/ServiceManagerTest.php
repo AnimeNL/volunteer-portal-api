@@ -24,10 +24,6 @@ class ServiceManagerTest extends \PHPUnit_Framework_TestCase {
                 $this->log[] = ['executed', $identifier];
             }
 
-            public function onServiceFailure(string $identifier, float $runtime) {
-                $this->log[] = ['failure', $identifier];
-            }
-
             public function onServiceException(string $identifier, float $runtime, $exception) {
                 $this->log[] = ['exception', $identifier, $exception->getMessage()];
             }
@@ -112,7 +108,7 @@ class ServiceManagerTest extends \PHPUnit_Framework_TestCase {
     }
 
     // Verifies that entries will be written to the service log as expected, and generate either
-    // `executed`, `failure` or `exception` messages depending on a service's result.
+    // `executed` or `exception` messages depending on a service's result.
     public function testServiceLog() {
         $serviceFactory = function (string $identifier, callable $callback) {
             // @codingStandardsIgnoreStart
@@ -134,7 +130,7 @@ class ServiceManagerTest extends \PHPUnit_Framework_TestCase {
                     return 1;
                 }
 
-                public function execute() : bool {
+                public function execute() {
                     return ($this->callback)();
                 }
             };
@@ -144,13 +140,9 @@ class ServiceManagerTest extends \PHPUnit_Framework_TestCase {
         $serviceLog = $this->createServiceLog();
         $serviceManager = new ServiceManager($serviceLog);
 
-        // Register three services in order: one that succeeds, one that fails and one that throws.
+        // Register three services in order: one that succeeds and one that throws.
         $serviceManager->registerService($serviceFactory('id-succeeds', function () {
             return true;
-        }));
-
-        $serviceManager->registerService($serviceFactory('id-fails', function () {
-            return false;
         }));
 
         $serviceManager->registerService($serviceFactory('id-throws', function () {
@@ -162,10 +154,9 @@ class ServiceManagerTest extends \PHPUnit_Framework_TestCase {
         $serviceManager->execute();
 
         // Verify that the data in the service log is what we expect it to be.
-        $this->assertEquals(3, count($serviceLog->log));
+        $this->assertEquals(2, count($serviceLog->log));
         $this->assertEquals([
             ['executed', 'id-succeeds'],
-            ['failure', 'id-fails'],
             ['exception', 'id-throws', 'Division by zero']
         ], $serviceLog->log);
 

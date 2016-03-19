@@ -288,8 +288,7 @@ class ImportProgramServiceTest extends \PHPUnit_Framework_TestCase {
                 'source'        => $source
             ]);
 
-            if (!$service->execute())
-                throw new \Exception('Unable to execute the ImportProgramService.');
+            $service->execute();
 
             return json_decode(file_get_contents($destination), true /* associative */);
 

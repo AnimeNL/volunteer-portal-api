@@ -69,12 +69,6 @@ class ServiceLogImpl implements ServiceLog {
     public function onServiceExecuted(string $identifier, float $runtime) {
     }
 
-    // Called when the service identified by |$identifier| has finished executing, but was not able
-    // to run successfully. The |$runtime| indicates the time taken by the service in milliseconds.
-    public function onServiceFailure(string $identifier, float $runtime) {
-        $this->messages[] = $this->createMessage($identifier, $runtime, 'Execution failed.');
-    }
-
     // Called when the service identified by |$identifier| failed to execute because |$exception|
     // got thrown. The |$runtime| indicates the time taken by the service in milliseconds.
     public function onServiceException(string $identifier, float $runtime, $exception) {

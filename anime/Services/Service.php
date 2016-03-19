@@ -15,6 +15,7 @@ interface Service {
     // Returns the frequency, in minutes, at which this service should be executed.
     public function getFrequencyMinutes() : int;
 
-    // Executes the service. Returns whether the service was executed successfully.
-    public function execute() : bool;
+    // Executes the service. Execution will be considered successful if no exception gets thrown.
+    // TODO: Mark this as returning void in PHP 7.1.
+    public function execute();
 }
