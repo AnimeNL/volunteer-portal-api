@@ -4,6 +4,9 @@ This repository contains the code powering the Anime 2016 volunteer portals. It 
 amount of backend logic for importing and normalizing data from external parties, as well as the
 frontend for both the client-side logic and the portal's visual interface.
 
+While this portal has been written for the [AnimeCon](http://www.animecon.nl/) convention, other
+events are most welcome to adopt it for their needs. Pull requests to make this easier are welcomed.
+
 ## Backend code (PHP)
 The backend is located in the [/anime/](/anime/) directory and has been written in PHP.
 
