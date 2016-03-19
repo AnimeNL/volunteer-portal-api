@@ -22,6 +22,7 @@ class ServiceLogImpl implements ServiceLog {
     private $isTest;
     private $mailer;
     private $messages;
+    private $failures;
 
     // Initializes the default service log. A |$mailerForTesting| may be provided when running a
     // test. It has the side-effect of supressing file writes to the |ERROR_LOG|.
@@ -29,6 +30,12 @@ class ServiceLogImpl implements ServiceLog {
         $this->isTest = !!$mailerForTesting;
         $this->mailer = $mailerForTesting ?: new SendmailMailer();
         $this->messages = [];
+        $this->failures = 0;
+    }
+
+    // Returns the number of stored messages. Should only be used for testing purposes.
+    public function getMessageCountForTesting() {
+        return count($this->messages);
     }
 
     // Called when the service manager has flushed the execution queue. Log any new error messages
@@ -43,6 +50,11 @@ class ServiceLogImpl implements ServiceLog {
         // Ideally we would verify that the write was successful, but there's no good fallback.
         if (!$this->isTest)
             file_put_contents(self::ERROR_LOG, $contents, FILE_APPEND);
+
+        // Early-return if there are no failures, because there is no need to send an alert message
+        // for successful service execution.
+        if ($this->failures == 0)
+            return;
 
         $configuration = Configuration::getInstance();
 
@@ -67,6 +79,7 @@ class ServiceLogImpl implements ServiceLog {
     // indicates the time taken by the service's execution routine in milliseconds. We don't log
     // successful runs, although their status can be verified by inspecting `state.json`.
     public function onServiceExecuted(string $identifier, float $runtime) {
+        $this->messages[] = $this->createMessage($identifier, $runtime, 'Executed successfully.');
     }
 
     // Called when the service identified by |$identifier| failed to execute because |$exception|
@@ -76,6 +89,7 @@ class ServiceLogImpl implements ServiceLog {
         $description .= ' (' . basename($exception->getFile()) . ':' . $exception->getLine() . ')';
 
         $this->messages[] = $this->createMessage($identifier, $runtime, $description);
+        $this->failures++;
     }
 
     // Creates the message for a result of |$identified| that took |$runtime| milliseconds.

@@ -52,4 +52,26 @@ class ServiceLogTest extends \PHPUnit_Framework_TestCase {
         $this->assertContains('id-throws', $body);
         $this->assertContains('functionThatDoesNotExist', $body);
     }
+
+    // Verifies that successful runs of the service manager will write messages to the log, but will
+    // not distribute an alert message.
+    public function testSuccessMessageBailOut() {
+        // @codingStandardsIgnoreStart
+        // CodeSniffer does not yet understand formatting of anonymous classes.
+        $mailer = new class implements IMailer {
+            public $message;
+
+            public function send(Message $message) {
+                $this->message = $message;
+            }
+        };
+        // @codingStandardsIgnoreEnd
+
+        $serviceLog = new ServiceLogImpl($mailer);
+        $serviceLog->onServiceExecuted('id-success', 0.123);
+        $serviceLog->onFinish();
+
+        $this->assertEquals(1, $serviceLog->getMessageCountForTesting());
+        $this->assertNull($mailer->message);
+    }
 }
