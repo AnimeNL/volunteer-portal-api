@@ -34,6 +34,7 @@ table tbody tr:nth-child(2n) .hour {
 
 .hour { vertical-align: top; }
 
+.event.hidden { background-color: #ddd; }
 .event {
   position: absolute;
 

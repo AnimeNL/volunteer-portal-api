@@ -35,6 +35,7 @@ var DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Friday', 'Saturday', 'S
         conventionEvents[event.floor][event.location].push({
             name: event.name,
             description: event.description,
+            hidden: event.hidden,
             begin: event.begin,
             end: event.end
         });
@@ -152,8 +153,11 @@ var DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Friday', 'Saturday', 'S
         var currentActive = 0;
 
         eventTimes.sort((lhs, rhs) => {
-            if (lhs.time === rhs.time)
+            if (lhs.time === rhs.time) {
+                if (lhs.type === 'begin' && rhs.type !== 'begin') return 1;
+                if (lhs.type !== 'begin' && rhs.type === 'begin') return -1;
                 return 0;
+            }
 
             return lhs.time > rhs.time ? 1 : -1;
         });
@@ -242,6 +246,9 @@ var DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Friday', 'Saturday', 'S
     function createEventBubble(event) {
         var bubble = document.createElement('div');
         bubble.className = 'event';
+
+        if (event.hidden)
+            bubble.className += ' hidden';
 
         bubble.textContent = event.name;
 

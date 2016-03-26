@@ -4,10 +4,12 @@
 // be found in the LICENSE file.
 
 $schedule = json_decode(file_get_contents(__DIR__ . '/../../configuration/program.json'), true);
-$schedule = array_filter($schedule, function ($event) {
-    return !$event['hidden'];
-});
 
+if (!array_key_exists('showHidden', $_GET)) {
+    $schedule = array_filter($schedule, function ($event) {
+       return !$event['hidden'];
+    });
+}
 ?>
 <!doctype html>
 <html lang="en">
