@@ -28,5 +28,8 @@ RedirectMatch 404 /phpunit.xml
 RewriteRule ^hallo$ /hallo/ [R=301]
 RewriteRule ^hallo/?(.*) /tools/registration/$1 [L]
 
+RewriteRule ^schedule$ /schedule/ [R=301]
+RewriteRule ^schedule/?(.*) /tools/schedule/$1 [L]
+
 RewriteRule ^scheduler$ /scheduler/ [R=301]
 RewriteRule ^scheduler/?(.*) /tools/event-scheduling-calculator/$1 [L]
