@@ -21,8 +21,12 @@ RedirectMatch 404 /\.gitignore
 RedirectMatch 404 /configuration/
 RedirectMatch 404 /composer.json
 RedirectMatch 404 /composer.lock
+RedirectMatch 404 /node_modules/
 RedirectMatch 404 /phpcs.xml
 RedirectMatch 404 /phpunit.xml
+
+# Compile the JavaScript on the server when running in debug mode.
+RewriteRule ^scripts/main-dev.js$ /scripts/main-dev.php [L]
 
 # Vanity URLs for the tools hosted on these domains.
 RewriteRule ^hallo$ /hallo/ [R=301]

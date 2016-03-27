@@ -2,6 +2,10 @@
 // Use of this source code is governed by the MIT license, a copy of which can
 // be found in the LICENSE file.
 
-const Router = require('./app/router');
+class Router {
+    constructor() {
+        console.log('yo 2');
+    }
+}
 
-new Router();
+module.exports = Router;
