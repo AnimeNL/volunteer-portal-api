@@ -25,7 +25,14 @@ $commands = [
     'git clean -f -d',
 
     // Write the latest commit SHA to the VERSION file.
-    'git rev-parse HEAD > VERSION'
+    'git rev-parse HEAD > VERSION',
+
+    // Update the latest dependencies of both Composer (backend) and NPM (frontend).
+    'composer update',
+    'npm update',
+
+    // Deploy the latest version of the frontend's JavaScript code.
+    'npm run build'
 ];
 
 $directory = realpath(__DIR__ . '/../../');

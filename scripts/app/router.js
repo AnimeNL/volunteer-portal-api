@@ -4,7 +4,7 @@
 
 class Router {
     constructor() {
-        console.log('yo 2');
+        console.log('yo 3');
     }
 }
 
