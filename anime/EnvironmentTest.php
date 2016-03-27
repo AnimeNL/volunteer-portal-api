@@ -45,14 +45,16 @@ class EnvironmentTest extends \PHPUnit_Framework_TestCase {
     // available on the Environment instance.
     public function testSettingReflection() {
         $settings = [
-            'name'      => 'Example environment',
-            'hostname'  => 'example.com'
+            'name'          => 'Example environment',
+            'short_name'    => 'Example',
+            'hostname'      => 'example.com',
         ];
 
         $environment = Environment::createForTests(true /* valid */, $settings);
         $this->assertTrue($environment->isValid());
 
         $this->assertEquals($settings['name'], $environment->getName());
+        $this->assertEquals($settings['short_name'], $environment->getShortName());
         $this->assertEquals($settings['hostname'], $environment->getHostname());
     }
 

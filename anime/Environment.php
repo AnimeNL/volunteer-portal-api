@@ -41,6 +41,7 @@ class Environment {
     private $valid;
 
     private $name;
+    private $shortName;
     private $hostname;
 
     // Constructor for the Environment class. The |$valid| boolean must be set, and, when set to
@@ -52,6 +53,7 @@ class Environment {
             return;
 
         $this->name = $settings['name'];
+        $this->shortName = $settings['short_name'];
         $this->hostname = $settings['hostname'];
     }
 
@@ -63,6 +65,11 @@ class Environment {
     // Returns the display name associated with this environment.
     public function getName() : string {
         return $this->name;
+    }
+
+    // Returns the short name of the environment, that can be used for display purposes.
+    public function getShortName() : string {
+        return $this->shortName;
     }
 
     // Returns the canonical hostname (origin) associated with this environment.

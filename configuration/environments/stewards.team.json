@@ -1,4 +1,5 @@
 {
     "name": "Steward Portal",
+    "short_name": "Stewards",
     "hostname": "stewards.team"
 }
