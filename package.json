@@ -1,0 +1,19 @@
+{
+    "name": "anime-2016",
+    "version": "1.0.0",
+    "description": "Volunteer Portal for the Anime 2016 convention.",
+    "license": "MIT",
+    "private": true,
+
+    "dependencies": {
+
+    },
+
+    "devDependencies": {
+
+    },
+
+    "scripts": {
+
+    }
+}
