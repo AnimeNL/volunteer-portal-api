@@ -1,6 +1,8 @@
 node_modules/
+scripts/main-compiled.js
 vendor/
 Thumbs.db
 VERSION
 composer.lock
+npm-debug.log
 sftp-config.json
