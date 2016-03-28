@@ -51,6 +51,7 @@ if ($release) {
   </head>
   <body>
     <p>Nothing to see here, move along.</p>
+    <script src="/scripts/webcomponents-lite.js" async></script>
     <script src="<?php echo $javascriptMainFile; ?>" async></script>
   </body>
 </html>
