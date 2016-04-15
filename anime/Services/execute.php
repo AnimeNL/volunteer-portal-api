@@ -7,7 +7,7 @@ namespace Anime\Services;
 
 use Anime\Configuration;
 
-require '../../vendor/autoload.php';
+require __DIR__ . '/../../vendor/autoload.php';
 
 // This file is the entry-point for executing the periodic services. It is adviced to create a cron
 // job that runs every minute (for best frequency accuracy) executing this file.
