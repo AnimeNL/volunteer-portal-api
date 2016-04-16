@@ -3,8 +3,35 @@
 // Use of this source code is governed by the MIT license, a copy of which can
 // be found in the LICENSE file.
 
-$scripts = glob(__DIR__ . '/*.js');
-$pages = glob(__DIR__ . '/pages/*.js');
+$scripts = [
+  'config.js',
+  'content_handler.js',
+  'event_location.js',
+  'event_update_handler.js',
+  'legacy_application.js',
+  'link_handler.js',
+  'menu_handler.js',
+  'page.js',
+  'polyfill.js',
+  'ripple_handler.js',
+  'schedule.js',
+  'schedule_entry.js',
+  'schedule_page.js',
+  'single_event.js',
+  'steward.js',
+  'template_factory.js',
+  'user.js'
+];
+
+$pages = [
+  'pages/event_page.js',
+  'pages/floor_page.js',
+  'pages/location_page.js',
+  'pages/login_page.js',
+  'pages/overview_page.js',
+  'pages/steward_overview_page.js',
+  'pages/stewards_page.js'
+];
 
 Header('Content-Type: application/javascript');
 

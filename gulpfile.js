@@ -9,6 +9,7 @@ var gulp = require('gulp');
 var sftp = require('gulp-sftp');
 var source = require('vinyl-source-stream');
 
+// Packages the JavaScript code after running it through Babel in order to be able to use ES2015.
 gulp.task('package', function() {
     return browserify('./scripts/application.js')
         .transform(babelify, { presets: ['es2015'] })
