@@ -28,21 +28,20 @@ Header('Content-Security-Policy: default-src \'self\' \'sha256-' . $shellStyleHa
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+    <meta name="robots" content="noindex" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-    <link rel="stylesheet" href="style/anime.css" /> <!-- XXX Remove XXX -->
     <link rel="manifest" href="/manifest.json" />
+    <link rel="stylesheet" href="/style/aggregated.php" />
     <title>Anime Volunteer Portal</title>
     <style><?php echo $shellStylesheet; ?></style>
   </head>
   <body>
-    <p>Nothing to see here, move along.</p>
+    <div class="container initial"></div>
 <?php
 foreach ($templates as $file) {
   echo indent(file_get_contents($file), 4);
 }
 ?>
-    <script src="/scripts/webcomponents-lite.js" async></script>
-    <script src="<?php echo $javascriptMainFile; ?>" async></script>
     <noscript>
       <p>
         Sorry, but you need a browser which supports JavaScript in order to use this site!
