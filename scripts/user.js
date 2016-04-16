@@ -3,7 +3,8 @@
 // be found in the LICENSE file.
 
 // Encapsulates information about the local user of the volunteer portal, and provides the ability
-// to identify users based on the credentials they gave.
+// to identify users based on the credentials they gave. Most of the functionality is asynchronous,
+// so wait for the |ready| Promise to resolve before using an instance of this class.
 class User {
     constructor() {
         this.name_ = null;
@@ -58,6 +59,9 @@ class User {
                         response.hasOwnProperty('token') && typeof response.token === 'string') {
                         this.name_ = response.name;
                         this.token_ = response.token;
+
+                        this.options_ = {};
+
                         return resolve(this.store());
                     }
                 } catch (e) {
@@ -118,6 +122,10 @@ class User {
             if (!user)
                 return this.signOut();
 
+            this.name_ = user.name;
+            this.token_ = user.token;
+            this.options_ = user.options;
+
             return this;
         });
     }
@@ -131,11 +139,11 @@ class User {
                 return resolve(this);
             }
 
-            localStorage['userInfo'] = {
+            localStorage['userInfo'] = JSON.stringify({
                 name: this.name_,
                 token: this.token_,
                 options: this.options_
-            };
+            });
 
             resolve();
         });
