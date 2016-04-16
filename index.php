@@ -39,9 +39,11 @@ Header('Content-Security-Policy: default-src \'self\' \'sha256-' . $shellStyleHa
     <div class="container initial"></div>
 <?php
 foreach ($templates as $file) {
-  echo indent(file_get_contents($file), 4);
+    // TODO: Indent?
+  echo file_get_contents($file);
 }
 ?>
+    <script src="/scripts/aggregated.php"></script>
     <noscript>
       <p>
         Sorry, but you need a browser which supports JavaScript in order to use this site!

@@ -13,7 +13,7 @@ echo '// config.json' . PHP_EOL;
 echo '// =============================================================================' . PHP_EOL;
 echo PHP_EOL;
 
-echo 'var config = ' . file_get_contents(__DIR__ . '/../config.json') . ';' . PHP_EOL;
+echo 'var config = { "event-data": "", "theme-color": "", "title": "Anime 2016", "year": "2016" };';
 echo PHP_EOL;
 
 foreach ($scripts as $file) {
