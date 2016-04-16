@@ -11,5 +11,6 @@ gulp.task('package', function() {
     return browserify('./scripts/application.js')
         .transform(babelify, { presets: ['es2015'] })
         .bundle()
+        .pipe(source('anime.js'))
         .pipe(gulp.dest('./'));
 });
