@@ -13,6 +13,9 @@ class Environment {
     // Directory in which the configuration files for the environments have been stored.
     const CONFIGURATION_DIRECTORY = __DIR__ . '/../configuration/environments/';
 
+    // Directory in which information about the individual teams has been stored.
+    const TEAM_DATA_DIRECTORY = __DIR__ . '/../configuration/teams/';
+
     // Initializes a new environment for the |$hostname|. An invalid Environment instance will be
     // returned when there are no known settings for the |$hostname|.
     public static function createForHostname(string $hostname) : Environment {
@@ -40,9 +43,12 @@ class Environment {
 
     private $valid;
 
+    private $team;
+
     private $name;
     private $shortName;
     private $hostname;
+    private $teamDataFile;
 
     // Constructor for the Environment class. The |$valid| boolean must be set, and, when set to
     // true, the |$settings| array must be given with all intended options.
@@ -52,9 +58,12 @@ class Environment {
         if (!$valid)
             return;
 
+        $this->team = null;
+
         $this->name = $settings['name'];
         $this->shortName = $settings['short_name'];
         $this->hostname = $settings['hostname'];
+        $this->teamDataFile = $settings['team_data'];
     }
 
     // Returns whether this Environment instance represents a valid environment.
@@ -75,5 +84,15 @@ class Environment {
     // Returns the canonical hostname (origin) associated with this environment.
     public function getHostname() : string {
         return $this->hostname;
+    }
+
+    // Loads the information about the team associated with this environment.
+    public function loadTeam() : array {
+        if ($this->team === null) {
+            $this->team = json_decode(
+                file_get_contents(self::TEAM_DATA_DIRECTORY . $this->teamDataFile), true);
+        }
+
+        return $this->team;
     }
 }

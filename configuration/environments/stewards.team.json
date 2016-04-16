@@ -1,5 +1,6 @@
 {
     "name": "Steward Portal",
     "short_name": "Stewards",
-    "hostname": "stewards.team"
+    "hostname": "stewards.team",
+    "team_data": "stewards.json"
 }
