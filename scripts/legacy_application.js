@@ -525,16 +525,16 @@ addEventListener('DOMContentLoaded', function() {
   var container = document.querySelector('.container'),
       config = new Config(window.config);
 
-  window.application = new LegacyApplication(config, container);
+  window.legacyApplication = new LegacyApplication(config, container);
 
   // Make it possible to log in anonymously for direct links.
   if (document.location.search == '?anonymous') {
-    window.application.GetUser().AttemptLogin('Peter Beverloo').then(function() {
+    window.legacyApplication.GetUser().AttemptLogin('Peter Beverloo').then(function() {
       document.location.reload();
     });
   }
 
-  window.application.Navigate(location.pathname, true /* ignoreNavigation */)
+  window.legacyApplication.Navigate(location.pathname, true /* ignoreNavigation */)
       .then(function() {
     requestAnimationFrame(function() {
       container.classList.add('visible');

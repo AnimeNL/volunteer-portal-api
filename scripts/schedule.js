@@ -29,7 +29,7 @@ Schedule.prototype.CheckForScheduleUpdate = function() {
       this.Initialize(schedule, true /* update_cache */);
       this.DisplayUpdateBanner();
 
-      window.application.Navigate();
+      window.legacyApplication.Navigate();
 
     } catch (e) {}
 
