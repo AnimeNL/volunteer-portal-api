@@ -352,6 +352,8 @@ Application.prototype.SetTitle = function(title) {
 // Initializes the Service Worker belonging to this application. Having one of
 // these available enables the use of Push Notifications and offline.
 Application.prototype.InitializeServiceWorkerSupport = function() {
+  return Promise.reject();  // offline support will be added later.
+
   if (!('serviceWorker' in navigator))
     return Promise.reject();
 

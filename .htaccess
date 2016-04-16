@@ -38,6 +38,7 @@ RewriteRule ^hallo$ /hallo/ [R=301]
 RewriteRule ^hallo/?(.*) /tools/registration/$1 [L]
 
 RewriteRule ^schedule$ /schedule/ [R=301]
+RewriteCond %{REQUEST_URI} !^/schedule.json
 RewriteRule ^schedule/?(.*) /tools/schedule/$1 [L]
 
 RewriteRule ^scheduler$ /scheduler/ [R=301]
