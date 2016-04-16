@@ -4,7 +4,7 @@
 
 "use strict";
 
-var Application = function(config, container) {
+var LegacyApplication = function(config, container) {
   this.config_ = config;
   this.container_ = container;
 
@@ -68,13 +68,13 @@ var Application = function(config, container) {
   // Listen to visibilitystate change events in the browser.
   ['visibilitychange', 'msvisibilitychange'].forEach(function(eventName) {
     document.addEventListener(eventName,
-        Application.prototype.OnVisibilityStateChange.bind(this));
+        LegacyApplication.prototype.OnVisibilityStateChange.bind(this));
 
   }.bind(this));
 
   // Listen to state change events triggered by the browser.
   window.addEventListener('popstate',
-      Application.prototype.OnBrowserNavigate.bind(this));
+      LegacyApplication.prototype.OnBrowserNavigate.bind(this));
 
   // Trigger the first periodic update, which will automatically trigger further
   // updates depending visibility of the screen.
@@ -85,31 +85,31 @@ var Application = function(config, container) {
 // Constants.
 
 // Number of milliseconds between periodic application updates.
-Application.PERIODIC_UPDATE_RATE_MS = 5000;
+LegacyApplication.PERIODIC_UPDATE_RATE_MS = 5000;
 
 // Number of milliseconds between schedule update checks (15 minutes).
-Application.SCHEDULE_UPDATE_RATE_MS = 15 * 60 * 1000;
+LegacyApplication.SCHEDULE_UPDATE_RATE_MS = 15 * 60 * 1000;
 
 // -----------------------------------------------------------------------------
 // Simple getters.
 
 // Returns an immutable object containing the event's configuration.
-Application.prototype.GetConfig = function() {
+LegacyApplication.prototype.GetConfig = function() {
   return this.config_;
 };
 
 // Returns the Page object that's currently being displayed to the user.
-Application.prototype.GetPage = function() {
+LegacyApplication.prototype.GetPage = function() {
   return this.page_;
 };
 
 // Returns the schedule of the event. Requires the event to be loaded.
-Application.prototype.GetSchedule = function() {
+LegacyApplication.prototype.GetSchedule = function() {
   return this.schedule_;
 };
 
 // Returns the User object belonging to the current application.
-Application.prototype.GetUser = function() {
+LegacyApplication.prototype.GetUser = function() {
   return this.user_;
 };
 
@@ -120,7 +120,7 @@ Application.prototype.GetUser = function() {
 // be logged in to use this application, so unless that's the case the login
 // page will be forced upon them. Returns a promise that resolves when the
 // navigation has completed, and the content has been included in the DOM tree.
-Application.prototype.Navigate = function(path, ignoreNavigation) {
+LegacyApplication.prototype.Navigate = function(path, ignoreNavigation) {
   if (!this.user_.IsIdentified())
     return this.NavigateToPage(LoginPage);
 
@@ -166,7 +166,7 @@ Application.prototype.Navigate = function(path, ignoreNavigation) {
   });
 };
 
-Application.prototype.NavigateToPage = function(classObject, parameters) {
+LegacyApplication.prototype.NavigateToPage = function(classObject, parameters) {
   var page = new classObject(this, parameters),
       self = this;
 
@@ -200,7 +200,7 @@ Application.prototype.NavigateToPage = function(classObject, parameters) {
   });
 };
 
-Application.prototype.OnDisplayMySchedule = function(event) {
+LegacyApplication.prototype.OnDisplayMySchedule = function(event) {
   var self = this;
 
   this.user_.FindSteward().then(function(steward) {
@@ -211,11 +211,11 @@ Application.prototype.OnDisplayMySchedule = function(event) {
   });
 };
 
-Application.prototype.OnRequestNavigate = function(event) {
+LegacyApplication.prototype.OnRequestNavigate = function(event) {
   this.Navigate(event.pageName);
 };
 
-Application.prototype.OnBrowserNavigate = function(event) {
+LegacyApplication.prototype.OnBrowserNavigate = function(event) {
   if (!event.state || !('path' in event.state))
     return;
 
@@ -229,7 +229,7 @@ Application.prototype.OnBrowserNavigate = function(event) {
 // -----------------------------------------------------------------------------
 // Handler-related methods.
 
-Application.prototype.InstallHandlers = function(element) {
+LegacyApplication.prototype.InstallHandlers = function(element) {
   this.handlers_.forEach(function(handler) {
     handler.OnRender(element);
   });
@@ -238,11 +238,11 @@ Application.prototype.InstallHandlers = function(element) {
 // -----------------------------------------------------------------------------
 // Layout and content methods.
 
-Application.prototype.GetLayoutTemplate = function() {
+LegacyApplication.prototype.GetLayoutTemplate = function() {
   return this.layoutTemplate_;
 };
 
-Application.prototype.SetLayoutTemplate = function(templateName) {
+LegacyApplication.prototype.SetLayoutTemplate = function(templateName) {
   this.layoutTemplate_ = templateName;
 
   var layout = TemplateFactory.Get(templateName);
@@ -290,7 +290,7 @@ Application.prototype.SetLayoutTemplate = function(templateName) {
   });
 };
 
-Application.prototype.SetContent = function(contentNode) {
+LegacyApplication.prototype.SetContent = function(contentNode) {
   this.InstallHandlers(contentNode);
 
   // TODO(peter): Perhaps have an animation here if I'm bored. Otherwise let's
@@ -315,20 +315,20 @@ Application.prototype.SetContent = function(contentNode) {
   return currentScroll;
 };
 
-Application.prototype.SetContentScroll = function(scroll) {
+LegacyApplication.prototype.SetContentScroll = function(scroll) {
   var container = document.getElementById('content');
   if (container)
     container.scrollTop = scroll;
 };
 
-Application.prototype.SetThemeColor = function(color) {
+LegacyApplication.prototype.SetThemeColor = function(color) {
   this.themeColorElements_.forEach(function(element) {
     if (element)
       element.content = color;
   });
 };
 
-Application.prototype.SetTitle = function(title) {
+LegacyApplication.prototype.SetTitle = function(title) {
   var suffix = this.config_['title'];
 
   // First update the header element if the layout includes one.
@@ -351,7 +351,7 @@ Application.prototype.SetTitle = function(title) {
 
 // Initializes the Service Worker belonging to this application. Having one of
 // these available enables the use of Push Notifications and offline.
-Application.prototype.InitializeServiceWorkerSupport = function() {
+LegacyApplication.prototype.InitializeServiceWorkerSupport = function() {
   return Promise.reject();  // offline support will be added later.
 
   if (!('serviceWorker' in navigator))
@@ -382,14 +382,14 @@ Application.prototype.InitializeServiceWorkerSupport = function() {
 
 // Returns the Service Worker registration promise to use when wanting to work
 // with it. The promise will be resolved/rejected when availability is known.
-Application.prototype.GetServiceWorkerRegistration = function() {
+LegacyApplication.prototype.GetServiceWorkerRegistration = function() {
   return this.service_worker_registration_;
 };
 
 // -----------------------------------------------------------------------------
 // User delegate implementation.
 
-Application.prototype.GetValidUserName = function(name) {
+LegacyApplication.prototype.GetValidUserName = function(name) {
   function sanitizeName(name) {
     return name.toLowerCase()
                .replace(/[\-]/g, ' ')
@@ -411,7 +411,7 @@ Application.prototype.GetValidUserName = function(name) {
   });
 };
 
-Application.prototype.ReadUserInfo = function() {
+LegacyApplication.prototype.ReadUserInfo = function() {
   var value = localStorage['user'];
   if (value)
     return JSON.parse(value);
@@ -419,7 +419,7 @@ Application.prototype.ReadUserInfo = function() {
   return { name: null };
 };
 
-Application.prototype.WriteUserInfo = function(info) {
+LegacyApplication.prototype.WriteUserInfo = function(info) {
   try {
     localStorage['user'] = JSON.stringify(info);
   } catch (e) {
@@ -434,24 +434,24 @@ Application.prototype.WriteUserInfo = function(info) {
 // -----------------------------------------------------------------------------
 // Click event handlers.
 
-Application.prototype.OnToggleHiddenEvents = function(event) {
+LegacyApplication.prototype.OnToggleHiddenEvents = function(event) {
   this.user_.SetShowHiddenEvents(!this.user_.ShowHiddenEvents());
   document.location.reload();
 };
 
-Application.prototype.OnRefresh = function(event) {
+LegacyApplication.prototype.OnRefresh = function(event) {
   document.location.href = '/';
 };
 
-Application.prototype.OnSignOut = function(event) {
+LegacyApplication.prototype.OnSignOut = function(event) {
   this.user_.SignOut();
   this.Navigate('/');
 };
 
 // -----------------------------------------------------------------------------
-// Application state invalidation.
+// LegacyApplication state invalidation.
 
-Application.prototype.IsDocumentHidden = function() {
+LegacyApplication.prototype.IsDocumentHidden = function() {
   if (typeof document.hidden != 'undefined')
     return document.hidden;
 
@@ -461,18 +461,18 @@ Application.prototype.IsDocumentHidden = function() {
   return false;
 };
 
-Application.prototype.OnVisibilityStateChange = function() {
+LegacyApplication.prototype.OnVisibilityStateChange = function() {
   this.OnPeriodicUpdate();
 };
 
-Application.prototype.OnPeriodicUpdate = function() {
+LegacyApplication.prototype.OnPeriodicUpdate = function() {
   var container = this.container_;
   this.handlers_.forEach(function(handler) {
     handler.OnPeriodicUpdate(container);
   });
 
   var schedule_update_diff = Date.now() - this.last_schedule_update_;
-  if (schedule_update_diff >= Application.SCHEDULE_UPDATE_RATE_MS) {
+  if (schedule_update_diff >= LegacyApplication.SCHEDULE_UPDATE_RATE_MS) {
     this.schedule_.then(function(schedule) {
       schedule.CheckForScheduleUpdate();
     });
@@ -488,15 +488,15 @@ Application.prototype.OnPeriodicUpdate = function() {
   if (this.IsDocumentHidden())
     return;
 
-  setTimeout(Application.prototype.OnPeriodicUpdate.bind(this),
-             Application.PERIODIC_UPDATE_RATE_MS);
+  setTimeout(LegacyApplication.prototype.OnPeriodicUpdate.bind(this),
+             LegacyApplication.PERIODIC_UPDATE_RATE_MS);
 };
 
 // Setting to toggle whether past days should be deprioritized on event pages.
 // The ordering doesn't feel completely right, but does ensure that the latest
 // events always appear at the top of the screen, which is must better for
 // devices with smaller screens. Basically a kill-switch.
-Application.prototype.DeprioritizePastDays = function() {
+LegacyApplication.prototype.DeprioritizePastDays = function() {
   return true;
 };
 
@@ -525,7 +525,7 @@ addEventListener('DOMContentLoaded', function() {
   var container = document.querySelector('.container'),
       config = new Config(window.config);
 
-  window.application = new Application(config, container);
+  window.application = new LegacyApplication(config, container);
 
   // Make it possible to log in anonymously for direct links.
   if (document.location.search == '?anonymous') {
