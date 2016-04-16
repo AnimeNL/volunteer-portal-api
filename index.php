@@ -44,6 +44,7 @@ foreach ($templates as $file) {
 }
 ?>
     <script src="/scripts/aggregated.php"></script>
+    <script src="/anime.js"></script>
     <noscript>
       <p>
         Sorry, but you need a browser which supports JavaScript in order to use this site!

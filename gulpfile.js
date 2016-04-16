@@ -8,11 +8,8 @@ var gulp = require('gulp');
 var source = require('vinyl-source-stream');
 
 gulp.task('package', function() {
-    return;  // disabled for now
-
-    return browserify('./scripts/main.js')
+    return browserify('./scripts/application.js')
         .transform(babelify, { presets: ['es2015'] })
         .bundle()
-        .pipe(source('main-compiled.js'))
-        .pipe(gulp.dest('scripts/'));
+        .pipe(gulp.dest('./'));
 });

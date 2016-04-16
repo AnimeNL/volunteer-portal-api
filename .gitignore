@@ -4,6 +4,7 @@ scripts/main-compiled.js
 vendor/
 Thumbs.db
 VERSION
+anime.js
 composer.lock
 npm-debug.log
 sftp-config.json
