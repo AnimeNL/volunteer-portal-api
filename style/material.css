@@ -1,0 +1,370 @@
+/** Headers **/
+
+.material h1 {
+  font-size: 24px;
+  margin: 0px;
+}
+
+div.material-root {
+  margin-top: 8px;
+}
+
+/** Text **/
+
+@font-face {
+  font-family: 'material-icons';
+  src: url(/images/material-icons.woff) format('woff');
+}
+
+.material h2 {
+  font-size: 16px;
+  font-weight: bold;
+  color: #898989;
+  margin: 8px 16px;
+}
+
+.material p {
+  font-size: 16px;
+  margin: 8px 0;
+}
+
+.material p a {
+  text-decoration: none;
+  font-weight: bold;
+  color: inherit;
+}
+
+/** Overlay **/
+
+.material-full-overlay {
+  position: fixed;
+
+  transition: opacity .4s ease-in-out;
+  transform: translateZ(0);
+
+  background-color: rgba(0, 0, 0, 1);
+  opacity: 0;
+
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.material-full-overlay.visible {
+  opacity: .01;
+}
+
+.material-full-overlay.main-menu {
+  opacity: .3;
+}
+
+/** Ripple effect **/
+
+@-webkit-keyframes ripple-animation {
+  from { transform: scale(0.3); opacity: 0.4; }
+  to   { transform: scale(2);   opacity: 0;   }
+}
+
+@-ms-keyframes ripple-animation {
+  from { transform: scale(0.3); opacity: 0.4; }
+  to   { transform: scale(2);   opacity: 0;   }
+}
+
+@keyframes ripple-animation {
+  from { transform: scale(0.3); opacity: 0.4; }
+  to   { transform: scale(2);   opacity: 0;   }
+}
+
+.material-ripple-effect.light { background-color: #aaa; }
+.material-ripple-effect {
+  pointer-events: none;
+  position: absolute;
+
+  border-radius: 50%;
+  background-color: white;
+
+  opacity: 0;
+
+  -webkit-animation: ripple-animation 0.75s;
+  -ms-animation: ripple-animation 0.75s;
+  animation: ripple-animation 0.75s;
+}
+
+/** Menu **/
+
+ul.material-menu.open {
+  z-index: 2;
+  opacity: 1;
+}
+
+ul.material-menu {
+  position: absolute;
+  overflow: hidden;
+
+  display: none;
+
+  padding: 8px 0px;
+  margin: 0px;
+
+  top: 4px;
+  right: 4px;
+
+  border-radius: 0px; /* for performance */
+  opacity: 0;
+  height: 0px;
+
+  transition: opacity 0.4s ease-in-out,
+              height 0.33s ease-in-out;
+}
+
+.material-menu > li:active { background-color: #eee; }
+.material-menu > li {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+
+  transition: background-color .75s ease-in-out;
+
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+
+  list-style: none;
+
+  padding: 0px 16px;
+  margin: 0px;
+
+  min-width: 145px;
+  line-height: 48px;
+}
+
+/** Icons **/
+
+.material-icon {
+  font-family: 'material-icons';
+}
+
+.material-icon-back:before { content: "\e893"; }
+.material-icon-navigation:before { content: "\e8a1"; }
+.material-icon-navigation-vertical:before { content: "\e8a3"; }
+
+[material-main-button-function] { display: none; }
+
+/** Cards **/
+
+.material-card {
+  background-color: white;
+  border-radius: 2px;
+
+  margin: 0 8px;
+  padding: 16px;
+
+  box-sizing: border-box;
+  box-shadow: 0 2px 5px  0 rgba(0, 0, 0, 0.16),
+              0 2px 10px 0 rgba(0, 0, 0, 0.12);
+}
+
+.material-card.pointer { cursor: pointer; }
+
+.material-card h3,
+.material-card footer {
+  margin: -16px;
+  padding: 8px 16px;
+
+  font-weight: normal;
+  font-size: 16px;
+}
+
+.material-card h3 {
+  margin-bottom: 0px;
+  border-bottom: 1px solid #eee;
+}
+
+.material-card footer::before {
+  font-family: 'material-icons';
+  content: "\e897";
+  margin-right: 10px;
+}
+
+.material-card footer {
+  margin-top: 0px;
+  border-top: 1px solid #eee;
+  font-size: .8em;
+  color: #8b8b8b;
+}
+
+.material-card-bottom-spacing {
+  margin-bottom: 16px;
+}
+
+.material-card-root {
+  margin: 0px 8px 16px 8px !important;
+  cursor: default !important;
+}
+
+/** Forms: General layout **/
+
+.material-form {
+  display: flex;
+  align-items: center;
+}
+
+.material-form-stretch {
+  flex: 1;
+}
+
+/** Forms: Input field **/
+
+.material-form-input-text { position: relative; }
+
+.material-form-input-text > input {
+  border: none;
+  border-bottom: 1px solid #9e9e9e;
+  outline: 0;
+
+  box-sizing: border-box;
+  font-size: 16px;
+  height: 48px;
+
+  width: 100%;
+
+  transition: border-bottom .2s ease-in-out,
+              box-shadow .2s ease-in-out;
+}
+
+.material-form-input-text > input.submit {
+  padding-right: 32px;
+}
+
+.material-form-input-text > button[type=submit]:before { content: '\e719'; }
+.material-form-input-text > button[type=submit] {
+  position: absolute;
+
+  background-color: transparent;
+  outline: none;
+  border: none;
+
+  font-family: 'material-icons';
+  font-size: 16px;
+
+  line-height: 48px;
+  padding: 0px 8px;
+
+  right: 0px;
+  top: 0px;
+}
+
+.material-form-input-text > input:focus {
+  border-bottom: 1px solid #26a69a;
+  box-shadow: 0 1px 0 0 #26a69a;
+}
+
+.material-form-input-text > .material-form-error {
+  width: 100%;
+}
+
+/** Forms: Error description **/
+
+.material-form .error input {
+  border-bottom: 1px solid red;
+  box-shadow: 0 1px 0 0 red;
+}
+
+.material-form .material-form-error {
+  font-size: 14px;
+
+  margin: 0px;
+  color: rgba(255, 255, 255, 0);
+  line-height: 0em;
+
+  /* feedback transition */
+  transition: margin-top 0.6s ease-in-out,
+              color 0.6s ease-in-out,
+              line-height 0.6s ease-in-out;
+}
+
+.material-form .error .material-form-error {
+  margin-top: 4px;
+  color: red;
+  line-height: 1.3em;
+}
+
+/** Lists **/
+
+.material-list {
+  background-color: white;
+
+  margin: 0px;
+  padding: 0px;
+}
+
+.material-list-border {
+  margin-bottom: 16px;
+  box-shadow: 0 2px 5px  0 rgba(0, 0, 0, 0.16),
+              0 2px 10px 0 rgba(0, 0, 0, 0.12);
+}
+
+.material-list > li:active { background-color: #eee; }
+
+.material-list-item,
+.material-list > li {
+  transition: background-color .75s ease-in-out;
+  list-style-type: none;
+
+  -webkit-user-select: none;
+  -moz-user-select: none;
+
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+
+  padding: 0 16px;
+  margin: 0px;
+
+  height: 72px;
+}
+
+.material-list > li > span.telephone {
+  display: block;
+  position: absolute;
+  top: 42px;
+  left: 41px;
+
+  background-color: #1976d2;
+  border-radius: 10px;
+  width: 20px;
+  height: 20px;
+
+  font-family: 'material-icons';
+  font-size: .8em;
+  line-height: 22px;
+  text-align: center;
+  color: white;
+}
+
+.material-list-item h2,
+.material-list > li h2 {
+  font-weight: normal;
+  font-size: 16px;
+  color: black;
+
+  margin: 0px;
+}
+
+.material-list-item p,
+.material-list > li p {
+  font-size: 14px;
+  margin: 0px;
+
+  color: #8b8b8b;
+
+  height: 17px;
+  overflow: hidden;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.material-list > li p span {
+  color: black;
+}

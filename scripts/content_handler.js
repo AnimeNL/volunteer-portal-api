@@ -1,0 +1,158 @@
+// Copyright 2015 Peter Beverloo. All rights reserved.
+// Use of this source code is governed by the MIT license, a copy of which can
+// be found in the LICENSE file.
+
+"use strict";
+
+// The content handler provides the ability to directly use JavaScript values
+// in the templates using the "content" attribute.
+//
+// <a content="name">
+//
+//   Replaces the contents of the element with the content handler for "name".
+//
+var ContentHandler = function(application) {
+  this.application_ = application;
+  this.cache_ = {};
+};
+
+ContentHandler.UNDEFINED = '[[undefined]]';
+
+// Initializes and updates the contents of labels that will fade into their new
+// value. This is a less trivial part of Material Design to implement.
+ContentHandler.prototype.UpdateLabel = function(element, value) {
+  // Skip updating the label altogether if the value is undefined.
+  if (value == ContentHandler.UNDEFINED)
+    return;
+
+  var current_value = element.getAttribute('content-label-value');
+
+  // Initialize the label for the first time, building up the DOM tree.
+  if (current_value == null) {
+    var current_value_element = document.createElement('span'),
+        upcoming_value_element = document.createElement('span');
+
+    current_value_element.className = 'current';
+    current_value_element.textContent = value;
+
+    upcoming_value_element.className = 'upcoming';
+    upcoming_value_element.addEventListener('transitionend',
+        ContentHandler.prototype.OnLabelTransitionEnd.bind(this, element),
+        false);
+
+    element.appendChild(current_value_element);
+    element.appendChild(upcoming_value_element);
+
+    element.setAttribute('content-label-value', value);
+    return;
+  }
+
+  // If the value hasn't changed, don't bother updating the label.
+  if (current_value == value)
+    return;
+
+  // Update the upcoming value to read |value|.
+  element.querySelector('.upcoming').textContent = value;
+
+  element.setAttribute('content-label-value', value);
+  element.classList.add('update');
+};
+
+// Called when the transition on menu labels has finished.
+ContentHandler.prototype.OnLabelTransitionEnd = function(element, event) {
+  var current_value_element = element.querySelector('.current'),
+      upcoming_value_element = element.querySelector('.upcoming');
+
+  if (upcoming_value_element.textContent == '')
+    return;  // the value has already been updated.
+
+  // Swap the current and upcoming values around to prevent reverse animation.
+  current_value_element.className = 'upcoming';
+  current_value_element.textContent = '';
+
+  upcoming_value_element.className = 'current';
+
+  // And return to the stable state.
+  element.classList.remove('update');
+};
+
+// Updates |element| with the value of the variable named |variable|.
+ContentHandler.prototype.UpdateElement =
+    function(element, attribute, label, variable) {
+  var value = ContentHandler.UNDEFINED;
+
+  if (this.cache_.hasOwnProperty(variable)) {
+    value = this.cache_[variable];
+  } else if (variable == 'build-type') {
+    value = MockPageLoadDate() ? 'debug' : 'prod';
+  } else if (variable == 'display-events-toggle') {
+    value = this.application_.GetUser().ShowHiddenEvents() ?
+        'Hide hidden events' : 'Show hidden events';
+  } else if (variable == 'event-name') {
+    value = this.application_.GetConfig().title;
+  } else if (variable == 'time') {
+    value = GetCurrentDate().toString();
+  } else if (variable == 'username') {
+    value = this.application_.GetUser().GetName();
+  } else {
+    var page = this.application_.GetPage();
+     if (page)
+        value = page.ResolveVariable(variable);
+  }
+
+  if (label)
+    this.UpdateLabel(element, value);
+  else if (attribute)
+    element.setAttribute(attribute, value);
+  else
+    element.textContent = value;
+};
+
+// Updates all elements in |element| having a content attribute with the latest
+// value of the set variable.
+ContentHandler.prototype.UpdateTree = function(rootElement) {
+  var elements = rootElement.querySelectorAll('[content]');
+  for (var index = 0; index < elements.length; ++index) {
+    var element = elements[index],
+        variable = elements[index].getAttribute('content'),
+        attribute = elements[index].getAttribute('content-attribute'),
+        label = elements[index].getAttribute('content-label') != null;
+
+    this.UpdateElement(element, attribute, label, variable);
+  }
+};
+
+// Called when an element has been added to the DOM.
+ContentHandler.prototype.OnRender =
+    ContentHandler.prototype.UpdateTree;
+
+// Called when a periodic update (a few times per minute) is set to happen. The
+// periodic update will refresh the caches prior to updating the tree.
+ContentHandler.prototype.OnPeriodicUpdate = function(rootElement) {
+  var include_hidden = this.application_.GetUser().ShowHiddenEvents(),
+      self = this;
+
+  this.application_.GetSchedule().then(function(schedule) {
+    var events = schedule.GetCurrentEvents(include_hidden);
+
+    // Create labels for activity on each of the floors. These indicate how
+    // many active events there are, and how many stewards are active there.
+    self.cache_ = {
+      'label-oceans':     self.CreateMenuLabel(events['-1']),
+      'label-continents': self.CreateMenuLabel(events[0]),
+      'label-rivers':     self.CreateMenuLabel(events[1]),
+      'label-mountains':  self.CreateMenuLabel(events[2])
+    };
+
+    // Update the tree now that the caches have been reset.
+    self.UpdateTree(rootElement);
+  });
+};
+
+ContentHandler.prototype.CreateMenuLabel = function(events) {
+  if (!events.length)
+    return '';
+
+  // TODO(peter): Display the steward count on this floor if it makes sense?
+  return events.length;
+};
