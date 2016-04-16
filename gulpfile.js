@@ -12,7 +12,7 @@ var source = require('vinyl-source-stream');
 // Packages the JavaScript code after running it through Babel in order to be able to use ES2015.
 gulp.task('package', function() {
     return browserify('./scripts/application.js')
-        .transform(babelify, { presets: ['es2015'] })
+        .transform(babelify, { presets: ['es2015'], plugins: ['transform-async-to-generator'] })
         .bundle()
         .pipe(source('anime.js'))
         .pipe(gulp.dest('./'));
