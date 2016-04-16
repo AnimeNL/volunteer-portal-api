@@ -4,21 +4,10 @@
 
 "use strict";
 
-var LegacyUser = function(schedule) {
+var LegacyUser = function(user, schedule) {
+  this.user_ = user;
   this.schedule_ = schedule;
-
-  // TODO: Stop reading the user's information before they're logged in.
-  this.user_ = {
-    name: null,
-    isIdentified: function() { return false },
-    getOption: function(name, defaultValue) { return defaultValue; },
-    setOption: function() { throw new Error('The User object is not available yet.'); },
-    identify: function() { throw new Error('The User object is not available yet.'); },
-    signOut: function() { throw new Error('The User object is not available yet.'); }
-  };
 };
-
-LegacyUser.prototype.SetModernUser = function(user) { this.user_ = user; };
 
 LegacyUser.prototype.GetName = function() { return this.user_.name; };
 LegacyUser.prototype.IsIdentified = function() { return this.user_.isIdentified(); };

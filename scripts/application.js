@@ -11,6 +11,7 @@ class Application {
         console.log('Hallo!');
     }
 
+    // Returns the User object representing the local user.
     get user() { return this.user_; }
 }
 

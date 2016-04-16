@@ -40,31 +40,6 @@ var LegacyApplication = function(config, container, callback) {
   // offline support and incoming events (push messages).
   this.service_worker_registration_ = this.InitializeServiceWorkerSupport();
 
-  // The schedule contains the stewards, events, times and everything else
-  // required in order to know who goes where and when.
-  this.schedule_ = new Promise(function(resolve) {
-    var request = new XMLHttpRequest(),
-        schedule = new Schedule(),
-        initialized = false;
-
-    if (schedule.InitializeFromCache()) {
-      initialized = true;
-      resolve(schedule);
-    }
-
-    request.open('get', '/schedule.json', true);
-    request.addEventListener('load', function() {
-      schedule.Initialize(JSON.parse(request.responseText), true /* update_cache */);
-      if (!initialized)
-        resolve(schedule);
-    });
-
-    request.send();
-  });
-
-  // Object representing the user who is currently logged in to the application.
-  this.user_ = new LegacyUser(this.schedule_);
-
   // Listen to visibilitystate change events in the browser.
   ['visibilitychange', 'msvisibilitychange'].forEach(function(eventName) {
     document.addEventListener(eventName,
@@ -76,18 +51,40 @@ var LegacyApplication = function(config, container, callback) {
   window.addEventListener('popstate',
       LegacyApplication.prototype.OnBrowserNavigate.bind(this));
 
-  // Trigger the first periodic update, which will automatically trigger further
-  // updates depending visibility of the screen.
-  this.OnPeriodicUpdate();
+  // The schedule contains the stewards, events, times and everything else
+  // required in order to know who goes where and when.
+  this.schedule_ = window.application.user.ready.then(function(user) {
+    this.user_ = new LegacyUser(user, this.schedule_);
 
-  // ---------------------------------------------------------------------------
-  // Emulate the old behaviour using new implementations.
+    return new Promise(function(resolve) {
+      var request = new XMLHttpRequest(),
+          schedule = new Schedule(),
+          initialized = false;
 
-  window.application.user.ready.then(function(user) {
-    this.user_.SetModernUser(user);
+      if (schedule.InitializeFromCache()) {
+        initialized = true;
+        resolve(schedule);
+      }
+
+      request.open('get', '/schedule.json', true);
+      request.addEventListener('load', function() {
+        schedule.Initialize(JSON.parse(request.responseText), true /* update_cache */);
+        if (!initialized)
+          resolve(schedule);
+      });
+
+      request.send();
+    });
+
+  }.bind(this)).then(function(schedule) {
+    // Trigger the first periodic update, which will automatically trigger further
+    // updates depending visibility of the screen.
+    this.OnPeriodicUpdate();
 
     // Execute the rest of the initialization now that this has completed.
     callback();
+
+    return schedule;
 
   }.bind(this));
 };
@@ -410,8 +407,10 @@ LegacyApplication.prototype.OnRefresh = function(event) {
 };
 
 LegacyApplication.prototype.OnSignOut = function(event) {
-  this.user_.SignOut();
-  this.Navigate('/');
+  this.user_.SignOut().then(function() {
+    this.Navigate('/');
+
+  }.bind(this));
 };
 
 // -----------------------------------------------------------------------------
