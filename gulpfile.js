@@ -4,7 +4,9 @@
 
 var babelify = require('babelify');
 var browserify = require('browserify');
+var fs = require('fs');
 var gulp = require('gulp');
+var sftp = require('gulp-sftp');
 var source = require('vinyl-source-stream');
 
 gulp.task('package', function() {
@@ -13,4 +15,30 @@ gulp.task('package', function() {
         .bundle()
         .pipe(source('anime.js'))
         .pipe(gulp.dest('./'));
+});
+
+// Deploys the packaged files to the server. Requires Sublime SFTP to be set up in the project.
+gulp.task('deploy', ['package'], function() {
+    var sublimeConfig = fs.readFileSync('sftp-config.json').toString();
+
+    // The Sublime SFTP configuration file allows comments in its JSON. Remove it, and convert it
+    // to a JavaScript object to be consumed by the SFTP option.
+    sublimeConfig = sublimeConfig.replace(/\/\*[\s\S]*?\*\/|([^:]|^)\/\/.*$/gm, '$1');
+    sublimeConfig = JSON.parse(sublimeConfig);
+
+    var deployOptions = {
+        host: sublimeConfig.host,
+        port: sublimeConfig.port,
+        user: sublimeConfig.user,
+        remotePath: sublimeConfig.remote_path,
+
+        agent: 'pageant',
+        key: sublimeConfig.ssh_key_file
+    };
+
+    var deployFiles = [
+        './anime.js'
+    ];
+
+    return gulp.src(deployFiles).pipe(sftp(deployOptions));
 });
