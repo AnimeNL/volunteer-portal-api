@@ -4,51 +4,27 @@
 
 "use strict";
 
-// The LegacyUser class encapsulates knowledge about the person who is currently
-// logged in to the Steward Portal. The constructor must receive a delegate
-// object which supports the following methods:
-//
-// GetValidLegacyUserName - Should return a promise resolving the proper capitalized
-//                    name when it's valid, or resolving to null when the name
-//                    is not valid.
-//
-// ReadLegacyUserInfo     - Reads the information about the current user and returns
-//                    it as an object with the {name} key.
-//
-// WriteLegacyUserInfo    - Writes the information about the current user. Receives a
-//                    single argument: an object with the {name} key.
-//
-var LegacyUser = function(delegate) {
-  if (!Object.getPrototypeOf(delegate).hasOwnProperty('ReadUserInfo') ||
-      !Object.getPrototypeOf(delegate).hasOwnProperty('WriteUserInfo') ||
-      !Object.getPrototypeOf(delegate).hasOwnProperty('GetValidUserName')) {
-    throw new Error('Invalid delegate supplied to the LegacyUser class.');
-  }
+var LegacyUser = function(schedule) {
+  this.schedule_ = schedule;
 
-  this.delegate_ = delegate;
-  this.userInfo_ = delegate.ReadUserInfo() || {
+  // TODO: Stop reading the user's information before they're logged in.
+  this.user_ = {
     name: null,
-    hidden_events: false
+    isIdentified: function() { return false },
+    getOption: function(name, defaultValue) { return defaultValue; },
+    setOption: function() { throw new Error('The User object is not available yet.'); },
+    identify: function() { throw new Error('The User object is not available yet.'); },
+    signOut: function() { throw new Error('The User object is not available yet.'); }
   };
 };
 
-// Returns the name of the user who is identified in the current browser.
-LegacyUser.prototype.GetName = function() {
-  return this.userInfo_.name;
-};
+LegacyUser.prototype.SetModernUser = function(user) { this.user_ = user; };
 
-// Whether hidden events should be shown for this user.
-LegacyUser.prototype.ShowHiddenEvents = function() {
-  return 'hidden_events' in this.userInfo_ ?
-             this.userInfo_['hidden_events'] :
-             false;
-}
+LegacyUser.prototype.GetName = function() { return this.user_.name; };
+LegacyUser.prototype.IsIdentified = function() { return this.user_.isIdentified(); };
 
-// Updates whether hidden events should be shown for the user.
-LegacyUser.prototype.SetShowHiddenEvents = function(show) {
-  this.userInfo_['hidden_events'] = !!show;
-  this.delegate_.WriteUserInfo(this.userInfo_);
-};
+LegacyUser.prototype.ShowHiddenEvents = function() { return this.user_.getOption('hidden_events', false); };
+LegacyUser.prototype.SetShowHiddenEvents = function(show) { this.user_.setOption('hidden_events', show); };
 
 // Returns a promise that will be resolved when the Steward object associated
 // with this user has been located in the schedule.
@@ -57,7 +33,7 @@ LegacyUser.prototype.FindSteward = function() {
   if (myName == null)
     return Promise.resolve(null);
 
-  return this.delegate_.GetSchedule().then(function(schedule) {
+  return this.schedule_.then(function(schedule) {
     var foundSteward = null;
     schedule.GetStewards().forEach(function(steward) {
       if (steward.GetName() == myName)
@@ -68,34 +44,6 @@ LegacyUser.prototype.FindSteward = function() {
   });
 };
 
-// Returns if the visitor has previously identified as a valid user.
-LegacyUser.prototype.IsIdentified = function() {
-  return this.GetName() != null;
-};
-
-// Attempts to log in as |name|. Return a promise that will be resolved when
 // it's known whether the login attempt was successful.
-LegacyUser.prototype.AttemptLogin = function(name) {
-  var self = this;
-  return self.delegate_.GetValidUserName(name).then(function(validName) {
-    if (validName == null)
-      return false;  // the username was not known for the event.
-
-    self.userInfo_ = {
-      name: validName,
-      hidden_events: false
-    };
-
-    self.delegate_.WriteUserInfo(self.userInfo_);
-    return true;
-  });
-};
-
-// Immediately signs the user out of their current session.
-LegacyUser.prototype.SignOut = function() {
-  this.userInfo_ = {
-    name: null
-  };
-
-  this.delegate_.WriteUserInfo(this.userInfo_);
-};
+LegacyUser.prototype.AttemptLogin = function(name) { return this.user_.identify(name); };
+LegacyUser.prototype.SignOut = function() { return this.user_.signOut(); };

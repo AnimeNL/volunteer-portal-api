@@ -20,17 +20,16 @@ LoginPage.prototype.OnRender = function(application, container, content) {
   }
 
   var formElement = container.querySelector('#login-form'),
-      nameElement = container.querySelector('#login-name');
+      nameElement = container.querySelector('#login-name'),
+      errorElement = container.querySelector('#login-error');
 
   formElement.addEventListener('submit', function(event) {
     event.preventDefault();
 
-    user.AttemptLogin(nameElement.value).then(function(success) {
-      // Navigate to the main page if the login attempt was successful.
-      if (success) {
-        application.Navigate('/');
-        return;
-      }
+    user.AttemptLogin(nameElement.value).then(function() {
+      application.Navigate('/');
+    }, function(error) {
+      errorElement.textContent = error.message;
 
       nameElement.parentElement.classList.add('error');
       var changeEvent = function() {
@@ -39,7 +38,6 @@ LoginPage.prototype.OnRender = function(application, container, content) {
       };
 
       nameElement.addEventListener('keydown', changeEvent);
-
     });
 
     return false;

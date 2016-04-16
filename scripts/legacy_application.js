@@ -4,7 +4,7 @@
 
 "use strict";
 
-var LegacyApplication = function(config, container) {
+var LegacyApplication = function(config, container, callback) {
   this.config_ = config;
   this.container_ = container;
 
@@ -40,9 +40,6 @@ var LegacyApplication = function(config, container) {
   // offline support and incoming events (push messages).
   this.service_worker_registration_ = this.InitializeServiceWorkerSupport();
 
-  // Object representing the user who is currently logged in to the application.
-  this.user_ = new LegacyUser(this);
-
   // The schedule contains the stewards, events, times and everything else
   // required in order to know who goes where and when.
   this.schedule_ = new Promise(function(resolve) {
@@ -65,6 +62,9 @@ var LegacyApplication = function(config, container) {
     request.send();
   });
 
+  // Object representing the user who is currently logged in to the application.
+  this.user_ = new LegacyUser(this.schedule_);
+
   // Listen to visibilitystate change events in the browser.
   ['visibilitychange', 'msvisibilitychange'].forEach(function(eventName) {
     document.addEventListener(eventName,
@@ -79,6 +79,17 @@ var LegacyApplication = function(config, container) {
   // Trigger the first periodic update, which will automatically trigger further
   // updates depending visibility of the screen.
   this.OnPeriodicUpdate();
+
+  // ---------------------------------------------------------------------------
+  // Emulate the old behaviour using new implementations.
+
+  window.application.user.ready.then(function(user) {
+    this.user_.SetModernUser(user);
+
+    // Execute the rest of the initialization now that this has completed.
+    callback();
+
+  }.bind(this));
 };
 
 // -----------------------------------------------------------------------------
@@ -387,51 +398,6 @@ LegacyApplication.prototype.GetServiceWorkerRegistration = function() {
 };
 
 // -----------------------------------------------------------------------------
-// User delegate implementation.
-
-LegacyApplication.prototype.GetValidUserName = function(name) {
-  function sanitizeName(name) {
-    return name.toLowerCase()
-               .replace(/[\-]/g, ' ')
-               .replace(/[èéêë]/g, 'e')
-               .replace(/[ùúûü]/g, 'u');
-  }
-
-  return this.schedule_.then(function(schedule) {
-    var sanitizedName = sanitizeName(name),
-        foundName = null;
-
-    schedule.GetStewards().forEach(function(steward) {
-      var stewardName = steward.GetName();
-      if (sanitizedName == sanitizeName(stewardName))
-        foundName = stewardName;
-    });
-
-    return foundName;
-  });
-};
-
-LegacyApplication.prototype.ReadUserInfo = function() {
-  var value = localStorage['user'];
-  if (value)
-    return JSON.parse(value);
-
-  return { name: null };
-};
-
-LegacyApplication.prototype.WriteUserInfo = function(info) {
-  try {
-    localStorage['user'] = JSON.stringify(info);
-  } catch (e) {
-    if (e.name == 'QuotaExceededError')
-      alert('Please note that stewards.club will not be able to remember your ' +
-            'name in Safari\'s private mode.');
-    else
-      alert('Something went terribly wrong: ' + e.message);
-  }
-};
-
-// -----------------------------------------------------------------------------
 // Click event handlers.
 
 LegacyApplication.prototype.OnToggleHiddenEvents = function(event) {
@@ -525,19 +491,19 @@ addEventListener('DOMContentLoaded', function() {
   var container = document.querySelector('.container'),
       config = new Config(window.config);
 
-  window.legacyApplication = new LegacyApplication(config, container);
+  window.legacyApplication = new LegacyApplication(config, container, function() {
+    // Make it possible to log in anonymously for direct links.
+    if (document.location.search == '?anonymous') {
+      window.legacyApplication.GetUser().AttemptLogin('Peter Beverloo').then(function() {
+        document.location.reload();
+      });
+    }
 
-  // Make it possible to log in anonymously for direct links.
-  if (document.location.search == '?anonymous') {
-    window.legacyApplication.GetUser().AttemptLogin('Peter Beverloo').then(function() {
-      document.location.reload();
-    });
-  }
-
-  window.legacyApplication.Navigate(location.pathname, true /* ignoreNavigation */)
-      .then(function() {
-    requestAnimationFrame(function() {
-      container.classList.add('visible');
+    window.legacyApplication.Navigate(location.pathname, true /* ignoreNavigation */)
+        .then(function() {
+      requestAnimationFrame(function() {
+        container.classList.add('visible');
+      });
     });
   });
 
