@@ -7,6 +7,8 @@
 class User {
     constructor() {
         this.name_ = null;
+        this.token_ = null;
+
         this.options_ = {};
 
         this.readyPromise_ = this.load();
@@ -20,6 +22,9 @@ class User {
 
     // Gets the full, validated name of this user, or null when unavailable.
     get name() { return this.name_; }
+
+    // Gets the security token of this user, or null when unavailable.
+    get token() { return this.token_; }
 
     // Gets the value of |option|, or |defaultValue| when the option has not been previously set.
     getOption(option, defaultValue = null) {
@@ -39,10 +44,34 @@ class User {
     // Will attempt to identify for a volunteer named |name|. Returns a Promise that will be
     // resolved with the logged in user when successful, or rejected with the error when it fails.
     identify(name) {
+        const endpoint = '/anime/identify.php';
+
         return new Promise((resolve, reject) => {
-            // TODO: Implement identification.
-            // Note: Previous error was "Your name has not been recognized."
-            reject(new Error('Identification has not yet been implemented.'));
+            const request = new XMLHttpRequest();
+            request.addEventListener('load', () => {
+                try {
+                    const response = JSON.parse(request.responseText);
+                    if (response.hasOwnProperty('error') && typeof response.error === 'string')
+                        return reject(new Error(response.error));
+
+                    if (response.hasOwnProperty('name') && typeof response.name === 'string' &&
+                        response.hasOwnProperty('token') && typeof response.token === 'string') {
+                        this.name_ = response.name;
+                        this.token_ = response.token;
+                        return resolve(this.store());
+                    }
+                } catch (e) {
+                    return reject(new Error('Server error: ' + e.message));
+                }
+
+                reject(new Error('Invalid response received from the server.'));
+            });
+
+            request.addEventListener('error', () =>
+                reject(new Error('Unable to connect to the server.')));
+
+            request.open('POST', endpoint, true);
+            request.send(name);
         });
     }
 
@@ -50,6 +79,8 @@ class User {
     // Promise that will be resolved with the guest-containing User instance when completed.
     signOut() {
         this.name_ = null;
+        this.token_ = null;
+
         this.options_ = {};
 
         return this.store();
@@ -71,8 +102,10 @@ class User {
             try {
                 userInfo = JSON.parse(serializedInfo);
                 if (userInfo.hasOwnProperty('name') && typeof userInfo.name === 'string' &&
+                    userInfo.hasOwnProperty('token') && typeof userInfo.token === 'string' &&
                     userInfo.hasOwnProperty('options') && typeof userInfo.options === 'object') {
                     return resolve({ name: userInfo.name,
+                                     token: userInfo.token,
                                      options: userInfo.options });
                 }
 
@@ -82,10 +115,8 @@ class User {
             resolve(null);
 
         }).then(user => {
-            if (user === null)
-                this.name_ = null;
-            else
-                this.name_ = user.name;
+            if (!user)
+                return this.signOut();
 
             return this;
         });
@@ -102,6 +133,7 @@ class User {
 
             localStorage['userInfo'] = {
                 name: this.name_,
+                token: this.token_,
                 options: this.options_
             };
 
