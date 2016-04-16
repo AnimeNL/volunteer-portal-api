@@ -41,7 +41,7 @@ var LegacyApplication = function(config, container) {
   this.service_worker_registration_ = this.InitializeServiceWorkerSupport();
 
   // Object representing the user who is currently logged in to the application.
-  this.user_ = new User(this);
+  this.user_ = new LegacyUser(this);
 
   // The schedule contains the stewards, events, times and everything else
   // required in order to know who goes where and when.
