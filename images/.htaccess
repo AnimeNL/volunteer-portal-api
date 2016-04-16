@@ -1,0 +1,6 @@
+<FilesMatch "\.(png|jpg|woff|svg)$">
+  Header set Cache-Control "max-age=31536050"
+  Header set Access-Control-Allow-Origin "*"
+</FilesMatch>
+
+AddType application/font-woff woff
