@@ -9,7 +9,6 @@ $scripts = [
   'event_location.js',
   'event_update_handler.js',
   'legacy_application.js',
-  'legacy_user.js',
   'link_handler.js',
   'menu_handler.js',
   'page.js',
