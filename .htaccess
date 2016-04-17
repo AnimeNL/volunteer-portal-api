@@ -33,6 +33,9 @@ RewriteRule ^manifest.json$ /manifest.php [L]
 # Compile the JavaScript on the server when running in debug mode.
 RewriteRule ^scripts/main-dev.js$ /scripts/main-dev.php [L]
 
+# URLs used by the client-side application.
+RewriteRule ^(events|floors|stewards)/ / [L]
+
 # Vanity URLs for the tools hosted on these domains.
 RewriteRule ^hallo$ /hallo/ [R=301]
 RewriteRule ^hallo/?(.*) /tools/registration/$1 [L]
