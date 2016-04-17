@@ -128,7 +128,7 @@ EventPage.prototype.BuildStewardRow = function(steward, beginDate, endDate, curr
                     DateToDisplayTime(endDate) + '.';
 
   if (steward.IsSenior()) {
-    whenPrefix.textContent = steward.GetTitle().split(' ')[0];
+    whenPrefix.textContent = steward.getStatusLine().split(' ')[0];
     whenContent = ' - ' + whenContent;
   }
 

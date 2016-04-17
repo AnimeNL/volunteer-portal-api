@@ -84,7 +84,7 @@ FloorPage.prototype.BuildRoomCard = function(location) {
   eventList.className = 'material-list list-room-event';
 
   var upcomingEvents = location.GetUpcomingEvents(
-      FloorPage.EVENT_COUNT, this.application_.GetUser().ShowHiddenEvents());
+      FloorPage.EVENT_COUNT, this.application_.GetUser().getOption('hidden_events', false));
 
   upcomingEvents.forEach(function(event) {
     eventList.appendChild(self.BuildEventRow(event));
@@ -123,7 +123,7 @@ FloorPage.prototype.OnRender = function(application, container, content) {
       locations = this.schedule_.GetLocations(),
       self = this;
 
-  var include_hidden = application.GetUser().ShowHiddenEvents(),
+  var include_hidden = application.GetUser().getOption('hidden_events', false),
       rendered_locations = [];
 
   locations.forEach(function(location) {

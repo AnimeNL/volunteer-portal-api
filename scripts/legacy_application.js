@@ -54,7 +54,7 @@ var LegacyApplication = function(config, container, callback) {
   // The schedule contains the stewards, events, times and everything else
   // required in order to know who goes where and when.
   this.schedule_ = window.application.ready.then(function(application) {
-    this.user_ = new LegacyUser(application.user, this.schedule_);
+    this.user_ = application.user;
   
     // Trigger the first periodic update, which will automatically trigger further
     // updates depending visibility of the screen.
@@ -108,7 +108,7 @@ LegacyApplication.prototype.GetUser = function() {
 // page will be forced upon them. Returns a promise that resolves when the
 // navigation has completed, and the content has been included in the DOM tree.
 LegacyApplication.prototype.Navigate = function(path, ignoreNavigation) {
-  if (!this.user_.IsIdentified())
+  if (!this.user_.isIdentified())
     return this.NavigateToPage(LoginPage);
 
   path = path || this.path_;
@@ -190,11 +190,15 @@ LegacyApplication.prototype.NavigateToPage = function(classObject, parameters) {
 LegacyApplication.prototype.OnDisplayMySchedule = function(event) {
   var self = this;
 
-  this.user_.FindSteward().then(function(steward) {
-    if (!steward)
+  // TODO: This should handle cases where the current user is a view-only one.
+
+  this.schedule_.then(schedule => {
+    var volunteer = schedule.GetSteward(this.user_.name);
+
+    if (!volunteer)
       self.Navigate('/');
     else
-      self.Navigate('/stewards/' + steward.slug + '/me/');
+      self.Navigate('/stewards/' + volunteer.slug + '/me/');
   });
 };
 
@@ -377,7 +381,7 @@ LegacyApplication.prototype.GetServiceWorkerRegistration = function() {
 // Click event handlers.
 
 LegacyApplication.prototype.OnToggleHiddenEvents = function(event) {
-  this.user_.SetShowHiddenEvents(!this.user_.ShowHiddenEvents());
+  this.user_.setOption('hidden_events', !this.user_.getOption('hidden_events', false));
   document.location.reload();
 };
 
@@ -470,13 +474,6 @@ addEventListener('DOMContentLoaded', function() {
       config = new Config(window.config);
 
   window.legacyApplication = new LegacyApplication(config, container, function() {
-    // Make it possible to log in anonymously for direct links.
-    if (document.location.search == '?anonymous') {
-      window.legacyApplication.GetUser().AttemptLogin('Peter Beverloo').then(function() {
-        document.location.reload();
-      });
-    }
-
     window.legacyApplication.Navigate(location.pathname, true /* ignoreNavigation */)
         .then(function() {
       requestAnimationFrame(function() {

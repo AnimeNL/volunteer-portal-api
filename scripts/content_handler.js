@@ -86,14 +86,14 @@ ContentHandler.prototype.UpdateElement =
   } else if (variable == 'build-type') {
     value = MockPageLoadDate() ? 'debug' : 'prod';
   } else if (variable == 'display-events-toggle') {
-    value = this.application_.GetUser().ShowHiddenEvents() ?
+    value = this.application_.GetUser().getOption('hidden_events', false) ?
         'Hide hidden events' : 'Show hidden events';
   } else if (variable == 'event-name') {
     value = this.application_.GetConfig().title;
   } else if (variable == 'time') {
     value = GetCurrentDate().toString();
   } else if (variable == 'username') {
-    value = this.application_.GetUser().GetName();
+    value = this.application_.GetUser().name;
   } else {
     var page = this.application_.GetPage();
      if (page)
@@ -129,7 +129,7 @@ ContentHandler.prototype.OnRender =
 // Called when a periodic update (a few times per minute) is set to happen. The
 // periodic update will refresh the caches prior to updating the tree.
 ContentHandler.prototype.OnPeriodicUpdate = function(rootElement) {
-  var include_hidden = this.application_.GetUser().ShowHiddenEvents(),
+  var include_hidden = this.application_.GetUser().getOption('hidden_events', false),
       self = this;
 
   this.application_.GetSchedule().then(function(schedule) {

@@ -14,8 +14,8 @@ LoginPage.prototype = Object.create(Page.prototype);
 // to submit the full name to the user system.
 LoginPage.prototype.OnRender = function(application, container, content) {
   var user = application.GetUser();
-  if (user.IsIdentified()) {
-    console.error('The user has already identified as: ' + user.GetName());
+  if (user.isIdentified()) {
+    console.error('The user has already identified as: ' + user.name);
     return;
   }
 
@@ -26,7 +26,7 @@ LoginPage.prototype.OnRender = function(application, container, content) {
   formElement.addEventListener('submit', function(event) {
     event.preventDefault();
 
-    user.AttemptLogin(nameElement.value).then(function() {
+    user.identify(nameElement.value).then(function() {
       application.Navigate('/');
     }, function(error) {
       errorElement.textContent = error.message;

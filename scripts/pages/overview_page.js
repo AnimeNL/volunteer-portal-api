@@ -41,7 +41,7 @@ OverviewPage.prototype.FormatOtherStewards =
         shift.end.getTime() <= session_time)
       return;
 
-    if (shift.steward.name == this.application_.GetUser().GetName())
+    if (shift.steward.name == this.application_.GetUser().name)
       return;
 
     stewards.push(shift.steward);
@@ -131,7 +131,7 @@ OverviewPage.prototype.OnRender = function(application, container, content) {
   var current_shift_element = content.querySelector('#current_shift'),
       upcoming_shift_element = content.querySelector('#upcoming_shift'),
       shift_count = content.querySelector('#shift_count'),
-      steward = this.schedule_.GetSteward(application.GetUser().GetName());
+      steward = this.schedule_.GetSteward(application.GetUser().name);
 
   // Update the total number of shifts in the introductionary text.
   if (shift_count)

@@ -90,11 +90,19 @@ class Volunteer {
     // Returns whether this volunteer is a staff member of the group.
     isStaff() { return this.staff_; }
 
+    // Returns the current status line of this vlunteer. This could be their level, current schedule
+    // or current availability.
+    getStatusLine() {
+        if (this.staff_)
+            return 'Staff';
+        else if (this.senior_)
+            return 'Senior Steward';  // TODO: Suffix with their role.
+        else
+            return 'Steward';  // TODO: Use their role instead.
+    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // TODO: These methods exist whilst I transition the existing schedule implementation.
-
-    GetTitle() { return 'Remove this.'; }
 
     GetShifts() { return []; }
 
