@@ -15,11 +15,7 @@ $scripts = [
   'page.js',
   'polyfill.js',
   'ripple_handler.js',
-  'schedule.js',
-  'schedule_entry.js',
   'schedule_page.js',
-  'single_event.js',
-  'steward.js',
   'template_factory.js',
 ];
 

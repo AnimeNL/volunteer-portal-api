@@ -55,28 +55,7 @@ var LegacyApplication = function(config, container, callback) {
   // required in order to know who goes where and when.
   this.schedule_ = window.application.ready.then(function(application) {
     this.user_ = new LegacyUser(application.user, this.schedule_);
-
-    return new Promise(function(resolve) {
-      var request = new XMLHttpRequest(),
-          schedule = new Schedule(),
-          initialized = false;
-
-      if (schedule.InitializeFromCache()) {
-        initialized = true;
-        resolve(schedule);
-      }
-
-      request.open('get', '/schedule.json', true);
-      request.addEventListener('load', function() {
-        schedule.Initialize(JSON.parse(request.responseText), true /* update_cache */);
-        if (!initialized)
-          resolve(schedule);
-      });
-
-      request.send();
-    });
-
-  }.bind(this)).then(function(schedule) {
+  
     // Trigger the first periodic update, which will automatically trigger further
     // updates depending visibility of the screen.
     this.OnPeriodicUpdate();
@@ -84,7 +63,7 @@ var LegacyApplication = function(config, container, callback) {
     // Execute the rest of the initialization now that this has completed.
     callback();
 
-    return schedule;
+    return application.convention;
 
   }.bind(this));
 };
