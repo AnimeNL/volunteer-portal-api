@@ -2,11 +2,15 @@
 // Use of this source code is governed by the MIT license, a copy of which can
 // be found in the LICENSE file.
 
+const Utils = require('./utils');
+
 // Represents one of the locations in which events will take place during the convention. It has an
 // associated name and floor, and provides convenience methods for the events taking place in it.
 class ConventionLocation {
     constructor(name, floor) {
         this.name_ = name;
+        this.slug_ = Utils.createSlug(name);
+
         this.floor_ = floor;
 
         this.events_ = [];
@@ -14,6 +18,9 @@ class ConventionLocation {
 
     // Gets the name of this location.
     get name() { return this.name_; }
+
+    // Gets the slug of this location that is safe to use in a URL.
+    get slug() { return this.slug_; }
 
     // Gets the floor on which this location is situated.
     get floor() { return this.floor_; }
@@ -39,9 +46,9 @@ class ConventionLocation {
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // TODO: These methods exist whilst I transition the existing schedule implementation.
 
-    GetUpcomingEvents() { return []; }
+    GetEvents() { return []; }
 
-    GetSlug() { return ''; }
+    GetUpcomingEvents() { return []; }
 }
 
 module.exports = ConventionLocation;

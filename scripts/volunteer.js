@@ -2,28 +2,7 @@
 // Use of this source code is governed by the MIT license, a copy of which can
 // be found in the LICENSE file.
 
-// Creates a slug out of |name|. Correctly handles a series of accents that were silently dropped
-// in the previous version of the volunteer portal.
-function createSlug(name) {
-    const replacements = { 'à': 'a', 'á': 'a', 'â': 'a', 'ã': 'a', 'ä': 'a', 'å': 'a', 'ò': 'o',
-                           'ó': 'o', 'ô': 'o', 'õ': 'o', 'ö': 'o', 'ø': 'o', 'è': 'e', 'é': 'e',
-                           'ê': 'e', 'ë': 'e', 'ð': 'o', 'ç': 'c', 'ì': 'i', 'í': 'i', 'î': 'i',
-                           'ï': 'i', 'ù': 'u', 'ú': 'u', 'û': 'u', 'ü': 'u', 'ñ': 'u', 'š': 's',
-                           'ÿ': 'y', 'ý': 'y' };
-
-    let slug = '';
-    for (let i = 0; i < name.length; ++i) {
-        const character = name[i].toLowerCase();
-
-        if (replacements.hasOwnProperty(character))
-            slug += replacements[character];
-        else
-            slug += character;
-    }
-
-    return slug.replace(/[^\w ]+/g, '')
-               .replace(/\s+/g, '-');
-}
+const Utils = require('./utils');
 
 // Represents a volunteer for the convention, contains all their basic information and provides
 // utility methods to get access to their shifts.
@@ -33,7 +12,7 @@ class Volunteer {
             throw new Error('A volunteer must be assigned a name.');
 
         this.name_ = volunteerData.name;
-        this.slug_ = createSlug(this.name_);
+        this.slug_ = Utils.createSlug(this.name_);
 
         if (!volunteerData.hasOwnProperty('type') || typeof volunteerData.type !== 'string')
             throw new Error('A volunteer must be assigned a type.');

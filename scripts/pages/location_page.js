@@ -31,7 +31,7 @@ LocationPage.prototype.PrepareRender = function(currentPage) {
     var locationSlug = self.parameters_[2];
 
     schedule.locations.forEach(function(location) {
-      if (locationSlug == location.GetSlug())
+      if (locationSlug == location.slug)
         self.location_ = location;    
     });
 
@@ -88,5 +88,5 @@ LocationPage.prototype.GetName = function() {
 
 // Returns the name of the floor this location exists on.
 LocationPage.prototype.GetDescription = function() {
-  return LocationPage.FLOORS[this.location_.GetFloor()];
+  return LocationPage.FLOORS[this.location_.floor];
 };
