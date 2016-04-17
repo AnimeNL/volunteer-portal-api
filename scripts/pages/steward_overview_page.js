@@ -41,7 +41,7 @@ StewardOverviewPage.prototype.RenderTelephone = function(container) {
       link = document.createElement('a');
 
   link.textContent = '\ue6d5';
-  link.setAttribute('href', 'tel:' + this.steward_.GetTelephone());
+  link.setAttribute('href', 'tel:' + this.steward_.telephone);
 
   element.className = 'steward-telephone';
   element.appendChild(link);
@@ -63,7 +63,7 @@ StewardOverviewPage.prototype.OnRender = function(application, container, conten
     return;
 
   var infoBox = content.querySelector('#info-box');
-  if (infoBox && this.steward_.GetTelephone())
+  if (infoBox && this.steward_.telephone)
     this.RenderTelephone(infoBox);
 
   var entries = [];
@@ -84,19 +84,16 @@ StewardOverviewPage.prototype.OnRender = function(application, container, conten
 
 //
 StewardOverviewPage.prototype.GetImage = function() {
-  return this.steward_ ? this.steward_.GetImage() : null;
+  return this.steward_ ? this.steward_.photo : null;
 };
 
 StewardOverviewPage.prototype.GetName = function() {
-  return this.steward_ ? this.steward_.GetName() : null;
+  return this.steward_ ? this.steward_.name : null;
 };
 
 StewardOverviewPage.prototype.GetDescription = function() {
   if (!this.steward_)
     return null;
-
-  if (this.steward_.IsHidden())
-    return 'Steward Henchman';
 
   var senior = this.steward_.GetSenior(),
       title = this.steward_.GetTitle();
@@ -104,5 +101,5 @@ StewardOverviewPage.prototype.GetDescription = function() {
   if (!senior)
     return title;
 
-  return title + ' in ' + (senior.GetName().split(' ')[0]) + '\'s team';
+  return title + ' in ' + (senior.name.split(' ')[0]) + '\'s team';
 };

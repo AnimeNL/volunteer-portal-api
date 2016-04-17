@@ -27,8 +27,8 @@ StewardsPage.prototype.BuildStewardRow = function(steward) {
       titleHighlight = document.createElement('span');
 
   row.className = 'list-item-steward material-ripple light';
-  image.src = steward.GetImage();
-  name.textContent = steward.GetName();
+  image.src = steward.photo;
+  name.textContent = steward.name;
   titleHighlight.textContent = steward.GetTitle();
 
   title.appendChild(titleHighlight);
@@ -52,7 +52,7 @@ StewardsPage.prototype.BuildStewardRow = function(steward) {
     this.next_update_ = Math.min(this.next_update_, nextShift.begin.getTime());
 
   var telephoneIcon = null;
-  if (steward.GetTelephone()) {
+  if (steward.telephone !== null) {
     telephoneIcon = document.createElement('span');
     telephoneIcon.className = 'telephone';
     telephoneIcon.textContent = '\ue6d5';
@@ -94,13 +94,10 @@ StewardsPage.prototype.OnRender = function(application, container, content) {
       self = this;
 
   stewards.sort(function(lhs, rhs) {
-    return lhs.GetName().localeCompare(rhs.GetName());
+    return lhs.name.localeCompare(rhs.name);
   });
 
   stewards.forEach(function(steward) {
-    if (steward.IsHidden())
-      return;
-
     stewardList.appendChild(self.BuildStewardRow(steward));
   });
 

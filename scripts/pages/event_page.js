@@ -114,13 +114,13 @@ EventPage.prototype.BuildStewardRow = function(steward, beginDate, endDate, curr
   listContainer.setAttribute('handler-navigate',
       '/stewards/' + steward.GetSlug() + '/');
 
-  image.setAttribute('src', steward.GetImage());
+  image.setAttribute('src', steward.photo);
 
   function DateToDisplayTime(date) {
     return date.toTimeString().match(/\d{2}:\d{2}/)[0];
   }
 
-  name.textContent = steward.GetName();
+  name.textContent = steward.name;
 
   var whenPrefix = document.createElement('span');
       whenContent = EventPage.DAYS[beginDate.getDay()] + ', from ' +

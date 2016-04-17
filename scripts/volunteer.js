@@ -67,8 +67,6 @@ class Volunteer {
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // TODO: These methods exist whilst I transition the existing schedule implementation.
 
-    GetName() { return this.name_; }
-
     GetTitle() { return 'Remove this.'; }
 
     GetSenior() { return null; }
@@ -84,12 +82,6 @@ class Volunteer {
     GetCurrentShift() { return null; }
 
     GetNextShift() { return null; }
-
-    GetTelephone() { return this.telephone_; }
-
-    GetImage() { return this.photo_; }
-
-    IsHidden() { return false; }
 }
 
 module.exports = Volunteer;

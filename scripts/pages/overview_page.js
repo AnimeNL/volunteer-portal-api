@@ -41,7 +41,7 @@ OverviewPage.prototype.FormatOtherStewards =
         shift.end.getTime() <= session_time)
       return;
 
-    if (shift.steward.GetName() == this.application_.GetUser().GetName())
+    if (shift.steward.name == this.application_.GetUser().GetName())
       return;
 
     stewards.push(shift.steward);
@@ -60,17 +60,17 @@ OverviewPage.prototype.FormatOtherStewards =
   else if (stewards.length == 7) prefix = 'Seven other stewards ' + plurals[1];
   else if (stewards.length == 6) prefix = 'Six other stewards ' + plurals[1];
   else if (stewards.length == 5) prefix = 'Five other stewards ' + plurals[1];
-  else if (stewards.length == 1) prefix = GetFirstName(stewards[0].GetName()) + plurals[0];
+  else if (stewards.length == 1) prefix = GetFirstName(stewards[0].name) + plurals[0];
   else {
     stewards.sort(function(lhs, rhs) {
-      return lhs.GetName().localeCompare(rhs.GetName());
+      return lhs.name.localeCompare(rhs.name);
     });
 
     for (var index = 0; index < stewards.length - 2; ++index)
-      prefix += GetFirstName(stewards[index].GetName()) + ', ';
+      prefix += GetFirstName(stewards[index].name) + ', ';
 
-    prefix += GetFirstName(stewards[stewards.length-2].GetName()) + ' and ';
-    prefix += GetFirstName(stewards[stewards.length-1].GetName()) + ' ' + plurals[1];
+    prefix += GetFirstName(stewards[stewards.length-2].name) + ' and ';
+    prefix += GetFirstName(stewards[stewards.length-1].name) + ' ' + plurals[1];
   }
 
   return ' ' + prefix + ' ' + suffix;
