@@ -324,13 +324,16 @@ ul.material-menu {
   height: 72px;
 }
 
-.material-list > li > span.telephone {
+.material-list > li > span.telephone { background-color: #1976d2; }
+.material-list > li > span.senior-badge { background-color: #e64a19;  }
+
+.material-list > li > span.telephone,
+.material-list > li > span.senior-badge {
   display: block;
   position: absolute;
   top: 42px;
   left: 41px;
 
-  background-color: #1976d2;
   border-radius: 10px;
   width: 20px;
   height: 20px;

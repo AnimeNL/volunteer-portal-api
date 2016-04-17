@@ -51,19 +51,23 @@ StewardsPage.prototype.BuildStewardRow = function(steward) {
   else if (nextShift)
     this.next_update_ = Math.min(this.next_update_, nextShift.begin.getTime());
 
-  var telephoneIcon = null;
-  if (steward.telephone !== null) {
-    telephoneIcon = document.createElement('span');
-    telephoneIcon.className = 'telephone';
-    telephoneIcon.textContent = '\uE0B0';
+  var badgeIcon = null;
+  if (steward.isSenior()) {
+    badgeIcon = document.createElement('span');
+    badgeIcon.className = 'senior-badge';
+    badgeIcon.textContent = '\uE885';
+  } else if (steward.telephone !== null) {
+    badgeIcon = document.createElement('span');
+    badgeIcon.className = 'telephone';
+    badgeIcon.textContent = '\uE0B0';
   }
 
   container.appendChild(name);
   container.appendChild(title);
 
   row.appendChild(image);
-  if (telephoneIcon)
-    row.appendChild(telephoneIcon);
+  if (badgeIcon)
+    row.appendChild(badgeIcon);
 
   row.appendChild(container);
 
