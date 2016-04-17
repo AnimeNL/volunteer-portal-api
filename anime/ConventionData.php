@@ -59,7 +59,8 @@ class ConventionData {
 
             $volunteerData = [
                 'name'      => $volunteer->getName(),
-                'type'      => $volunteer->getType()
+                'type'      => $volunteer->getType(),
+                'photo'     => $volunteer->getPhoto()
             ];
 
             // Append the extra information if the volunteer should have access to it.

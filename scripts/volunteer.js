@@ -30,6 +30,11 @@ class Volunteer {
                 throw new Error('Invalid volunteer type: ' + volunteerData.type);
         }
 
+        if (!volunteerData.hasOwnProperty('photo') || typeof volunteerData.photo !== 'string')
+            throw new Error('A volunteer must be assigned a photo.');
+
+        this.photo_ = volunteerData.photo;
+
         this.telephone_ = null;
         this.hotel_ = null;
 
@@ -42,6 +47,9 @@ class Volunteer {
 
     // Gets the full name of this volunteer.
     get name() { return this.name_; }
+
+    // Gets the URL to a photo representing this volunteer.
+    get photo() { return this.photo_; }
 
     // Gets the telephone number of this volunteer. May be NULL.
     get telephone() { return this.telephone_; }
@@ -79,7 +87,7 @@ class Volunteer {
 
     GetTelephone() { return this.telephone_; }
 
-    GetImage() { return '/images/no-photo.png'; }
+    GetImage() { return this.photo_; }
 
     IsHidden() { return false; }
 }

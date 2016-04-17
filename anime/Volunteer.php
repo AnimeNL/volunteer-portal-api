@@ -15,6 +15,9 @@ class Volunteer {
     const TYPE_SENIOR = 'Senior';
     const TYPE_STAFF = 'Staff';
 
+    // Directory in which hashed photos of the volunteers are stored.
+    const PHOTO_DIRECTORY = __DIR__ . '/../images/photos/';
+
     // Full name of the volunteer.
     private $name;
 
@@ -97,6 +100,19 @@ class Volunteer {
     // Returns the type { 'Volunteer', 'Senior', 'Staff' } of this volunteer.
     public function getType() : string {
         return $this->type;
+    }
+
+    // Returns a relative URL to a photo representing this volunteer. If a PNG file named by the
+    // crc32 hash of their name exists in the /images/photos/ directory it will be used, otherwise
+    // the /images/no-photo.png file will be returned.
+    public function getPhoto() : string {
+        $hash = crc32($this->name);
+        $filename = self::PHOTO_DIRECTORY . $hash . '.png';
+
+        if (file_exists($filename))
+            return '/images/photos/' . $hash . '.png';
+
+        return '/images/no-photo.png';
     }
 
     // Returns the e-mail address of this volunteer.
