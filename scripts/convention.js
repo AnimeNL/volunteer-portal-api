@@ -3,6 +3,7 @@
 // be found in the LICENSE file.
 
 const ConventionEvent = require('./convention_event');
+const ConventionEventSession = require('./convention_event_session');
 const ConventionLocation = require('./convention_location');
 const ConventionVolunteer = require('./convention_volunteer');
 
@@ -86,16 +87,28 @@ class Convention {
 
         return Promise.resolve().then(() => {
             let locations = {};
-            data.events.forEach(event => {
-                if (locations.hasOwnProperty(event.location))
-                    return;
+            data.events.forEach(eventData => {
+                eventData.sessions.forEach(sessionData => {
+                    if (locations.hasOwnProperty(sessionData.location))
+                        return;
 
-                locations[event.location] = new ConventionLocation(event.location, event.floor);
+                    locations[sessionData.location] =
+                        new ConventionLocation(sessionData.location, sessionData.floor);
+                });
             });
 
             let events = [];
-            data.events.forEach(event =>
-                events.push(new ConventionEvent(event, locations[event.location])));
+            data.events.forEach(eventData => {
+                const event = new ConventionEvent(eventData.hidden);
+
+                eventData.sessions.forEach(sessionData => {
+                    event.sessions.push(
+                          new ConventionEventSession(sessionData, event,
+                                                     locations[sessionData.location]));
+                });
+
+                events.push(event);
+            });
 
             let volunteers = [];
             data.volunteers.forEach(volunteer =>

@@ -20,24 +20,26 @@ var DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'S
     Object.keys(schedule).forEach(eventId => {
         var event = schedule[eventId];
 
-        event.begin += timezoneCorrection;
-        event.end += timezoneCorrection;
+        event.sessions.forEach(session => {
+            session.begin += timezoneCorrection;
+            session.end += timezoneCorrection;
 
-        conventionDuration.begin = Math.min(conventionDuration.begin, event.begin);
-        conventionDuration.end = Math.max(conventionDuration.end, event.end);
+            conventionDuration.begin = Math.min(conventionDuration.begin, session.begin);
+            conventionDuration.end = Math.max(conventionDuration.end, session.end);
 
-        if (!conventionEvents.hasOwnProperty(event.floor))
-            conventionEvents[event.floor] = {};
+            if (!conventionEvents.hasOwnProperty(session.floor))
+                conventionEvents[session.floor] = {};
 
-        if (!conventionEvents[event.floor].hasOwnProperty(event.location))
-            conventionEvents[event.floor][event.location] = [];
+            if (!conventionEvents[session.floor].hasOwnProperty(session.location))
+                conventionEvents[session.floor][session.location] = [];
 
-        conventionEvents[event.floor][event.location].push({
-            name: event.name,
-            description: event.description,
-            hidden: event.hidden,
-            begin: event.begin,
-            end: event.end
+            conventionEvents[session.floor][session.location].push({
+                name: session.name,
+                description: session.description,
+                hidden: event.hidden,
+                begin: session.begin,
+                end: session.end
+            });
         });
     });
 

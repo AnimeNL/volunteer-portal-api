@@ -13,7 +13,7 @@ class ConventionLocation {
 
         this.floor_ = floor;
 
-        this.events_ = [];
+        this.session_ = [];
     }
 
     // Gets the name of this location.
@@ -25,18 +25,18 @@ class ConventionLocation {
     // Gets the floor on which this location is situated.
     get floor() { return this.floor_; }
 
-    // Gets the array of events that will take place in this location.
-    get events() { return this.events_; }
+    // Gets the array of session that will take place in this location.
+    get session() { return this.session_; }
 
-    // Adds |event| to the list of events taking place in this location.
-    addEvent(event) {
-        this.events_.push(event);
+    // Adds |session| to the list of event sessions taking place in this location.
+    addSession(session) {
+        this.session_.push(session);
     }
 
-    // Returns whether any of the events in the location are visible.
+    // Returns whether any of the sessions in the location are visible.
     hasVisibleEvents() {
-        for (let event of this.events_) {
-            if (!event.isHidden())
+        for (let session of this.session_) {
+            if (!session.isHidden())
                 return true;
         }
 
@@ -48,7 +48,18 @@ class ConventionLocation {
 
     GetEvents() { return []; }
 
-    GetUpcomingEvents() { return []; }
+    GetUpcomingEvents(maxCount) {
+        let events = [];
+
+        for (let session of this.session_) {
+            if (events.length >= maxCount)
+                break;
+
+            events.push(session);
+        }
+
+        return events;
+    }
 }
 
 module.exports = ConventionLocation;

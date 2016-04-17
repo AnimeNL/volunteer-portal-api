@@ -26,7 +26,7 @@ namespace Anime\Services;
 //     'locationId'  Internal id of the location in the AnimeCon database.
 //     'floor'       Floor on which the event takes place. Prefixed with 'floor-'. {-1, 0, 1, 2}.
 //     'floorTitle'  Description of the floor on which the event takes place.
-//     'tsId'        Unique identifier for the instance of the event.
+//     'tsId'        Internal id of the session of this event in the AnimeCon database.
 //     'eventId'     Internal id of this event in the AnimeCon database.
 //     'opening'     `0` for a one-shot event, `1` for an event's opening, `-1` for its closing.
 //
@@ -204,27 +204,35 @@ class ImportProgramService implements Service {
     // the naming and values of the AnimeCon format and converts it into something more sensible.
     // This method has public visibility for testing purposes only.
     public function convertToIntermediateProgramFormat(array $entries) : array {
-        $program = [];
+        $events = [];
+
+        // Iterate over all entries which have been merged since, storing them in a series of events
+        // each of which have one or multiple sessions.
         foreach ($entries as $entry) {
-            $program[] = [
+            $session = [
                 'name'          => $entry['name'],
                 'description'   => $entry['comment'],
+
                 'begin'         => strtotime($entry['start']),
                 'end'           => strtotime($entry['end']),
+
                 'location'      => $entry['location'],
                 'floor'         => (int) (substr($entry['floor'], 6)),
-                'hidden'        => !!$entry['hidden']
+
+            ];
+
+            // Coalesce this session with the existing event if it exists.
+            if (array_key_exists($entry['eventId'], $events)) {
+                $events[$entry['eventId']]['sessions'][] = $session;
+                continue;
+            }
+
+            $events[$entry['eventId']] = [
+                'hidden'        => !!$entry['hidden'],
+                'sessions'      => [ $session ]
             ];
         }
 
-        // Sort the |$program| array in ascending order by begin time, then by name.
-        usort($program, function ($lhs, $rhs) {
-            if ($lhs['begin'] === $rhs['begin'])
-                return strcmp($lhs['name'], $rhs['name']);
-
-            return $lhs['begin'] > $rhs['begin'] ? 1 : -1;
-        });
-
-        return $program;
+        return array_values($events);
     }
 }
