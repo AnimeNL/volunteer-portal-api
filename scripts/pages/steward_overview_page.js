@@ -22,12 +22,7 @@ StewardOverviewPage.prototype.PrepareRender = function(currentPage) {
       self = this;
 
   return parentMethod().then(function(schedule) {
-    var stewardSlug = self.parameters_[1];
-
-    schedule.GetStewards().forEach(function(steward) {
-      if (stewardSlug == steward.slug)
-        self.steward_ = steward;    
-    });
+    self.steward_ = schedule.findVolunteer(self.parameters_[1], true /* isSlug */);
 
     // If |self.steward_| could be set then we located the Steward for whom this
     // overview page is. If it's NULL then an error page will be shown instead.

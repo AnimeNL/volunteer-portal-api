@@ -9,8 +9,6 @@ const ConventionLoader = require('./convention_loader');
 // to know about- controlled using the local user's token.
 class Convention {
     constructor(user) {
-        this.loaded_ = false;
-
         this.loader_ = new ConventionLoader();
 
         this.events_ = [];
@@ -20,9 +18,6 @@ class Convention {
         // Observe the |user| class to be informed of user state changes.
         user.observe(this.__proto__.onUserStateChanged.bind(this));
     }
-
-    // Returns whether information about the convention has been loaded.
-    isLoaded() { return this.loaded_; }
 
     // Gets the list of events that will take place as part of this convention.
     get events() { return this.events_; }
@@ -44,13 +39,26 @@ class Convention {
         //       since the initial draw for logged in volunteers will be blocking on this.
 
         return this.loader_.fetchScheduleFromNetwork(user.token).then(data => {
-            this.loaded_ = true;
-
             this.events_ = data.events;
             this.locations_ = data.locations;
             this.volunteers_ = data.volunteers;
             return this;
         });
+    }
+
+    // Finds a volunteer named |name| and returns the ConventionVolunteer instance when found, or
+    // NULL when not found. When |isSlug| is set to true, the |name| will be compared to the
+    // volunteer's slug rather than their name.
+    findVolunteer(name, isSlug = false) {
+        for (let volunteer of this.volunteers_) {
+            if (!isSlug && name === volunteer.name)
+                return volunteer;
+
+            if (isSlug && name === volunteer.slug)
+                return volunteer;
+        }
+
+        return null;
     }
 
     // Will be invoked when the user identifies to an account, or signs out of their account. The
@@ -61,8 +69,6 @@ class Convention {
             return;
         }
 
-        this.loaded_ = false;
-
         this.events_ = [];
         this.locations_ = [];
         this.volunteers_ = [];
@@ -72,17 +78,6 @@ class Convention {
     // TODO: These methods exist whilst I transition the existing schedule implementation.
 
     GetCurrentEvents() { return { '-1': [], 0: [], 1: [], 2: [] }; }
-
-    GetSteward(name) {
-        for (let volunteer of this.volunteers_) {
-            if (volunteer.name === name)
-                return volunteer;
-        }
-
-        return null;
-    }
-
-    GetStewards() { return this.volunteers_; }
 }
 
 module.exports = Convention;

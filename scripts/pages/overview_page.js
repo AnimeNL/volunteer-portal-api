@@ -131,7 +131,7 @@ OverviewPage.prototype.OnRender = function(application, container, content) {
   var current_shift_element = content.querySelector('#current_shift'),
       upcoming_shift_element = content.querySelector('#upcoming_shift'),
       shift_count = content.querySelector('#shift_count'),
-      steward = this.schedule_.GetSteward(application.GetUser().name);
+      steward = this.schedule_.findVolunteer(application.GetUser().name);
 
   // Update the total number of shifts in the introductionary text.
   if (shift_count)

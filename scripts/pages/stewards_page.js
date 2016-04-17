@@ -94,7 +94,7 @@ StewardsPage.prototype.OnRender = function(application, container, content) {
     return;
 
   var stewardList = document.createDocumentFragment(),
-      stewards = this.schedule_.GetStewards(),
+      stewards = this.schedule_.volunteers,
       self = this;
 
   stewards.sort(function(lhs, rhs) {
