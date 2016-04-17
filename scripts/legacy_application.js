@@ -36,10 +36,6 @@ var LegacyApplication = function(config, container, callback) {
     new RippleHandler()
   ];
 
-  // Initialize the Service Worker registration for the application. Drives
-  // offline support and incoming events (push messages).
-  this.service_worker_registration_ = this.InitializeServiceWorkerSupport();
-
   // Listen to visibilitystate change events in the browser.
   ['visibilitychange', 'msvisibilitychange'].forEach(function(eventName) {
     document.addEventListener(eventName,
@@ -338,46 +334,6 @@ LegacyApplication.prototype.SetTitle = function(title) {
 };
 
 // -----------------------------------------------------------------------------
-// Service Worker methods.
-
-// Initializes the Service Worker belonging to this application. Having one of
-// these available enables the use of Push Notifications and offline.
-LegacyApplication.prototype.InitializeServiceWorkerSupport = function() {
-  return Promise.reject();  // offline support will be added later.
-
-  if (!('serviceWorker' in navigator))
-    return Promise.reject();
-
-  return navigator.serviceWorker.register('/service_worker.js', {
-    scope: '/'
-  }).then(function() {
-    return navigator.serviceWorker.ready;
-  }).then(function(registration) {
-    console.log('Service Worker has been activated.');
-
-    registration.addEventListener('updatefound', function() {
-      console.log('Service Worker update has been found.');
-      if ('update' in registration)
-        registration.update();
-    });
-
-    registration.addEventListener('error', function(error) {
-      console.error('Service Worker error: ', error);
-    });
-
-    return registration;
-  }).catch(function(error) {
-    console.error('Unable to initialize the Service Worker.', error);
-  });
-};
-
-// Returns the Service Worker registration promise to use when wanting to work
-// with it. The promise will be resolved/rejected when availability is known.
-LegacyApplication.prototype.GetServiceWorkerRegistration = function() {
-  return this.service_worker_registration_;
-};
-
-// -----------------------------------------------------------------------------
 // Click event handlers.
 
 LegacyApplication.prototype.OnToggleHiddenEvents = function(event) {
@@ -440,30 +396,10 @@ LegacyApplication.prototype.OnPeriodicUpdate = function() {
              LegacyApplication.PERIODIC_UPDATE_RATE_MS);
 };
 
-// Setting to toggle whether past days should be deprioritized on event pages.
-// The ordering doesn't feel completely right, but does ensure that the latest
-// events always appear at the top of the screen, which is must better for
-// devices with smaller screens. Basically a kill-switch.
-LegacyApplication.prototype.DeprioritizePastDays = function() {
-  return true;
-};
-
 // -----------------------------------------------------------------------------
 
-var g_page_load_time = Date.now();
-
-function MockPageLoadDate() {
-  return null;//new Date(2015, 5 /* month - 1 */, 13, 12, 59, 55);
-}
-
 function GetCurrentDate() {
-  var mock_date = MockPageLoadDate();
-  if (!mock_date)
-    return new Date();
-
-  // The mocked page load time has to be corrected with the amount of time the
-  // user has actually been on the site so far.
-  return new Date(mock_date.getTime() + (Date.now() - g_page_load_time));
+  return new Date(window.application.getTime());
 }
 
 // -----------------------------------------------------------------------------

@@ -4,6 +4,7 @@
 
 const Convention = require('./convention');
 const User = require('./user');
+const Utils = require('./utils');
 
 // Main object for the application. Controls all shared logic, the router and the views systems that
 // together work to present the user interface.
@@ -30,6 +31,14 @@ class Application {
 
     // Gets the Promise that is to be resolved with the Application instance when it's ready.
     get ready() { return this.readyPromise_; }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // TODO: These methods exist whilst I transition the existing schedule implementation.
+
+    // Returns the current time as a UNIX timestamp with microsecond precision. 
+    getTime() {
+        return Utils.getTime();
+    }
 }
 
 window.application = new Application();

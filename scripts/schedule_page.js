@@ -137,17 +137,15 @@ SchedulePage.prototype.RenderEntries = function(entries, noDataMessage) {
   var todayTime = new Date(GetCurrentDate().toDateString()).getTime(),
       days = Object.keys(entriesPerDay).map(Date.parse);
 
-  if (this.application_.DeprioritizePastDays()) {
-    days.sort(function(lhs, rhs) {
-      if (lhs >= todayTime && rhs < todayTime)
-        return -1;
+  days.sort(function(lhs, rhs) {
+    if (lhs >= todayTime && rhs < todayTime)
+      return -1;
 
-      if (lhs < todayTime && rhs >= todayTime)
-        return 1;
+    if (lhs < todayTime && rhs >= todayTime)
+      return 1;
 
-      return lhs > rhs ? 1 : -1;
-    });
-  }
+    return lhs > rhs ? 1 : -1;
+  });
 
   var container = document.createDocumentFragment();
   days.forEach(function(integralDay) {
