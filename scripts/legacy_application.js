@@ -53,8 +53,8 @@ var LegacyApplication = function(config, container, callback) {
 
   // The schedule contains the stewards, events, times and everything else
   // required in order to know who goes where and when.
-  this.schedule_ = window.application.user.ready.then(function(user) {
-    this.user_ = new LegacyUser(user, this.schedule_);
+  this.schedule_ = window.application.ready.then(function(application) {
+    this.user_ = new LegacyUser(application.user, this.schedule_);
 
     return new Promise(function(resolve) {
       var request = new XMLHttpRequest(),
