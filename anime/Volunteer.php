@@ -66,9 +66,12 @@ class Volunteer {
         // force-logout all users on the volunteer portal.
         $this->token = strval(crc32($this->name) ^ crc32($this->email));
 
-        // TODO: How to validate and normalize the telephone numbers?
+        if (!array_key_exists('telephone', $volunteerData) ||
+            !is_string($volunteerData['telephone'])) {
+            throw new TypeError('The volunteer\'s `telephone` is expected to be a string.');
+        }
 
-        $this->telephone = $volunteerData['telephone'];
+        $this->telephone = preg_replace('/\s|\(\d\)/s', '', $volunteerData['telephone']);
 
         if (!array_key_exists('hotel', $volunteerData) || !is_string($volunteerData['hotel']))
             throw new TypeError('The volunteer\'s `hotel` is expected to be a string.');
