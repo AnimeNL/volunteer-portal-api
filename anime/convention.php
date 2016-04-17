@@ -9,29 +9,21 @@ function dieWithError($error) {
     die(json_encode([ 'error' => $error ]));
 }
 
+if (!array_key_exists('token', $_GET) || !is_numeric($_GET['token']))
+    dieWithError('Invalid token.');
+
+$token = intval($_GET['token']);
+
 $environment = \Anime\Environment::createForHostname($_SERVER['HTTP_HOST']);
 if (!$environment->isValid())
     dieWithError('Unrecognized volunteer portal environment.');
 
-if (!array_key_exists('token', $_GET) || !is_numeric($_GET['token']))
-    dieWithError('Invalid token.');
-
-$volunteers = $environment->loadTeam();
-if (!is_array($volunteers))
+$volunteers = $environment->loadVolunteers();
+if (!($volunteers instanceof \Anime\VolunteerList))
     dieWithError('There are no known volunteers.');
 
-$token = intval($_GET['token']);
-
-$level = null;
-foreach ($volunteers as $volunteer) {
-    if (crc32($volunteer['name']) !== $token)
-        continue;
-
-    $level = $volunteer['type'];
-    break;
-}
-
-if ($token === null)
+$volunteer = $volunteers->findByToken($token);
+if (!($volunteer instanceof \Anime\Volunteer))
     dieWithError('Invalid token.');
 
-echo '{ "level": "' . $level . '" }';
+echo '{ "type": "' . $volunteer->getType() . '" }';

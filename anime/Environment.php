@@ -86,11 +86,12 @@ class Environment {
         return $this->hostname;
     }
 
-    // Loads the information about the team associated with this environment.
-    public function loadTeam() : array {
+    // Loads the list of volunteers associated with this environment and returns a VolunteerList
+    // instance. The instance will be cached, so multiple calls will return the same instance.
+    public function loadVolunteers() : VolunteerList {
         if ($this->team === null) {
-            $this->team = json_decode(
-                file_get_contents(self::TEAM_DATA_DIRECTORY . $this->teamDataFile), true);
+            $teamData = file_get_contents(self::TEAM_DATA_DIRECTORY . $this->teamDataFile);
+            $this->team = VolunteerList::create(json_decode($teamData, true));
         }
 
         return $this->team;

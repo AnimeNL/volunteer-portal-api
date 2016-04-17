@@ -13,30 +13,19 @@ $environment = \Anime\Environment::createForHostname($_SERVER['HTTP_HOST']);
 if (!$environment->isValid())
     dieWithError('Unrecognized volunteer portal environment.');
 
-$volunteers = $environment->loadTeam();
-if (!is_array($volunteers))
+$volunteers = $environment->loadVolunteers();
+if (!($volunteers instanceof \Anime\VolunteerList))
     dieWithError('There are no known volunteers.');
 
-// For the purposes of identification, the |$name| will be lowercased and any non-alphabetic
-// characters will be removed, which includes spaces.
-function normalizeNameForIdentification($name) {
-    return preg_replace('/[^a-z]/i', '', strtolower($name));
-}
+$requestName = file_get_contents('php://input');
 
-$requestName = normalizeNameForIdentification(file_get_contents('php://input'));
-if (strlen($requestName) < 5)
-    dieWithError('Your name must have more than five characters.');
+$volunteer = $volunteers->findByName($requestName, true /* fuzzy */);
+if (!($volunteer instanceof \Anime\Volunteer))
+    dieWithError('Your name has not been recognized.');
 
-foreach ($volunteers as $volunteer) {
-    if (normalizeNameForIdentification($volunteer['name']) !== $requestName)
-        continue;
+$userInfo = [
+    'name'  => $volunteer->getName(),
+    'token' => $volunteer->getToken()
+];
 
-    $userInfo = [
-        'name'  => $volunteer['name'],
-        'token' => strval(crc32($volunteer['name']))
-    ];
-
-    die(json_encode($userInfo));
-}
-
-dieWithError('Your name has not been recognized.');
+die(json_encode($userInfo));
