@@ -30,7 +30,7 @@ LocationPage.prototype.PrepareRender = function(currentPage) {
   return parentMethod().then(function(schedule) {
     var locationSlug = self.parameters_[2];
 
-    schedule.GetLocations().forEach(function(location) {
+    schedule.locations.forEach(function(location) {
       if (locationSlug == location.GetSlug())
         self.location_ = location;    
     });
@@ -81,7 +81,7 @@ LocationPage.prototype.GetImage = function() {
 // Returns the name of this location, as it should be rendered.
 LocationPage.prototype.GetName = function() {
   if (this.location_)
-    return this.location_.GetName();
+    return this.location_.name;
 
   return null;
 };

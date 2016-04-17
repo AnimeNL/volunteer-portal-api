@@ -72,7 +72,7 @@ StewardOverviewPage.prototype.OnRender = function(application, container, conten
   // rather cares about their shift and then the event's information.
   this.steward_.GetShifts().forEach(function(shift) {
     entries.push(new ScheduleEntry(shift.begin, shift.end, shift.event.GetName(),
-                                   shift.event.GetLocation().GetName(),
+                                   shift.event.location.name,
                                    shift.event.GetNavigateLocation(),
                                    shift.event.IsHidden() ? 'hidden' : ''));
   });

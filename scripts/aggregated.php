@@ -6,7 +6,6 @@
 $scripts = [
   'config.js',
   'content_handler.js',
-  'event_location.js',
   'event_update_handler.js',
   'legacy_application.js',
   'link_handler.js',

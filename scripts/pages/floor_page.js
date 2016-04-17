@@ -71,15 +71,15 @@ FloorPage.prototype.BuildRoomCard = function(location) {
       self = this;
 
   container.className = 'material-card pointer material-card-bottom-spacing';
-  if (location.GetName().indexOf('Neil') !== -1)
+  if (location.name.indexOf('Neil') !== -1)
     container.className += ' room-neil';
 
   // Make it possible to click on the card to go to the room overview.
   container.setAttribute('handler', true);
   container.setAttribute('handler-navigate',
-      '/floors/' + this.floor_ + '/' + location.GetSlug() + '/');
+      '/floors/' + this.floor_ + '/' + location.slug + '/');
 
-  header.textContent = location.GetName();
+  header.textContent = location.name;
 
   eventList.className = 'material-list list-room-event';
 
@@ -102,7 +102,7 @@ FloorPage.prototype.BuildRoomCard = function(location) {
   container.appendChild(eventList);
   container.appendChild(footer);
 
-  return { name: location.GetName(),
+  return { name: location.name,
            has_events: !!upcomingEvents.length,
            node: container };
 };
@@ -120,17 +120,16 @@ FloorPage.prototype.PrepareRender = function() {
 FloorPage.prototype.OnRender = function(application, container, content) {
   var roomOverview = document.createDocumentFragment(),
       currentFloor = FloorPage.FLOORS[this.floor_],
-      locations = this.schedule_.GetLocations(),
       self = this;
 
   var include_hidden = application.GetUser().getOption('hidden_events', false),
       rendered_locations = [];
 
-  locations.forEach(function(location) {
-    if (!location.HasVisibleEvents() && !include_hidden)
+  this.schedule_.locations.forEach(function(location) {
+    if (!location.hasVisibleEvents() && !include_hidden)
       return;
 
-    if (location.GetFloor() != currentFloor)
+    if (location.floor != currentFloor)
       return;
 
     rendered_locations.push(self.BuildRoomCard(location));

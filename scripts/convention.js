@@ -140,9 +140,6 @@ class Convention {
     }
 
     GetStewards() { return this.volunteers_; }
-
-    GetLocations() { return []; }
-
 }
 
 module.exports = Convention;

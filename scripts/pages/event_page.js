@@ -80,8 +80,8 @@ EventPage.prototype.BuildSessionRow = function(session, currentTime) {
   when.textContent = DateToDisplayTime(session.begin) + ' until ' +
                      DateToDisplayTime(session.end);
 
-  where.textContent = this.event_.GetLocation().GetName() + ', ' +
-        EventPage.FLOORS[this.event_.GetLocation().GetFloor()];
+  where.textContent = this.event_.location.name + ', ' +
+        EventPage.FLOORS[this.event_.location.floor];
 
   dataContainer.className = 'event';
 

@@ -25,6 +25,23 @@ class ConventionLocation {
     addEvent(event) {
         this.events_.push(event);
     }
+
+    // Returns whether any of the events in the location are visible.
+    hasVisibleEvents() {
+        for (let event of this.events_) {
+            if (!event.isHidden())
+                return true;
+        }
+
+        return false;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // TODO: These methods exist whilst I transition the existing schedule implementation.
+
+    GetUpcomingEvents() { return []; }
+
+    GetSlug() { return ''; }
 }
 
 module.exports = ConventionLocation;

@@ -199,7 +199,7 @@ li.list-item-event {
 .room-finished h3::after,
 div.past > h2::after {
   font-family: 'material-icons';
-  content: ' \e623';
+  content: ' \e877';
 }
 
 div.past > h2::after { opacity: .8; }
