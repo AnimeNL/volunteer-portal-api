@@ -2,6 +2,8 @@
 // Use of this source code is governed by the MIT license, a copy of which can
 // be found in the LICENSE file.
 
+const ConventionEvent = require('./convention_event');
+const ConventionLocation = require('./convention_location');
 const Volunteer = require('./volunteer');
 
 // Represents the convention whose volunteers this portal has been built for. It has knowledge of
@@ -12,6 +14,8 @@ class Convention {
         this.loaded_ = false;
         this.token_ = null;
 
+        this.events_ = [];
+        this.locations_ = [];
         this.volunteers_ = [];
 
         // Observe the |user| class to be informed of user state changes.
@@ -20,6 +24,12 @@ class Convention {
 
     // Returns whether information about the convention has been loaded.
     isLoaded() { return this.loaded_; }
+
+    // Gets the list of events that will take place as part of this convention.
+    get events() { return this.events_; }
+
+    // Gets the list of locations that will be hosting events as part of this convention.
+    get locations() { return this.locations_; }
 
     // Gets the volunteers for this convention. The list will be sorted by their full name.
     get volunteers() { return this.volunteers_; }
@@ -75,6 +85,18 @@ class Convention {
         };
 
         return Promise.resolve().then(() => {
+            let locations = {};
+            data.events.forEach(event => {
+                if (locations.hasOwnProperty(event.location))
+                    return;
+
+                locations[event.location] = new ConventionLocation(event.location, event.floor);
+            });
+
+            let events = [];
+            data.events.forEach(event =>
+                events.push(new ConventionEvent(event, locations[event.location])));
+
             let volunteers = [];
             data.volunteers.forEach(volunteer =>
                 volunteers.push(new Volunteer(volunteer)));
@@ -83,6 +105,8 @@ class Convention {
             // copy over all data to their member variables.
             this.loaded_ = true;
 
+            this.events_ = events;
+            this.locations_ = Object.values(locations);
             this.volunteers_ = volunteers;
         });
     }

@@ -35,6 +35,24 @@
 
 })();
 
+// Polyfill for Object.values(), which is ES7.
+(function() {
+  if (Object.hasOwnProperty('values'))
+    return;
+
+  // Source: https://github.com/tc39/proposal-object-values-entries/blob/master/polyfill.js
+  var reduce = Function.bind.call(Function.call, Array.prototype.reduce);
+  var isEnumerable = Function.bind.call(Function.call, Object.prototype.propertyIsEnumerable);
+  var concat = Function.bind.call(Function.call, Array.prototype.concat);
+
+  Object.values = function(obj) {
+    return reduce(Object.keys(obj), function(value, key) {
+      return concat(value, typeof key === 'string' && isEnumerable(obj, key) ? [obj[key]] : []);
+    }, []);
+  };
+
+})();
+
 /*! https://mths.be/startswith v0.2.0 by @mathias */
 if (!String.prototype.startsWith) {
   (function() {
