@@ -145,8 +145,8 @@ ul.material-menu {
 }
 
 .material-icon-back:before { content: "\E5C4"; }
-.material-icon-navigation:before { content: "\e8a1"; }
-.material-icon-navigation-vertical:before { content: "\E5D2"; }
+.material-icon-navigation:before { content: "\E5D2"; }
+.material-icon-navigation-vertical:before { content: "\E5D4"; }
 
 [material-main-button-function] { display: none; }
 
@@ -236,7 +236,7 @@ ul.material-menu {
   padding-right: 32px;
 }
 
-.material-form-input-text > button[type=submit]:before { content: '\e719'; }
+.material-form-input-text > button[type=submit]:before { content: '\e163'; }
 .material-form-input-text > button[type=submit] {
   position: absolute;
 
@@ -340,7 +340,7 @@ ul.material-menu {
 
   font-family: 'material-icons';
   font-size: .8em;
-  line-height: 22px;
+  line-height: 21px;
   text-align: center;
   color: white;
 }

@@ -154,6 +154,7 @@ li.list-item-no-content {
 
   color: #8b8b8b;
   font-size: .8em;
+  cursor: default;
 }
 
 li.list-item-event:last-of-type { border-bottom: none; }

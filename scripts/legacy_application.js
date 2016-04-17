@@ -390,7 +390,7 @@ LegacyApplication.prototype.OnRefresh = function(event) {
 };
 
 LegacyApplication.prototype.OnSignOut = function(event) {
-  this.user_.SignOut().then(function() {
+  this.user_.signOut().then(function() {
     this.Navigate('/');
 
   }.bind(this));
