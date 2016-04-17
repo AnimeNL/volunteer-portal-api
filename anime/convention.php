@@ -26,4 +26,5 @@ $volunteer = $volunteers->findByToken($token);
 if (!($volunteer instanceof \Anime\Volunteer))
     dieWithError('Invalid token.');
 
-echo '{ "type": "' . $volunteer->getType() . '" }';
+// The ConventionData class is in charge of making the actual data selections.
+die(json_encode(\Anime\ConventionData::CompileForVolunteer($environment, $volunteer)));
