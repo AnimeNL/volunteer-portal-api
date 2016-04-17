@@ -95,11 +95,5 @@ StewardOverviewPage.prototype.GetDescription = function() {
   if (!this.steward_)
     return null;
 
-  var senior = this.steward_.GetSenior(),
-      title = this.steward_.GetTitle();
-
-  if (!senior)
-    return title;
-
-  return title + ' in ' + (senior.name.split(' ')[0]) + '\'s team';
+  return this.steward_.GetTitle();
 };

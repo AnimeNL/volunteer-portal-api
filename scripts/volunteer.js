@@ -69,8 +69,6 @@ class Volunteer {
 
     GetTitle() { return 'Remove this.'; }
 
-    GetSenior() { return null; }
-
     GetSlug() {
         return this.name_.toLowerCase()
                    .replace(/[^\w ]+/g, '')
