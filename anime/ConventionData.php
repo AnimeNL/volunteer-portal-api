@@ -9,11 +9,15 @@ namespace Anime;
 
 // Object responsible for compiling the data that should be exposed to a given volunteer.
 class ConventionData {
+    // Absolute path to the JSON data file that contains the convention's program.
+    const PROGRAM_FILE = __DIR__ . '/../configuration/program.json';
+
     // Compiles the convention data required by the front-end for the |$volunteer|. The used data
     // will depend on the active |$environment|. Returns an array that could be send to the user.
     public static function CompileForVolunteer(Environment $environment, Volunteer $volunteer) {
         $compiler = new ConventionData($environment, $volunteer);
         return [
+            'events'        => $compiler->compileEvents(),
             'volunteers'    => $compiler->compileVolunteers()
         ];
     }
@@ -27,6 +31,20 @@ class ConventionData {
     private function __construct(Environment $environment, Volunteer $volunteer) {
         $this->environment = $environment;
         $this->volunteer = $volunteer;
+    }
+
+    // Compiles an array with all events that will take place for this convention. Senior and Staff
+    // volunteers will also receive hidden events, display of which can be toggled in the client.
+    private function compileEvents() : array {
+        $program = json_decode(file_get_contents(self::PROGRAM_FILE), true);
+
+        if (!$this->isSeniorVolunteer()) {
+            $program = array_values(array_filter($program, function($entry) {
+                return !$entry['hidden'];
+            }));
+        }
+
+        return $program;
     }
 
     // Compiles an array with all volunteers that should be sent to the user. Hidden volunteers will
