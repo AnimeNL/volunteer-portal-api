@@ -2,6 +2,8 @@
 // Use of this source code is governed by the MIT license, a copy of which can
 // be found in the LICENSE file.
 
+const SHORT_DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
 // A collection of shared utility functions between different files.
 class Utils {
     // Creates a slug out of |text|. Correctly handles a series of accents that were silently
@@ -25,6 +27,20 @@ class Utils {
 
         return slug.replace(/[^\w ]+/g, '')
                    .replace(/\s+/g, '-');
+    }
+
+    // Formats |time| to be displayed. The |time| parameter can be either a Date instance of a UNIX
+    // timestamp, either of which will result in the right thing happening.
+    static formatDisplayTime(time) {
+        const date = time instanceof Date ? time : new Date(time);
+
+        return SHORT_DAYS[date.getDay()] + ' ' + date.toTimeString().match(/\d{2}:\d{2}/)[0];
+    }
+
+    // Returns the current UNIX timestamp.
+    // TODO: Add a mechanism allowing this to be faked throughout the system.
+    static getTime() {
+        return Date.now();
     }
 };
 

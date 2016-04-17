@@ -29,9 +29,9 @@ FloorPage.FLOORS = {
 
 // Builds an event entry for the current and next events for a location. If
 // |event| is NULL, a no-event row will be created instead.
-FloorPage.prototype.BuildEventRow = function(upcomingEvent) {
+FloorPage.prototype.BuildEventRow = function(session) {
   var container = document.createElement('li');
-  if (!upcomingEvent) {
+  if (!session) {
     container.className = 'list-item-no-content';
     container.innerHTML = '<i>No more events have been scheduled in this room.</i>';
 
@@ -42,20 +42,20 @@ FloorPage.prototype.BuildEventRow = function(upcomingEvent) {
       name = document.createElement('p');
 
   container.className = 'list-item-room-event';
-  if (upcomingEvent.active)
+  if (session.isActive())
     container.className += ' active';
 
   time.className = 'time';
-  if (upcomingEvent)
-    time.textContent = upcomingEvent.time;
+  if (session)
+    time.textContent = session.getFormattedTime();
 
   name.className = 'event';
-  if (upcomingEvent)
-    name.textContent = upcomingEvent.name;
+  if (session)
+    name.textContent = session.name;
   else
     name.innerHTML = '<i>No scheduled events.</i>';
 
-  if (upcomingEvent)
+  if (session)
     container.appendChild(time);
   container.appendChild(name);
   return container;
@@ -86,8 +86,8 @@ FloorPage.prototype.BuildRoomCard = function(location) {
   var upcomingEvents = location.GetUpcomingEvents(
       FloorPage.EVENT_COUNT, this.application_.GetUser().getOption('hidden_events', false));
 
-  upcomingEvents.forEach(function(event) {
-    eventList.appendChild(self.BuildEventRow(event));
+  upcomingEvents.forEach(function(session) {
+    eventList.appendChild(self.BuildEventRow(session));
   });
 
   if (!upcomingEvents.length) {

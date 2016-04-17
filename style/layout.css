@@ -268,14 +268,12 @@ li.list-item-room-event {
 
 .list-item-room-event.active > .event::before {
   position: absolute;
-  margin-left: -14px;
-  margin-top: -1px;
+  margin-left: -15px;
 
   font-family: 'material-icons';
-  font-size: .8em;
 
-  content: "\e6b9";
-  color: #1976d2;
+  content: "\e039";
+  color: #e64a19;
 }
 
 .list-item-room-event > .time { width: 148px; }

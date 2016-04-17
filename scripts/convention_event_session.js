@@ -2,6 +2,8 @@
 // Use of this source code is governed by the MIT license, a copy of which can
 // be found in the LICENSE file.
 
+const Utils = require('./utils');
+
 // Represents one of the events that happens at the convention. Will store all related information,
 // and has convenience methods for retrieving the location and stewards associated with it.
 class ConventionEventSession {
@@ -53,6 +55,20 @@ class ConventionEventSession {
 
     // Returns whether this session is hidden. Hidden events may not be available for all users.
     isHidden() { return this.event_.hidden_; }
+
+    // Returns whether this session is currently in progress.
+    isActive() {
+        const currentTime = Utils.getTime();
+
+        return this.begin_.getTime() <= currentTime && this.end_.getTime() > currentTime;
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // TODO: These methods exist whilst I transition the existing schedule implementation.
+
+    getFormattedTime() {
+        return Utils.formatDisplayTime(this.begin_) + ' - ' + Utils.formatDisplayTime(this.end_);
+    }
 }
 
 module.exports = ConventionEventSession;

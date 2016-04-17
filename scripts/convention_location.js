@@ -48,12 +48,15 @@ class ConventionLocation {
 
     GetEvents() { return []; }
 
-    GetUpcomingEvents(maxCount) {
+    GetUpcomingEvents(maxCount, showHidden) {
         let events = [];
 
         for (let session of this.session_) {
             if (events.length >= maxCount)
                 break;
+
+            if (!showHidden && session.isHidden())
+                continue;
 
             events.push(session);
         }
