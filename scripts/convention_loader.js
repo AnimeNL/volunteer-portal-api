@@ -74,6 +74,9 @@ class ConventionLoader {
             data.volunteers.forEach(volunteer =>
                 volunteers.push(new ConventionVolunteer(volunteer)));
 
+            // Sort the sessions in locations now that all information is available.
+            Object.keys(locations).forEach(locationName => locations[locationName].sortSessions());
+
             // Returns the loaded information as an object so that the caller can store it.
             return {
                 events: events,

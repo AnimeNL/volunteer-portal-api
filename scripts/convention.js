@@ -53,7 +53,7 @@ class Convention {
         let floors = {};
 
         for (let location of this.locations_) {
-            if (floor && location.floor !== floor)
+            if (floor !== null && location.floor !== floor)
                 continue;
 
             let sessions = [];

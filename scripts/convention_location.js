@@ -33,6 +33,17 @@ class ConventionLocation {
         this.sessions_.push(session);
     }
 
+    // Sorts the sessions known to this location based on their start time, then based on their
+    // name. Should be called after all sessions have been added to the location.
+    sortSessions() {
+        this.sessions_.sort((lhs, rhs) => {
+            if (lhs.beginTime === rhs.beginTime)
+                return lhs.name.localeCompare(rhs.name);
+
+            return lhs.beginTime > rhs.beginTime ? 1 : -1;
+        });
+    }
+
     // Returns whether any of the sessions in the location are visible.
     hasVisibleEvents() {
         for (let session of this.sessions_) {
