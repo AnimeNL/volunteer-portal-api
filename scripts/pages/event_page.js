@@ -112,7 +112,7 @@ EventPage.prototype.BuildStewardRow = function(steward, beginDate, endDate, curr
 
   listContainer.setAttribute('handler', true);
   listContainer.setAttribute('handler-navigate',
-      '/stewards/' + steward.GetSlug() + '/');
+      '/stewards/' + steward.slug + '/');
 
   image.setAttribute('src', steward.photo);
 

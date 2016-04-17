@@ -25,7 +25,7 @@ StewardOverviewPage.prototype.PrepareRender = function(currentPage) {
     var stewardSlug = self.parameters_[1];
 
     schedule.GetStewards().forEach(function(steward) {
-      if (stewardSlug == steward.GetSlug())
+      if (stewardSlug == steward.slug)
         self.steward_ = steward;    
     });
 

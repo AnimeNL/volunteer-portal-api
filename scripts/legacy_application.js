@@ -194,7 +194,7 @@ LegacyApplication.prototype.OnDisplayMySchedule = function(event) {
     if (!steward)
       self.Navigate('/');
     else
-      self.Navigate('/stewards/' + steward.GetSlug() + '/me/');
+      self.Navigate('/stewards/' + steward.slug + '/me/');
   });
 };
 
