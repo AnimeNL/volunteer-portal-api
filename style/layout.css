@@ -482,7 +482,7 @@ nav#main-menu > ol > li.icon-schedule::before {
   font-family: 'material-icons';
   font-size: 22px;
 
-  content: "\e8af";
+  content: "\e616";
 }
 
 nav#main-menu > ol > li.icon-stewards::before {
@@ -492,7 +492,7 @@ nav#main-menu > ol > li.icon-stewards::before {
   font-family: 'material-icons';
   font-size: 20px;
 
-  content: "\e8d6";
+  content: "\e7ef";
 }
 
 nav#main-menu > ol > li > span > em {

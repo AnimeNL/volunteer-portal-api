@@ -144,9 +144,9 @@ ul.material-menu {
   font-family: 'material-icons';
 }
 
-.material-icon-back:before { content: "\e893"; }
+.material-icon-back:before { content: "\E5C4"; }
 .material-icon-navigation:before { content: "\e8a1"; }
-.material-icon-navigation-vertical:before { content: "\e8a3"; }
+.material-icon-navigation-vertical:before { content: "\E5D2"; }
 
 [material-main-button-function] { display: none; }
 

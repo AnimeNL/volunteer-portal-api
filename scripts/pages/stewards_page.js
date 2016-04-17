@@ -55,7 +55,7 @@ StewardsPage.prototype.BuildStewardRow = function(steward) {
   if (steward.telephone !== null) {
     telephoneIcon = document.createElement('span');
     telephoneIcon.className = 'telephone';
-    telephoneIcon.textContent = '\ue6d5';
+    telephoneIcon.textContent = '\uE0B0';
   }
 
   container.appendChild(name);

@@ -40,7 +40,7 @@ StewardOverviewPage.prototype.RenderTelephone = function(container) {
   var element = document.createElement('div'),
       link = document.createElement('a');
 
-  link.textContent = '\ue6d5';
+  link.textContent = '\uE0B0';
   link.setAttribute('href', 'tel:' + this.steward_.telephone);
 
   element.className = 'steward-telephone';
