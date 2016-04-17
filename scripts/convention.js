@@ -4,7 +4,7 @@
 
 const ConventionEvent = require('./convention_event');
 const ConventionLocation = require('./convention_location');
-const Volunteer = require('./volunteer');
+const ConventionVolunteer = require('./convention_volunteer');
 
 // Represents the convention whose volunteers this portal has been built for. It has knowledge of
 // the volunteers, locations and events, to the extend the server thinks it's appropriate for them
@@ -99,7 +99,7 @@ class Convention {
 
             let volunteers = [];
             data.volunteers.forEach(volunteer =>
-                volunteers.push(new Volunteer(volunteer)));
+                volunteers.push(new ConventionVolunteer(volunteer)));
 
             // Now that all data has been imported, mark the Convention's data as having loaded and
             // copy over all data to their member variables.

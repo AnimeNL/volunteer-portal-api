@@ -6,7 +6,7 @@ const Utils = require('./utils');
 
 // Represents a volunteer for the convention, contains all their basic information and provides
 // utility methods to get access to their shifts.
-class Volunteer {
+class ConventionVolunteer {
     constructor(volunteerData) {
         if (!volunteerData.hasOwnProperty('name') || typeof volunteerData.name !== 'string')
             throw new Error('A volunteer must be assigned a name.');
@@ -90,4 +90,4 @@ class Volunteer {
     GetNextShift() { return null; }
 }
 
-module.exports = Volunteer;
+module.exports = ConventionVolunteer;
