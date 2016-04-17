@@ -3,16 +3,18 @@
 // Use of this source code is governed by the MIT license, a copy of which can
 // be found in the LICENSE file.
 
-$scheduledFile = __DIR__ . '/scheduled.txt';
-if (!file_exists($scheduledFile))
-    exit;
+if ($_SERVER['argc'] < 2 || $_SERVER['argv'][1] !== 'force') {
+    $scheduledFile = __DIR__ . '/scheduled.txt';
+    if (!file_exists($scheduledFile))
+        exit;
 
-$requested = file_get_contents($scheduledFile);
-if (!unlink($scheduledFile))
-    exit;
+    $requested = file_get_contents($scheduledFile);
+    if (!unlink($scheduledFile))
+        exit;
 
-if ((time() - $requested) > 120)
-    exit;
+    if ((time() - $requested) > 120)
+        exit;
+}
 
 $commands = [
     // Updates the local copy of the repository with the most recent remote changes.
