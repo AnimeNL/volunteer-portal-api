@@ -12,6 +12,7 @@ class User {
 
         this.options_ = {};
 
+        this.observers_ = [];
         this.readyPromise_ = this.load();
     }
 
@@ -26,6 +27,12 @@ class User {
 
     // Gets the security token of this user, or null when unavailable.
     get token() { return this.token_; }
+
+    // Registers |observer| as a callable that is to be invoked when the user's state changes, that
+    // is, when they identify or sign out. Will be called with the updated User instance.
+    observe(observer) {
+        this.observers_.push(observer);
+    }
 
     // Gets the value of |option|, or |defaultValue| when the option has not been previously set.
     getOption(option, defaultValue = null) {
@@ -62,6 +69,9 @@ class User {
 
                         this.options_ = {};
 
+                        // The user has logged in, inform the observers of this action.
+                        this.observers_.forEach(observer => observer(this));
+
                         return resolve(this.store());
                     }
                 } catch (e) {
@@ -86,6 +96,9 @@ class User {
         this.token_ = null;
 
         this.options_ = {};
+
+        // The user has signed out, inform the observers of this action.
+        this.observers_.forEach(observer => observer(this));
 
         return this.store();
     }
@@ -145,7 +158,7 @@ class User {
                 options: this.options_
             });
 
-            resolve();
+            resolve(this);
         });
     }
 }
