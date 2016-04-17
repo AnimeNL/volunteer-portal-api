@@ -3,6 +3,7 @@
 // be found in the LICENSE file.
 
 const ConventionLoader = require('./convention_loader');
+const Utils = require('./utils');
 
 // Represents the convention whose volunteers this portal has been built for. It has knowledge of
 // the volunteers, locations and events, to the extend the server thinks it's appropriate for them
@@ -28,6 +29,64 @@ class Convention {
     // Gets the volunteers for this convention. The list will be sorted by their full name.
     get volunteers() { return this.volunteers_; }
 
+    // Finds a volunteer named |name| and returns the ConventionVolunteer instance when found, or
+    // NULL when not found. When |isSlug| is set to true, the |name| will be compared to the
+    // volunteer's slug rather than their name.
+    findVolunteer(name, isSlug = false) {
+        for (let volunteer of this.volunteers_) {
+            if (!isSlug && name === volunteer.name)
+                return volunteer;
+
+            if (isSlug && name === volunteer.slug)
+                return volunteer;
+        }
+
+        return null;
+    }
+
+    // Finds the active and upcoming events for each known location. The |activeOnly| and |floor|
+    // constraints may optionally be given to limit the set of returned events.
+    findUpcomingEvents({ activeOnly = false, floor = null, hidden = false } = {}) {
+        const currentTime = Utils.getTime();
+        const maxUpcomingPerLocation = 2;
+
+        let floors = {};
+
+        for (let location of this.locations_) {
+            if (floor && location.floor !== floor)
+                continue;
+
+            let sessions = [];
+
+            for (let session of location.sessions) {
+                if (session.isHidden() && !hidden)
+                    continue;
+
+                if (session.endTime < currentTime)
+                    continue;
+
+                const isActive = session.beginTime <= currentTime;
+                if (!isActive && activeOnly)
+                    continue;
+
+                if (!isActive && sessions.length >= maxUpcomingPerLocation)
+                    continue;
+
+                sessions.push(session);
+            }
+
+            if (!floors.hasOwnProperty(location.floor))
+                floors[location.floor] = [];
+
+            floors[location.floor].push({
+                location: location,
+                sessions: sessions
+            });
+        }
+
+        return floors;
+    }
+
     // Loads all information of the convention available to |user|. Returns a Promise that will be
     // resolved with this Convention instance when the information is available, or will be rejected
     // with an error in case the information cannot be loaded.
@@ -44,21 +103,6 @@ class Convention {
             this.volunteers_ = data.volunteers;
             return this;
         });
-    }
-
-    // Finds a volunteer named |name| and returns the ConventionVolunteer instance when found, or
-    // NULL when not found. When |isSlug| is set to true, the |name| will be compared to the
-    // volunteer's slug rather than their name.
-    findVolunteer(name, isSlug = false) {
-        for (let volunteer of this.volunteers_) {
-            if (!isSlug && name === volunteer.name)
-                return volunteer;
-
-            if (isSlug && name === volunteer.slug)
-                return volunteer;
-        }
-
-        return null;
     }
 
     // Will be invoked when the user identifies to an account, or signs out of their account. The

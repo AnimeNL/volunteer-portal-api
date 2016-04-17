@@ -13,7 +13,7 @@ class ConventionLocation {
 
         this.floor_ = floor;
 
-        this.session_ = [];
+        this.sessions_ = [];
     }
 
     // Gets the name of this location.
@@ -26,16 +26,16 @@ class ConventionLocation {
     get floor() { return this.floor_; }
 
     // Gets the array of session that will take place in this location.
-    get session() { return this.session_; }
+    get sessions() { return this.sessions_; }
 
     // Adds |session| to the list of event sessions taking place in this location.
     addSession(session) {
-        this.session_.push(session);
+        this.sessions_.push(session);
     }
 
     // Returns whether any of the sessions in the location are visible.
     hasVisibleEvents() {
-        for (let session of this.session_) {
+        for (let session of this.sessions_) {
             if (!session.isHidden())
                 return true;
         }
@@ -47,22 +47,6 @@ class ConventionLocation {
     // TODO: These methods exist whilst I transition the existing schedule implementation.
 
     GetEvents() { return []; }
-
-    GetUpcomingEvents(maxCount, showHidden) {
-        let events = [];
-
-        for (let session of this.session_) {
-            if (events.length >= maxCount)
-                break;
-
-            if (!showHidden && session.isHidden())
-                continue;
-
-            events.push(session);
-        }
-
-        return events;
-    }
 }
 
 module.exports = ConventionLocation;

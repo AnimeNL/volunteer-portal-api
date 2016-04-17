@@ -133,15 +133,25 @@ ContentHandler.prototype.OnPeriodicUpdate = function(rootElement) {
       self = this;
 
   this.application_.GetSchedule().then(function(schedule) {
-    var events = schedule.GetCurrentEvents(include_hidden);
+    var activeEvents = schedule.findUpcomingEvents({ activeOnly: true, hidden: include_hidden });
 
-    // Create labels for activity on each of the floors. These indicate how
-    // many active events there are, and how many stewards are active there.
+    function countSessionsForFloor(floor) {
+      if (!activeEvents.hasOwnProperty(floor))
+        return 0;
+
+      var count = 0;
+      activeEvents[floor].forEach(function(locationInfo) {
+        count += locationInfo.sessions.length;
+      });
+
+      return count;
+    }
+
     self.cache_ = {
-      'label-oceans':     self.CreateMenuLabel(events['-1']),
-      'label-continents': self.CreateMenuLabel(events[0]),
-      'label-rivers':     self.CreateMenuLabel(events[1]),
-      'label-mountains':  self.CreateMenuLabel(events[2])
+      'label-oceans':     countSessionsForFloor('-1') || '',
+      'label-continents': countSessionsForFloor(0) || '',
+      'label-rivers':     countSessionsForFloor(1) || '',
+      'label-mountains':  countSessionsForFloor(2) || '',
     };
 
     // Update the tree now that the caches have been reset.

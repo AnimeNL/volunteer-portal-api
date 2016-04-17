@@ -29,7 +29,7 @@ FloorPage.FLOORS = {
 
 // Builds an event entry for the current and next events for a location. If
 // |event| is NULL, a no-event row will be created instead.
-FloorPage.prototype.BuildEventRow = function(session) {
+FloorPage.prototype.BuildSessionRow = function(session) {
   var container = document.createElement('li');
   if (!session) {
     container.className = 'list-item-no-content';
@@ -61,14 +61,17 @@ FloorPage.prototype.BuildEventRow = function(session) {
   return container;
 };
 
-// Builds a card for |location|, to be displayed in the room overview for the
+// Builds a card for |locationInfo|, to be displayed in the room overview for the
 // current floor. An icon will indicate if Stewards are currently active there.
-FloorPage.prototype.BuildRoomCard = function(location) {
+FloorPage.prototype.BuildRoomCard = function(locationInfo) {
   var container = document.createElement('div'),
       header = document.createElement('h3'),
       eventList = document.createElement('ol'),
       footer = document.createElement('footer'),
       self = this;
+
+  var location = locationInfo.location;
+  var sessions = locationInfo.sessions;
 
   container.className = 'material-card pointer material-card-bottom-spacing';
   if (location.name.indexOf('Neil') !== -1)
@@ -83,15 +86,12 @@ FloorPage.prototype.BuildRoomCard = function(location) {
 
   eventList.className = 'material-list list-room-event';
 
-  var upcomingEvents = location.GetUpcomingEvents(
-      FloorPage.EVENT_COUNT, this.application_.GetUser().getOption('hidden_events', false));
-
-  upcomingEvents.forEach(function(session) {
-    eventList.appendChild(self.BuildEventRow(session));
+  sessions.forEach(function(session) {
+    eventList.appendChild(self.BuildSessionRow(session));
   });
 
-  if (!upcomingEvents.length) {
-    eventList.appendChild(self.BuildEventRow());
+  if (!sessions.length) {
+    eventList.appendChild(self.BuildSessionRow());
     container.classList.add('room-finished');
   }
 
@@ -103,7 +103,7 @@ FloorPage.prototype.BuildRoomCard = function(location) {
   container.appendChild(footer);
 
   return { name: location.name,
-           has_events: !!upcomingEvents.length,
+           has_events: !!sessions.length,
            node: container };
 };
 
@@ -125,14 +125,11 @@ FloorPage.prototype.OnRender = function(application, container, content) {
   var include_hidden = application.GetUser().getOption('hidden_events', false),
       rendered_locations = [];
 
-  this.schedule_.locations.forEach(function(location) {
-    if (!location.hasVisibleEvents() && !include_hidden)
-      return;
-
-    if (location.floor != currentFloor)
-      return;
-
-    rendered_locations.push(self.BuildRoomCard(location));
+  var floors = this.schedule_.findUpcomingEvents({ floor: currentFloor, hidden: include_hidden });
+  Object.keys(floors).forEach(function(floor) {
+    floors[floor].forEach(function(locationInfo) {
+      rendered_locations.push(self.BuildRoomCard(locationInfo));
+    });
   });
 
   rendered_locations.sort(function(lhs, rhs) {
