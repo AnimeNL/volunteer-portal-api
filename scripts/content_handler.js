@@ -83,15 +83,19 @@ ContentHandler.prototype.UpdateElement =
 
   if (this.cache_.hasOwnProperty(variable)) {
     value = this.cache_[variable];
-  } else if (variable == 'build-type') {
-    value = MockPageLoadDate() ? 'debug' : 'prod';
   } else if (variable == 'display-events-toggle') {
     value = this.application_.GetUser().getOption('hidden_events', false) ?
         'Hide hidden events' : 'Show hidden events';
   } else if (variable == 'event-name') {
     value = this.application_.GetConfig().title;
   } else if (variable == 'time') {
-    value = GetCurrentDate().toString();
+    var date = GetCurrentDate();
+
+    value  = date.getUTCFullYear() + '-' + ('0' + (date.getUTCMonth() + 1)).substr(-2) + '-' +
+                                           ('0' + date.getUTCDate()).substr(-2) + ' ';
+    value += ('0' + date.getUTCHours()).substr(-2) + ':' + ('0' + date.getUTCMinutes()).substr(-2)
+                                                   + ':' + ('0' + date.getUTCSeconds()).substr(-2);
+
   } else if (variable == 'username') {
     value = this.application_.GetUser().name;
   } else {
