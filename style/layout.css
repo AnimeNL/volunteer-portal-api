@@ -202,6 +202,13 @@ div.past > h2::after {
   content: ' \e877';
 }
 
+.room-finished h3::after {
+  position: relative;
+  top: 2px;
+  left: 2px;
+  color: #1976d2;
+}
+
 div.past > h2::after { opacity: .8; }
 
 .list-item-event.past-no-collapse > div.event > h2 {
@@ -268,11 +275,11 @@ li.list-item-room-event {
 
 .list-item-room-event.active > .event::before {
   position: absolute;
-  margin-left: -17px;
+  margin-left: -16px;
 
   font-family: 'material-icons';
 
-  content: "\e039";
+  content: "\e037";
   color: #e64a19;
 }
 
@@ -368,8 +375,11 @@ li.list-item-steward {
   display: none;
 }
 
+.room-finished { padding-bottom: 8px; }
 .room-finished h3 {
   color: #8b8b8b;
+  border-bottom: none;
+  padding-bottom: 0px;
 }
 
 .room-neil h3::after {

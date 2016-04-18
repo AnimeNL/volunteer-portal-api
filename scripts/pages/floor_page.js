@@ -46,18 +46,14 @@ FloorPage.prototype.BuildSessionRow = function(session) {
     container.className += ' active';
 
   time.className = 'time';
-  if (session)
-    time.textContent = session.getFormattedTime();
+  time.textContent = session.getFormattedTime();
 
   name.className = 'event';
-  if (session)
-    name.textContent = session.name;
-  else
-    name.innerHTML = '<i>No scheduled events.</i>';
+  name.textContent = session.name;
 
-  if (session)
-    container.appendChild(time);
+  container.appendChild(time);
   container.appendChild(name);
+
   return container;
 };
 
@@ -90,17 +86,18 @@ FloorPage.prototype.BuildRoomCard = function(locationInfo) {
     eventList.appendChild(self.BuildSessionRow(session));
   });
 
-  if (!sessions.length) {
-    eventList.appendChild(self.BuildSessionRow());
+  if (!sessions.length)
     container.classList.add('room-finished');
-  }
 
   footer.textContent = 'Full schedule';
 
   // Put them all together and return the container.
   container.appendChild(header);
-  container.appendChild(eventList);
-  container.appendChild(footer);
+
+  if (sessions.length) {
+    container.appendChild(eventList);
+    container.appendChild(footer);
+  }
 
   return { name: location.name,
            has_events: !!sessions.length,
