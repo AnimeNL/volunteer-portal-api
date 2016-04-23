@@ -616,15 +616,33 @@ span[content-label].update .upcoming {
 
 /** Page: Identification **/
 
-.login-screen > img {
-  position: absolute;
-  top: 16px;
+.login-screen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 475px;
 }
 
-.login-screen > section > h1 { color: #105e77; }
-.login-screen > section {
-  position: absolute;
+.login-screen-content {
+  min-width: 500px;
+  max-width: 40%;
+
+  padding-bottom: calc(30vh - 150px);
 }
+
+.login-screen-content > img {
+  display: block;
+  margin: 0 auto 32px auto;
+}
+
+.login-screen-content > section > h1 { color: #FF6D00; }
+
+.login-screen-content > section {
+
+}
+
+
 
 @media all and (max-width: 559px) {
   .login-screen { background-image: url(/images/login-background-mobile.jpg); background-size: 100% auto; }
@@ -634,6 +652,5 @@ span[content-label].update .upcoming {
 
 @media all and (min-width: 560px) {
   .login-screen { background-image: url(/images/login-background.jpg); background-size: cover; }
-  .login-screen > img { left: calc(50% - 145px); }
-  .login-screen > section { width: 500px; left: calc(50% - 250px); top: 300px; }
+
 }
