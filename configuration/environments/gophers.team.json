@@ -2,5 +2,6 @@
     "name": "Gopher Portal",
     "short_name": "Gophers",
     "hostname": "gophers.team",
-    "team_data": "gophers.json"
+    "team_data": "gophers.json",
+    "year": 2016
 }

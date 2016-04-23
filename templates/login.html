@@ -1,11 +1,13 @@
 <template id="login">
   <div id="content" class="login-screen">
      <div class="login-screen-content">
-      <img src="/images/login-logo.png" alt="Anime 2015: Do not try this at home!" />
+      <img src="/images/login-logo.png" alt="Anime 2016: All aboard!" />
       <section class="material material-card">
-        <h1>Steward Portal</h1>
+        <h1><?php echo $environment->getName(); ?></h1>
         <p>
-          Log in to the Anime 2015 Steward Portal using your full name. Forgot your name? Ask <a href="sms:+447427457387">Peter</a>!
+          Log in to the <?php echo $environment->getName(); ?> for volunteers of Anime
+          <?php echo $environment->getYear(); ?> using your full name. Please contact
+          <a href="sms:+447427457387">Peter</a> in case you forgot your name!
         </p>
         <form id="login-form" class="material-form">
           <div class="material-form-input-text material-form-stretch">

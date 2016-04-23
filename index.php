@@ -3,7 +3,21 @@
 // Use of this source code is governed by the MIT license, a copy of which can
 // be found in the LICENSE file.
 
-$templates = glob(__DIR__ . '/templates/*.html');
+require_once __DIR__ . '/vendor/autoload.php';
+
+$environment = \Anime\Environment::createForHostname($_SERVER['HTTP_HOST']);
+if (!$environment->isValid())
+  die('This domain name has not been configured for the volunteer portal.');
+
+$templates = [
+  'event-page.html',
+  'floors-page.html',
+  'layout.html',
+  'login.html',
+  'overview-page.html',
+  'schedule-page.html',
+  'stewards-page.html'
+];
 
 // -------------------------------------------------------------------------------------------------
 
@@ -38,10 +52,8 @@ Header('Content-Security-Policy: default-src \'self\' \'sha256-' . $shellStyleHa
   <body>
     <div class="container initial"></div>
 <?php
-foreach ($templates as $file) {
-    // TODO: Indent?
-  echo file_get_contents($file);
-}
+foreach ($templates as $file)
+  include(__DIR__ . '/templates/' . $file);
 ?>
     <script src="/scripts/aggregated.php"></script>
     <script src="/anime.js"></script>

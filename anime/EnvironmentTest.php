@@ -48,7 +48,8 @@ class EnvironmentTest extends \PHPUnit_Framework_TestCase {
             'name'          => 'Example environment',
             'short_name'    => 'Example',
             'hostname'      => 'example.com',
-            'team_data'     => 'team.json'
+            'team_data'     => 'team.json',
+            'year'          => 2024
         ];
 
         $environment = Environment::createForTests(true /* valid */, $settings);
@@ -59,6 +60,8 @@ class EnvironmentTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($settings['hostname'], $environment->getHostname());
 
         // TODO: Test the |loadTeam()| method.
+
+        $this->assertEquals($settings['year'], $environment->getYear());
     }
 
     // Verifies that creating an invalid environment does not rely on any particular properties

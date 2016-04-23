@@ -49,6 +49,7 @@ class Environment {
     private $shortName;
     private $hostname;
     private $teamDataFile;
+    private $year;
 
     // Constructor for the Environment class. The |$valid| boolean must be set, and, when set to
     // true, the |$settings| array must be given with all intended options.
@@ -64,6 +65,7 @@ class Environment {
         $this->shortName = $settings['short_name'];
         $this->hostname = $settings['hostname'];
         $this->teamDataFile = $settings['team_data'];
+        $this->year = $settings['year'];
     }
 
     // Returns whether this Environment instance represents a valid environment.
@@ -95,5 +97,10 @@ class Environment {
         }
 
         return $this->team;
+    }
+
+    // Returns the year for which this environment has been created.
+    public function getYear() : int {
+        return $this->year;
     }
 }
