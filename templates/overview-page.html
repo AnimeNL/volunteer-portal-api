@@ -6,16 +6,19 @@
     <div class="material-card material-card-root card-shift card-shift-no-pointer">
       <h3>Steward Portal</h3>
       <p>
-        Hi there, <strong content="username"></strong>! You're looking at the Anime 2015
-        Steward Portal, which contains all the information you need to run your shifts.
+        Hi there, <strong content="username"></strong>! You're looking at the
+        <?php echo $environment->getName(); ?> for volunteers of Anime
+        <?php echo $environment->getYear(); ?>. This site contains all the information
+        you need to run your shifts.
       </p>
       <p>
         Use the menu button in the top-left corner to look at your schedule, the other
-        stewards and information about any of the events scheduled for Anime 2015.
+        stewards and information about any of the events scheduled for Anime
+        <?php echo $environment->getYear(); ?>.
       </p>
       <p>
         You've been scheduled for <strong id="shift_count">0</strong> shifts during the
-        convention. Please talk to Neil or a Senior Steward if you won't be able to
+        convention. Please talk to one of the Senior Stewards if you won't be able to
         attend any of your shifts.
       </p>
     </div>
