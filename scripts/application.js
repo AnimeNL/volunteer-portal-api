@@ -3,8 +3,8 @@
 // be found in the LICENSE file.
 
 const Convention = require('./convention');
+const DateUtils = require('./date_utils');
 const User = require('./user');
-const Utils = require('./utils');
 
 // Main object for the application. Controls all shared logic, the router and the views systems that
 // together work to present the user interface.
@@ -37,7 +37,7 @@ class Application {
 
     // Returns the current time as a UNIX timestamp with microsecond precision. 
     getTime() {
-        return Utils.getTime();
+        return DateUtils.getTime();
     }
 }
 

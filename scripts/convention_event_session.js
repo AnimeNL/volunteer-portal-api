@@ -2,7 +2,7 @@
 // Use of this source code is governed by the MIT license, a copy of which can
 // be found in the LICENSE file.
 
-const Utils = require('./utils');
+const DateUtils = require('./date_utils');
 
 // Represents one of the events that happens at the convention. Will store all related information,
 // and has convenience methods for retrieving the location and stewards associated with it.
@@ -19,8 +19,8 @@ class ConventionEventSession {
             throw new Error('A session must have a known begin and end time.');
         }
 
-        this.begin_ = new Date(sessionData.begin * 1000);
-        this.end_ = new Date(sessionData.end * 1000);
+        this.beginTime_ = sessionData.begin * 1000;
+        this.endTime_ = sessionData.end * 1000;
 
         this.event_ = event;
         this.location_ = location;
@@ -35,17 +35,11 @@ class ConventionEventSession {
     // Gets the description of this session. May be NULL.
     get description() { return this.description_; }
 
-    // Gets the Date object representing the begin time of this session.
-    get begin() { return this.begin_; }
-
     // Gets the UNIX timestamp at microsecond granularity of the session's begin time.
-    get beginTime() { return this.begin_.getTime(); }
-
-    // Gets the Date object representing the end time of this session.
-    get end() { return this.end_; }
+    get beginTime() { return this.beginTime_; }
 
     // Gets the UNIX timestamp at microsecond granularity of the session's end time.
-    get endTime() { return this.end_.getTime(); }
+    get endTime() { return this.endTime_; }
 
     // Gets the event that this session is part of.
     get event() { return this.event_; }
@@ -58,16 +52,17 @@ class ConventionEventSession {
 
     // Returns whether this session is currently in progress.
     isActive() {
-        const currentTime = Utils.getTime();
+        const currentTime = DateUtils.getTime();
 
-        return this.begin_.getTime() <= currentTime && this.end_.getTime() > currentTime;
+        return this.beginTime_ <= currentTime && this.endTime_ > currentTime;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // TODO: These methods exist whilst I transition the existing schedule implementation.
 
     getFormattedTime() {
-        return Utils.formatDisplayTime(this.begin_) + ' - ' + Utils.formatDisplayTime(this.end_);
+        return DateUtils.format(this.beginTime_, DateUtils.FORMAT_DAY_SHORT_TIME) + ' - ' +
+               DateUtils.format(this.endTime_, DateUtils.FORMAT_DAY_SHORT_TIME);
     }
 }
 

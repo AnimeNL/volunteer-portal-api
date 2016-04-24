@@ -3,7 +3,7 @@
 // be found in the LICENSE file.
 
 const ConventionLoader = require('./convention_loader');
-const Utils = require('./utils');
+const DateUtils = require('./date_utils');
 
 // Represents the convention whose volunteers this portal has been built for. It has knowledge of
 // the volunteers, locations and events, to the extend the server thinks it's appropriate for them
@@ -47,7 +47,7 @@ class Convention {
     // Finds the active and upcoming events for each known location. The |activeOnly| and |floor|
     // constraints may optionally be given to limit the set of returned events.
     findUpcomingEvents({ activeOnly = false, floor = null, hidden = false } = {}) {
-        const currentTime = Utils.getTime();
+        const currentTime = DateUtils.getTime();
         const maxUpcomingPerLocation = 2;
 
         let floors = {};
