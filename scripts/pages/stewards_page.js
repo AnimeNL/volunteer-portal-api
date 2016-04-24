@@ -36,8 +36,15 @@ StewardsPage.prototype.BuildStewardRow = function(steward) {
   var activeShift = steward.GetCurrentShift(),
       nextShift = steward.GetNextShift();
 
+  if (steward.isSenior()) {
+    activeShift = {
+      event: { GetName() { return 'Some Event'; } },
+      end: new Date()
+    };
+  }
+
   if (activeShift !== null) {
-    var activeText = ' - ' + activeShift.event.GetName() + ' until ';
+    var activeText = ' – ' + activeShift.event.GetName() + ' until ';
     activeText += ('0' + activeShift.end.getHours()).substr(-2) + ':';
     activeText += ('0' + activeShift.end.getMinutes()).substr(-2);
 
@@ -55,11 +62,7 @@ StewardsPage.prototype.BuildStewardRow = function(steward) {
   if (steward.isSenior()) {
     badgeIcon = document.createElement('span');
     badgeIcon.className = 'senior-badge';
-    badgeIcon.textContent = '\uE885';
-  } else if (steward.telephone !== null) {
-    badgeIcon = document.createElement('span');
-    badgeIcon.className = 'telephone';
-    badgeIcon.textContent = '\uE0B0';
+    badgeIcon.textContent = '\uE8D0';
   }
 
   container.appendChild(name);

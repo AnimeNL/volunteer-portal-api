@@ -118,7 +118,7 @@ ul.material-menu {
               height 0.33s ease-in-out;
 }
 
-.material-menu > li:active { background-color: #eee; }
+.material-menu > li:active { background-color: #ECEFF1; }
 .material-menu > li {
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -326,10 +326,6 @@ ul.material-menu {
   height: 72px;
 }
 
-.material-list > li > span.telephone { background-color: #1976d2; }
-.material-list > li > span.senior-badge { background-color: #e64a19;  }
-
-.material-list > li > span.telephone,
 .material-list > li > span.senior-badge {
   display: block;
   position: absolute;
@@ -340,11 +336,15 @@ ul.material-menu {
   width: 20px;
   height: 20px;
 
+  background-color: #455A64;
+
   font-family: 'material-icons';
-  font-size: .8em;
-  line-height: 21px;
+  font-size: 1.7em;
+  line-height: 20px;
   text-align: center;
   color: white;
+
+  text-indent: -3px;
 }
 
 .material-list-item h2,

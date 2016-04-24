@@ -294,6 +294,10 @@ li.list-item-room-event {
 
 li.list-item-steward-no-pointer { cursor: default; }
 
+li.list-item-steward.active:active {
+  background-color: #FFF59D;
+}
+
 li.list-item-steward {
   transition: background-color .4s cubic-bezier(.4, 0, .2, 1),
               -webkit-filter .4s cubic-bezier(.4, 0, .2, 1);
@@ -310,7 +314,11 @@ li.list-item-steward {
 }
 
 .list-item-steward.active {
-  background-color: #fff9c4;
+  background-color: #FFFDE7;
+}
+
+.list-item-steward.active + .list-item-steward.active > div {
+  border-top: 1px solid #CFD8DC;
 }
 
 .list-item-steward.past {
@@ -328,7 +336,9 @@ li.list-item-steward {
   width: calc(100% - 64px);
 
   vertical-align: top;
-  height: 72px;
+  height: 71px;
+
+  border-top: 1px solid #eee;
 }
 
 .list-item-steward div h2 {
@@ -362,7 +372,7 @@ li.list-item-steward {
   font-smooth: always;
 
   text-decoration: none;
-  color: #1976d2;
+  color: #0D47A1;
 }
 
 .warning-card.future { display: block; }
