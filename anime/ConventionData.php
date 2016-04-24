@@ -14,7 +14,7 @@ class ConventionData {
 
     // Compiles the convention data required by the front-end for the |$volunteer|. The used data
     // will depend on the active |$environment|. Returns an array that could be send to the user.
-    public static function CompileForVolunteer(Environment $environment, Volunteer $volunteer) {
+    public static function compileForVolunteer(Environment $environment, Volunteer $volunteer) {
         $compiler = new ConventionData($environment, $volunteer);
         return [
             'events'        => $compiler->compileEvents(),
@@ -39,7 +39,7 @@ class ConventionData {
         $program = json_decode(file_get_contents(self::PROGRAM_FILE), true);
 
         if (!$this->isSeniorVolunteer()) {
-            $program = array_values(array_filter($program, function($entry) {
+            $program = array_values(array_filter($program, function ($entry) {
                 return !$entry['hidden'];
             }));
         }

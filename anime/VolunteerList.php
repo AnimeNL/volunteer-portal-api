@@ -13,7 +13,7 @@ namespace Anime;
 class VolunteerList implements \ArrayAccess, \Countable, \IteratorAggregate {
     // Creates a new instance of the VolunteerList based on |$volunteerData|, each of which will
     // be loaded in to a new instance of the Volunteer class.
-    static function create(array $volunteerData) : VolunteerList {
+    public static function create(array $volunteerData) : VolunteerList {
         $volunteers = [];
 
         // Volunteer::__construct is expected to throw for invalid data.

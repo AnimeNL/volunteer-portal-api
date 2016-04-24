@@ -154,22 +154,30 @@ class ImportProgramServiceTest extends \PHPUnit_Framework_TestCase {
 
         $this->assertEquals([
             [
-                'name'          => 'Example event',
-                'description'   => 'Description of event',
-                'begin'         => 1465430400,
-                'end'           => 1465432200,
-                'location'      => 'Asia',
-                'floor'         => -1,
-                'hidden'        => false
+                'sessions'  => [
+                    [
+                        'name'          => 'Example event',
+                        'description'   => 'Description of event',
+                        'begin'         => 1465430400,
+                        'end'           => 1465432200,
+                        'location'      => 'Asia',
+                        'floor'         => -1
+                    ]
+                ],
+                'hidden'    => false
             ],
             [
-                'name'          => 'Another event',
-                'description'   => 'Description of another event',
-                'begin'         => 1465433100,
-                'end'           => 1465434000,
-                'location'      => 'Atlantic / Dealer Room',
-                'floor'         => 2,
-                'hidden'        => true
+                'sessions'  => [
+                    [
+                        'name'          => 'Another event',
+                        'description'   => 'Description of another event',
+                        'begin'         => 1465433100,
+                        'end'           => 1465434000,
+                        'location'      => 'Atlantic / Dealer Room',
+                        'floor'         => 2
+                    ]
+                ],
+                'hidden'    => true
             ]
         ], $service->convertToIntermediateProgramFormat([
             [
@@ -201,21 +209,29 @@ class ImportProgramServiceTest extends \PHPUnit_Framework_TestCase {
     public function testImportProgramService() {
         $this->assertEquals([
             [
-                'name'          => 'Example event',
-                'description'   => 'Description of event',
-                'begin'         => 1465430400,
-                'end'           => 1465434000,
-                'location'      => 'Asia',
-                'floor'         => -1,
-                'hidden'        => false
+                'sessions'  => [
+                    [
+                        'name'          => 'Example event',
+                        'description'   => 'Description of event',
+                        'begin'         => 1465430400,
+                        'end'           => 1465434000,
+                        'location'      => 'Asia',
+                        'floor'         => -1
+                    ]
+                ],
+                'hidden'    => false
             ],
             [
-                'name'          => 'Another event',
-                'description'   => 'Description of another event',
-                'begin'         => 1465433100,
-                'end'           => 1465434000,
-                'location'      => 'Atlantic / Dealer Room',
-                'floor'         => 2,
+                'sessions'  => [
+                    [
+                        'name'          => 'Another event',
+                        'description'   => 'Description of another event',
+                        'begin'         => 1465433100,
+                        'end'           => 1465434000,
+                        'location'      => 'Atlantic / Dealer Room',
+                        'floor'         => 2
+                    ]
+                ],
                 'hidden'        => true
             ]
         ], $this->importFromData([

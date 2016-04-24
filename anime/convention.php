@@ -27,4 +27,4 @@ if (!($volunteer instanceof \Anime\Volunteer))
     dieWithError('Invalid token.');
 
 // The ConventionData class is in charge of making the actual data selections.
-die(json_encode(\Anime\ConventionData::CompileForVolunteer($environment, $volunteer)));
+die(json_encode(\Anime\ConventionData::compileForVolunteer($environment, $volunteer)));
