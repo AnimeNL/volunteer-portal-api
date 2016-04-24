@@ -46,6 +46,18 @@ class DateUtils {
         return new Date(time + TARGET_TIMEZONE_OFFSET * 60 * 60 * 1000);
     }
 
+    // Formats the date in YYYY-MM-DD format. Assumes |date| to be a Date instance containing the
+    // correct time in UTC time.
+    static formatDate(date) {
+        let formattedDate = '';
+
+        formattedDate += date.getUTCFullYear();
+        formattedDate += '-' + ('0' + (date.getUTCMonth() + 1)).substr(-2);
+        formattedDate += '-' + ('0' + date.getUTCDate()).substr(-2);
+
+        return formattedDate;
+    }
+
     // Formats the time in HH:MM(:SS) format. Assumes |date| to be a Date instance containing the
     // correct time in UTC time. Including the seconds can be controlled using |includeSeconds|.
     static formatTime(date, includeSeconds = false) {
@@ -58,6 +70,18 @@ class DateUtils {
             formattedTime += ':' + ('0' + date.getUTCSeconds()).substr(-2);
 
         return formattedTime;
+    }
+
+    // Formats the timezone offset for |offsetHours| into an ISO 8601-compatible representation.
+    static formatTimezoneOffset(offsetHours) {
+        const offset = offsetHours * 3600;
+        const prefix = offset >= 0 ? '+' : '-';
+
+        let formattedOffset = prefix;
+        formattedOffset += ('0' + Math.floor(offset / 3600)).substr(-2);
+        formattedOffset += ':' + ('0' + Math.floor((offset % 3600) / 60)).substr(-2);
+
+        return formattedOffset;
     }
 
     // Formats the current day of the week for |date|. Assumes |date| to be a Date instance
@@ -74,12 +98,17 @@ class DateUtils {
     // Formats |time| to be displayed according to the |format|. The |time| is expected to be a
     // UNIX timestamp in millisecond granularity in the UTC timezone.
     static format(time, format) {
-        const localTime = DateUtils.toTargetTimezone(time);
+        const localDate = DateUtils.toTargetTimezone(time);
 
         switch (format) {
+            case DateUtils.FORMAT_ISO_8601:
+                return DateUtils.formatDate(localDate) + 'T' +
+                       DateUtils.formatTime(localDate, true /* includeSeconds */) +
+                       DateUtils.formatTimezoneOffset(TARGET_TIMEZONE_OFFSET);
+
             case DateUtils.FORMAT_DAY_SHORT_TIME:
-                return DateUtils.formatDay(localTime, true /* shortDays */) + ' ' +
-                       DateUtils.formatTime(localTime, false /* includeSeconds */);
+                return DateUtils.formatDay(localDate, true /* shortDays */) + ' ' +
+                       DateUtils.formatTime(localDate, false /* includeSeconds */);
 
             default:
                 throw new Error('Unexpected format type: ' + format);
@@ -87,7 +116,15 @@ class DateUtils {
     }
 }
 
+// Formats the time as "YYYY-MM-DDTHH:II:SS+[OFFSET]" (ISO 8601).
+DateUtils.FORMAT_ISO_8601 = 0;
+
 // Formats the time as "DAY HH:II".
-DateUtils.FORMAT_DAY_SHORT_TIME = 0;
+DateUtils.FORMAT_DAY_SHORT_TIME = 1;
 
 module.exports = DateUtils;
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// TODO: This exposure exist whilst I transition the existing schedule implementation.
+
+global.DateUtils = DateUtils;

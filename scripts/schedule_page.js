@@ -134,7 +134,7 @@ SchedulePage.prototype.RenderEntries = function(entries, noDataMessage) {
     });
   });
 
-  var todayTime = new Date(GetCurrentDate().toDateString()).getTime(),
+  var todayTime = new Date(DateUtils.toDateString()).getTime(),
       days = Object.keys(entriesPerDay).map(Date.parse);
 
   days.sort(function(lhs, rhs) {

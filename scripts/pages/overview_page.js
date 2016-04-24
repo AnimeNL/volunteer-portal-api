@@ -78,7 +78,7 @@ OverviewPage.prototype.FormatOtherStewards =
 
 // Compiles the text to display in the "current shift" box.
 OverviewPage.prototype.CompileTextForCurrentEvent = function(shift) {
-  var current_time = GetCurrentDate().getTime(),
+  var current_time = DateUtils.getTime(),
       remaining_time = shift.end.getTime() - current_time,
       message = '';
 
@@ -90,7 +90,7 @@ OverviewPage.prototype.CompileTextForCurrentEvent = function(shift) {
 
 // Compiles the text to display in the "next shift" box.
 OverviewPage.prototype.CompileTextForFutureShift = function(shift) {
-  var current_time = GetCurrentDate().getTime(),
+  var current_time = DateUtils.getTime(),
       remaining_time = shift.begin.getTime() - current_time,
       message = '';
 
@@ -139,7 +139,7 @@ OverviewPage.prototype.OnRender = function(application, container, content) {
 
   // Display clear banners for the current and/or upcoming shift of the
   // logged in steward. These help us quickly navigate where to go next.
-  var current_time = GetCurrentDate().getTime(),
+  var current_time = DateUtils.getTime(),
       current_shift = null,
       upcoming_shift = null;
 

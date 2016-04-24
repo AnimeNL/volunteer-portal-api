@@ -38,7 +38,7 @@ EventUpdateHandler.prototype.UpdateElement = function(element, begin, end, time)
 // status updated. All elements with begin and end times will be considered.
 EventUpdateHandler.prototype.UpdateTree = function(rootElement) {
   var elements = rootElement.querySelectorAll('[event-begin][event-end]'),
-      currentTime = GetCurrentDate().getTime();
+      currentTime = DateUtils.getTime();
 
   for (var i = 0; i < elements.length; ++i) {
     this.UpdateElement(elements[i],

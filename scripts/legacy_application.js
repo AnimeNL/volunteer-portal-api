@@ -398,12 +398,6 @@ LegacyApplication.prototype.OnPeriodicUpdate = function() {
 
 // -----------------------------------------------------------------------------
 
-function GetCurrentDate() {
-  return new Date(window.application.getTime());
-}
-
-// -----------------------------------------------------------------------------
-
 // Activate the application when the DOM has finished loading.
 addEventListener('DOMContentLoaded', function() {
   var container = document.querySelector('.container'),

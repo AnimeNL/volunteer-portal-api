@@ -157,7 +157,7 @@ EventPage.prototype.OnRender = function(application, container, content) {
 
   var sessionContainer = document.createDocumentFragment(),
       stewardContainer = document.createDocumentFragment(),
-      currentTime = GetCurrentDate().getTime(),
+      currentTime = DateUtils.getTime(),
       self = this;
 
   this.event_.GetSessions().forEach(function(session) {

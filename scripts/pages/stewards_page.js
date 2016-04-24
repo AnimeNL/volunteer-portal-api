@@ -14,7 +14,7 @@ var StewardsPage = function(application) {
 StewardsPage.prototype = Object.create(Page.prototype);
 
 StewardsPage.prototype.ResetNextUpdate = function() {
-  this.next_update_ = GetCurrentDate().getTime() + 86400100;
+  this.next_update_ = DateUtils.getTime() + 86400100;
 };
 
 // Builds the DOM row for displaying |steward| in the list of stewards.
@@ -119,7 +119,7 @@ Page.prototype.OnPeriodicUpdate = function() {
   if (this.next_update_ == null)
     return;  // something must be wrong.
 
-  if (GetCurrentDate().getTime() < this.next_update_)
+  if (DateUtils.getTime() < this.next_update_)
     return;  // no update is neccesary.
 
   this.ResetNextUpdate();

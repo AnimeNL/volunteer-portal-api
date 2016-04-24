@@ -31,14 +31,6 @@ class Application {
 
     // Gets the Promise that is to be resolved with the Application instance when it's ready.
     get ready() { return this.readyPromise_; }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // TODO: These methods exist whilst I transition the existing schedule implementation.
-
-    // Returns the current time as a UNIX timestamp with microsecond precision. 
-    getTime() {
-        return DateUtils.getTime();
-    }
 }
 
 window.application = new Application();

@@ -89,13 +89,7 @@ ContentHandler.prototype.UpdateElement =
   } else if (variable == 'event-name') {
     value = this.application_.GetConfig().title;
   } else if (variable == 'time') {
-    var date = GetCurrentDate();
-
-    value  = date.getUTCFullYear() + '-' + ('0' + (date.getUTCMonth() + 1)).substr(-2) + '-' +
-                                           ('0' + date.getUTCDate()).substr(-2) + ' ';
-    value += ('0' + date.getUTCHours()).substr(-2) + ':' + ('0' + date.getUTCMinutes()).substr(-2)
-                                                   + ':' + ('0' + date.getUTCSeconds()).substr(-2);
-
+    value = DateUtils.format(DateUtils.getTime(), DateUtils.FORMAT_ISO_8601);
   } else if (variable == 'username') {
     value = this.application_.GetUser().name;
   } else {
