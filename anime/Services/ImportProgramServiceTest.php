@@ -274,6 +274,83 @@ class ImportProgramServiceTest extends \PHPUnit_Framework_TestCase {
         ]));
     }
 
+    // Verifies that events spanning multiple sessions will end up in the same imported group.
+    public function testImportEventSessions() {
+        $this->assertEquals([
+            [
+                'sessions'  => [
+                    [
+                        'name'          => 'First session',
+                        'description'   => 'Description of the first session',
+                        'begin'         => 1465430400,
+                        'end'           => 1465434000,
+                        'location'      => 'Asia',
+                        'floor'         => -1
+                    ],
+                    [
+                        'name'          => 'Second session',
+                        'description'   => 'Description of the second session',
+                        'begin'         => 1465434000,
+                        'end'           => 1465437600,
+                        'location'      => 'Oceania',
+                        'floor'         => -1
+                    ]
+                ],
+                'hidden'    => false
+            ],
+            [
+                'sessions'  => [
+                    [
+                        'name'          => 'Another event',
+                        'description'   => 'Description of another event',
+                        'begin'         => 1465433100,
+                        'end'           => 1465434000,
+                        'location'      => 'Atlantic / Dealer Room',
+                        'floor'         => 2
+                    ]
+                ],
+                'hidden'    => true
+            ]
+        ], $this->importFromData([
+            [
+                'name'      => 'First session',
+                'start'     => '2016-06-09T01:00:00+01:00',
+                'end'       => '2016-06-09T02:00:00+01:00',
+                'location'  => 'Asia',
+                'comment'   => 'Description of the first session',
+                'hidden'    => 0,
+                'floor'     => 'floor--1',
+                'eventId'   => 42424,
+                'tsId'      => 42424,
+                'opening'   => 0 /* event */
+            ],
+            [
+                'name'      => 'Another event',
+                'start'     => '2016-06-09T00:45:00+00:00',
+                'end'       => '2016-06-09T01:00:00+00:00',
+                'location'  => 'Atlantic / Dealer Room',
+                'comment'   => 'Description of another event',
+                'hidden'    => 1,
+                'floor'     => 'floor-2',
+                'eventId'   => 84848,
+                'tsId'      => 84848,
+                'opening'   => 0 /* event */
+            ],
+            [
+                'name'      => 'Second session',
+                'start'     => '2016-06-09T02:00:00+01:00',
+                'end'       => '2016-06-09T03:00:00+01:00',
+                'location'  => 'Oceania',
+                'comment'   => 'Description of the second session',
+                'hidden'    => 0,
+                'floor'     => 'floor--1',
+                'eventId'   => 42424,
+                'tsId'      => 42424,
+                'opening'   => 0 /* event */
+            ]
+        ]));
+    }
+
     // Creates a default instance of the service with void information to make validation happy.
     // Only use this if you won't be using the infrastructure of the service manager.
     private function createDefaultService() : ImportProgramService {
