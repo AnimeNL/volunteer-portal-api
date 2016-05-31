@@ -8,3 +8,4 @@ anime.js
 composer.lock
 npm-debug.log
 sftp-config.json
+*.psd
