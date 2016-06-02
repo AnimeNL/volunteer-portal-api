@@ -218,7 +218,6 @@ class ImportProgramService implements Service {
 
                 'location'      => $entry['location'],
                 'floor'         => (int) (substr($entry['floor'], 6)),
-
             ];
 
             // Coalesce this session with the existing event if it exists.
@@ -228,6 +227,7 @@ class ImportProgramService implements Service {
             }
 
             $events[$entry['eventId']] = [
+                'id'            => $entry['eventId'],
                 'hidden'        => !!$entry['hidden'],
                 'sessions'      => [ $session ]
             ];
