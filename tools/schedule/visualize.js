@@ -8,7 +8,7 @@ var DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'S
     var container = document.getElementById('schedule');
 
     // Hax for people who don't live in the Netherlands - calculate the timezone offset.
-    var timezoneCorrection = (new Date().getTimezoneOffset() - -60) * 60;
+    var timezoneCorrection = (new Date().getTimezoneOffset() - -120) * 60;
 
     // UNIX timestamps representing the begin and end of the conventions's scheduled events.
     var conventionDuration = { begin: Number.MAX_VALUE, end: Number.MIN_VALUE };
