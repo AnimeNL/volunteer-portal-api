@@ -91,6 +91,9 @@ class ServiceManager {
                 $this->serviceLog->onServiceExecuted($identifier, $runtime);
 
             } catch (\Throwable $throwable) {
+                if (array_key_exists('TERM', $_SERVER))
+                    echo $throwable;
+
                 $runtime = microtime(true) - $startTime;
                 $this->serviceLog->onServiceException($identifier, $runtime, $throwable);
             }
