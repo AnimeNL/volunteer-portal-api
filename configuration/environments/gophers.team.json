@@ -3,5 +3,7 @@
     "short_name": "Gophers",
     "hostname": "gophers.team",
     "team_data": "gophers.json",
+    "team_program": "program_gophers.json",
+    "team_shifts": "shifts_gophers.json",
     "year": 2016
 }

@@ -160,8 +160,8 @@ class ImportScheduleService implements Service {
                 $sessions[] = [
                     'name'          => $data['name'],
                     'description'   => $data['description'],
-                    'begin'         => date('c', $shift['beginTime']),
-                    'end'           => date('c', $shift['endTime']),
+                    'begin'         => $shift['beginTime'],
+                    'end'           => $shift['endTime'],
                     'location'      => $data['location'],
                     'floor'         => $data['floor']
                 ];
@@ -193,7 +193,7 @@ class ImportScheduleService implements Service {
 
     // Loads the schedule from the live exported CSV representation of the schedule spreadsheet.
     private function loadSchedule() : array {
-        $scheduleLines = file(__DIR__ . '/foo.csv');
+        $scheduleLines = file($this->options['schedule']);
         $schedule = [];
 
         // The following constants have been derived by looking at the spreadsheet in the browser.
@@ -228,7 +228,7 @@ class ImportScheduleService implements Service {
 
     // Loads the event mappings from the live exported CSV representation of the schedule sheet.
     private function loadMapping() : array {
-        $mappingLines = file(__DIR__ . '/foo2.csv');
+        $mappingLines = file($this->options['mapping']);
         $mapping = [];
 
         for ($i = 1 /* skip the header */; $i < count($mappingLines); ++$i) {

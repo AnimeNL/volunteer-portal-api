@@ -18,7 +18,8 @@ class ConventionData {
         $compiler = new ConventionData($environment, $volunteer);
         return [
             'events'        => $compiler->compileEvents(),
-            'volunteers'    => $compiler->compileVolunteers()
+            'volunteers'    => $compiler->compileVolunteers(),
+            'shifts'        => $environment->loadShifts()
         ];
     }
 
@@ -44,7 +45,11 @@ class ConventionData {
             }));
         }
 
-        return $program;
+        $additions = $this->environment->loadProgram();
+        if (!count($additions))
+            return $program;
+
+        return array_merge($program, $additions);
     }
 
     // Compiles an array with all volunteers that should be sent to the user. Hidden volunteers will

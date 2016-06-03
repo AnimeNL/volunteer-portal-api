@@ -16,6 +16,9 @@ class Environment {
     // Directory in which information about the individual teams has been stored.
     const TEAM_DATA_DIRECTORY = __DIR__ . '/../configuration/teams/';
 
+    // Directory in which the generic information is stored.
+    const DATA_DIRECTORY = __DIR__ . '/../configuration/';
+
     // Initializes a new environment for the |$hostname|. An invalid Environment instance will be
     // returned when there are no known settings for the |$hostname|.
     public static function createForHostname(string $hostname) : Environment {
@@ -44,11 +47,15 @@ class Environment {
     private $valid;
 
     private $team;
+    private $program;
+    private $shifts;
 
     private $name;
     private $shortName;
     private $hostname;
     private $teamDataFile;
+    private $teamProgramFile;
+    private $teamShiftsFile;
     private $year;
 
     // Constructor for the Environment class. The |$valid| boolean must be set, and, when set to
@@ -65,6 +72,8 @@ class Environment {
         $this->shortName = $settings['short_name'];
         $this->hostname = $settings['hostname'];
         $this->teamDataFile = $settings['team_data'];
+        $this->teamProgramFile = $settings['team_program'];
+        $this->teamShiftsFile = $settings['team_shifts'];
         $this->year = $settings['year'];
     }
 
@@ -97,6 +106,27 @@ class Environment {
         }
 
         return $this->team;
+    }
+
+    // Loads the program additions that are relevant to this team. These are entries dynamically
+    // created based on the schedule the team's staff has created.
+    public function loadProgram() : array {
+        if ($this->program === null) {
+            $this->program =
+                json_decode(file_get_contents(self::DATA_DIRECTORY . $this->teamProgramFile), true);
+        }
+
+        return $this->program;
+    }
+
+    // Loads the shifts for the volunteers that are part of this team.
+    public function loadShifts() : array {
+        if ($this->shifts === null) {
+            $this->shifts =
+                json_decode(file_get_contents(self::DATA_DIRECTORY . $this->teamShiftsFile), true);
+        }
+
+        return $this->shifts;
     }
 
     // Returns the year for which this environment has been created.
