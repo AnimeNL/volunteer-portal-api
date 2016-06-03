@@ -117,6 +117,15 @@ EventPage.prototype.BuildStewardRow = function(steward, beginTime, endTime) {
   dataContainer.appendChild(when);
 
   listContainer.appendChild(image);
+
+  if (steward.isSenior()) {
+    var badgeIcon = document.createElement('span');
+    badgeIcon.className = 'senior-badge';
+    badgeIcon.textContent = '\uE8D0';
+
+    listContainer.appendChild(badgeIcon);
+  }
+
   listContainer.appendChild(dataContainer);
 
   return listContainer;
