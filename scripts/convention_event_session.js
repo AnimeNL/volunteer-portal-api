@@ -12,7 +12,7 @@ class ConventionEventSession {
             throw new Error('A session must be assigned a name.');
 
         this.name_ = sessionData.name;
-        this.description_ = sessionData.description || null;
+        this.description_ = sessionData.description || 'No description';
 
         if (!sessionData.hasOwnProperty('begin') || typeof sessionData.begin !== 'number' ||
             !sessionData.hasOwnProperty('end') || typeof sessionData.end !== 'number') {
