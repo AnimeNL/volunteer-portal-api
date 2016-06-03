@@ -163,7 +163,7 @@ class ImportScheduleService implements Service {
                     'begin'         => $shift['beginTime'],
                     'end'           => $shift['endTime'],
                     'location'      => $data['location'],
-                    'floor'         => $data['floor']
+                    'floor'         => (int) $data['floor']
                 ];
             }
 

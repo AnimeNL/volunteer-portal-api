@@ -42,7 +42,8 @@ class ConventionLoader {
     loadSchedule(uncheckedData) {
         const data = {
             events: uncheckedData.events || [],
-            volunteers: uncheckedData.volunteers || []
+            volunteers: uncheckedData.volunteers || [],
+            shifts: uncheckedData.shifts || []
         };
 
         return Promise.resolve().then(() => {
@@ -57,9 +58,9 @@ class ConventionLoader {
                 });
             });
 
-            let events = [];
+            let events = {};
             data.events.forEach(eventData => {
-                const event = new ConventionEvent(eventData.hidden);
+                const event = new ConventionEvent(eventData.id, eventData.hidden);
 
                 eventData.sessions.forEach(sessionData => {
                     event.sessions.push(
@@ -67,21 +68,59 @@ class ConventionLoader {
                                                      locations[sessionData.location]));
                 });
 
-                events.push(event);
+                events[event.id] = event;
             });
 
-            let volunteers = [];
-            data.volunteers.forEach(volunteer =>
-                volunteers.push(new ConventionVolunteer(volunteer)));
+            let volunteers = {};
+            data.volunteers.forEach(volunteerName => {
+                const volunteer = new ConventionVolunteer(volunteerName);
+                volunteers[volunteer.name] = volunteer;
+            });
+
+            Object.keys(data.shifts).forEach(volunteerName => {
+                if (!volunteers.hasOwnProperty(volunteerName)) {
+                    console.warn('Dropping schedule for unknown volunteer: ', volunteerName);
+                    return;
+                }
+
+                const volunteer = volunteers[volunteerName];
+
+                data.shifts[volunteerName].forEach(shift => {
+                    switch (shift.shiftType) {
+                        case 'available':
+                            // don't do anything special with these shifts
+                            break;
+                        case 'unavailable':
+                            volunteer.addUnavailableTime(shift.beginTime, shift.endTime);
+                            break;
+                        case 'event':
+                            if (!events.hasOwnProperty(shift.eventId)) {
+                                console.warn('Dropping shift for volunteer ' + volunteerName +
+                                             ' due to unknown shift: ', shift);
+                                return;
+                            }
+
+                            const event = events[shift.eventId];
+
+                            // Convert the UNIX timestamps to JavaScript times.
+                            shift.beginTime *= 1000;
+                            shift.endTime *= 1000;
+
+                            volunteer.addShift(event, shift.beginTime, shift.endTime);
+                            event.addShift(volunteer, shift.beginTime, shift.endTime);
+                            break;
+                    }
+                });
+            });
 
             // Sort the sessions in locations now that all information is available.
             Object.keys(locations).forEach(locationName => locations[locationName].sortSessions());
 
             // Returns the loaded information as an object so that the caller can store it.
             return {
-                events: events,
+                events: Object.values(events),
                 locations: Object.values(locations),
-                volunteers: volunteers
+                volunteers: Object.values(volunteers)
             };
         });
     }

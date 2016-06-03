@@ -13,7 +13,7 @@ const LONG_DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Frid
 
 // In order to faciliate testing on the portal, the date and time globally can be faked by using
 // the DateUtils.setMockTime() method and passing in the intended timestamp.
-let mockedPageLoadTime = 1465567140000;
+let mockedPageLoadTime = 1465546500000;
 let actualPageLoadTime = Date.now();
 
 // A collection of utilities related to times and dates. The server communicates UNIX timestamps to

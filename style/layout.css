@@ -395,7 +395,8 @@ li.list-item-steward {
 .room-neil h3::after {
   font-family: 'material-icons';
   font-size: .6em;
-  content: ' \e62a';
+  padding-left: 4px;
+  content: '\e87d';
   color: #d81b60;
 }
 

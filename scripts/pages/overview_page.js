@@ -31,24 +31,22 @@ OverviewPage.prototype.FormatTime = function(time) {
 // Formats a list of other stewards which will be joining the current user on a
 // particular shift. There's really no justification behind this complexity, it's
 // just a fun element on the overview page.
-OverviewPage.prototype.FormatOtherStewards =
-    function(shift, plurals, suffix, session_time) {
-  var shifts = shift.event.GetShifts(),
-      stewards = [];
+OverviewPage.prototype.FormatOtherStewards = function(shift, plurals, suffix, session_time) {
+  var volunteers = [];
 
-  shifts.forEach(function(shift) {
-    if (shift.begin.getTime() > session_time ||
-        shift.end.getTime() <= session_time)
+  shift.event.shifts.forEach(function(shift) {
+    if (shift.beginTime > session_time ||
+        shift.endTime <= session_time)
       return;
 
-    if (shift.steward.name == this.application_.GetUser().name)
+    if (shift.volunteer.name == this.application_.GetUser().name)
       return;
 
-    stewards.push(shift.steward);
+    volunteers.push(shift.volunteer);
 
   }.bind(this));
 
-  if (!stewards.length)
+  if (!volunteers.length)
     return '';
 
   function GetFirstName(name) {
@@ -56,21 +54,21 @@ OverviewPage.prototype.FormatOtherStewards =
   }
 
   var prefix = '';
-  if (stewards.length >= 8) prefix = 'Plenty of other stewards ' + plurals[1];
-  else if (stewards.length == 7) prefix = 'Seven other stewards ' + plurals[1];
-  else if (stewards.length == 6) prefix = 'Six other stewards ' + plurals[1];
-  else if (stewards.length == 5) prefix = 'Five other stewards ' + plurals[1];
-  else if (stewards.length == 1) prefix = GetFirstName(stewards[0].name) + plurals[0];
+  if (volunteers.length >= 8) prefix = 'Plenty of other stewards ' + plurals[1];
+  else if (volunteers.length == 7) prefix = 'Seven other stewards ' + plurals[1];
+  else if (volunteers.length == 6) prefix = 'Six other stewards ' + plurals[1];
+  else if (volunteers.length == 5) prefix = 'Five other stewards ' + plurals[1];
+  else if (volunteers.length == 1) prefix = GetFirstName(volunteers[0].name) + plurals[0];
   else {
-    stewards.sort(function(lhs, rhs) {
+    volunteers.sort(function(lhs, rhs) {
       return lhs.name.localeCompare(rhs.name);
     });
 
-    for (var index = 0; index < stewards.length - 2; ++index)
-      prefix += GetFirstName(stewards[index].name) + ', ';
+    for (var index = 0; index < volunteers.length - 2; ++index)
+      prefix += GetFirstName(volunteers[index].name) + ', ';
 
-    prefix += GetFirstName(stewards[stewards.length-2].name) + ' and ';
-    prefix += GetFirstName(stewards[stewards.length-1].name) + ' ' + plurals[1];
+    prefix += GetFirstName(volunteers[volunteers.length-2].name) + ' and ';
+    prefix += GetFirstName(volunteers[volunteers.length-1].name) + ' ' + plurals[1];
   }
 
   return ' ' + prefix + ' ' + suffix;
@@ -78,24 +76,24 @@ OverviewPage.prototype.FormatOtherStewards =
 
 // Compiles the text to display in the "current shift" box.
 OverviewPage.prototype.CompileTextForCurrentEvent = function(shift) {
-  var current_time = DateUtils.getTime(),
-      remaining_time = shift.end.getTime() - current_time,
+  var currentTime = DateUtils.getTime(),
+      remainingTime = shift.endTime - currentTime,
       message = '';
 
-  message  = 'You have ' + this.FormatTime(remaining_time) + ' remaining on this shift.';
-  message += this.FormatOtherStewards(shift, ['is', 'are'], 'with you right now.', current_time);
+  message  = 'You have ' + this.FormatTime(remainingTime) + ' remaining on this shift.';
+  message += this.FormatOtherStewards(shift, ['is', 'are'], 'with you right now.', currentTime);
 
   return message;
 };
 
 // Compiles the text to display in the "next shift" box.
 OverviewPage.prototype.CompileTextForFutureShift = function(shift) {
-  var current_time = DateUtils.getTime(),
-      remaining_time = shift.begin.getTime() - current_time,
+  var currentTime = DateUtils.getTime(),
+      remainingTime = shift.beginTime - currentTime,
       message = '';
 
-  message  = 'This shift will begin in ' + this.FormatTime(remaining_time) + '.';
-  message += this.FormatOtherStewards(shift, ['', ''], 'will be joining you.', shift.begin.getTime());
+  message  = 'This shift will begin in ' + this.FormatTime(remainingTime) + '.';
+  message += this.FormatOtherStewards(shift, ['', ''], 'will be joining you.', shift.beginTime);
 
   return message;
 };
@@ -107,13 +105,16 @@ OverviewPage.prototype.RenderShift = function(shift, settings) {
       header = document.createElement('h3'),
       text = document.createElement('p');
 
+  var event = shift.event;
+  var session = event.getSessionForTime(DateUtils.getTime());
+
   container.className = 'material-card material-card-root card-shift ' + settings.className;
   container.addEventListener('click', function() {
-    this.application_.Navigate(shift.event.GetNavigateLocation());
+    this.application_.Navigate('/events/' + event.slug + '/');
 
   }.bind(this));
 
-  header.textContent = settings.titlePrefix + shift.event.GetName();
+  header.textContent = settings.titlePrefix + session.name;
   if (settings.future)
     text.textContent = this.CompileTextForFutureShift(shift);
   else
@@ -128,56 +129,55 @@ OverviewPage.prototype.RenderShift = function(shift, settings) {
 // Renders the overview page. This page will be rendered every few seconds while
 // the user is viewing it, so it must remain as simple as we can make it.
 OverviewPage.prototype.OnRender = function(application, container, content) {
-  var current_shift_element = content.querySelector('#current_shift'),
-      upcoming_shift_element = content.querySelector('#upcoming_shift'),
-      shift_count = content.querySelector('#shift_count'),
-      steward = this.schedule_.findVolunteer(application.GetUser().name);
+  var currentShiftElement = content.querySelector('#current_shift'),
+      upcomingShiftElement = content.querySelector('#upcoming_shift'),
+      shiftCountElement = content.querySelector('#shift_count'),
+      volunteer = this.schedule_.findVolunteer(application.GetUser().name);
 
   // Update the total number of shifts in the introductionary text.
-  if (shift_count)
-    shift_count.textContent = steward.GetShifts().length;
+  if (shiftCountElement)
+    shiftCountElement.textContent = volunteer.shifts.length;
 
   // Display clear banners for the current and/or upcoming shift of the
   // logged in steward. These help us quickly navigate where to go next.
-  var current_time = DateUtils.getTime(),
-      current_shift = null,
-      upcoming_shift = null;
+  var currentTime = DateUtils.getTime(),
+      currentShift = null,
+      upcomingShift = null;
 
-  steward.GetShifts().forEach(function(shift) {
-    if (shift.end.getTime() < current_time)
+  volunteer.shifts.forEach(function(shift) {
+    if (shift.endTime < currentTime)
       return;
 
-    if (shift.begin.getTime() < current_time) {
-      current_shift = shift;
+    if (shift.beginTime < currentTime) {
+      currentShift = shift;
       return;
     }
 
-    if (upcoming_shift == null ||
-        upcoming_shift.begin.getTime() > shift.begin.getTime())
-      upcoming_shift = shift;
+    if (!upcomingShift || upcomingShift.beginTime > shift.beginTime)
+      upcomingShift = shift;
   });
 
-  if (!current_shift_element || !upcoming_shift_element)
+  if (!currentShiftElement || !upcomingShiftElement)
     return;
 
-  while (current_shift_element.firstChild)
-    current_shift_element.removeChild(current_shift_element.firstChild);
+  while (currentShiftElement.firstChild)
+    currentShiftElement.removeChild(currentShiftElement.firstChild);
 
-  if (current_shift_element && current_shift) {
-    current_shift_element.appendChild(
-        this.RenderShift(current_shift, { className: 'card-shift-current',
-                                          titlePrefix: 'Current shift: ',
-                                          future: false }));
+  if (currentShiftElement && currentShift) {
+    currentShiftElement.appendChild(
+        this.RenderShift(currentShift, { className: 'card-shift-current',
+                                         titlePrefix: 'Current shift: ',
+                                         future: false }));
   }
 
-  while (upcoming_shift_element.firstChild)
-    upcoming_shift_element.removeChild(upcoming_shift_element.firstChild);
+  while (upcomingShiftElement.firstChild)
+    upcomingShiftElement.removeChild(upcomingShiftElement.firstChild);
 
-  if (upcoming_shift_element && upcoming_shift) {
-    upcoming_shift_element.appendChild(
-        this.RenderShift(upcoming_shift, { className: 'card-shift-upcoming',
-                                           titlePrefix: 'Next shift: ',
-                                           future: true }));
+  if (upcomingShiftElement && upcomingShift) {
+    upcomingShiftElement.appendChild(
+        this.RenderShift(upcomingShift, { className: 'card-shift-upcoming',
+                                          titlePrefix: 'Next shift: ',
+                                          future: true }));
   }
 };
 

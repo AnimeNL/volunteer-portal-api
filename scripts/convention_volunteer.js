@@ -46,6 +46,9 @@ class ConventionVolunteer {
 
         if (volunteerData.hasOwnProperty('hotel') && typeof volunteerData.hotel == 'string')
             this.hotel_ = volunteerData.hotel;
+
+        this.unavailable_ = [];
+        this.shifts_ = [];
     }
 
     // Gets the full name of this volunteer.
@@ -79,6 +82,36 @@ class ConventionVolunteer {
         else
             return 'Steward';  // TODO: Use their role instead.
     }
+
+    // Adds the time span between |beginTime| and |endTime| as time where this volunteer is not
+    // available. They will appear greyed out in the interface of the application.
+    addUnavailableTime(beginTime, endTime) {
+        this.unavailable_.push({ beginTime, endTime });
+    }
+
+    // Returns whether the volunteer is available at |time|. They may be on a shift.
+    isAvailable(time) {
+        for (let i = 0; i < this.unavailable_.length; ++i) {
+            if (this.unavailable_[i].endTime < time)
+                continue;  // this scheduled unavailability time is in the past.
+
+            if (this.unavailable_[i].beginTime > time)
+                continue;  // this scheduled unavailability time is in the future.
+
+            return false;
+        }
+
+        return true;
+    }
+
+    // Adds a shift on |event| that has a time span between |beginTime| and |endTime|.
+    addShift(event, beginTime, endTime) {
+        this.shifts_.push({ event, beginTime, endTime });
+    }
+
+    // Gets the shifts that this volunteer will be attending.
+    get shifts() { return this.shifts_; }
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // TODO: These methods exist whilst I transition the existing schedule implementation.
