@@ -141,7 +141,20 @@ EventPage.prototype.OnRender = function(application, container, content) {
     sessionContainer.appendChild(self.BuildSessionRow(session));
   });
 
-  var stewardShifts = this.event_.shifts;
+  var stewardShifts = this.event_.shifts.slice() /* make a copy */;
+  stewardShifts.sort(function(lhs, rhs) {
+    if (lhs.beginTime != rhs.beginTime)
+      return lhs.beginTime > rhs.beginTime ? 1 : -1;
+
+    if (lhs.volunteer.isSenior() && !rhs.volunteer.isSenior())
+      return -1;
+
+    if (!lhs.volunteer.isSenior() && rhs.volunteer.isSenior())
+      return 1;
+
+    return lhs.volunteer.name.localeCompare(rhs.volunteer.name);
+  });
+
   stewardShifts.forEach(function(shift) {
     stewardContainer.appendChild(
         self.BuildStewardRow(shift.volunteer, shift.beginTime, shift.endTime));
