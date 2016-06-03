@@ -33,15 +33,14 @@ class Convention {
     // NULL when not found. When |isSlug| is set to true, the |name| will be compared to the
     // volunteer's slug rather than their name.
     findVolunteer(name, isSlug = false) {
-        for (let volunteer of this.volunteers_) {
+        return this.volunteers_.find(volunteer => {
             if (!isSlug && name === volunteer.name)
                 return volunteer;
 
             if (isSlug && name === volunteer.slug)
                 return volunteer;
-        }
 
-        return null;
+        }) || null;
     }
 
     // Finds the active and upcoming events for each known location. The |activeOnly| and |floor|
@@ -52,28 +51,28 @@ class Convention {
 
         let floors = {};
 
-        for (let location of this.locations_) {
+        this.locations_.forEach(location => {
             if (floor !== null && location.floor !== floor)
-                continue;
+                return;
 
             let sessions = [];
 
-            for (let session of location.sessions) {
+            location.sessions.forEach(session => {
                 if (session.isHidden() && !hidden)
-                    continue;
+                    return;
 
                 if (session.endTime < currentTime)
-                    continue;
+                    return;
 
                 const isActive = session.beginTime <= currentTime;
                 if (!isActive && activeOnly)
-                    continue;
+                    return;
 
                 if (!isActive && sessions.length >= maxUpcomingPerLocation)
-                    continue;
+                    return;
 
                 sessions.push(session);
-            }
+            });
 
             if (!floors.hasOwnProperty(location.floor))
                 floors[location.floor] = [];
@@ -82,7 +81,7 @@ class Convention {
                 location: location,
                 sessions: sessions
             });
-        }
+        });
 
         return floors;
     }

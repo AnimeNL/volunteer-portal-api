@@ -188,8 +188,8 @@ LegacyApplication.prototype.OnDisplayMySchedule = function(event) {
 
   // TODO: This should handle cases where the current user is a view-only one.
 
-  this.schedule_.then(schedule => {
-    var volunteer = schedule.findVolunteer(this.user_.name);
+  this.schedule_.then(function(schedule) {
+    var volunteer = schedule.findVolunteer(self.user_.name);
 
     if (!volunteer)
       self.Navigate('/');

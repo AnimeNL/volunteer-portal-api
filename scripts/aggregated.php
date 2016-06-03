@@ -5,13 +5,14 @@
 
 $scripts = [
   'config.js',
+  'polyfill.js',
+
   'content_handler.js',
   'event_update_handler.js',
   'legacy_application.js',
   'link_handler.js',
   'menu_handler.js',
   'page.js',
-  'polyfill.js',
   'ripple_handler.js',
   'schedule_page.js',
   'template_factory.js',

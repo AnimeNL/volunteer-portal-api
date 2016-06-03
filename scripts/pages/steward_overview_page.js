@@ -68,7 +68,7 @@ StewardOverviewPage.prototype.OnRender = function(application, container, conten
   // A steward's schedule doesn't care about the timings of the event itself, but
   // rather cares about their shift and then the event's information.
   this.steward_.shifts.forEach(function(shift) {
-    let session = shift.event.getSessionForTime(currentTime);
+    var session = shift.event.getSessionForTime(currentTime);
     entries.push({
       name: session.name,
       description: session.description,
