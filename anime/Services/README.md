@@ -24,5 +24,8 @@ The following list contains the services implemented under this framework:
 - **[ImportProgramService](/anime/Services/ImportProgramService.php)**: Imports the event program
   from an API exposed by the event, writing it to an intermediate representation used by the site.
 
+- **[ImportScheduleService](/anime/services/ImportScheduleService.php)**: Imports the schedule for
+  each of the volunteers part of this event.
+
 - **[ImportTeamService](/anime/Services/ImportTeamService.php)**: Imports information about the
   members in a team from the published CSV representation of a Google Spreadsheet sheet.
