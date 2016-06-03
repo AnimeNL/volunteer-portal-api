@@ -235,9 +235,7 @@ div.past > h2::after { opacity: .8; }
 }
 
 .list-item-event > div.event {
-  -webkit-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
+  width: calc(100% - 60px);
 }
 
 .list-item-event > div.event > h2,

@@ -103,12 +103,9 @@ EventPage.prototype.BuildStewardRow = function(steward, beginTime, endTime) {
 
   image.setAttribute('src', steward.photo);
 
-  function DateToDisplayTime(date) {
-    return date.toTimeString().match(/\d{2}:\d{2}/)[0];
-  }
-
-  var whenPrefix = steward.isSenior() ? steward.getStatusLine().split(' ')[0] + ' - '
-                                      : '';
+  var whenPrefix = '';
+  if (steward.isSenior())
+    whenPrefix = steward.getStatusLine().split(' ')[0] + ' - ';
 
   name.textContent = steward.name;
   when.textContent = whenPrefix +
