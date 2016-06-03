@@ -63,13 +63,22 @@ StewardOverviewPage.prototype.OnRender = function(application, container, conten
 
   var entries = [];
 
+  var currentTime = DateUtils.getTime();
+
   // A steward's schedule doesn't care about the timings of the event itself, but
   // rather cares about their shift and then the event's information.
-  this.steward_.GetShifts().forEach(function(shift) {
-    entries.push(new ScheduleEntry(shift.begin, shift.end, shift.event.GetName(),
-                                   shift.event.location.name,
-                                   shift.event.GetNavigateLocation(),
-                                   shift.event.IsHidden() ? 'hidden' : ''));
+  this.steward_.shifts.forEach(function(shift) {
+    let session = shift.event.getSessionForTime(currentTime);
+    entries.push({
+      name: session.name,
+      description: session.description,
+
+      beginTime: shift.beginTime,
+      endTime: shift.endTime,
+
+      location: session.location.name,
+      url: '/events/' + shift.event.slug + '/',
+    });
   });
 
   listContainer.appendChild(

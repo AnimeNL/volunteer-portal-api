@@ -56,16 +56,15 @@ SchedulePage.prototype.RenderSingleEntry = function(entry) {
       timeElement = document.createElement('div'),
       eventElement = document.createElement('div'),
       eventTitle = document.createElement('h2'),
-      eventDescription = document.createElement('p'),
-      navigate = entry.GetNavigate();
+      eventDescription = document.createElement('p');
 
-  listContainer.className = 'list-item-event ' + entry.GetClassName();
-  listContainer.setAttribute('event-begin', entry.GetStartDate().getTime());
-  listContainer.setAttribute('event-end', entry.GetEndDate().getTime());
+  listContainer.className = 'list-item-event ' + (entry.className || '');
+  listContainer.setAttribute('event-begin', entry.beginTime);
+  listContainer.setAttribute('event-end', entry.endTime);
 
-  if (navigate) {
+  if (entry.url) {
     listContainer.setAttribute('handler', true);
-    listContainer.setAttribute('handler-navigate', navigate);
+    listContainer.setAttribute('handler-navigate', entry.url);
   } 
 
   function DateToDisplayTime(date) {
@@ -73,13 +72,13 @@ SchedulePage.prototype.RenderSingleEntry = function(entry) {
   }
 
   timeElement.className = 'time';
-  timeElement.textContent = DateToDisplayTime(entry.GetStartDate()) + ' ' +
-                            DateToDisplayTime(entry.GetEndDate());
+  timeElement.textContent = DateUtils.format(entry.beginTime, DateUtils.FORMAT_SHORT_TIME) + ' ' +
+                            DateUtils.format(entry.endTime, DateUtils.FORMAT_SHORT_TIME);
 
   eventElement.className = 'event';
 
-  eventTitle.textContent = entry.GetTitle();
-  eventDescription.innerHTML = entry.GetDescription();
+  eventTitle.textContent = entry.name;
+  eventDescription.innerHTML = entry.description;
 
   eventElement.appendChild(eventTitle);
   eventElement.appendChild(eventDescription);
@@ -121,12 +120,15 @@ SchedulePage.prototype.RenderEntries = function(entries, noDataMessage) {
     return this.RenderNoEntriesBar(noDataMessage);
 
   entries.sort(function(lhs, rhs) {
-    return lhs.GetStartDate().getTime() > rhs.GetStartDate().getTime() ? 1 : -1;
+    if (lhs.beginTime == rhs.beginTime)
+      return 0;
+
+    return lhs.beginTime > rhs.beginTime ? 1 : -1;
   });
 
   entries.forEach(function(possiblySpanningEntry) {
     self.ExpandEntry(possiblySpanningEntry).forEach(function(entry) {
-      var dateString = entry.GetStartDate().toDateString();
+      var dateString = new Date(entry.beginTime).toDateString();
       if (!(dateString in entriesPerDay))
         entriesPerDay[dateString] = [];
 
@@ -134,7 +136,7 @@ SchedulePage.prototype.RenderEntries = function(entries, noDataMessage) {
     });
   });
 
-  var todayTime = new Date(DateUtils.toDateString()).getTime(),
+  var todayTime = Date.parse(new Date(DateUtils.getTime()).toDateString()),
       days = Object.keys(entriesPerDay).map(Date.parse);
 
   days.sort(function(lhs, rhs) {
@@ -159,7 +161,7 @@ SchedulePage.prototype.RenderEntries = function(entries, noDataMessage) {
       dayContainer.className = 'past';
 
     dayHeader.textContent =
-        SchedulePage.DAYS[entriesPerDay[day][0].GetStartDate().getDay()];
+        SchedulePage.DAYS[new Date(entriesPerDay[day][0].beginTime).getDay()];
 
     dayList.className = 'material-list material-list-border';
     entriesPerDay[day].forEach(function(entry) {
