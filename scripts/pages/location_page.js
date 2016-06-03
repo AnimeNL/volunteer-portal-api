@@ -51,20 +51,22 @@ LocationPage.prototype.OnRender = function(application, container, content) {
   if (!listContainer)
     return;
 
-  var include_hidden = application.GetUser().getOption('hidden_events', false),
+  var includeHidden = application.GetUser().getOption('hidden_events', false),
       entries = [];
 
-  // All events and sessions for that event need to be individual entries on
-  // the schedule for a location.
-  this.location_.GetEvents().forEach(function(event) {
-    if (event.IsHidden() && !include_hidden)
+  this.location_.sessions.forEach(function(session) {
+    if (session.isHidden() && !includeHidden)
       return;
 
-    event.GetSessions().forEach(function(session) {
-      entries.push(new ScheduleEntry(session.begin, session.end,
-                                     event.GetName(), event.GetDescription(),
-                                     event.GetNavigateLocation(),
-                                     event.IsHidden() ? 'hidden' : ''));
+    entries.push({
+      name: session.name,
+      description: session.description,
+
+      beginTime: session.beginTime,
+      endTime: session.endTime,
+
+      location: session.location.name,
+      url: '/events/' + session.event.slug + '/',
     });
   });
 
