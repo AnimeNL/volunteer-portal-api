@@ -44,6 +44,8 @@ Header('Content-Security-Policy: default-src \'self\' \'sha256-' . $shellStyleHa
     <meta charset="utf-8" />
     <meta name="robots" content="noindex" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <link rel="apple-touch-icon-precomposed" href="/images/logo-128.png" />
     <link rel="manifest" href="/manifest.json" />
     <link rel="stylesheet" href="/style/aggregated.php" />
     <title>Anime Volunteer Portal</title>
