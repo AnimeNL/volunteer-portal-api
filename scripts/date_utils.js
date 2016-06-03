@@ -110,6 +110,9 @@ class DateUtils {
                 return DateUtils.formatDay(localDate, true /* shortDays */) + ' ' +
                        DateUtils.formatTime(localDate, false /* includeSeconds */);
 
+            case DateUtils.FORMAT_SHORT_TIME:
+                return DateUtils.formatTime(localDate, false /* includeSeconds */);
+
             default:
                 throw new Error('Unexpected format type: ' + format);
         }
@@ -121,6 +124,9 @@ DateUtils.FORMAT_ISO_8601 = 0;
 
 // Formats the time as "DAY HH:II".
 DateUtils.FORMAT_DAY_SHORT_TIME = 1;
+
+// Formats the time as "HH:II".
+DateUtils.FORMAT_SHORT_TIME = 2;
 
 module.exports = DateUtils;
 

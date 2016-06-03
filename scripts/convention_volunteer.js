@@ -112,6 +112,20 @@ class ConventionVolunteer {
     // Gets the shifts that this volunteer will be attending.
     get shifts() { return this.shifts_; }
 
+    // Gets the current or soonest upcoming shift for the volunteer.
+    getCurrentOrUpcomingShift(time) {
+        for (let i = 0; i < this.shifts_.length; ++i) {
+            if (this.shifts_[i].endTime < time)
+                continue;  // the shift is in the past
+
+            let shift = this.shifts_[i];
+            shift.current = shift.beginTime < time;
+
+            return shift;
+        }
+
+        return null;
+    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // TODO: These methods exist whilst I transition the existing schedule implementation.

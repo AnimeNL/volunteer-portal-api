@@ -17,8 +17,8 @@ StewardsPage.prototype.ResetNextUpdate = function() {
   this.next_update_ = DateUtils.getTime() + 86400100;
 };
 
-// Builds the DOM row for displaying |steward| in the list of stewards.
-StewardsPage.prototype.BuildStewardRow = function(steward) {
+// Builds the DOM row for displaying |volunteer| in the list of stewards.
+StewardsPage.prototype.BuildStewardRow = function(volunteer) {
   var row = document.createElement('li'),
       image = document.createElement('img'),
       container = document.createElement('div'),
@@ -27,39 +27,33 @@ StewardsPage.prototype.BuildStewardRow = function(steward) {
       titleHighlight = document.createElement('span');
 
   row.className = 'list-item-steward material-ripple light';
-  image.src = steward.photo;
-  name.textContent = steward.name;
-  titleHighlight.textContent = steward.getStatusLine();
+  image.src = volunteer.photo;
+  name.textContent = volunteer.name;
+  titleHighlight.textContent = volunteer.getStatusLine();
 
   title.appendChild(titleHighlight);
 
-  var activeShift = steward.GetCurrentShift(),
-      nextShift = steward.GetNextShift();
+  var currentTime = DateUtils.getTime();
+  var shift = volunteer.getCurrentOrUpcomingShift(currentTime);
 
-  if (steward.isSenior()) {
-    activeShift = {
-      event: { GetName() { return 'Some Event'; } },
-      end: new Date()
-    };
-  }
+  if (shift && shift.current) {
+    var session = shift.event.getSessionForTime(currentTime);
 
-  if (activeShift !== null) {
-    var activeText = ' – ' + activeShift.event.GetName() + ' until ';
-    activeText += ('0' + activeShift.end.getHours()).substr(-2) + ':';
-    activeText += ('0' + activeShift.end.getMinutes()).substr(-2);
+    var activeText = ' - ' + session.name + ' until ';
+    activeText += DateUtils.format(shift.endTime, DateUtils.FORMAT_SHORT_TIME);
 
     title.appendChild(document.createTextNode(activeText));
     row.className += ' active';
   }
 
   // Store the next update time for the stewards overview page.
-  if (activeShift)
-    this.next_update_ = Math.min(this.next_update_, activeShift.end.getTime());
-  else if (nextShift)
-    this.next_update_ = Math.min(this.next_update_, nextShift.begin.getTime());
+  if (shift && shift.current)
+    this.next_update_ = Math.min(this.next_update_, shift.endTime);
+  else if (shift && !shift.current)
+    this.next_update_ = Math.min(this.next_update_, shift.beginTime);
 
   var badgeIcon = null;
-  if (steward.isSenior()) {
+  if (volunteer.isSenior()) {
     badgeIcon = document.createElement('span');
     badgeIcon.className = 'senior-badge';
     badgeIcon.textContent = '\uE8D0';
@@ -75,7 +69,7 @@ StewardsPage.prototype.BuildStewardRow = function(steward) {
   row.appendChild(container);
 
   row.setAttribute('handler', true);
-  row.setAttribute('handler-navigate', '/stewards/' + steward.slug + '/');
+  row.setAttribute('handler-navigate', '/stewards/' + volunteer.slug + '/');
 
   return row;
 };
@@ -99,6 +93,9 @@ StewardsPage.prototype.OnRender = function(application, container, content) {
   var stewardList = document.createDocumentFragment(),
       stewards = this.schedule_.volunteers,
       self = this;
+
+  // TODO(Peter): Unavailable stewards should be listed at the bottom of this view, and clearly
+  // indicated as being unavailable.
 
   stewards.sort(function(lhs, rhs) {
     return lhs.name.localeCompare(rhs.name);
