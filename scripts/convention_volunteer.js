@@ -126,15 +126,6 @@ class ConventionVolunteer {
 
         return null;
     }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // TODO: These methods exist whilst I transition the existing schedule implementation.
-
-    GetShifts() { return []; }
-
-    GetCurrentShift() { return null; }
-
-    GetNextShift() { return null; }
 }
 
 module.exports = ConventionVolunteer;

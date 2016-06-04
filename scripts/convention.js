@@ -116,11 +116,6 @@ class Convention {
         this.locations_ = [];
         this.volunteers_ = [];
     }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // TODO: These methods exist whilst I transition the existing schedule implementation.
-
-    GetCurrentEvents() { return { '-1': [], 0: [], 1: [], 2: [] }; }
 }
 
 module.exports = Convention;

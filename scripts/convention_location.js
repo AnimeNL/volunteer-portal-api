@@ -53,11 +53,6 @@ class ConventionLocation {
 
         return false;
     }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////
-    // TODO: These methods exist whilst I transition the existing schedule implementation.
-
-    GetEvents() { return []; }
 }
 
 module.exports = ConventionLocation;
