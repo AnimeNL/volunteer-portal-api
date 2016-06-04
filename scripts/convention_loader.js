@@ -32,8 +32,8 @@ class ConventionLoader {
             // Treat network errors as success without result, we won't cycle the data.
             request.addEventListener('error', () => resolve(null));
 
-            request.open('POST', endpoint, true);
-            request.send(name);
+            request.open('GET', endpoint, true);
+            request.send();
         });
     }
 
