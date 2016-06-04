@@ -56,10 +56,10 @@ self.addEventListener('activate', event => {
 });
 
 self.addEventListener('fetch', event => {
-    if (event.request.method !== 'GET')
-        return fetch(event.request);
-
     var requestUrl = new URL(event.request.url);
+    if (event.request.method !== 'GET' || requestUrl.pathname.startsWith('/tools/'))
+        return fetch(event.request);
+    
     var responseUrl = null;
 
     if (requestUrl.pathname.endsWith('.woff'))
