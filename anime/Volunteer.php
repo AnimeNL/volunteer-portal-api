@@ -97,6 +97,12 @@ class Volunteer {
         return $this->token;
     }
 
+    // Returns whether this volunteer is a senior member of the volunteers.
+    public function isSeniorVolunteer() : bool {
+        return $this->type === Volunteer::TYPE_SENIOR ||
+               $this->type === Volunteer::TYPE_STAFF;
+    }
+
     // Returns the type { 'Volunteer', 'Senior', 'Staff' } of this volunteer.
     public function getType() : string {
         return $this->type;

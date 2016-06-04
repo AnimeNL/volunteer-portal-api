@@ -39,7 +39,7 @@ class ConventionData {
     private function compileEvents() : array {
         $program = json_decode(file_get_contents(self::PROGRAM_FILE), true);
 
-        if (!$this->isSeniorVolunteer()) {
+        if (!$this->environment->areHiddenEventsPublic() && !$this->isSeniorVolunteer()) {
             $program = array_values(array_filter($program, function ($entry) {
                 return !$entry['hidden'];
             }));
@@ -69,7 +69,7 @@ class ConventionData {
             ];
 
             // Append the extra information if the volunteer should have access to it.
-            if ($this->isSeniorVolunteer()) {
+            if ($this->isSeniorVolunteer() || $volunteer->isSeniorVolunteer()) {
                 $volunteerData['telephone'] = $volunteer->getTelephone();
                 $volunteerData['hotel'] = $volunteer->getHotel();
             }
@@ -82,7 +82,6 @@ class ConventionData {
 
     // Returns whether the current volunteer is of either the Senior or Staff level.
     private function isSeniorVolunteer() : bool {
-        return $this->volunteer->getType() === Volunteer::TYPE_SENIOR ||
-               $this->volunteer->getType() === Volunteer::TYPE_STAFF;
+        return $this->volunteer->isSeniorVolunteer();
     }
 }

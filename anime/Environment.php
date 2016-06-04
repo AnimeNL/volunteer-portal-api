@@ -71,6 +71,7 @@ class Environment {
         $this->name = $settings['name'];
         $this->shortName = $settings['short_name'];
         $this->hostname = $settings['hostname'];
+        $this->hiddenEventsPublic = $settings['hidden_events_public'];
         $this->teamDataFile = $settings['team_data'];
         $this->teamProgramFile = $settings['team_program'];
         $this->teamShiftsFile = $settings['team_shifts'];
@@ -95,6 +96,11 @@ class Environment {
     // Returns the canonical hostname (origin) associated with this environment.
     public function getHostname() : string {
         return $this->hostname;
+    }
+
+    // Returns whether hidden events are to be made visible for all volunteers, regardless of level.
+    public function areHiddenEventsPublic() : bool {
+        return $this->hiddenEventsPublic;
     }
 
     // Loads the list of volunteers associated with this environment and returns a VolunteerList

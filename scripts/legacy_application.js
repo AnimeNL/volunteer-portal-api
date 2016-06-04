@@ -421,6 +421,12 @@ addEventListener('DOMContentLoaded', function() {
   var container = document.querySelector('.container'),
       config = new Config(window.config);
 
+  if (window.location.hash.length) {
+    var time = parseFloat(window.location.hash.substr(1));
+    if (!isNaN(time) && isFinite(time))
+      DateUtils.setMockTime(time);
+  }
+
   window.legacyApplication = new LegacyApplication(config, container, function() {
     window.legacyApplication.Navigate(location.pathname, true /* ignoreNavigation */)
         .then(function() {

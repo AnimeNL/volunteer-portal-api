@@ -2,6 +2,7 @@
     "name": "Steward Portal",
     "short_name": "Stewards",
     "hostname": "stewards.team",
+    "hidden_events_public": true,
     "team_data": "stewards.json",
     "team_program": "program_stewards.json",
     "team_shifts": "shifts_stewards.json",
