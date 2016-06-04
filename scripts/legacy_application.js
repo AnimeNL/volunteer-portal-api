@@ -70,8 +70,8 @@ var LegacyApplication = function(config, container, callback) {
 // Number of milliseconds between periodic application updates.
 LegacyApplication.PERIODIC_UPDATE_RATE_MS = 5000;
 
-// Number of milliseconds between schedule update checks (15 minutes).
-LegacyApplication.SCHEDULE_UPDATE_RATE_MS = 15 * 60 * 1000;
+// Number of milliseconds between schedule update checks (10 minutes).
+LegacyApplication.SCHEDULE_UPDATE_RATE_MS = 10 * 60 * 1000;
 
 // -----------------------------------------------------------------------------
 // Simple getters.
@@ -378,7 +378,25 @@ LegacyApplication.prototype.OnPeriodicUpdate = function() {
   var schedule_update_diff = Date.now() - this.last_schedule_update_;
   if (schedule_update_diff >= LegacyApplication.SCHEDULE_UPDATE_RATE_MS) {
     this.schedule_.then(function(schedule) {
-      schedule.CheckForScheduleUpdate();
+      schedule.isUpdateAvailable().then(function(available) {
+        if (!available)
+          return;  // no schedule update is available
+
+        if (document.querySelector('div.update-banner'))
+          return;  // the update banner is already visible
+
+        var updateBanner = document.createElement('div');
+        updateBanner.className = 'update-banner hidden';
+        updateBanner.textContent = 'An update is available!';
+
+        // Refresh the entire page when the user clicks on the update banner.
+        updateBanner.addEventListener('click', function() { location.reload(); });
+
+        // Provides a fade-in animation if the user is currently looking at the portal.
+        setTimeout(function() { updateBanner.classList.remove('hidden'); }, 0);
+
+        document.body.appendChild(updateBanner);
+      });
     });
 
     this.last_schedule_update_ = Date.now();

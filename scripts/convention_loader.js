@@ -7,9 +7,21 @@ const ConventionEventSession = require('./convention_event_session');
 const ConventionLocation = require('./convention_location');
 const ConventionVolunteer = require('./convention_volunteer');
 
+// Creates a hash value for the |string|. Should not be used for cryptographic purposes.
+function stringHash(string, hash = 0) {
+    for (let i = 0; i < string.length; ++i)
+        hash = ((hash << 5) - hash + string.charCodeAt(i)) << 0;
+
+    return hash;
+}
+
 // The loader responsible for making sure that the convention information can be retrieved. There
 // are two sources to load the data from: the network, or the local cache.
 class ConventionLoader {
+    constructor() {
+        this.hash_ = null;
+    }
+
     // Loads all information of the convention. The token to use for authenticaiton must already be
     // known to the instance. Returns a Promise that will be resolved with the Convention object
     // in case of success, or rejected in case of an exceptional error.
@@ -23,7 +35,7 @@ class ConventionLoader {
             const request = new XMLHttpRequest();
             request.addEventListener('load', () => {
                 try {
-                    return resolve(this.loadSchedule(JSON.parse(request.responseText)));
+                    return resolve(request.responseText);
                 } catch (e) {
                     return reject(new Error('Server error: ' + e.message));
                 }
@@ -34,6 +46,24 @@ class ConventionLoader {
 
             request.open('GET', endpoint, true);
             request.send();
+        });
+    }
+
+    // Loads the schedule based on the information fetched from the network.
+    loadScheduleFromNetwork(token) {
+        return this.fetchScheduleFromNetwork(token).then(response => {
+            this.hash_ = stringHash(response);
+
+            // Proceed with loading the schedule, and return when that has been done.
+            return this.loadSchedule(JSON.parse(response));
+        });
+    }
+
+    // Fetches the latest schedule from the network and returns whether it has changed based on
+    // the version that has been loaded for this request.
+    isUpdateAvailable(token) {
+        return this.fetchScheduleFromNetwork(token).then(response => {
+            return this.hash_ !== stringHash(response);
         });
     }
 

@@ -11,6 +11,7 @@ const DateUtils = require('./date_utils');
 class Convention {
     constructor(user) {
         this.loader_ = new ConventionLoader();
+        this.user_ = null;
 
         this.events_ = [];
         this.locations_ = [];
@@ -93,10 +94,9 @@ class Convention {
         if (!user.isIdentified())
             return Promise.reject(new Error('The user must be identified for loading the data.'));
 
-        // TODO: Load a locally cached version of the convention data prior to hitting the network,
-        //       since the initial draw for logged in volunteers will be blocking on this.
+        this.user_ = user;
 
-        return this.loader_.fetchScheduleFromNetwork(user.token).then(data => {
+        return this.loader_.loadScheduleFromNetwork(user.token).then(data => {
             this.events_ = data.events;
             this.locations_ = data.locations;
             this.volunteers_ = data.volunteers;
@@ -104,9 +104,19 @@ class Convention {
         });
     }
 
+    // Checks for an update to the schedule. It it has been detected,
+    isUpdateAvailable() {
+        if (!this.user_ || !this.user_.isIdentified())
+            return false;
+
+        return this.loader_.isUpdateAvailable(this.user_.token);
+    }
+
     // Will be invoked when the user identifies to an account, or signs out of their account. The
     // convention's information will either have to be loaded, or discarded.
     onUserStateChanged(user) {
+        this.user_ = user;
+
         if (user.isIdentified()) {
             this.loadForUser(user);
             return;

@@ -617,6 +617,7 @@ span[content-label].update .upcoming {
   width: calc(100% - 32px);
   max-width: 560px;
 
+  cursor: pointer;
   background-color: #323232;
   border-radius: 2px;
 
