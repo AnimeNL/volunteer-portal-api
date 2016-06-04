@@ -31,8 +31,6 @@ foreach (json_decode(file_get_contents(SHIFTS_FILE), true) as $steward => $stewa
     $shifts[$steward] = $stewardShifts;
 
 // -------------------------------------------------------------------------------------------------
-// Graph: number of scheduled hours per steward
-// Graph: number of different shifts per steward
 
 $hoursPerSteward = [];
 $typesPerSteward = [];
@@ -47,6 +45,9 @@ foreach ($stewards as $steward => $data) {
             if ($shift['shiftType'] !== 'event')
                 continue;
 
+            if (IsIgnoredShift($shift))
+                continue;
+
             $hours += ($shift['endTime'] - $shift['beginTime']) / 3600;
             $typesPerSteward[$steward][$shift['eventId']] = 1;
         }
@@ -58,19 +59,8 @@ foreach ($stewards as $steward => $data) {
 foreach ($typesPerSteward as $steward => $types)
     $typesPerSteward[$steward] = count($types);
 
-uksort($hoursPerSteward, function($lhs, $rhs) use ($hoursPerSteward) {
-    if ($hoursPerSteward[$lhs] === $hoursPerSteward[$rhs])
-        return strcmp($lhs, $rhs);
-
-    return $hoursPerSteward[$lhs] > $hoursPerSteward[$rhs] ? 1 : -1;
-});
-
-uksort($typesPerSteward, function($lhs, $rhs) use ($typesPerSteward) {
-    if ($typesPerSteward[$lhs] === $typesPerSteward[$rhs])
-        return strcmp($lhs, $rhs);
-
-    return $typesPerSteward[$lhs] > $typesPerSteward[$rhs] ? 1 : -1;
-});
+SortByCountThenName($hoursPerSteward);
+SortByCountThenName($typesPerSteward);
 
 $hoursPerStewardLabels = implode("', '", array_keys($hoursPerSteward));
 $hoursPerStewardValues = implode(', ', array_values($hoursPerSteward));

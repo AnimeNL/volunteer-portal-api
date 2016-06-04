@@ -3,6 +3,28 @@
 // Use of this source code is governed by the MIT license, a copy of which can
 // be found in the LICENSE file.
 
+function IsIgnoredShift($shift) {
+    global $program;
+
+    $name = $program[$shift['eventId']]['sessions'][0]['name'];
+    if ($name === 'Steward Briefing')
+        return true;
+
+    if ($name === 'Group photo')
+        return true;
+
+    return false;
+}
+
+function SortByCountThenName(&$array) {
+    uksort($array, function($lhs, $rhs) use ($array) {
+        if ($array[$lhs] === $array[$rhs])
+            return strcmp($lhs, $rhs);
+
+        return $array[$lhs] > $array[$rhs] ? 1 : -1;
+    });
+}
+
 function RenderMetrics($metrics) {
     echo '    <table class="metrics">' . PHP_EOL;
     echo '      <tbody>' . PHP_EOL;
