@@ -97,7 +97,8 @@ $typesPerStewardMetrics = [
   </head>
   <body>
     <p>
-      <b>Notes:</b> The <i>Steward Briefing</i> and <i>Group Photo</i> shifts are ignored.
+      <b>Notes:</b> The <i>Steward Briefing</i> and <i>Group Photo</i> shifts are ignored.<br />
+      <b>Actions:</b> <a href="javascript:expandAll()">expand all</a>, <a href="javascript:collapseAll()">collapse all</a>.
     </p>
     <h1 id="scheduled-hours-per-steward">Scheduled hours per steward <a href="#scheduled-hours-per-steward">#</a></h1>
     <div>
@@ -261,6 +262,37 @@ foreach ($stewardShifts as $steward => $shiftData) {
 
     <!-- All elements on the page should be accordions, collapsed by default -->
     <script>
+      function findAll() {
+          var containers = [];
+
+          var headers = document.querySelectorAll('h1');
+          for (var i = 0; i < headers.length; ++i) {
+              var container = headers[i].nextElementSibling;
+              if (container.tagName == 'DIV')
+                  containers.push(container);
+          }
+
+          return containers;
+      }
+
+      function collapse(container) {
+          container.classList.add('collapsed');
+          container.style.height = 0 + 'px';
+      }
+
+      function collapseAll() {
+          findAll().forEach(collapse);
+      }
+
+      function expand(container) {
+          container.classList.remove('collapsed');
+          container.style.height = container.originalHeight + 'px';
+      }
+
+      function expandAll() {
+          findAll().forEach(expand);
+      }
+
       window.addEventListener('load', function() {
           var headers = document.querySelectorAll('h1');
           for (var i = 0; i < headers.length; ++i) {
@@ -272,26 +304,22 @@ foreach ($stewardShifts as $steward => $shiftData) {
 
             header.onclick = function(container) {
                 return function() {
-                    if (container.classList.contains('collapsed')) {
-                        container.classList.remove('collapsed');
-                        container.style.height = container.originalHeight + 'px';
-                    } else {
-                        container.classList.add('collapsed');
-                        container.style.height = 0 + 'px';
-                    }
-                }
+                    if (container.classList.contains('collapsed'))
+                        expand(container);
+                    else
+                        collapse(container);
+                };
             }(container);
 
             container.originalHeight = container.offsetHeight;
 
-            if (document.location.hash != '#' + header.id) {
-                container.classList.add('collapsed');
-                container.style.height = '0px';
-            } else {
+            if (document.location.hash == '#' + header.id)
                 container.style.height = container.offsetHeight + 'px';
-            }
+            else
+                collapse(container);
           }
       });
+
     </script>
   </body>
 </html>
