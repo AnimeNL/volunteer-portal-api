@@ -122,7 +122,7 @@ FloorPage.prototype.OnRender = function(application, container, content) {
       currentFloor = FloorPage.FLOORS[this.floor_],
       self = this;
 
-  var include_hidden = application.GetUser().getOption('hidden_events', false),
+  var include_hidden = application.GetUser().getOption('hidden_events', true),
       rendered_locations = [];
 
   var floors = this.schedule_.findUpcomingEvents({ floor: currentFloor, hidden: include_hidden });

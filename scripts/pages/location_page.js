@@ -51,7 +51,7 @@ LocationPage.prototype.OnRender = function(application, container, content) {
   if (!listContainer)
     return;
 
-  var includeHidden = application.GetUser().getOption('hidden_events', false),
+  var includeHidden = application.GetUser().getOption('hidden_events', true),
       entries = [];
 
   this.location_.sessions.forEach(function(session) {

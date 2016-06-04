@@ -337,7 +337,7 @@ LegacyApplication.prototype.SetTitle = function(title) {
 // Click event handlers.
 
 LegacyApplication.prototype.OnToggleHiddenEvents = function(event) {
-  this.user_.setOption('hidden_events', !this.user_.getOption('hidden_events', false));
+  this.user_.setOption('hidden_events', !this.user_.getOption('hidden_events', true));
   document.location.reload();
 };
 
