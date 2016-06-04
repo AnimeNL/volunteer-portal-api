@@ -70,8 +70,8 @@ var LegacyApplication = function(config, container, callback) {
 // Number of milliseconds between periodic application updates.
 LegacyApplication.PERIODIC_UPDATE_RATE_MS = 5000;
 
-// Number of milliseconds between schedule update checks (10 minutes).
-LegacyApplication.SCHEDULE_UPDATE_RATE_MS = 10 * 60 * 1000;
+// Number of milliseconds between schedule update checks (5 minutes).
+LegacyApplication.SCHEDULE_UPDATE_RATE_MS = 5 * 60 * 1000;
 
 // -----------------------------------------------------------------------------
 // Simple getters.
