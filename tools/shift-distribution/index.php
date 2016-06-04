@@ -86,7 +86,7 @@ $typesPerStewardValues = implode(', ', array_values($typesPerSteward));
 $typesPerStewardMetrics = [
     'Minimum'   => min(array_values($typesPerSteward)),
     'Maximum'   => max(array_values($typesPerSteward)),
-    'Average'   => array_sum($typesPerSteward) / count($typesPerSteward)
+    'Average'   => round(array_sum($typesPerSteward) / count($typesPerSteward), 1)
 ];
 
 // -------------------------------------------------------------------------------------------------
@@ -160,7 +160,7 @@ $typesPerStewardMetrics = [
           });
         })();
       </script>
-      <?php RenderTimeMetrics($typesPerStewardMetrics); ?>
+      <?php RenderMetrics($typesPerStewardMetrics); ?>
     </div>
 
     <!-- All elements on the page should be accordions, collapsed by default -->
@@ -174,15 +174,17 @@ $typesPerStewardMetrics = [
             if (container.tagName != 'DIV')
                 continue;
 
-            header.onclick = function() {
-                if (container.classList.contains('collapsed')) {
-                    container.classList.remove('collapsed');
-                    container.style.height = container.originalHeight + 'px';
-                } else {
-                    container.classList.add('collapsed');
-                    container.style.height = 0 + 'px';
+            header.onclick = function(container) {
+                return function() {
+                    if (container.classList.contains('collapsed')) {
+                        container.classList.remove('collapsed');
+                        container.style.height = container.originalHeight + 'px';
+                    } else {
+                        container.classList.add('collapsed');
+                        container.style.height = 0 + 'px';
+                    }
                 }
-            };
+            }(container);
 
             container.originalHeight = container.offsetHeight;
 
