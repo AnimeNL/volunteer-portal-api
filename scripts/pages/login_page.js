@@ -27,7 +27,7 @@ LoginPage.prototype.OnRender = function(application, container, content) {
     event.preventDefault();
 
     user.identify(nameElement.value).then(function() {
-      application.Navigate('/');
+      window.location.href = '/';
     }, function(error) {
       errorElement.textContent = error.message;
 
