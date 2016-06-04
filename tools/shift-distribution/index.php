@@ -3,6 +3,8 @@
 // Use of this source code is governed by the MIT license, a copy of which can
 // be found in the LICENSE file.
 
+require_once __DIR__ . '/functions.php';
+
 define('PROGRAM_FILE', __DIR__ . '/../../configuration/program.json');
 define('STEWARD_PROGRAM_FILE', __DIR__ . '/../../configuration/program_stewards.json');
 define('STEWARD_FILE', __DIR__ . '/../../configuration/teams/stewards.json');
@@ -55,6 +57,14 @@ uksort($hoursPerSteward, function($lhs, $rhs) use ($hoursPerSteward) {
 
 $hoursPerStewardLabels = implode("', '", array_keys($hoursPerSteward));
 $hoursPerStewardValues = implode(', ', array_values($hoursPerSteward));
+$hoursPerStewardMetrics = [
+    'Minimum'   => min(array_values($hoursPerSteward)),
+    'Maximum'   => max(array_values($hoursPerSteward)),
+    'Average'   => array_sum($hoursPerSteward) / count($hoursPerSteward),
+    'Total'     => array_sum($hoursPerSteward)
+];
+
+$hoursPerStewardMinimum = '';
 
 // -------------------------------------------------------------------------------------------------
 ?>
@@ -70,31 +80,67 @@ $hoursPerStewardValues = implode(', ', array_values($hoursPerSteward));
     <link rel="stylesheet" href="shifts.css" />
   </head>
   <body>
-    <h1>Scheduled hours per steward <a name="scheduled-hours-per-steward" href="#scheduled-hours-per-steward">#</a></h1>
-    <canvas id="scheduled-hours-per-steward" width="800" height="300"></canvas>
-    <script>
-      (function() {
-          var element = document.getElementById('scheduled-hours-per-steward');
-          new Chart(element, {
-              type: 'bar',
-              options: {
-                  scales: {
-                      xAxes: [{ ticks: { autoSkip: false } }],
-                      yAxes: [{ ticks: { beginAtZero: true } }]
-                  }
-              },
-              data: {
-                  labels: [ '<?php echo $hoursPerStewardLabels; ?>' ],
-                  datasets: [
-                      {
-                          label: 'Scheduled hours',
-                          backgroundColor: 'rgba(25, 118, 210, 0.9)',
-                          data: [ <?php echo $hoursPerStewardValues; ?> ]
-                      }
-                  ],
-              }
+    <h1 id="scheduled-hours-per-steward">Scheduled hours per steward <a href="#scheduled-hours-per-steward">#</a></h1>
+    <div>
+      <canvas id="scheduled-hours-per-steward-chart" width="800" height="300"></canvas>
+      <script>
+        (function() {
+            var element = document.getElementById('scheduled-hours-per-steward-chart');
+            new Chart(element, {
+                type: 'bar',
+                options: {
+                    scales: {
+                        xAxes: [{ ticks: { autoSkip: false } }],
+                        yAxes: [{ ticks: { beginAtZero: true } }]
+                    }
+                },
+                data: {
+                    labels: [ '<?php echo $hoursPerStewardLabels; ?>' ],
+                    datasets: [
+                        {
+                            label: 'Scheduled hours',
+                            backgroundColor: 'rgba(25, 118, 210, 0.9)',
+                            data: [ <?php echo $hoursPerStewardValues; ?> ]
+                        }
+                    ],
+                }
           });
-      })();
+        })();
+      </script>
+      <?php RenderTimeMetrics($hoursPerStewardMetrics); ?>
+    </div>
+
+    <!-- All elements on the page should be accordions, collapsed by default -->
+    <script>
+      window.addEventListener('load', function() {
+          var headers = document.querySelectorAll('h1');
+          for (var i = 0; i < headers.length; ++i) {
+            var header = headers[i];
+            var container = header.nextElementSibling;
+
+            if (container.tagName != 'DIV')
+                continue;
+
+            header.onclick = function() {
+                if (container.classList.contains('collapsed')) {
+                    container.classList.remove('collapsed');
+                    container.style.height = container.originalHeight + 'px';
+                } else {
+                    container.classList.add('collapsed');
+                    container.style.height = 0 + 'px';
+                }
+            };
+
+            container.originalHeight = container.offsetHeight;
+
+            if (document.location.hash != '#' + header.id) {
+                container.classList.add('collapsed');
+                container.style.height = '0px';
+            } else {
+                container.style.height = container.offsetHeight + 'px';
+            }
+          }
+      });
     </script>
   </body>
 </html>
