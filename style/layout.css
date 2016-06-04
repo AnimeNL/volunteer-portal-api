@@ -200,6 +200,7 @@ li.list-item-event {
 div.past > h2::after {
   font-family: 'material-icons';
   content: ' \e877';
+  color: #1976d2;
 }
 
 .room-finished h3::after {
@@ -215,13 +216,17 @@ div.past > h2::after { opacity: .8; }
   color: #8b8b8b;
 }
 
+.list-item-event.past-no-collapse h2 { margin-top: -2px; }
+.list-item-event.past-no-collapse p { display: none; }
+.list-item-event.past-no-collapse { height: 32px; }
 
 .list-item-event.past {
-  height: 28px;
+  height: 32px;
 }
 
 .list-item-event.past > div.time {
-  height: 1em;
+  margin-top: -1px;
+  height: 1.1em;
   overflow: hidden;
   color: #8b8b8b;
 }

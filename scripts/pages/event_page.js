@@ -16,11 +16,6 @@ var EventPage = function(application, parameters) {
 
 EventPage.prototype = Object.create(Page.prototype);
 
-// Fully written out names of the days in the week, starting on Sunday.
-EventPage.DAYS = [
-  'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'
-];
-
 // Names of the floors as is to be displayed in the event row.
 EventPage.FLOORS = {
   '-1': 'lower ground (Oceans)',
@@ -146,12 +141,34 @@ EventPage.prototype.OnRender = function(application, container, content) {
       stewardContainer = document.createDocumentFragment(),
       self = this;
 
-  this.event_.sessions.forEach(function(session) {
+  var currentTime = DateUtils.getTime();
+
+  var sessions = this.event_.sessions.slice() /* make a copy */;
+  sessions.sort(function(lhs, rhs) {
+    if (lhs.endTime <= currentTime && rhs.endTime > currentTime)
+      return 1;
+
+    if (lhs.endTime > currentTime && rhs.endTime <= currentTime)
+      return -1;
+
+    if (lhs.beginTime != rhs.beginTime)
+      return lhs.beginTime > rhs.beginTime ? 1 : -1;
+
+    return 0;
+  });
+
+  sessions.forEach(function(session) {
     sessionContainer.appendChild(self.BuildSessionRow(session));
   });
 
   var stewardShifts = this.event_.shifts.slice() /* make a copy */;
   stewardShifts.sort(function(lhs, rhs) {
+    if (lhs.endTime <= currentTime && rhs.endTime > currentTime)
+      return 1;
+
+    if (lhs.endTime > currentTime && rhs.endTime <= currentTime)
+      return -1;
+
     if (lhs.beginTime != rhs.beginTime)
       return lhs.beginTime > rhs.beginTime ? 1 : -1;
 
