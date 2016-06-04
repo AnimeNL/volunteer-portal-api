@@ -58,7 +58,7 @@ OverviewPage.prototype.FormatOtherStewards = function(shift, plurals, suffix, se
   else if (volunteers.length == 7) prefix = 'Seven other stewards ' + plurals[1];
   else if (volunteers.length == 6) prefix = 'Six other stewards ' + plurals[1];
   else if (volunteers.length == 5) prefix = 'Five other stewards ' + plurals[1];
-  else if (volunteers.length == 1) prefix = GetFirstName(volunteers[0].name) + plurals[0];
+  else if (volunteers.length == 1) prefix = GetFirstName(volunteers[0].name) + ' ' + plurals[0];
   else {
     volunteers.sort(function(lhs, rhs) {
       return lhs.name.localeCompare(rhs.name);
