@@ -14,6 +14,8 @@ $program = [];
 $stewards = [];
 $shifts = [];
 
+$stewardShifts = [];
+
 // (1) Load the normal, publicized AnimeCon program.
 foreach (json_decode(file_get_contents(PROGRAM_FILE), true) as $entry)
     $program[$entry['id']] = $entry;
@@ -27,8 +29,9 @@ foreach (json_decode(file_get_contents(STEWARD_FILE), true) as $entry)
     $stewards[$entry['name']] = $entry;
 
 // (4) Load the list of shifts that the stewards have been assigned to.
-foreach (json_decode(file_get_contents(SHIFTS_FILE), true) as $steward => $stewardShifts)
-    $shifts[$steward] = $stewardShifts;
+foreach (json_decode(file_get_contents(SHIFTS_FILE), true) as $steward => $data) {
+    $stewardShifts[$steward] = $data;
+}
 
 // -------------------------------------------------------------------------------------------------
 
@@ -40,8 +43,8 @@ foreach ($stewards as $steward => $data) {
 
     $typesPerSteward[$steward] = [];
 
-    if (array_key_exists($steward, $shifts)) {
-        foreach ($shifts[$steward] as $shift) {
+    if (array_key_exists($steward, $stewardShifts)) {
+        foreach ($stewardShifts[$steward] as $shift) {
             if ($shift['shiftType'] !== 'event')
                 continue;
 
@@ -93,6 +96,9 @@ $typesPerStewardMetrics = [
     <link rel="stylesheet" href="shifts.css" />
   </head>
   <body>
+    <p>
+      <b>Notes:</b> The <i>Steward Briefing</i> and <i>Group Photo</i> shifts are ignored.
+    </p>
     <h1 id="scheduled-hours-per-steward">Scheduled hours per steward <a href="#scheduled-hours-per-steward">#</a></h1>
     <div>
       <canvas id="scheduled-hours-per-steward-chart" width="800" height="300"></canvas>
@@ -141,7 +147,7 @@ $typesPerStewardMetrics = [
                     labels: [ '<?php echo $typesPerStewardLabels; ?>' ],
                     datasets: [
                         {
-                            label: 'Scheduled hours',
+                            label: 'Different shift types',
                             backgroundColor: 'rgba(25, 118, 210, 0.9)',
                             data: [ <?php echo $typesPerStewardValues; ?> ]
                         }
@@ -152,6 +158,106 @@ $typesPerStewardMetrics = [
       </script>
       <?php RenderMetrics($typesPerStewardMetrics); ?>
     </div>
+
+<?php
+foreach ($stewardShifts as $steward => $shiftData) {
+    $slug = 'steward-' . CreateSlug($steward);
+
+    $hoursPerShiftType = [];
+    $hoursPerDay = ['Friday' => 0, 'Saturday' => 0, 'Sunday' => 0];
+
+    foreach ($shiftData as $shift) {
+        if ($shift['shiftType'] !== 'event')
+                continue;
+
+        if (IsIgnoredShift($shift))
+            continue;
+
+        $name = $program[$shift['eventId']]['sessions'][0]['name'];
+        if (!array_key_exists($name, $hoursPerShiftType))
+            $hoursPerShiftType[$name] = 0;
+
+        $hours = ($shift['endTime'] - $shift['beginTime']) / 3600;
+        $hoursPerShiftType[$name] += $hours;
+
+        if ($shift['beginTime'] < 1465596000)
+            $hoursPerDay['Friday'] += $hours;
+        else if ($shift['beginTime'] < 1465682400)
+            $hoursPerDay['Saturday'] += $hours;
+        else
+            $hoursPerDay['Sunday'] += $hours;
+    }
+
+    SortByCountThenName($hoursPerShiftType);
+
+    $hoursPerShiftTypeLabels = implode("', '", array_keys($hoursPerShiftType));
+    $hoursPerShiftTypeValues = implode(', ', array_values($hoursPerShiftType));
+
+    $hoursPerDayValues = implode(', ', array_values($hoursPerDay));
+
+?>
+    <h1 id="<?php echo $slug; ?>">Steward: <?php echo $steward; ?> <a href="#<?php echo $slug; ?>">#</a></h1>
+    <div class="steward-grid">
+        <div>
+            <canvas id="<?php echo $slug; ?>-chart" width="700" height="350"></canvas>
+            <script>
+              (function() {
+                  var element = document.getElementById('<?php echo $slug; ?>-chart');
+                  new Chart(element, {
+                      type: 'bar',
+                      options: {
+                          responsive: false,
+                          scales: {
+                              xAxes: [{ ticks: { autoSkip: false } }],
+                              yAxes: [{ ticks: { beginAtZero: true } }]
+                          }
+                      },
+                      data: {
+                          labels: [ '<?php echo $hoursPerShiftTypeLabels; ?>' ],
+                          datasets: [
+                              {
+                                  label: 'Hours',
+                                  backgroundColor: 'rgba(25, 118, 210, 0.9)',
+                                  data: [ <?php echo $hoursPerShiftTypeValues; ?> ]
+                              }
+                          ],
+                      }
+                });
+              })();
+            </script>
+        </div>
+        <div>
+            <canvas id="<?php echo $slug; ?>-chart2" width="700" height="350"></canvas>
+            <script>
+              (function() {
+                  var element = document.getElementById('<?php echo $slug; ?>-chart2');
+                  new Chart(element, {
+                      type: 'bar',
+                      options: {
+                          responsive: false,
+                          scales: {
+                              xAxes: [{ ticks: { autoSkip: false } }],
+                              yAxes: [{ ticks: { beginAtZero: true } }]
+                          }
+                      },
+                      data: {
+                          labels: [ 'Friday', 'Saturday', 'Sunday' ],
+                          datasets: [
+                              {
+                                  label: 'Hours',
+                                  backgroundColor: 'rgba(25, 118, 210, 0.9)',
+                                  data: [ <?php echo $hoursPerDayValues; ?> ]
+                              }
+                          ],
+                      }
+                });
+              })();
+            </script>
+        </div>
+    </div>
+<?php
+}
+?>
 
     <!-- All elements on the page should be accordions, collapsed by default -->
     <script>

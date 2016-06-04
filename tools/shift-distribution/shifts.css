@@ -8,7 +8,11 @@ a {
     text-decoration: none;
 }
 
-h1 { cursor: pointer; }
+h1 {
+    cursor: pointer; 
+    margin-bottom: 0px;
+    font-size: 1.7em;
+}
 
 div {
     overflow: hidden;
@@ -18,4 +22,10 @@ div {
 table.metrics td:first-of-type {
     font-weight: bold;
     padding-right: 16px;
+}
+
+.steward-grid > div {
+    display: inline-block;
+    padding-right: 50px;
+    vertical-align: top;
 }

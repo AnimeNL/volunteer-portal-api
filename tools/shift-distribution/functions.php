@@ -51,3 +51,15 @@ function RenderTimeMetrics($metrics) {
     RenderMetrics($metrics);
 }
 
+function CreateSlug($text) {
+    $slug = strtolower($text);
+    $allowed = preg_split ('//', 'abcdefghijklmnopqrstuvwxyz0123456789-+_');
+
+    for ($i = 0, $j = strlen($slug); $i < $j; $i++) {
+        if (!in_array($slug[$i], $allowed))
+            $slug[$i] = '-';
+    }
+
+    $slug = preg_replace('/[\-]{2,}/s', '-', $slug);
+    return preg_replace ('/^[\-]*(.+?)[\-]*$/s', '\\1', $slug);;
+}
