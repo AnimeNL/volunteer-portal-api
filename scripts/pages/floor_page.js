@@ -51,6 +51,9 @@ FloorPage.prototype.BuildSessionRow = function(session) {
   name.className = 'event';
   name.textContent = session.name;
 
+  if (session.isHidden())
+    name.className += ' hidden';
+
   container.appendChild(time);
   container.appendChild(name);
 
