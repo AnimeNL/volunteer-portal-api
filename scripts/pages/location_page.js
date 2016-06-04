@@ -67,6 +67,8 @@ LocationPage.prototype.OnRender = function(application, container, content) {
 
       location: session.location.name,
       url: '/events/' + session.event.slug + '/',
+
+      className: session.isHidden() ? 'hidden' : ''
     });
   });
 

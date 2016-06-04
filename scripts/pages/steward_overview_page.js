@@ -78,6 +78,8 @@ StewardOverviewPage.prototype.OnRender = function(application, container, conten
 
       location: session.location.name,
       url: '/events/' + shift.event.slug + '/',
+
+      className: session.isHidden() ? 'hidden' : ''
     });
   });
 

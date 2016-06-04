@@ -182,11 +182,13 @@ li.list-item-event {
   background-color: #e0f2f1;
 }
 
-.list-item-event.hidden h2::before {
+.list-item-event.hidden h2::after,
+.list-item-room-event .event.hidden::after {
   font-family: 'material-icons';
-  content: '\e8aa  ';
-  color: #888;
-  font-size: .8em;
+  content: '\e8f4';
+  margin-left: 4px;
+  color: #1976d2;
+  font-size: .6em;
 }
 
 .list-item-event.active {
