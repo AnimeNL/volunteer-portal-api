@@ -36,7 +36,7 @@ Header('Content-Security-Policy: default-src \'self\'');
     <meta name="msapplication-TileColor" content="#093565" />
     <link rel="apple-touch-icon-precomposed" href="/images/logo-128.png" />
     <link rel="manifest" href="/manifest.json" />
-    <link rel="stylesheet" href="/style/aggregated.php" />
+    <link rel="stylesheet" href="/anime.css" />
     <title>Anime Volunteer Portal</title>
   </head>
   <body>
@@ -45,7 +45,7 @@ Header('Content-Security-Policy: default-src \'self\'');
 foreach ($templates as $file)
   include(__DIR__ . '/templates/' . $file);
 ?>
-    <script src="/scripts/aggregated.php"></script>
+    <script src="/anime-legacy.js"></script>
     <script src="/anime.js"></script>
     <noscript>
       <p>
