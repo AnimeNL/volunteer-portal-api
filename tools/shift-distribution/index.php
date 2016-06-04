@@ -32,27 +32,44 @@ foreach (json_decode(file_get_contents(SHIFTS_FILE), true) as $steward => $stewa
 
 // -------------------------------------------------------------------------------------------------
 // Graph: number of scheduled hours per steward
+// Graph: number of different shifts per steward
 
 $hoursPerSteward = [];
+$typesPerSteward = [];
 
 foreach ($stewards as $steward => $data) {
     $hours = 0;
 
+    $typesPerSteward[$steward] = [];
+
     if (array_key_exists($steward, $shifts)) {
         foreach ($shifts[$steward] as $shift) {
-            if ($shift['shiftType'] === 'event')
-                $hours += ($shift['endTime'] - $shift['beginTime']) / 3600;
+            if ($shift['shiftType'] !== 'event')
+                continue;
+
+            $hours += ($shift['endTime'] - $shift['beginTime']) / 3600;
+            $typesPerSteward[$steward][$shift['eventId']] = 1;
         }
     }
 
     $hoursPerSteward[$steward] = $hours;
 }
 
+foreach ($typesPerSteward as $steward => $types)
+    $typesPerSteward[$steward] = count($types);
+
 uksort($hoursPerSteward, function($lhs, $rhs) use ($hoursPerSteward) {
     if ($hoursPerSteward[$lhs] === $hoursPerSteward[$rhs])
         return strcmp($lhs, $rhs);
 
     return $hoursPerSteward[$lhs] > $hoursPerSteward[$rhs] ? 1 : -1;
+});
+
+uksort($typesPerSteward, function($lhs, $rhs) use ($typesPerSteward) {
+    if ($typesPerSteward[$lhs] === $typesPerSteward[$rhs])
+        return strcmp($lhs, $rhs);
+
+    return $typesPerSteward[$lhs] > $typesPerSteward[$rhs] ? 1 : -1;
 });
 
 $hoursPerStewardLabels = implode("', '", array_keys($hoursPerSteward));
@@ -64,7 +81,13 @@ $hoursPerStewardMetrics = [
     'Total'     => array_sum($hoursPerSteward)
 ];
 
-$hoursPerStewardMinimum = '';
+$typesPerStewardLabels = implode("', '", array_keys($typesPerSteward));
+$typesPerStewardValues = implode(', ', array_values($typesPerSteward));
+$typesPerStewardMetrics = [
+    'Minimum'   => min(array_values($typesPerSteward)),
+    'Maximum'   => max(array_values($typesPerSteward)),
+    'Average'   => array_sum($typesPerSteward) / count($typesPerSteward)
+];
 
 // -------------------------------------------------------------------------------------------------
 ?>
@@ -108,6 +131,36 @@ $hoursPerStewardMinimum = '';
         })();
       </script>
       <?php RenderTimeMetrics($hoursPerStewardMetrics); ?>
+    </div>
+
+    <h1 id="shift-types-per-steward">Shift types per steward <a href="#shift-types-per-steward">#</a></h1>
+    <div>
+      <canvas id="shift-types-per-steward-chart" width="800" height="300"></canvas>
+      <script>
+        (function() {
+            var element = document.getElementById('shift-types-per-steward-chart');
+            new Chart(element, {
+                type: 'bar',
+                options: {
+                    scales: {
+                        xAxes: [{ ticks: { autoSkip: false } }],
+                        yAxes: [{ ticks: { beginAtZero: true } }]
+                    }
+                },
+                data: {
+                    labels: [ '<?php echo $typesPerStewardLabels; ?>' ],
+                    datasets: [
+                        {
+                            label: 'Scheduled hours',
+                            backgroundColor: 'rgba(25, 118, 210, 0.9)',
+                            data: [ <?php echo $typesPerStewardValues; ?> ]
+                        }
+                    ],
+                }
+          });
+        })();
+      </script>
+      <?php RenderTimeMetrics($typesPerStewardMetrics); ?>
     </div>
 
     <!-- All elements on the page should be accordions, collapsed by default -->
