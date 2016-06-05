@@ -36,6 +36,9 @@ StewardsPage.prototype.BuildStewardRow = function(volunteer) {
   var currentTime = DateUtils.getTime();
   var shift = volunteer.getCurrentOrUpcomingShift(currentTime);
 
+  if (!volunteer.cachedIsAvailable)
+    row.className += ' unavailable';
+
   if (shift && shift.current) {
     var session = shift.event.getSessionForTime(currentTime);
 
@@ -90,14 +93,22 @@ StewardsPage.prototype.OnRender = function(application, container, content) {
   if (!listContainer)
     return;
 
+  var currentTime = DateUtils.getTime();
   var stewardList = document.createDocumentFragment(),
-      stewards = this.schedule_.volunteers,
+      stewards = this.schedule_.volunteers.slice() /* make a copy */,
       self = this;
 
-  // TODO(Peter): Unavailable stewards should be listed at the bottom of this view, and clearly
-  // indicated as being unavailable.
+  // Calling isAvailable() within the sorting function would be too expensive.
+  stewards.forEach(function(steward) {
+    steward.cachedIsAvailable = steward.isAvailable(currentTime);
+  });
 
   stewards.sort(function(lhs, rhs) {
+    if (lhs.cachedIsAvailable && !rhs.cachedIsAvailable)
+      return -1;
+    if (!lhs.cachedIsAvailable && rhs.cachedIsAvailable)
+      return 1;
+
     return lhs.name.localeCompare(rhs.name);
   });
 

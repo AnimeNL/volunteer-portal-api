@@ -92,13 +92,8 @@ class ConventionVolunteer {
     // Returns whether the volunteer is available at |time|. They may be on a shift.
     isAvailable(time) {
         for (let i = 0; i < this.unavailable_.length; ++i) {
-            if (this.unavailable_[i].endTime < time)
-                continue;  // this scheduled unavailability time is in the past.
-
-            if (this.unavailable_[i].beginTime > time)
-                continue;  // this scheduled unavailability time is in the future.
-
-            return false;
+            if (this.unavailable_[i].beginTime <= time && this.unavailable_[i].endTime > time)
+                return false;
         }
 
         return true;

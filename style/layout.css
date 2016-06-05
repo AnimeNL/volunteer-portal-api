@@ -303,6 +303,25 @@ li.list-item-steward.active:active {
   background-color: #FFF59D;
 }
 
+li.list-item-steward.unavailable {
+  background-color: #ECEFF1;
+}
+
+li.list-item-steward.unavailable img {
+  -webkit-filter: grayscale(1);
+  filter: grayscale(1);
+}
+
+li.list-item-steward.unavailable h2:after {
+  font-family: 'material-icons';
+  font-size: .7em;
+
+  margin-left: 4px;
+
+  content: "\e644";
+  color: #e64a19;
+}
+
 li.list-item-steward {
   transition: background-color .4s cubic-bezier(.4, 0, .2, 1),
               -webkit-filter .4s cubic-bezier(.4, 0, .2, 1);

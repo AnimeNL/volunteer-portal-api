@@ -7,9 +7,6 @@ function IsIgnoredShift($shift) {
     global $program;
 
     $name = $program[$shift['eventId']]['sessions'][0]['name'];
-    if ($name === 'Steward Briefing')
-        return true;
-
     if ($name === 'Group photo')
         return true;
 

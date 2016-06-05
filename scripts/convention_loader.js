@@ -116,6 +116,10 @@ class ConventionLoader {
                 const volunteer = volunteers[volunteerName];
 
                 data.shifts[volunteerName].forEach(shift => {
+                    // Convert the UNIX timestamps to JavaScript times.
+                    shift.beginTime *= 1000;
+                    shift.endTime *= 1000;
+
                     switch (shift.shiftType) {
                         case 'available':
                             // don't do anything special with these shifts
@@ -131,10 +135,6 @@ class ConventionLoader {
                             }
 
                             const event = events[shift.eventId];
-
-                            // Convert the UNIX timestamps to JavaScript times.
-                            shift.beginTime *= 1000;
-                            shift.endTime *= 1000;
 
                             volunteer.addShift(event, shift.beginTime, shift.endTime);
                             event.addShift(volunteer, shift.beginTime, shift.endTime);

@@ -97,7 +97,7 @@ $typesPerStewardMetrics = [
   </head>
   <body>
     <p>
-      <b>Notes:</b> The <i>Steward Briefing</i> and <i>Group Photo</i> shifts are ignored.<br />
+      <b>Notes:</b> The <i>Group Photo</i> shift is ignored.<br />
       <b>Actions:</b> <a href="javascript:expandAll()">expand all</a>, <a href="javascript:collapseAll()">collapse all</a>.
     </p>
     <h1 id="scheduled-hours-per-steward">Scheduled hours per steward <a href="#scheduled-hours-per-steward">#</a></h1>
