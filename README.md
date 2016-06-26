@@ -19,7 +19,8 @@ sure to run `composer install` when starting to work with this repository, and `
 every time you pull new changes.
 
 ## Frontend code (JavaScript)
-This stuff doesn't exist yet.
+You need to generate anime.js, for which [Gulp](https://github.com/gulpjs/gulp) is used. Install nodejs
+and npm, and then run `npm install`. Afterwards, run `npm run-script build` to generate anime.js.
 
 ## Installation
 Create the following files, and make sure that they're readable by the current user, as well as the
@@ -29,5 +30,22 @@ user that will be used for serving the application (e.g. _apache_).
   - anime/Services/state.json
   - configuration/teams/
 
+If you are running on a system that has SELinux set to enforcing, make sure you change the context
+of anime/Services/error.log to `httpd_sys_rw_content_t`
+(run `chcon -t httpd_sys_rw_content_t anime/Services/error.log`).
+
 **TODO**: Create a `post-install-cmd` hook for `composer` that creates these files.
 **TODO**: Document both backend and frontend deployment in this section.
+
+## Frontend
+Now try to reach $yourhost/anime.css. If that gives you a Not Found error, you need to enable htaccess
+overrides (set "AllowOverride FileInfo Options" in your apache config for the directory where you are
+deploying, or copy all of the .htaccess entries into the apache configuration).
+
+## Configuration
+Look in anime/Services/Import{Program,Schedule,Team}Service.php to see how the various services import
+the data formats. Then move configuration/configuration.json-example to configuration/configuration.json
+and edit the email address and configure the Services you want to use for importing your schedule and
+other configuration.
+
+**TODO**: Write some more explanation about importing the configuration.
