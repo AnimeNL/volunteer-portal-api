@@ -24,7 +24,7 @@ namespace Anime\Services;
 //     'comment'     Description of the event. May be NULL.
 //     'hidden'      Whether the event should be publicly visible.
 //     'locationId'  Internal id of the location in the AnimeCon database.
-//     'floor'       Floor on which the event takes place. Prefixed with 'floor-'. {-1, 0, 1, 2}.
+//     'floor'       Floor on which the event takes place. Prefixed with 'floor-'. <digit>.
 //     'floorTitle'  Description of the floor on which the event takes place.
 //     'tsId'        Internal id of the session of this event in the AnimeCon database.
 //     'eventId'     Internal id of this event in the AnimeCon database.
@@ -130,8 +130,8 @@ class ImportProgramService implements Service {
                 throw new \Exception('Missing field "' . $field . '" for entry ' . $eventId . '.');
             }
 
-            // Assumption: All floors are in the format of "floor-" {-1, 0, 1, 2}.
-            if (!preg_match('/floor\-(\-1|0|1|2)/s', $entry['floor']))
+            // Assumption: All floors are in the format of "floor-" <digit>.
+            if (!preg_match('/floor\-((\-)?\d)/s', $entry['floor']))
                 throw new \Exception('Invalid value for "floor" for entry ' . $eventId . '.');
 
             switch($entry['opening']) {
