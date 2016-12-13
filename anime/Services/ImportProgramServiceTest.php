@@ -1,5 +1,5 @@
 <?php
-// Copyright 2016 Peter Beverloo. All rights reserved.
+// Copyright 2017 Peter Beverloo. All rights reserved.
 // Use of this source code is governed by the MIT license, a copy of which can
 // be found in the LICENSE file.
 
@@ -34,8 +34,8 @@ class ImportProgramServiceTest extends \PHPUnit_Framework_TestCase {
         // Assumption: All fields that we use in the translation exist in the entries.
         $entry = [
             'name'      => 'My Event',
-            'start'     => '2016-03-13T17:00:00+01:00',
-            'end'       => '2016-03-13T17:45:00+01:00',
+            'start'     => '2017-03-13T17:00:00+01:00',
+            'end'       => '2017-03-13T17:45:00+01:00',
             'location'  => 'Asia',
             'comment'   => null,
             'hidden'    => 0,
@@ -101,22 +101,22 @@ class ImportProgramServiceTest extends \PHPUnit_Framework_TestCase {
         $entries = [
             [
                 'name'      => 'Event opening',
-                'start'     => '2016-03-13T22:00:00+01:00',
-                'end'       => '2016-03-13T22:00:00+01:00',
+                'start'     => '2017-03-13T22:00:00+01:00',
+                'end'       => '2017-03-13T22:00:00+01:00',
                 'tsId'      => 42,
                 'opening'   => 1 /* opening */
             ],
             [
                 'name'      => 'Another event opening',
-                'start'     => '2016-03-13T17:00:00+01:00',
-                'end'       => '2016-03-13T17:45:00+01:00',
+                'start'     => '2017-03-13T17:00:00+01:00',
+                'end'       => '2017-03-13T17:45:00+01:00',
                 'tsId'      => 84,
                 'opening'   => 0 /* event */
             ],
             [
                 'name'      => 'Event closing',
-                'start'     => '2016-03-13T23:00:00+01:00',
-                'end'       => '2016-03-13T23:00:00+01:00',
+                'start'     => '2017-03-13T23:00:00+01:00',
+                'end'       => '2017-03-13T23:00:00+01:00',
                 'tsId'      => 42,
                 'opening'   => -1 /* closing */
             ]
@@ -129,15 +129,15 @@ class ImportProgramServiceTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals([
             [
                 'name'      => 'Event',
-                'start'     => '2016-03-13T22:00:00+01:00',
-                'end'       => '2016-03-13T23:00:00+01:00',
+                'start'     => '2017-03-13T22:00:00+01:00',
+                'end'       => '2017-03-13T23:00:00+01:00',
                 'tsId'      => 42,
                 'opening'   => 1 /* opening */
             ],
             [
                 'name'      => 'Another event opening',
-                'start'     => '2016-03-13T17:00:00+01:00',
-                'end'       => '2016-03-13T17:45:00+01:00',
+                'start'     => '2017-03-13T17:00:00+01:00',
+                'end'       => '2017-03-13T17:45:00+01:00',
                 'tsId'      => 84,
                 'opening'   => 0 /* event */
             ]
@@ -182,8 +182,8 @@ class ImportProgramServiceTest extends \PHPUnit_Framework_TestCase {
         ], $service->convertToIntermediateProgramFormat([
             [
                 'name'      => 'Example event',
-                'start'     => '2016-06-09T01:00:00+01:00',
-                'end'       => '2016-06-09T01:30:00+01:00',
+                'start'     => '2017-06-09T01:00:00+01:00',
+                'end'       => '2017-06-09T01:30:00+01:00',
                 'location'  => 'Asia',
                 'comment'   => 'Description of event',
                 'hidden'    => 0,
@@ -193,8 +193,8 @@ class ImportProgramServiceTest extends \PHPUnit_Framework_TestCase {
             ],
             [
                 'name'      => 'Another event',
-                'start'     => '2016-06-09T00:45:00+00:00',
-                'end'       => '2016-06-09T01:00:00+00:00',
+                'start'     => '2017-06-09T00:45:00+00:00',
+                'end'       => '2017-06-09T01:00:00+00:00',
                 'location'  => 'Atlantic / Dealer Room',
                 'comment'   => 'Description of another event',
                 'hidden'    => 1,
@@ -237,8 +237,8 @@ class ImportProgramServiceTest extends \PHPUnit_Framework_TestCase {
         ], $this->importFromData([
             [
                 'name'      => 'Example event opening',
-                'start'     => '2016-06-09T01:00:00+01:00',
-                'end'       => '2016-06-09T01:00:00+01:00',
+                'start'     => '2017-06-09T01:00:00+01:00',
+                'end'       => '2017-06-09T01:00:00+01:00',
                 'location'  => 'Asia',
                 'comment'   => 'Description of event',
                 'hidden'    => 0,
@@ -249,8 +249,8 @@ class ImportProgramServiceTest extends \PHPUnit_Framework_TestCase {
             ],
             [
                 'name'      => 'Another event',
-                'start'     => '2016-06-09T00:45:00+00:00',
-                'end'       => '2016-06-09T01:00:00+00:00',
+                'start'     => '2017-06-09T00:45:00+00:00',
+                'end'       => '2017-06-09T01:00:00+00:00',
                 'location'  => 'Atlantic / Dealer Room',
                 'comment'   => 'Description of another event',
                 'hidden'    => 1,
@@ -261,8 +261,8 @@ class ImportProgramServiceTest extends \PHPUnit_Framework_TestCase {
             ],
             [
                 'name'      => 'Example event closing',
-                'start'     => '2016-06-09T02:00:00+01:00',
-                'end'       => '2016-06-09T02:00:00+01:00',
+                'start'     => '2017-06-09T02:00:00+01:00',
+                'end'       => '2017-06-09T02:00:00+01:00',
                 'location'  => 'Asia',
                 'comment'   => 'Description of event',
                 'hidden'    => 0,
@@ -314,8 +314,8 @@ class ImportProgramServiceTest extends \PHPUnit_Framework_TestCase {
         ], $this->importFromData([
             [
                 'name'      => 'First session',
-                'start'     => '2016-06-09T01:00:00+01:00',
-                'end'       => '2016-06-09T02:00:00+01:00',
+                'start'     => '2017-06-09T01:00:00+01:00',
+                'end'       => '2017-06-09T02:00:00+01:00',
                 'location'  => 'Asia',
                 'comment'   => 'Description of the first session',
                 'hidden'    => 0,
@@ -326,8 +326,8 @@ class ImportProgramServiceTest extends \PHPUnit_Framework_TestCase {
             ],
             [
                 'name'      => 'Another event',
-                'start'     => '2016-06-09T00:45:00+00:00',
-                'end'       => '2016-06-09T01:00:00+00:00',
+                'start'     => '2017-06-09T00:45:00+00:00',
+                'end'       => '2017-06-09T01:00:00+00:00',
                 'location'  => 'Atlantic / Dealer Room',
                 'comment'   => 'Description of another event',
                 'hidden'    => 1,
@@ -338,8 +338,8 @@ class ImportProgramServiceTest extends \PHPUnit_Framework_TestCase {
             ],
             [
                 'name'      => 'Second session',
-                'start'     => '2016-06-09T02:00:00+01:00',
-                'end'       => '2016-06-09T03:00:00+01:00',
+                'start'     => '2017-06-09T02:00:00+01:00',
+                'end'       => '2017-06-09T03:00:00+01:00',
                 'location'  => 'Oceania',
                 'comment'   => 'Description of the second session',
                 'hidden'    => 0,

@@ -1,5 +1,5 @@
 <?php
-// Copyright 2016 Peter Beverloo. All rights reserved.
+// Copyright 2017 Peter Beverloo. All rights reserved.
 // Use of this source code is governed by the MIT license, a copy of which can
 // be found in the LICENSE file.
 
@@ -11,7 +11,7 @@ namespace Anime\Services;
 // will be taking place. The format of the input is entirely proprietary to AnimeCon, so an
 // intermediate format has been developed to make adoption for other input types easier.
 //
-// For the Anime 2016 conference, the JSON format has been chosen to serve as the input for this
+// For the Anime 2017 conference, the JSON format has been chosen to serve as the input for this
 // website's data. It expects an array of event entries that each have the following fields:
 //
 //     'name'        Name of the event. May be suffixed with 'opening' or 'closing'.

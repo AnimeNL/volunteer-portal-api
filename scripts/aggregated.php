@@ -1,5 +1,5 @@
 <?php
-// Copyright 2015 Peter Beverloo. All rights reserved.
+// Copyright 2017 Peter Beverloo. All rights reserved.
 // Use of this source code is governed by the MIT license, a copy of which can
 // be found in the LICENSE file.
 
@@ -35,7 +35,7 @@ echo '// config.json' . PHP_EOL;
 echo '// =============================================================================' . PHP_EOL;
 echo PHP_EOL;
 
-echo 'var config = { "event-data": "", "theme-color": "", "title": "Anime 2016", "year": "2016" };';
+echo 'var config = { "event-data": "", "theme-color": "", "title": "Anime 2017", "year": "2017" };';
 echo PHP_EOL . PHP_EOL;
 
 foreach ($scripts as $file) {

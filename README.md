@@ -1,6 +1,6 @@
-Anime 2016 Volunteer Portal
+Anime 2017 Volunteer Portal
 ===
-This repository contains the code powering the Anime 2016 volunteer portals. It contains a limited
+This repository contains the code powering the Anime 2017 volunteer portals. It contains a limited
 amount of backend logic for importing and normalizing data from external parties, as well as the
 frontend for both the client-side logic and the portal's visual interface.
 
