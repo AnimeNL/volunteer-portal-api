@@ -1,4 +1,4 @@
 # Steward registratieformulier
 ===
 
-https://stewards.club/hallo
+https://stewards.team/hallo

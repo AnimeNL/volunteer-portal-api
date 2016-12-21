@@ -13,13 +13,14 @@ p { font-size: 16px; }
 
 /** Colors **/
 a {
-  color: #E65100;
-  text-decoration: none;
+  color: #7E57C2;
+  text-decoration: underline;
 }
 
 /** Header styling **/
 header {
-  background: url(/tools/common/background.jpg) right / cover;
+  background-color: black;
+  background-image: linear-gradient(180deg, black, black 80%, #7B1FA2);
   box-sizing: border-box;
 
   padding-top: 30px;
@@ -55,7 +56,7 @@ section, footer {
 
 /** Content header styling **/
 section > h1 {
-  background-color: #17223c;
+  background-color: #4A148C;
   color: white;
 
   margin: 0px;

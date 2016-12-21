@@ -1,18 +1,18 @@
 
 @media (min-width: 1200px) {
   section:first-of-type::before {
-    content: url(/tools/common/plane.png);
+    content: url(/tools/common/clara.png);
     position: absolute;
 
-    margin: -198px 0 0 -150px;
+    margin: -195px 0 0 -160px;
   }
 
   section:first-of-type > h1::before {
     content: url(/tools/common/marieke.png);
     position: absolute;
 
-    transform: scale(.8);
-    margin: -233px -107px 0 0;
+    transform: scale(.9);
+    margin: -220px -100px 0 0;
     right: 0;
   }
 
