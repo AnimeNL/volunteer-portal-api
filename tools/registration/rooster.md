@@ -7,14 +7,14 @@ We verwachten dat iedere steward ongeveer 16 uur aan shifts zal krijgen. Natuurl
 mogelijkheid om aan te geven welke evenementen je echt niet wilt missen, maar houd in gedachten dat
 het niet altijd mogelijk is om aan ieder's wensen te voldoen.
 
-Tijdens Anime 2016 zal je rooster beschikbaar zijn via een website geoptimaliseerd voor je mobiele
+Tijdens Anime 2017 zal je rooster beschikbaar zijn via een website geoptimaliseerd voor je mobiele
 telefoon, welke op Android telefoons ook zonder internet beschikbaar zal zijn. Daarnaast krijg je
 ook een uitgeprint rooster indien je al die techniek maar niets vindt.
 
 ## Hoe ziet zo'n rooster er uit?
 
-Het volgende rooster was van één van de Anime 2015 stewards, en is indicatief voor de roosters die
-we voor Anime 2016 verwachten.
+Het volgende rooster was van één van de Anime 2017 stewards, en is indicatief voor de roosters die
+we voor Anime 2017 verwachten.
 
 ### Vrijdag
   * 11:00 - 12:00 - Steward briefing

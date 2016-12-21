@@ -5,7 +5,7 @@ problemen. Als je mee wilt helpen met _crowd management_, leeftijd- en veilighei
 voor de VIPs en tevens onze beveiliging en EHBO'ers bij wilt staan, dan zijn we naar jou op zoek!
 
 Meld je hier direct aan als je deel wilt uitmaken van een te gekke groep vrijwilligers die er samen
-voor zorgen dat ook Anime 2016 weer een veilig en fantastisch festival wordt.
+voor zorgen dat ook Anime 2017 weer een veilig en fantastisch festival wordt.
 
 ## Wat verwachten we van je?
 
