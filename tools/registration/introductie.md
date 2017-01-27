@@ -2,7 +2,7 @@
 
 Stewards zijn de gastheren en -vrouwen van het festival; de eerste linie in het geval van vragen en
 problemen. Als je mee wilt helpen met _crowd management_, leeftijd- en veiligheidcontroles, escortes
-voor de VIPs en tevens onze beveiliging en EHBO'ers bij wilt staan, dan zijn we naar jou op zoek!
+voor de VIPs en tevens onze beveiliging en EHBO'ers bij wilt staan, dan zijn we op zoek naar **jou**!
 
 Meld je hier direct aan als je deel wilt uitmaken van een te gekke groep vrijwilligers die er samen
 voor zorgen dat ook Anime 2017 weer een veilig en fantastisch festival wordt.
@@ -24,8 +24,8 @@ contact met ons op.
 
 ## Wat krijg je van ons?
 
-  * Wij regelen en betalen een professionele stewardtraining voor je op **zaterdag 7, of zondag 8
-    mei** in Amersfoort. Stewards moeten deze training eens per twee jaar volgen.
+  * Wij regelen en betalen een professionele stewardtraining voor je **in april of mei** in
+    Amersfoort. Stewards moeten deze training eens per twee jaar volgen.
 
   * De mogelijkheid om een slaapplaats in één van de festivalhotels te reserveren ([meer informatie
     en prijzen](hotel.html)).

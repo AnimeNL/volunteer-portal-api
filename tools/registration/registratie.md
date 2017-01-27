@@ -36,8 +36,8 @@ if (document.location.hash == '#error')
     </li>
   </ol>
 
-Daarnaast hebben we ook nog wat vragen over je eerdere ervaringen betreft veiligheid, stewarden en
-vrijwilligerswerk.
+<span style="color: #7B1FA2">▼</span> Daarnaast hebben we ook nog wat vragen over je eerdere
+ervaringen betreft veiligheid, stewarden en vrijwilligerswerk.
 
   <ol>
     <li>
@@ -49,7 +49,7 @@ vrijwilligerswerk.
       <input type="checkbox" name="ehbo" id="ehbo" />
     </li>
     <li>
-      <label for="stewardtraining">Stewardtraining in 2015 gevolgd? <span style="color: red">*</span></label>
+      <label for="stewardtraining">Stewardtraining in 2016 gevolgd? <sup>1</sup></label>
       <input type="checkbox" name="stewardtraining" id="stewardtraining" />
     </li>
     <li>
@@ -58,10 +58,34 @@ vrijwilligerswerk.
     </li>
   </ol>
 
+<span style="color: #7B1FA2">▼</span> En ten slotte enkele korte vragen over je voorkeuren betreft
+inzet tijdens Anime 2017.
+
+  <ol>
+    <li>
+      <label for="uren">Hoeveel uur werk heeft je voorkeur?</label>
+      <select name="uren" id="uren">
+        <option>12 – 16 uur</option>
+        <option selected>16 – 20 uur</option>
+        <option>20+ uur</option>
+      </select>
+    </li>
+    <li>
+      <label for="aanwezig">Ben je het hele weekend aanwezig? <sup>2</sup></label>
+      <input type="checkbox" name="aanwezig" id="aanwezig" />
+    </li>
+    <li>
+      <label for="hotel">Heb je interesse in een hotelkamer?</label>
+      <input type="checkbox" name="hotel" id="hotel" />
+    </li>
+  </ol>
+
   <input type="submit" value="Verzenden" />
 </form>
 
-<span style="font-size: .8em"><span style="color: red">*</span> Als je in 2015 een stewardtraining
-via Animecon óf Abunai hebt gevolgt, dan is de training in 2016 optioneel.</span>
+<sup>1 -</sup> Als je in 2016 een stewardtraining via Animecon óf Abunai hebt gevolgt, dan is de
+training in 2017 optioneel.</span>
+
+<sup>2 -</sup> Van 10 uur 's ochtends op vrijdag tot 6 uur 's avonds op zondag.
 
 [« Vorige pagina](index.html)

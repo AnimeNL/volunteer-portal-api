@@ -41,15 +41,27 @@ form li {
 
 form label {
     display: inline-block;
-    width: 270px;
+    width: 285px;
 }
 
 form input[type="text"],
 form input[type="email"],
-form input[type="date"] {
+form input[type="date"],
+form select {
     border: 1px solid #E2E2E2;
     border-bottom: 1px solid #BDBDBD;
     font-size: 16px;
     padding: 4px 8px;
     width: 200px;
+}
+
+select { width: 218px; }
+
+.waarschuwing {
+    background-color: #FFEBEE;
+    padding: 4px;
+}
+
+sup {
+    color: red;
 }

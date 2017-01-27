@@ -7,12 +7,15 @@ Dit zal doorgaans iets duurder zijn dan zelf voor je accommodatie te zorgen, maa
 dat je slechts enkele minuten bij het festival vandaan zit. Daarnaast leert de ervaring dat het ook
 gezelliger is! Je zult deze kamer delen met één of twee andere stewards.
 
-Dit jaar zullen we een beperkt aantal kamers in het
-[Novotel](http://www.novotel.com/gb/hotel-5389-novotel-den-haag-world-forum/index.shtml) hebben,
-maar genoeg kamers in het [Marriott](http://www.marriott.co.uk/hotels/travel/rtmmc-the-hague-marriott-hotel/)
-hotel.
+Dit jaar verwachten we voldoende kamers in het
+[Novotel](http://www.novotel.com/gb/hotel-5389-novotel-den-haag-world-forum/index.shtml) te hebben,
+maar zullen ook ruimte voor uitbreiding in het
+[Marriott](http://www.marriott.co.uk/hotels/travel/rtmmc-the-hague-marriott-hotel/) hotel hebben.
 
 ## Prijzen
+
+<p class="waarschuwing">De volgende prijzen zijn indicatief. We zijn in gesprek met de hotels om
+zo spoedig mogelijk de uiteindelijke prijzen te kunnen delen.</p>
 
 De prijzen voor de kamers, exclusief de verplichte stadsbelasting, zijn als volgt. De precieze
 kosten zijn afhankelijk van het hotel waar je boeking terecht komt.
