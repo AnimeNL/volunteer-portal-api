@@ -37,7 +37,7 @@ $content = file_get_contents(__DIR__ . '/' . $pages[$page]);
   </head>
   <body>
     <header>
-      <img src="/tools/common/logo.png" alt="Anime 2016 - All Aboard!" />
+      <img src="/tools/common/logo.png" alt="Anime 2017 - Marieke's Magical Miracle!" />
     </header>
     <section>
 <?php echo Parsedown::instance()->text($content); ?> 

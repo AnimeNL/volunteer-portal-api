@@ -28,7 +28,7 @@ $fields = [
 ];
 
 
-$message  = 'Iemand heeft zich aangemeld als steward op <a href="https://stewards.club/hallo">stewards.club</a>, ';
+$message  = 'Iemand heeft zich aangemeld als steward op <a href="https://stewards.team/hallo">stewards.team</a>, ';
 $message .= 'via het IP adres ' . $_SERVER['REMOTE_ADDR'] . '.<br /><br />';
 
 $message .= '<table border=1>';
@@ -50,7 +50,7 @@ foreach ($fields as $name => $label) {
 $message .= '</table>';
 
 mail('security@animecon.nl', 'Stewardaanmelding: ' . htmlspecialchars($_POST['naam']), $message,
-         'From: aanmelding@stewards.club' . PHP_EOL .
-         'Content-Type: text/html');
+         'From: aanmelding@stewards.team' . PHP_EOL .
+         'Content-Type: text/html; charset=UTF-8');
 
 Header('Location: registratie2.html');

@@ -34,11 +34,7 @@ var staticResources = [
 
 // Identifiers of the photos.
 [
-    1044545028, 1094954079, 113755755, 131172023, 1471428552, 1847797434, 1936960762, 205880836,
-    2249626818, 243439886, 2615339157, 2621264915, 27925916, 2807102604, 2846741264, 289806870,
-    2935908812, 3067994234, 3104018503, 3131408215, 3157557610, 316828961, 3177818173, 331067631,
-    3467213544, 3674885751, 376436694, 3905577875, 3912778180, 4042808635, 4128177395, 4172578045,
-    556637407, 786058562, 79098839, 838187230, 933957023, 995915586
+    995915586  // TODO: Add the photos
 
 ].map(identifier => staticResources.push('images/photos/' + identifier + '.png'));
 
@@ -57,8 +53,10 @@ self.addEventListener('activate', event => {
 
 self.addEventListener('fetch', event => {
     var requestUrl = new URL(event.request.url);
-    if (event.request.method !== 'GET' || requestUrl.pathname.startsWith('/tools/'))
+    if (event.request.method !== 'GET' || requestUrl.pathname.startsWith('/tools/') ||
+        requestUrl.pathname.startsWith('/hallo')) {
         return fetch(event.request);
+    }
     
     var responseUrl = null;
 
