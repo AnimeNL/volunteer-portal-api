@@ -19,12 +19,13 @@ $fields = [
 
     'bhv'               => 'In bezit van BHV',
     'ehbo'              => 'In bezit van EBHO',
-    'stewardtraining'   => 'Stewardtraining in 2015 gedaan',
+    'stewardtraining'   => 'Stewardtraining in 2016 gedaan',
     'ervaring'          => 'Overige ervaring',
 
     'uren'              => 'Voorkeur inzet',
     'aanwezig'          => 'Volledig aanwezig',
-    'hotel'             => 'Hotelkamer'
+    'hotel'             => 'Hotelkamer',
+    'social'            => 'Social media',
 ];
 
 

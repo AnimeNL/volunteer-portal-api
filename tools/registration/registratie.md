@@ -78,6 +78,10 @@ inzet tijdens Anime 2017.
       <label for="hotel">Heb je interesse in een hotelkamer?</label>
       <input type="checkbox" name="hotel" id="hotel" />
     </li>
+    <li>
+      <label for="social">Wil je in onze social media groepen? <sup>3</sup></label>
+      <input type="checkbox" name="social" id="social" />
+    </li>
   </ol>
 
   <input type="submit" value="Verzenden" />
@@ -87,5 +91,7 @@ inzet tijdens Anime 2017.
 training in 2017 optioneel.</span>
 
 <sup>2 -</sup> Van 10 uur 's ochtends op vrijdag tot 6 uur 's avonds op zondag.
+
+<sup>3 -</sup> We hebben privé WhatsApp en Facebook groepen voor het Anime 2017 stewardteam.
 
 [« Vorige pagina](index.html)
