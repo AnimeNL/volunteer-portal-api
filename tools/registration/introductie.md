@@ -32,7 +32,7 @@ contact met ons op.
 
   * Muntjes om tijdens de lunch een lekkere versnapering te halen.
 
-  * Een gratis weekend-ticket voor het festival _na_ het jaar dat je vrijwilliger bent geweest.
+  * Een gratis weekend-ticket voor het festival het jaar _nadat_ je vrijwilliger bent geweest.
     Vergeet niet zelf een kaartje te kopen als dit de eerste keer is dat je meehelpt!
 
 ## Doe je mee?
