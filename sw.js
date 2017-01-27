@@ -55,7 +55,8 @@ self.addEventListener('fetch', event => {
     var requestUrl = new URL(event.request.url);
     if (event.request.method !== 'GET' || requestUrl.pathname.startsWith('/tools/') ||
         requestUrl.pathname.startsWith('/hallo')) {
-        return fetch(event.request);
+        event.respondWith(fetch(event.request));
+        return;
     }
     
     var responseUrl = null;
