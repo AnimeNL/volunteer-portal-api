@@ -45,11 +45,14 @@ class EnvironmentTest extends \PHPUnit_Framework_TestCase {
     // available on the Environment instance.
     public function testSettingReflection() {
         $settings = [
-            'name'          => 'Example environment',
-            'short_name'    => 'Example',
-            'hostname'      => 'example.com',
-            'team_data'     => 'team.json',
-            'year'          => 2024
+            'name'                  => 'Example environment',
+            'short_name'            => 'Example',
+            'hostname'              => 'example.com',
+            'hidden_events_public'  => true,
+            'team_data'             => 'team.json',
+            'team_program'          => '',  // TODO: test this?
+            'team_shifts'           => '',  // TODO: test this?
+            'year'                  => 2024
         ];
 
         $environment = Environment::createForTests(true /* valid */, $settings);
@@ -58,6 +61,7 @@ class EnvironmentTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals($settings['name'], $environment->getName());
         $this->assertEquals($settings['short_name'], $environment->getShortName());
         $this->assertEquals($settings['hostname'], $environment->getHostname());
+        $this->assertEquals($settings['hidden_events_public'], $environment->areHiddenEventsPublic());
 
         // TODO: Test the |loadTeam()| method.
 

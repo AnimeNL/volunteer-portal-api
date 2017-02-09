@@ -10,6 +10,17 @@ class ImportProgramServiceTest extends \PHPUnit_Framework_TestCase {
     // test method. This really ought to be part of the core PHPUnit assertion suite.
     use \VladaHejda\AssertException;
 
+    private $storedTimezone;
+
+    protected function setUp() {
+        $this->storedTimezone = date_default_timezone_get();
+        date_default_timezone_set('Etc/GMT-1');
+    }
+
+    protected function tearDown() {
+        date_default_timezone_set($this->storedTimezone);
+    }
+
     // Verifies that the frequency of the service can be configured in the configuration options.
     public function testFrequencyOption() {
         $service = new ImportProgramService([
@@ -88,14 +99,86 @@ class ImportProgramServiceTest extends \PHPUnit_Framework_TestCase {
         }, null, null, 'Invalid value for "floor" for entry 42.');
     }
 
+    // Verifies that entries that are included on the time slot ignore list will be filtered out.
+    public function testFilterIgnoredTimeSlotEvents() {
+        $service = new ImportProgramService([
+            'destination'           => null,
+            'frequency'             => 42,
+            'source'                => null,
+            'ignored_time_slots'    => [
+                [
+                    'tsId'      => 1337,
+                    'reason'    => 'This entry should be ignored for whatever reason.'
+                ]
+            ]
+        ]);
+
+        $entries = [
+            [
+                'name'      => 'My first fancy event',
+                'start'     => '2017-03-13T22:00:00+01:00',
+                'end'       => '2017-03-13T22:00:00+01:00',
+                'tsId'      => 42,
+                'opening'   => 0 /* event */
+            ],
+            [
+                'name'      => 'Another fancy event',
+                'start'     => '2017-03-13T17:00:00+01:00',
+                'end'       => '2017-03-13T17:45:00+01:00',
+                'tsId'      => 1337,
+                'opening'   => 0 /* event */
+            ],
+            [
+                'name'      => 'Third super fancy event',
+                'start'     => '2017-03-13T23:00:00+01:00',
+                'end'       => '2017-03-13T23:00:00+01:00',
+                'tsId'      => 54,
+                'opening'   => 0 /* event */
+            ]
+        ];
+
+        $filtered = $service->filterIgnoredTimeSlotEvents($entries);
+
+        $this->assertEquals(3, count($entries));
+        $this->assertEquals(2, count($filtered));
+
+        $this->assertEquals('My first fancy event', $filtered[0]['name']);
+        $this->assertEquals('Third super fancy event', $filtered[1]['name']);
+    }
+
+    // Verifies that the silly split-floor-number-syntax that was introduced as part of Anime 2017
+    // can be fixed into something sensible - the first listed floor number.
+    public function testFixSplitFloorNumbers() {
+        $service = $this->createDefaultService();
+        $entries = [
+            [
+                'name'      => 'Invalid floor number event',
+                'floor'     => 'floor--1-2',
+            ],
+            [
+                'name'      => 'Another silly event',
+                'floor'     => 'floor-0-2',
+            ]
+        ];
+
+        $service->fixSplitFloorNumbers($entries);
+
+        $this->assertEquals([
+            [
+                'name'      => 'Invalid floor number event',
+                'floor'     => 'floor--1',
+            ],
+            [
+                'name'      => 'Another silly event',
+                'floor'     => 'floor-0',
+            ]
+        ], $entries);
+    }
+
     // Verifies that the service has the ability to merge together split entries in the programme,
     // and removes any suffixes from the event name(s) while doing so.
     public function testMergeSplitEntries() {
         $service = $this->createDefaultService();
-
-        // Make sure that this test runs well regardless of which timezone it's being ran in.
-        $currentTimezone = date_default_timezone_get();
-        date_default_timezone_set('Etc/GMT-1');  // yay for posix style signs
 
         // The entries. This contains two events, one of which is split.
         $entries = [
@@ -142,9 +225,6 @@ class ImportProgramServiceTest extends \PHPUnit_Framework_TestCase {
                 'opening'   => 0 /* event */
             ]
         ], $entries);
-
-        // Restore the timezone to the value it held before the change.
-        date_default_timezone_set($currentTimezone);
     }
 
     // Verifies that the conversion from the AnimeCon data format to our intermediate representation
@@ -158,26 +238,28 @@ class ImportProgramServiceTest extends \PHPUnit_Framework_TestCase {
                     [
                         'name'          => 'Example event',
                         'description'   => 'Description of event',
-                        'begin'         => 1465430400,
-                        'end'           => 1465432200,
+                        'begin'         => 1496966400,
+                        'end'           => 1496968200,
                         'location'      => 'Asia',
                         'floor'         => -1
                     ]
                 ],
-                'hidden'    => false
+                'hidden'    => false,
+                'id'        => 42424
             ],
             [
                 'sessions'  => [
                     [
                         'name'          => 'Another event',
                         'description'   => 'Description of another event',
-                        'begin'         => 1465433100,
-                        'end'           => 1465434000,
+                        'begin'         => 1496969100,
+                        'end'           => 1496970000,
                         'location'      => 'Atlantic / Dealer Room',
                         'floor'         => 2
                     ]
                 ],
-                'hidden'    => true
+                'hidden'    => true,
+                'id'        => 84848
             ]
         ], $service->convertToIntermediateProgramFormat([
             [
@@ -213,26 +295,28 @@ class ImportProgramServiceTest extends \PHPUnit_Framework_TestCase {
                     [
                         'name'          => 'Example event',
                         'description'   => 'Description of event',
-                        'begin'         => 1465430400,
-                        'end'           => 1465434000,
+                        'begin'         => 1496966400,
+                        'end'           => 1496970000,
                         'location'      => 'Asia',
                         'floor'         => -1
                     ]
                 ],
-                'hidden'    => false
+                'hidden'    => false,
+                'id'        => 42424
             ],
             [
                 'sessions'  => [
                     [
                         'name'          => 'Another event',
                         'description'   => 'Description of another event',
-                        'begin'         => 1465433100,
-                        'end'           => 1465434000,
+                        'begin'         => 1496969100,
+                        'end'           => 1496970000,
                         'location'      => 'Atlantic / Dealer Room',
                         'floor'         => 2
                     ]
                 ],
-                'hidden'        => true
+                'hidden'        => true,
+                'id'            => 84848
             ]
         ], $this->importFromData([
             [
@@ -282,34 +366,36 @@ class ImportProgramServiceTest extends \PHPUnit_Framework_TestCase {
                     [
                         'name'          => 'First session',
                         'description'   => 'Description of the first session',
-                        'begin'         => 1465430400,
-                        'end'           => 1465434000,
+                        'begin'         => 1496966400,
+                        'end'           => 1496970000,
                         'location'      => 'Asia',
                         'floor'         => -1
                     ],
                     [
                         'name'          => 'Second session',
                         'description'   => 'Description of the second session',
-                        'begin'         => 1465434000,
-                        'end'           => 1465437600,
+                        'begin'         => 1496970000,
+                        'end'           => 1496973600,
                         'location'      => 'Oceania',
                         'floor'         => -1
                     ]
                 ],
-                'hidden'    => false
+                'hidden'    => false,
+                'id'        => 42424
             ],
             [
                 'sessions'  => [
                     [
                         'name'          => 'Another event',
                         'description'   => 'Description of another event',
-                        'begin'         => 1465433100,
-                        'end'           => 1465434000,
+                        'begin'         => 1496969100,
+                        'end'           => 1496970000,
                         'location'      => 'Atlantic / Dealer Room',
                         'floor'         => 2
                     ]
                 ],
-                'hidden'    => true
+                'hidden'    => true,
+                'id'        => 84848
             ]
         ], $this->importFromData([
             [

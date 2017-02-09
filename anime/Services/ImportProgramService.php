@@ -51,6 +51,7 @@ class ImportProgramService implements Service {
                              'eventId', 'tsId', 'opening'];
 
     private $options;
+    private $ignoredTimeSlots;
 
     // Initializes the service with |$options|, defined in the website's configuration file.
     public function __construct(array $options) {
@@ -64,6 +65,9 @@ class ImportProgramService implements Service {
             throw new \Exception('The ImportProgramService requires a `source` option.');
 
         $this->options = $options;
+        $this->ignoredTimeSlots =
+            array_key_exists('ignored_time_slots', $options) ? $options['ignored_time_slots']
+                                                             : [];
     }
 
     // Returns a textual identifier for identifying this service.
@@ -91,6 +95,12 @@ class ImportProgramService implements Service {
         if ($input === null)
             throw new \Exception('Unable to decode the source data as json.');
 
+        // Filters ignored time slot events from the input.
+        $input = $this->filterIgnoredTimeSlotEvents($input);
+
+        // Fixes split floor number notations to only mention the lowest floor of the event.
+        $this->fixSplitFloorNumbers($input);
+
         // Will throw an exception when an assumption fails, to make sure that the log files (and
         // the associated alert e-mails) contain sufficient information to push for a fix.
         $this->validateInputAssumptions($input);
@@ -106,6 +116,43 @@ class ImportProgramService implements Service {
         // Write the |$programData| to the destination file indicated in the configuration.
         if (file_put_contents($this->options['destination'], $programData) != strlen($programData))
             throw new \Exception('Unable to write the program data to the destination file.');
+    }
+
+    // Filters events from |$input| that have a `tsId` value that's included on the ignore list for
+    // time slots (|$ignoredTimeSlots|). Such entries include a reason that is dismissed.
+    // This method has public visibility for testing purposes only.
+    public function filterIgnoredTimeSlotEvents(array $input) {
+        $filtered = [];
+        $ignored = [];
+
+        foreach ($this->ignoredTimeSlots as $entry)
+            $ignored[$entry['tsId']] = true;
+
+        foreach ($input as $entryId => $entry) {
+            $tsId = $entry['tsId'];
+
+            if (array_key_exists($tsId, $ignored))
+                continue;
+
+            $filtered[] = $entry;
+        }
+
+        return $filtered;
+    }
+
+    // Merges floor numbers that are in the format of "floor-0-2", which seems to be used to
+    // indicate that an event is about to move from floor 0 to 2 (why????), to something sensible.
+    // This method has public visibility for testing purposes only.
+    public function fixSplitFloorNumbers(array &$input) {
+        foreach ($input as $entryId => &$entry) {
+            $matches = [];
+
+            if (!preg_match('/^floor\-((\-)?\d)\-(\d)$/s', $entry['floor'], $matches))
+                continue;
+
+            // Discard everything but the starting floor at which this event exists.
+            $entry['floor'] = 'floor-' . $matches[1];
+        }
     }
 
     // Validates the assumptions, as documented in the class-level documentation block, in the data
@@ -131,7 +178,7 @@ class ImportProgramService implements Service {
             }
 
             // Assumption: All floors are in the format of "floor-" <digit>.
-            if (!preg_match('/floor\-((\-)?\d)/s', $entry['floor']))
+            if (!preg_match('/^floor\-((\-)?\d)$/s', $entry['floor']))
                 throw new \Exception('Invalid value for "floor" for entry ' . $eventId . '.');
 
             switch($entry['opening']) {
@@ -144,6 +191,8 @@ class ImportProgramService implements Service {
                 case 1:
                     $partialEvents['openings'][] = $eventId;
                     break;
+                default:
+                    throw new \Exception('Invalid value for `opening` for event ' . $eventId);
             }
         }
 
@@ -171,8 +220,8 @@ class ImportProgramService implements Service {
             if ($entry['opening'] === 1 /* opening */) {
                 $openings[$tsId] = $index;
             } else if ($entry['opening'] === -1 /* closing */) {
-                if (!array_key_exists($tsId, $openings))
-                    throw new \Exception('Unpaired opening/closing event sequence.');
+                if (!array_key_exists($tsId, $openings)) 
+                    throw new \Exception('Unpaired opening/closing sequence for tsId: ' . $tsId);
 
                 $entries[$openings[$tsId]] =
                     $this->mergeEntries($entries[$openings[$tsId]], $entry);
