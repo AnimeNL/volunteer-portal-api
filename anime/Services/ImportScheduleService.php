@@ -33,6 +33,9 @@ class ImportScheduleService implements Service {
     }
 
     public function execute() {
+        if (array_key_exists('enabled', $this->options) && $this->options['enabled'] === false)
+            return;
+
         $program = $this->loadProgram();
         $volunteers = $this->loadVolunteers();
         $schedule = $this->loadSchedule();
