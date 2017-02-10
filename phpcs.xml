@@ -5,6 +5,9 @@
     <file>anime/</file>
     <file>index.php</file>
 
+    <!-- Ignore the forked AssertException library. -->
+    <exclude-pattern>anime/Test/AssertException.php</exclude-pattern>
+
     <!-- PSR-2 is the basis of our coding standard. -->
     <rule ref="PSR2">
         <!-- Override: Allow any kind of line endings. Git will enforce consistency (Unix style)
@@ -35,12 +38,6 @@
 
     <!-- Require that the opening braces of a function is on the same line as the declaration. -->
     <rule ref="Generic.Functions.OpeningFunctionBraceKernighanRitchie"/>
-
-    <!-- Make sure that the McCabe cyclomatic complexity of functions is reasonable. -->
-    <rule ref="Generic.Metrics.CyclomaticComplexity">
-        <property name="complexity">5</property>
-        <property name="absoluteComplexity">15</property>
-    </rule>
 
     <!-- Make sure that nesting within methods continues to be reasonable. -->
     <rule ref="Generic.Metrics.NestingLevel">

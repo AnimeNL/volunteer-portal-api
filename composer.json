@@ -11,10 +11,10 @@
     "require-dev": {
         "phploc/phploc": "3.0.*",
         "phpunit/phpunit": "6.0.*",
-        "squizlabs/php_codesniffer": "2.5.*"
+        "squizlabs/php_codesniffer": "3.0.0RC3"
     },
     "scripts": {
-        "lint": "php vendor/squizlabs/php_codesniffer/scripts/phpcs --colors --standard=phpcs.xml",
+        "lint": "php vendor/squizlabs/php_codesniffer/bin/phpcs --colors --standard=phpcs.xml",
         "test": "php vendor/phpunit/phpunit/phpunit"
     }
 }

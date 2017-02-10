@@ -4,10 +4,7 @@
 // be found in the LICENSE file.
 
 require __DIR__ . '/../vendor/autoload.php';
-
-function dieWithError($error) {
-    die(json_encode([ 'error' => $error ]));
-}
+require __DIR__ . '/Error.php';
 
 if (!array_key_exists('token', $_GET) || !is_numeric($_GET['token']))
     dieWithError('Invalid token.');

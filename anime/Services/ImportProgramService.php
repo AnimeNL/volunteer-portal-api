@@ -220,7 +220,7 @@ class ImportProgramService implements Service {
             if ($entry['opening'] === 1 /* opening */) {
                 $openings[$tsId] = $index;
             } else if ($entry['opening'] === -1 /* closing */) {
-                if (!array_key_exists($tsId, $openings)) 
+                if (!array_key_exists($tsId, $openings))
                     throw new \Exception('Unpaired opening/closing sequence for tsId: ' . $tsId);
 
                 $entries[$openings[$tsId]] =

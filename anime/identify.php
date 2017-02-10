@@ -4,10 +4,7 @@
 // be found in the LICENSE file.
 
 require __DIR__ . '/../vendor/autoload.php';
-
-function dieWithError($error) {
-    die(json_encode([ 'error' => $error ]));
-}
+require __DIR__ . '/Error.php';
 
 $environment = \Anime\Environment::createForHostname($_SERVER['HTTP_HOST']);
 if (!$environment->isValid())
