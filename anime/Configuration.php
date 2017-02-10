@@ -11,7 +11,7 @@ namespace Anime;
 // can be obtained by calling the `getInstance()` method. Configuration is immutable.
 class Configuration {
     // File that contains the configuration for this installation.
-    const CONFIGURATION_FILE = __DIR__ . '/../configuration/configuration.json';
+    private const CONFIGURATION_FILE = __DIR__ . '/../configuration/configuration.json';
 
     private static $instance;
 

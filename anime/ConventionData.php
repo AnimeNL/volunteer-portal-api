@@ -10,7 +10,7 @@ namespace Anime;
 // Object responsible for compiling the data that should be exposed to a given volunteer.
 class ConventionData {
     // Absolute path to the JSON data file that contains the convention's program.
-    const PROGRAM_FILE = __DIR__ . '/../configuration/program.json';
+    private const PROGRAM_FILE = __DIR__ . '/../configuration/program.json';
 
     // Compiles the convention data required by the front-end for the |$volunteer|. The used data
     // will depend on the active |$environment|. Returns an array that could be send to the user.

@@ -11,13 +11,14 @@ namespace Anime;
 // allow split data sources based on the hostname.
 class Environment {
     // Directory in which the configuration files for the environments have been stored.
-    const CONFIGURATION_DIRECTORY = __DIR__ . '/../configuration/environments/';
+    // Marked public for testing purposes only.
+    public const CONFIGURATION_DIRECTORY = __DIR__ . '/../configuration/environments/';
 
     // Directory in which information about the individual teams has been stored.
-    const TEAM_DATA_DIRECTORY = __DIR__ . '/../configuration/teams/';
+    private const TEAM_DATA_DIRECTORY = __DIR__ . '/../configuration/teams/';
 
     // Directory in which the generic information is stored.
-    const DATA_DIRECTORY = __DIR__ . '/../configuration/';
+    private const DATA_DIRECTORY = __DIR__ . '/../configuration/';
 
     // Initializes a new environment for the |$hostname|. An invalid Environment instance will be
     // returned when there are no known settings for the |$hostname|.

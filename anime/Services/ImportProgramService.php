@@ -47,8 +47,9 @@ namespace Anime\Services;
 class ImportProgramService implements Service {
     // Array containing the fields in a program entry that must be present for this importing
     // service to work correctly. The verification step will make sure that they're all present.
-    const REQUIRED_FIELDS = ['name', 'start', 'end', 'location', 'comment', 'hidden', 'floor',
-                             'eventId', 'tsId', 'opening'];
+    // Marked as public for testing purposes only.
+    public const REQUIRED_FIELDS = ['name', 'start', 'end', 'location', 'comment', 'hidden',
+                                    'floor', 'eventId', 'tsId', 'opening'];
 
     private $options;
     private $ignoredTimeSlots;

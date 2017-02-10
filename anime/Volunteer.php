@@ -11,12 +11,12 @@ namespace Anime;
 // This object is usually owned and created by the VolunteerList class.
 class Volunteer {
     // The recognized types of volunteers.
-    const TYPE_VOLUNTEER = 'Volunteer';
-    const TYPE_SENIOR = 'Senior';
-    const TYPE_STAFF = 'Staff';
+    public const TYPE_VOLUNTEER = 'Volunteer';
+    public const TYPE_SENIOR = 'Senior';
+    public const TYPE_STAFF = 'Staff';
 
     // Directory in which hashed photos of the volunteers are stored.
-    const PHOTO_DIRECTORY = __DIR__ . '/../images/photos/';
+    private const PHOTO_DIRECTORY = __DIR__ . '/../images/photos/';
 
     // Full name of the volunteer.
     private $name;

@@ -11,7 +11,8 @@ namespace Anime\Services;
 // due. It will also keep state of failures, and inform the administrators of them.
 class ServiceManager {
     // File in which the Service Manager will write the current state.
-    const STATE_FILE = __DIR__ . '/state.json';
+    // Marked as public for testing purposes only.
+    public const STATE_FILE = __DIR__ . '/state.json';
 
     private $serviceLog;
     private $services;

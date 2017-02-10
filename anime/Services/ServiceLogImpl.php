@@ -17,7 +17,8 @@ use Nette\Mail\SendmailMailer;
 // sending e-mail alerts, will be done lazily after the service manager's execution queue is empty.
 class ServiceLogImpl implements ServiceLog {
     // File in which the service log will write error messages.
-    const ERROR_LOG = __DIR__ . '/error.log';
+    // Marked as public for testing purposes only.
+    public const ERROR_LOG = __DIR__ . '/error.log';
 
     private $isTest;
     private $mailer;
