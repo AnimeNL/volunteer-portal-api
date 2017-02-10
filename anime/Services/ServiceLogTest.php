@@ -25,7 +25,7 @@ class ServiceLogTest extends \PHPUnit\Framework\TestCase {
         $mailer = new class implements IMailer {
             public $message;
 
-            public function send(Message $message) {
+            public function send(Message $message) : void {
                 $this->message = $message;
             }
         };
@@ -61,7 +61,7 @@ class ServiceLogTest extends \PHPUnit\Framework\TestCase {
         $mailer = new class implements IMailer {
             public $message;
 
-            public function send(Message $message) {
+            public function send(Message $message) : void {
                 $this->message = $message;
             }
         };
