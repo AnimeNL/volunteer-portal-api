@@ -9,7 +9,6 @@
         "nette/mail": "2.3.*"
     },
     "require-dev": {
-        "phploc/phploc": "3.0.*",
         "phpunit/phpunit": "6.0.*",
         "squizlabs/php_codesniffer": "3.0.0RC3"
     },
