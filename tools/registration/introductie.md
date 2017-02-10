@@ -24,8 +24,9 @@ contact met ons op.
 
 ## Wat krijg je van ons?
 
-  * Wij regelen en betalen een professionele stewardtraining voor je **in april of mei** in
-    Amersfoort. Stewards moeten deze training eens per twee jaar volgen.
+  * Wij regelen en betalen een professionele stewardtraining voor je in Amersfoort. De trainingen
+    zullen dit jaar op **13 en 14 mei** plaatsvinden, en we verwachten nog een derde dag toe te
+    voegen. Stewards moeten deze training eens per twee jaar volgen.
 
   * De mogelijkheid om een slaapplaats in één van de festivalhotels te reserveren ([meer informatie
     en prijzen](hotel.html)).
