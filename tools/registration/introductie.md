@@ -9,7 +9,7 @@ voor zorgen dat ook Anime 2017 weer een veilig en fantastisch festival wordt.
 
 ## Wat verwachten we van je?
 
-  * Je bent tenminste 18 jaar oud tijdens Anime 2017 (**9 - 11 juni 2017**) en kunt goed verbaal
+  * Je bent tenminste 18 jaar oud tijdens Anime 2017 (**9–11 juni 2017**) en kunt goed verbaal
     communiceren in zowel het Nederlands als in het Engels.
 
   * Je bent tussen 10 uur 's ochtends op vrijdag en 6 uur 's avonds op zondag beschikbaar op het
