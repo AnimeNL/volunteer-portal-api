@@ -5,9 +5,9 @@
 
 namespace Anime\Services;
 
-class ImportTeamServiceTest extends \PHPUnit_Framework_TestCase {
+class ImportTeamServiceTest extends \PHPUnit\Framework\TestCase {
     // Trait providing the `assertException` method.
-    use \VladaHejda\AssertException;
+    use \Anime\Test\AssertException;
 
     // Verifies that the given configuration options will be reflected in the getters.
     public function testOptionGetters() {

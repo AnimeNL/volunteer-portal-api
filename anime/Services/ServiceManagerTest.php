@@ -5,7 +5,7 @@
 
 namespace Anime\Services;
 
-class ServiceManagerTest extends \PHPUnit_Framework_TestCase {
+class ServiceManagerTest extends \PHPUnit\Framework\TestCase {
     // Creates a new ServiceLog that can be used for the purposes of testing. The implementation
     // writes all received callbacks, in order, to the |$log| member part of the instance. The
     // |$runtime| of the callbacks will be ignored as it would make the tests non-deterministic.

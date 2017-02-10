@@ -8,7 +8,7 @@ namespace Anime\Services;
 use Nette\Mail\IMailer;
 use Nette\Mail\Message;
 
-class ServiceLogTest extends \PHPUnit_Framework_TestCase {
+class ServiceLogTest extends \PHPUnit\Framework\TestCase {
     // Verifies that the service log's error log exists and is writable by the user that's executing
     // the tests. Without these properties, the service log cannot function correctly.
     public function testErrorLogShouldBeWritable() {

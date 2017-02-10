@@ -5,7 +5,7 @@
 
 namespace Anime;
 
-class ConfigurationTest extends \PHPUnit_Framework_TestCase {
+class ConfigurationTest extends \PHPUnit\Framework\TestCase {
     // Verifies that the default configuration can be loaded successfully.
     public function testDefaultConfiguration() {
         $this->assertTrue(Configuration::getInstance() instanceof Configuration);

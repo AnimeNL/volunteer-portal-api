@@ -5,10 +5,10 @@
 
 namespace Anime\Services;
 
-class ImportProgramServiceTest extends \PHPUnit_Framework_TestCase {
+class ImportProgramServiceTest extends \PHPUnit\Framework\TestCase {
     // Gives us the `assertException` method to allow testing more than a single exception per
     // test method. This really ought to be part of the core PHPUnit assertion suite.
-    use \VladaHejda\AssertException;
+    use \Anime\Test\AssertException;
 
     private $storedTimezone;
 

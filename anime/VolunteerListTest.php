@@ -5,8 +5,8 @@
 
 namespace Anime;
 
-class VolunteerListTest extends \PHPUnit_Framework_TestCase {
-    use \VladaHejda\AssertException;
+class VolunteerListTest extends \PHPUnit\Framework\TestCase {
+    use \Anime\Test\AssertException;
 
     // Verifies that the findByName() function can find volunteers by name.
     public function testFindVolunteer() {

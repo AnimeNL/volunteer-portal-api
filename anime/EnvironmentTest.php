@@ -5,7 +5,7 @@
 
 namespace Anime;
 
-class EnvironmentTest extends \PHPUnit_Framework_TestCase {
+class EnvironmentTest extends \PHPUnit\Framework\TestCase {
     // Verifies that all configuration files available in this installation can be loaded as valid
     // environments, avoiding silent breakages of less frequently used environments.
     public function testValidConfigurationFiles() {
