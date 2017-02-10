@@ -26,26 +26,34 @@
         <!-- Override: Not allowing "else if" (over "elseif") is silly. -->
         <exclude name="PSR2.ControlStructures.ElseIfDeclaration"/>
 
-        <!-- Override: The space-after-keyword sniff is broken in case of no-brace "else"s. -->
-        <exclude name="Squiz.ControlStructures.ControlSignature.SpaceAfterKeyword"/>
+        <!-- Override: Don't require blank lines after the closing bracket of a lambda. -->
+        <exclude name="PSR2.Methods.FunctionClosingBrace"/>
+
+        <!-- Override: Blank lines at the end of control structures are fine. -->
+        <exclude name="Squiz.WhiteSpace.ControlStructureSpacing.SpacingBeforeClose"/>
     </rule>
 
-    <!-- Disallow the long array() syntax, force use of [] instead. -->
     <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
-
-    <!-- Force a space after a type cast. -->
+    <rule ref="Generic.Classes.DuplicateClassName"/>
+    <rule ref="Generic.Classes.OpeningBraceSameLine"/>
+    <rule ref="Generic.CodeAnalysis.EmptyStatement"/>
+    <rule ref="Generic.CodeAnalysis.UnusedFunctionParameter"/>
+    <rule ref="Generic.Files.EndFileNewline"/>
     <rule ref="Generic.Formatting.SpaceAfterCast"/>
-
-    <!-- Require that the opening braces of a function is on the same line as the declaration. -->
     <rule ref="Generic.Functions.OpeningFunctionBraceKernighanRitchie"/>
+    <rule ref="Generic.NamingConventions.UpperCaseConstantName"/>
+    <rule ref="Generic.PHP.BacktickOperator"/>
+    <rule ref="Generic.PHP.CharacterBeforePHPOpeningTag"/>
+    <rule ref="Generic.PHP.DeprecatedFunctions"/>
+    <rule ref="Generic.PHP.DisallowShortOpenTag"/>
+    <rule ref="Generic.PHP.NoSilencedErrors"/>
+    <rule ref="Generic.WhiteSpace.DisallowTabIndent"/>
+    <rule ref="Generic.WhiteSpace.ScopeIndent"/>
 
     <!-- Make sure that nesting within methods continues to be reasonable. -->
     <rule ref="Generic.Metrics.NestingLevel">
         <property name="nestingLevel">3</property>
         <property name="absoluteNestingLevel">5</property>
     </rule>
-
-    <!-- Do not allow the PHP silencing operator (@) to be used. -->
-    <rule ref="Generic.PHP.NoSilencedErrors"/>
 
 </ruleset>

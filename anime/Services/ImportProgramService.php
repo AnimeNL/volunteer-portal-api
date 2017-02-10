@@ -181,7 +181,7 @@ class ImportProgramService implements Service {
             if (!preg_match('/^floor\-((\-)?\d)$/s', $entry['floor']))
                 throw new \Exception('Invalid value for "floor" for entry ' . $eventId . '.');
 
-            switch($entry['opening']) {
+            switch ($entry['opening']) {
                 case -1:
                     $partialEvents['closings'][] = $eventId;
                     break;
