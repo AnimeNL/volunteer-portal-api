@@ -34,13 +34,13 @@ class ServiceLogImpl implements ServiceLog {
     }
 
     // Returns the number of stored messages. Should only be used for testing purposes.
-    public function getMessageCountForTesting() {
+    public function getMessageCountForTesting() : int {
         return count($this->messages);
     }
 
     // Called when the service manager has flushed the execution queue. Log any new error messages
     // to the |ERROR_LOG| file and send an alert to the people configured to receive it.
-    public function onFinish() {
+    public function onFinish() : void {
         if (!count($this->messages))
             return;  // everything went alright
 
@@ -78,13 +78,13 @@ class ServiceLogImpl implements ServiceLog {
     // Called when the service identified by |$identifier| has finished executing. The |$runtime|
     // indicates the time taken by the service's execution routine in milliseconds. We don't log
     // successful runs, although their status can be verified by inspecting `state.json`.
-    public function onServiceExecuted(string $identifier, float $runtime) {
+    public function onServiceExecuted(string $identifier, float $runtime) : void {
         $this->messages[] = $this->createMessage($identifier, $runtime, 'Executed successfully.');
     }
 
     // Called when the service identified by |$identifier| failed to execute because |$exception|
     // got thrown. The |$runtime| indicates the time taken by the service in milliseconds.
-    public function onServiceException(string $identifier, float $runtime, $exception) {
+    public function onServiceException(string $identifier, float $runtime, $exception) : void {
         $description  = $exception->getMessage();
         $description .= ' (' . basename($exception->getFile()) . ':' . $exception->getLine() . ')';
 
@@ -93,7 +93,7 @@ class ServiceLogImpl implements ServiceLog {
     }
 
     // Creates the message for a result of |$identified| that took |$runtime| milliseconds.
-    private function createMessage(string $identifier, float $runtime, string $description) {
+    private function createMessage(string $identifier, float $runtime, string $description) : string {
         $message  = date('[Y-m-d H:i:s] ');
         $message .= '[' . sprintf('%.2f', $runtime) . 'ms] ';
         $message .= '[' . $identifier . '] ';

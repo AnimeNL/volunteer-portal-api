@@ -32,7 +32,7 @@ class ImportScheduleService implements Service {
         return $this->options['frequency'];
     }
 
-    public function execute() {
+    public function execute() : void {
         if (array_key_exists('enabled', $this->options) && $this->options['enabled'] === false)
             return;
 

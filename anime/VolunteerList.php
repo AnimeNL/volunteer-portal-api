@@ -32,7 +32,7 @@ class VolunteerList implements \ArrayAccess, \Countable, \IteratorAggregate {
     // Finds the volunteer named |$name|. If |$fuzzy| is set to true, differences in spacing and
     // non-alphabetic characters will be ignored. Returns the Volunteer object when found, or NULL
     // in case no suitable volunteer could be found. This method has O(n) complexity.
-    public function findByName(string $name, $fuzzy = false) {
+    public function findByName(string $name, $fuzzy = false) : ?Volunteer {
         if ($fuzzy)
             $name = $this->normalizeNameForFuzzyMatching($name);
 
@@ -51,7 +51,7 @@ class VolunteerList implements \ArrayAccess, \Countable, \IteratorAggregate {
 
     // Finds the volunteer associated with |$token|, or NULL when they cannot be found. This method
     // has O(n) complexity because it has to iterate over all volunteers.
-    public function findByToken(string $token) {
+    public function findByToken(string $token) : ?Volunteer {
         foreach ($this->volunteers as $volunteer) {
             if ($volunteer->getToken() == $token)
                 return $volunteer;

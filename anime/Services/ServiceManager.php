@@ -56,14 +56,14 @@ class ServiceManager {
 
     // Registers |$service| as a service that may have to be executed by this manager. Applicability
     // will be determined elsewhere, this method merely registers the |$service|.
-    public function registerService(Service $service) {
+    public function registerService(Service $service) : void {
         $this->services[] = $service;
     }
 
     // Executes the services that are up for execution according to their stored state and indicated
     // frequency. Services with no known state will be executed regardless. The |$timeForTesting|
     // parameter may be set to a Unix timestamp only for the purposes of running unit tests.
-    public function execute($timeForTesting = 0) {
+    public function execute($timeForTesting = 0) : void {
         $time = $timeForTesting ?: time();
 
         $executionQueue = [];

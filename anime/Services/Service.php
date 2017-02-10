@@ -17,5 +17,5 @@ interface Service {
 
     // Executes the service. Execution will be considered successful if no exception gets thrown.
     // TODO: Mark this as returning void in PHP 7.1.
-    public function execute();
+    public function execute() : void;
 }

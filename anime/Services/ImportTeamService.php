@@ -72,7 +72,7 @@ class ImportTeamService implements Service {
     // Imports the team by parsing data from the source (as set in the options), which must be an
     // exported Google Spreadsheet sheet in CSV format. The class level comment contains more
     // detailed description about the expected data.
-    public function execute() {
+    public function execute() : void {
         $sourceFile = $this->options['source'];
 
         $inputArray = file($sourceFile);

@@ -84,7 +84,7 @@ class ImportProgramService implements Service {
     // Actually imports the program from the API endpoint defined in the options. The information
     // will be distilled per the class-level documentation block's quirks and written to the
     // destination file in accordance with our own intermediate format.
-    public function execute() {
+    public function execute() : void {
         $sourceFile = $this->options['source'];
 
         $inputData = file_get_contents($sourceFile);
@@ -121,7 +121,7 @@ class ImportProgramService implements Service {
     // Filters events from |$input| that have a `tsId` value that's included on the ignore list for
     // time slots (|$ignoredTimeSlots|). Such entries include a reason that is dismissed.
     // This method has public visibility for testing purposes only.
-    public function filterIgnoredTimeSlotEvents(array $input) {
+    public function filterIgnoredTimeSlotEvents(array $input) : array {
         $filtered = [];
         $ignored = [];
 
@@ -143,7 +143,7 @@ class ImportProgramService implements Service {
     // Merges floor numbers that are in the format of "floor-0-2", which seems to be used to
     // indicate that an event is about to move from floor 0 to 2 (why????), to something sensible.
     // This method has public visibility for testing purposes only.
-    public function fixSplitFloorNumbers(array &$input) {
+    public function fixSplitFloorNumbers(array &$input) : void {
         foreach ($input as $entryId => &$entry) {
             $matches = [];
 
@@ -158,7 +158,7 @@ class ImportProgramService implements Service {
     // Validates the assumptions, as documented in the class-level documentation block, in the data
     // made available per |$input|. Will throw an exception when one of the assumptions fails.
     // This method has public visibility for testing purposes only.
-    public function validateInputAssumptions(array $input) {
+    public function validateInputAssumptions(array $input) : void {
         // Assumption: The |$input| data is an array with at least one entry.
         if (!count($input))
             throw new \Exception('The input must be an array containing at least one entry.');
@@ -210,7 +210,7 @@ class ImportProgramService implements Service {
     // considered for this, together with the `tsId` value for determining event uniqueness. Any
     // "opening" or "closing" suffix from the event's name will be removed.
     // This method has public visibility for testing purposes only.
-    public function mergeSplitEntries(array &$entries) {
+    public function mergeSplitEntries(array &$entries) : void {
         $openings = [];
 
         for ($index = 0; $index < count($entries);) {

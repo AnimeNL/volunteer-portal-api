@@ -16,15 +16,15 @@ class ServiceManagerTest extends \PHPUnit\Framework\TestCase {
             public $finished = 0;
             public $log = [];
 
-            public function onFinish() {
+            public function onFinish() : void {
                 $this->finished++;
             }
 
-            public function onServiceExecuted(string $identifier, float $runtime) {
+            public function onServiceExecuted(string $identifier, float $runtime) : void {
                 $this->log[] = ['executed', $identifier];
             }
 
-            public function onServiceException(string $identifier, float $runtime, $exception) {
+            public function onServiceException(string $identifier, float $runtime, $exception) : void {
                 $this->log[] = ['exception', $identifier, $exception->getMessage()];
             }
 
@@ -71,9 +71,8 @@ class ServiceManagerTest extends \PHPUnit\Framework\TestCase {
                     return $this->frequencyMinutes;
                 }
 
-                public function execute() : bool {
+                public function execute() : void {
                     $this->counter++;
-                    return true;
                 }
             };
             // @codingStandardsIgnoreEnd
@@ -130,8 +129,8 @@ class ServiceManagerTest extends \PHPUnit\Framework\TestCase {
                     return 1;
                 }
 
-                public function execute() {
-                    return ($this->callback)();
+                public function execute() : void {
+                    ($this->callback)();
                 }
             };
             // @codingStandardsIgnoreEnd
