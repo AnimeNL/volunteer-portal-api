@@ -19,11 +19,13 @@ class ServiceManagerTest extends \PHPUnit\Framework\TestCase {
             }
 
             public function onServiceExecuted(string $identifier, float $runtime) : void {
-                $this->log[] = ['executed', $identifier, $runtime];
+                $this->log[] = ['executed', $identifier];
+                $runtime;  // unused
             }
 
             public function onServiceException(string $identifier, float $runtime, $exception) : void {
-                $this->log[] = ['exception', $identifier, $runtime, $exception->getMessage()];
+                $this->log[] = ['exception', $identifier, $exception->getMessage()];
+                $runtime;  // unused
             }
 
         };
@@ -154,10 +156,7 @@ class ServiceManagerTest extends \PHPUnit\Framework\TestCase {
         $this->assertEquals([
             ['executed', 'id-succeeds'],
             ['exception', 'id-throws', 'Division by zero']
-
-        ], array_map($serviceLog->log, function ($entry) {
-            return [ $entry[0], /* discard the runtime */ $entry[2] ];
-        });
+        ], $serviceLog->log);
 
         $this->assertEquals(1, $serviceLog->finished);
     }
