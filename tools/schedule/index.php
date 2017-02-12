@@ -3,13 +3,35 @@
 // Use of this source code is governed by the MIT license, a copy of which can
 // be found in the LICENSE file.
 
+require __DIR__ . '/../../vendor/autoload.php';
+
 $schedule = json_decode(file_get_contents(__DIR__ . '/../../configuration/program.json'), true);
+$configuration = \Anime\Configuration::getInstance();
 
 if (!array_key_exists('showHidden', $_GET)) {
     $schedule = array_filter($schedule, function ($event) {
        return !$event['hidden'];
     });
 }
+
+$conventionDuration = $configuration->get('convention/duration');
+
+$conventionBegin = strtotime($conventionDuration[0]);
+$conventionEnd = strtotime($conventionDuration[1]);
+
+// Only include events on the schedule whose sessions actually happen during the convention.
+$schedule = array_filter($schedule, function ($event) use ($conventionBegin, $conventionEnd) {
+  $eventBegin = min(array_map(function ($session) {
+    return $session['begin'];
+  }, $event['sessions']));
+
+  $eventEnd = max(array_map(function ($session) {
+    return $session['end'];
+  }, $event['sessions']));
+
+  return $eventBegin >= $conventionBegin && $eventEnd <= $conventionEnd;
+});
+
 ?>
 <!doctype html>
 <html lang="en">

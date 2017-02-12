@@ -1,4 +1,7 @@
 {
+    "convention": {
+        "duration": [ "2017-06-09 10:00:00", "2017-06-11 19:00:00" ]
+    },
     "serviceLog": {
         "alerts": true,
         "from": "Your Portal <info@example.com>",
