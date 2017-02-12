@@ -7,25 +7,39 @@ var DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'S
 (function() {
     var container = document.getElementById('schedule');
 
-    // Hax for people who don't live in the Netherlands - calculate the timezone offset.
-    var timezoneCorrection = (new Date().getTimezoneOffset() - -120) * 60;
-
     // UNIX timestamps representing the begin and end of the conventions's scheduled events.
     var conventionDuration = { begin: Number.MAX_VALUE, end: Number.MIN_VALUE };
 
     // Mapping of floors to an array of rooms, each being an array of events taking place there.
     var conventionEvents = {};
 
-    // Iterate over all events to arrange information in the variables above.
+    // Iterate over all events to determine the duration of the convention.
+    Object.keys(schedule).forEach(eventId => {
+        schedule[eventId].sessions.forEach(session => {
+            conventionDuration.begin = Math.min(conventionDuration.begin, session.begin);
+            conventionDuration.end = Math.max(conventionDuration.end, session.end);
+        });
+    });
+
+    // Respectively floor and ceil the convention's duration to full hours.
+    conventionDuration.begin -= conventionDuration.begin % 3600;
+    conventionDuration.end += conventionDuration.end % 3600;
+
+    // Determine number of seconds of difference between the current timezone and that of the event.
+    var timezoneCorrection =
+        ((new Date()).getTimezoneOffset() -
+            moment.tz.zone('Europe/Amsterdam').offset(conventionDuration.begin)) * 60;
+
+    conventionDuration.begin += timezoneCorrection;
+    conventionDuration.end += timezoneCorrection;
+
+    // Iterate over all events once more to normalize the data based on floor and location.
     Object.keys(schedule).forEach(eventId => {
         var event = schedule[eventId];
 
         event.sessions.forEach(session => {
             session.begin += timezoneCorrection;
             session.end += timezoneCorrection;
-
-            conventionDuration.begin = Math.min(conventionDuration.begin, session.begin);
-            conventionDuration.end = Math.max(conventionDuration.end, session.end);
 
             if (!conventionEvents.hasOwnProperty(session.floor))
                 conventionEvents[session.floor] = {};
@@ -42,10 +56,6 @@ var DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'S
             });
         });
     });
-
-    // Respectively floor and ceil the convention's duration to full hours.
-    conventionDuration.begin -= conventionDuration.begin % 3600;
-    conventionDuration.end += conventionDuration.end % 3600;
 
     // Translate the convention's hours to an array of objects containing { day, hours }.
     var conventionHourCount = 0;
