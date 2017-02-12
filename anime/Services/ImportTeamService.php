@@ -38,6 +38,10 @@ namespace Anime\Services;
 // The parser is strict in regards to these rules, but linient for the actual data values. The
 // conditions, as well known mistakes, are tested in the ImportTeamServiceTest.
 class ImportTeamService implements Service {
+    // Length of the passwords to generate for each person in the team. See the generatePassword()
+    // method for an explanation of its use and sensitivity. Public for testing purposes only.
+    public const PASSWORD_LENGTH = 4;
+
     private $options;
 
     // Initializes the service with |$options|, defined in the website's configuration file.
@@ -53,6 +57,9 @@ class ImportTeamService implements Service {
 
         if (!array_key_exists('source', $options))
             throw new \Exception('The ImportTeamService requires a `source` option.');
+
+        if (!array_key_exists('password_salt', $options))
+            throw new \Exception('The ImportTeamService requires a `password_salt` option.');
 
         $this->options = $options;
     }
@@ -111,13 +118,17 @@ class ImportTeamService implements Service {
             if (!in_array($visibility, ['Visible', 'Hidden']))
                 throw new \Exception('Invalid visibility in "' . $sourceFile . '" for ' . $name);
 
+            // Generate a password for the user.
+            $password = $this->generatePassword($name);
+
             $team[] = [
                 'name'      => $name,
+                'password'  => $password,
                 'type'      => $type,
                 'email'     => trim($line[2]),
                 'telephone' => trim($line[3]),
                 'hotel'     => trim($line[4]),
-                'visible'   => trim($line[5]) !== 'Hidden'
+                'visible'   => trim($line[5]) !== 'Hidden',
             ];
         }
 
@@ -128,5 +139,17 @@ class ImportTeamService implements Service {
 
         // Write the resulting |$team| array to the destination file.
         file_put_contents($this->options['destination'], json_encode($team));
+    }
+
+    // Generates a password for |$name| by running it through a hashing function and selecting a
+    // certain number of characters from it. A salt for the generation can be configured in the
+    // service's configuration section.
+    //
+    // These passwords will only be required for Senior and Staff users who get access to additional
+    // information in the application. All other users will be able to log in using their name. In
+    // addition, those who require a password can see the passwords of all other users.
+    public function generatePassword($name) : string {
+        $phrase = base_convert(hash('fnv164', $name . $this->options['password_salt']), 16, 36);
+        return strtoupper(substr($phrase, 0, self::PASSWORD_LENGTH));
     }
 }
