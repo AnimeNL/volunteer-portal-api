@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/AnimeNL/anime-2017.svg?branch=master)](https://travis-ci.org/AnimeNL/anime-2017)
+
 Anime 2017 Volunteer Portal
 ===
 This repository contains the code powering the Anime 2017 volunteer portals. It contains a limited

@@ -35,6 +35,9 @@ class ServiceManagerTest extends \PHPUnit\Framework\TestCase {
     // Verifies that the service manager's state file exists and is writable by the user that's
     // executing the tests. Without these properties, the service manager cannot function.
     public function testStateFileShouldBeWritable() {
+        if (getenv('TRAVIS_CI') !== false)
+            return;  // this test doesn't make sense when ran through Travis
+
         $this->assertTrue(file_exists(ServiceManager::STATE_FILE));
         $this->assertTrue(is_writable(ServiceManager::STATE_FILE));
     }
@@ -42,6 +45,9 @@ class ServiceManagerTest extends \PHPUnit\Framework\TestCase {
     // Verifies that the state file can be loaded and saved in-place. This function will not
     // modify the state in order for it to be safe to re-run tests on installations.
     public function testStateFileLoadAndSave() {
+        if (getenv('TRAVIS_CI') !== false)
+            return;  // this test doesn't make sense when ran through Travis
+
         $serviceManager = new ServiceManager($this->createServiceLog());
 
         $this->assertTrue($serviceManager->loadState());
