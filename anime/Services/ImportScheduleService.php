@@ -33,9 +33,6 @@ class ImportScheduleService implements Service {
     }
 
     public function execute() : void {
-        if (array_key_exists('enabled', $this->options) && $this->options['enabled'] === false)
-            return;
-
         $program = $this->loadProgram();
         $volunteers = $this->loadVolunteers();
         $schedule = $this->loadSchedule();
@@ -200,19 +197,18 @@ class ImportScheduleService implements Service {
         $schedule = [];
 
         // The following constants have been derived by looking at the spreadsheet in the browser.
-        $SKIP_HEADER_ROWS = 5;
-        $NONEMPTY_COLUMN = 0 /* A */;
-        $NAME_COLUMN = 1 /* B */;
-        $SCHEDULE_BEGIN = 2 /* C */;
-        $SCHEDULE_BEGIN_TIME = 1465545600 /* 10am, Friday June 10th */;
-        $SCHEDULE_END = 58 /* BG */;
+        $SKIP_HEADER_ROWS = 2;
+        $NAME_COLUMN = 0 /* A */;
+        $SCHEDULE_BEGIN = 1 /* B */;
+        $SCHEDULE_BEGIN_TIME = 1496995200 /* 10am, Friday June 9th, 2017 */;
+        $SCHEDULE_END = 57 /* BF */;
 
         for ($i = $SKIP_HEADER_ROWS; $i < count($scheduleLines); ++$i) {
             $scheduleLine = str_getcsv(trim($scheduleLines[$i]));
             if (count($scheduleLine) <= $SCHEDULE_END)
                 continue;  // not enough data on the line
 
-            if (empty($scheduleLine[$NONEMPTY_COLUMN]))
+            if (empty($scheduleLine[$NAME_COLUMN]))
                 continue;  // the non-empty validation check failed
 
             $name = $scheduleLine[$NAME_COLUMN];
@@ -278,27 +274,13 @@ class ImportScheduleService implements Service {
         if (is_numeric($eventId))
             return (int) $eventId;
 
-        switch ($eventId) {
-            case 'SPECIAL-1':  // Cosplay Compo
-                if ($time < 1465596000)
-                    return 40921;  // Friday
-                else if ($time > 1465682400)
-                    return 40923;  // Sunday
+        // Return the appropriate Event ID for the |$eventId| here.
+        //
+        // This normally means that the volunteer schedule groups together an event that has several
+        // entries in the AniPlanner. In such cases the actual Event ID should be hardcoded here
+        // based on the given |$time|.
 
-                return 40922;  // Saturday
-
-            case 'SPECIAL-2':  // Mini-Concert
-                if ($time == 1465650000)
-                    return 40952;  // Shiroku
-
-                return 40951;
-
-            case 'SPECIAL-3':  // Sake Tasting
-                if ($time < 1465596000)
-                    return 40975;  // Friday
-
-                return 40974;  // Saturday
-        }
+        $time;  // unused
 
         throw new \Exception('Unrecognized event Id: ' . $eventId);
     }
