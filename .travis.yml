@@ -10,3 +10,7 @@ before_script: composer install
 script:
   - composer test
   - composer lint
+
+cache:
+  directories:
+    - $HOME/.composer/cache/files
