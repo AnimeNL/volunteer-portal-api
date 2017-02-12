@@ -238,9 +238,9 @@ class ImportScheduleService implements Service {
             $mapping[$mappingLine[0]] = [
                 'eventId'       => $mappingLine[1],
                 'name'          => $mappingLine[2],
-                'description'   => $mappingLine[3],
-                'location'      => $mappingLine[4],
-                'floor'         => $mappingLine[5]
+                'location'      => $mappingLine[3],
+                'floor'         => $mappingLine[4],
+                'description'   => $mappingLine[5]
             ];
         }
 
