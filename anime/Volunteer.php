@@ -21,6 +21,9 @@ class Volunteer {
     // Full name of the volunteer.
     private $name;
 
+    // The randomly generated password for the volunteer.
+    private $password;
+
     // Token unique to this volunteer. Created by combining the name and e-mail address.
     private $token;
 
@@ -43,25 +46,30 @@ class Volunteer {
     // for correctness to ensure the instance is valid.
     public function __construct($volunteerData) {
         if (!array_key_exists('name', $volunteerData) || !is_string($volunteerData['name']))
-            throw new TypeError('The volunteer\'s `name` is expected to be a string.');
+            throw new \TypeError('The volunteer\'s `name` is expected to be a string.');
 
         $this->name = $volunteerData['name'];
 
+        if (!array_key_exists('password', $volunteerData) || !is_string($volunteerData['password']))
+            throw new \TypeError('The volunteer\'s `password` is expected to be a string.');
+
+        $this->password = $volunteerData['password'];
+
         if (!array_key_exists('type', $volunteerData) || !is_string($volunteerData['type']))
-            throw new TypeError('The volunteer\'s `type` is expected to be a string.');
+            throw new \TypeError('The volunteer\'s `type` is expected to be a string.');
 
         if (!in_array($volunteerData['type'], [ self::TYPE_VOLUNTEER, self::TYPE_SENIOR,
                                                 self::TYPE_STAFF ])) {
-            throw new TypeError('The volunteer\'s `type` has got an invalid value.');
+            throw new \TypeError('The volunteer\'s `type` has got an invalid value.');
         }
 
         $this->type = $volunteerData['type'];
 
         if (!array_key_exists('email', $volunteerData) || !is_string($volunteerData['email']))
-            throw new TypeError('The volunteer\'s `email` is expected to be a string.');
+            throw new \TypeError('The volunteer\'s `email` is expected to be a string.');
 
         if (!filter_var($volunteerData['email'], FILTER_VALIDATE_EMAIL))
-            throw new TypeError('The volunteer\'s `email` must be a valid e-mail address.');
+            throw new \TypeError('The volunteer\'s `email` must be a valid e-mail address.');
 
         $this->email = $volunteerData['email'];
 
@@ -71,18 +79,18 @@ class Volunteer {
 
         if (!array_key_exists('telephone', $volunteerData) ||
             !is_string($volunteerData['telephone'])) {
-            throw new TypeError('The volunteer\'s `telephone` is expected to be a string.');
+            throw new \TypeError('The volunteer\'s `telephone` is expected to be a string.');
         }
 
         $this->telephone = preg_replace('/\s|\(\d\)/s', '', $volunteerData['telephone']);
 
         if (!array_key_exists('hotel', $volunteerData) || !is_string($volunteerData['hotel']))
-            throw new TypeError('The volunteer\'s `hotel` is expected to be a string.');
+            throw new \TypeError('The volunteer\'s `hotel` is expected to be a string.');
 
         $this->hotel = $volunteerData['hotel'];
 
         if (!array_key_exists('visible', $volunteerData) || !is_bool($volunteerData['visible']))
-            throw new TypeError('The volunteer\'s `visible` is expected to be a boolean.');
+            throw new \TypeError('The volunteer\'s `visible` is expected to be a boolean.');
 
         $this->visible = $volunteerData['visible'];
     }
@@ -90,6 +98,11 @@ class Volunteer {
     // Returns the volunteer's full name as a string.
     public function getName() : string {
         return $this->name;
+    }
+
+    // Return the volunteer's generated password as a string.
+    public function getPassword() : string {
+        return $this->password;
     }
 
     // Returns the token associated with this volunteer.

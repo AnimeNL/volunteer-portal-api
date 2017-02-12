@@ -74,6 +74,10 @@ class ConventionData {
                 $volunteerData['hotel'] = $volunteer->getHotel();
             }
 
+            // Seniors and above are able to see each other's passwords, for convenience.
+            if ($this->isSeniorVolunteer() && $volunteer->isSeniorVolunteer())
+                $volunteerData['password'] = $volunteer->getPassword();
+
             $volunteers[] = $volunteerData;
         }
 

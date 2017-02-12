@@ -114,6 +114,8 @@ class VolunteerListTest extends \PHPUnit\Framework\TestCase {
     private function createVolunteer(string $name, array $options = []) {
         return [
             'name'      => $name,
+            'password'  => '',
+
             'type'      => array_key_exists('type', $options) ? $options['type'] : 'Volunteer',
             'email'     => array_key_exists('email', $options) ? $options['email']
                                                                : 'info@example.com',
