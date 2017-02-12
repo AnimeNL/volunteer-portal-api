@@ -10,8 +10,6 @@ class ServiceManagerTest extends \PHPUnit\Framework\TestCase {
     // writes all received callbacks, in order, to the |$log| member part of the instance. The
     // |$runtime| of the callbacks will be ignored as it would make the tests non-deterministic.
     private function createServiceLog() : ServiceLog {
-        // @codingStandardsIgnoreStart
-        // CodeSniffer does not yet understand formatting of anonymous classes.
         return new class implements ServiceLog {
             public $finished = 0;
             public $log = [];
@@ -21,15 +19,14 @@ class ServiceManagerTest extends \PHPUnit\Framework\TestCase {
             }
 
             public function onServiceExecuted(string $identifier, float $runtime) : void {
-                $this->log[] = ['executed', $identifier];
+                $this->log[] = ['executed', $identifier, $runtime];
             }
 
             public function onServiceException(string $identifier, float $runtime, $exception) : void {
-                $this->log[] = ['exception', $identifier, $exception->getMessage()];
+                $this->log[] = ['exception', $identifier, $runtime, $exception->getMessage()];
             }
 
         };
-        // @codingStandardsIgnoreEnd
     }
 
     // Verifies that the service manager's state file exists and is writable by the user that's
@@ -59,8 +56,6 @@ class ServiceManagerTest extends \PHPUnit\Framework\TestCase {
     // over the course of a fake three hours.
     public function testServiceFrequencies() {
         $serviceFactory = function (int $frequencyMinutes) {
-            // @codingStandardsIgnoreStart
-            // CodeSniffer does not yet understand formatting of anonymous classes.
             return new class($frequencyMinutes) implements Service {
                 public $counter = 0;
                 public $frequencyMinutes;
@@ -81,7 +76,6 @@ class ServiceManagerTest extends \PHPUnit\Framework\TestCase {
                     $this->counter++;
                 }
             };
-            // @codingStandardsIgnoreEnd
         };
 
         $serviceLog = $this->createServiceLog();
@@ -116,8 +110,6 @@ class ServiceManagerTest extends \PHPUnit\Framework\TestCase {
     // `executed` or `exception` messages depending on a service's result.
     public function testServiceLog() {
         $serviceFactory = function (string $identifier, callable $callback) {
-            // @codingStandardsIgnoreStart
-            // CodeSniffer does not yet understand formatting of anonymous classes.
             return new class($identifier, $callback) implements Service {
                 public $callback;
                 public $identifier;
@@ -139,7 +131,6 @@ class ServiceManagerTest extends \PHPUnit\Framework\TestCase {
                     ($this->callback)();
                 }
             };
-            // @codingStandardsIgnoreEnd
         };
 
         $serviceLog = $this->createServiceLog();
@@ -163,7 +154,10 @@ class ServiceManagerTest extends \PHPUnit\Framework\TestCase {
         $this->assertEquals([
             ['executed', 'id-succeeds'],
             ['exception', 'id-throws', 'Division by zero']
-        ], $serviceLog->log);
+
+        ], array_map($serviceLog->log, function ($entry) {
+            return [ $entry[0], /* discard the runtime */ $entry[2] ];
+        });
 
         $this->assertEquals(1, $serviceLog->finished);
     }
