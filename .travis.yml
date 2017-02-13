@@ -5,11 +5,16 @@ php:
 env:
   - TRAVIS_CI=1
 
-before_script: composer install
+before_script:
+  - composer install
+  - nvm install node
+  - npm install -g gulp-cli
+  - npm update
 
 script:
   - composer test
   - composer lint
+  - gulp package
 
 cache:
   directories:
