@@ -25,7 +25,7 @@ class Application {
         // Register a Service Worker to provide offline support when this feature is available in
         // the browser. At time of writing, this is the case for Chrome, Opera and Firefox.
         if ('serviceWorker' in navigator)
-            navigator.serviceWorker.register('/sw.js');
+            navigator.serviceWorker.register('/sw.js', { scope: '/' });
     }
 
     // Gets the User object representing the local user.
