@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/AnimeNL/anime-2017.svg?branch=master)](https://travis-ci.org/AnimeNL/anime-2017)
+[![NPM Dependencies](https://david-dm.org/AnimeNL/anime-2017.svg)](https://david-dm.org/AnimeNL/anime-2017/)
 
 Anime 2017 Volunteer Portal
 ===
