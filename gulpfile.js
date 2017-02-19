@@ -4,13 +4,23 @@
 
 var babelify = require('babelify');
 var browserify = require('browserify');
+var concat = require('gulp-concat');
 var fs = require('fs');
 var gulp = require('gulp');
 var sftp = require('gulp-sftp');
+var sass = require('gulp-sass');
 var source = require('vinyl-source-stream');
 
+// Packages the stylesheet code in a single file after processing it with SASS.
+gulp.task('package-css', function() {
+    return gulp.src('style/anime.scss')
+        .pipe(sass({ outputStyle: 'expanded' }).on('error', sass.logError))
+        .pipe(concat('anime.css'))
+        .pipe(gulp.dest('./'));
+});
+
 // Packages the JavaScript code after running it through Babel in order to be able to use ES2015.
-gulp.task('package', function() {
+gulp.task('package-js', function() {
     return browserify('./scripts/application.js')
         .transform(babelify, { presets: ['es2015'], plugins: ['transform-async-to-generator'] })
         .bundle()
@@ -19,7 +29,7 @@ gulp.task('package', function() {
 });
 
 // Deploys the packaged files to the server. Requires Sublime SFTP to be set up in the project.
-gulp.task('deploy', ['package'], function() {
+gulp.task('deploy', ['package-css', 'package-js'], function() {
     var sublimeConfig = fs.readFileSync('sftp-config.json').toString();
 
     // The Sublime SFTP configuration file allows comments in its JSON. Remove it, and convert it
@@ -38,6 +48,7 @@ gulp.task('deploy', ['package'], function() {
     };
 
     var deployFiles = [
+        './anime.css',
         './anime.js'
     ];
 
