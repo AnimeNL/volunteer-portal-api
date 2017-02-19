@@ -16,7 +16,56 @@
     opacity: 0;
 
     // Stable state to transition to once the first frame has been painted.
-    &.visible {
-        opacity: 1;
+    &.visible { opacity: 1; }
+}
+
+header {
+    // Height of the header, in pixels. Alignment will adjust automatically.
+    $header-height: 56px;
+
+    position: relative;
+    overflow: hidden;
+
+    width: 100%;
+    height: $header-height;
+
+    background-color: $theme-background-color;
+
+    // Captures the two buttons in the header: toggle menu and in-page options.
+    div[role=button] {
+        display: inline-block;
+        height: 56px;
+        width: 40px;
+
+        font-size: 1.5em;
+        line-height: $header-height;
+        cursor: pointer;
+        color: white;
+    }
+
+    // Specialization for the toggle menu button: display it on the left.
+    div[role=button]:first-child { margin-left: 16px; }
+
+    // Title of the page 
+    h1 {
+        display: inline-block;
+        vertical-align: top;
+        margin: 0;
+
+        text-indent: 12px;
+        line-height: $header-height;
+        font-size: $font-size-header;
+        font-weight: normal;
+
+        @include text-overflow-ellipsis(calc(100% - 120px));
+
+        color: $theme-background-text-color;
+    }
+
+    // The navigation button should not be displayed on desktop because the menu is always visible.
+    @include desktop {
+        .material-icon-navigation {
+            display: none !important;
+        }
     }
 }

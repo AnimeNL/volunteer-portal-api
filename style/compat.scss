@@ -4,6 +4,12 @@
 
 template { display: none; }
 
+@mixin desktop {
+    @media (min-width: 768px) {
+        @content;
+    }
+}
+
 @mixin flex {
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -14,4 +20,13 @@ template { display: none; }
     -webkit-flex-direction: $direction;
     -ms-flex-direction: $direction;
     flex-direction: $direction;
+}
+
+@mixin text-overflow-ellipsis($max-width) {
+    white-space: nowrap;
+
+    text-overflow: ellipsis;
+    overflow: hidden;
+
+    max-width: $max-width;
 }
