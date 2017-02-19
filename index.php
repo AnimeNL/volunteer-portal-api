@@ -37,6 +37,7 @@ Header('Content-Security-Policy: default-src \'self\'');
     <link rel="apple-touch-icon-precomposed" href="/images/logo-128.png" />
     <link rel="manifest" href="/manifest.json" />
     <link rel="stylesheet" href="/anime.css" />
+    <link rel="stylesheet" href="/anime-legacy.css" />
     <title>Anime Volunteer Portal</title>
   </head>
   <body>
