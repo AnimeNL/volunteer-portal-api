@@ -1,0 +1,60 @@
+// Copyright 2017 Peter Beverloo. All rights reserved.
+// Use of this source code is governed by the MIT license, a copy of which can
+// be found in the LICENSE file.
+
+// Screen width at which the identification page will toggle between mobile and desktop views.
+$identification-mobile-max-width: 560px;
+
+.identification {
+    .identification-content {
+        img {
+            display: block;
+        }
+
+        section > h1 {
+            color: $theme-background-color;
+        }
+    }
+
+    // Rules specific to mobile display of the identification page.
+    @media (max-width: $identification-mobile-max-width) {
+        background-image: url(/images/login-background-mobile.jpg);
+        background-size: auto 100%;
+
+        .identification-content {
+            img {
+                margin: 5vh auto 0 auto;
+                width: 80%;
+            }
+
+            section {
+                position: absolute;
+                bottom: 8px;
+            }
+        } 
+    }
+
+    // Rules specific to deskop display of the identification page.
+    @media (min-width: $identification-mobile-max-width + 1) {
+        background-image: url(/images/login-background.jpg);
+        background-size: cover;
+
+        @include flex-display;
+        
+        align-items: center;
+        justify-content: center;
+
+        min-height: 475px;
+
+        .identification-content {
+            min-width: 500px;
+            max-width: 40%;
+
+            padding-bottom: calc(30vh - 150px);
+
+            img {
+                margin: 0 auto 32px auto;
+            }
+        }
+    }
+}

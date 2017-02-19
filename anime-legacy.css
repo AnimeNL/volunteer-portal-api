@@ -391,17 +391,6 @@ div[role=button] { -webkit-user-select: none; }
 
 .options-button { float: right; }
 
-#content {
-  -webkit-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
-
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-
-  background-color: #f0f0f0;
-}
-
 /** Error page **/
 
 .error-page > * {
@@ -922,55 +911,6 @@ span[content-label].update .upcoming {
   color: white;
 }
 
-/** Page: Identification **/
-
-.login-screen-content > img {
-  display: block;
-}
-
-.login-screen-content > section > h1 { color: #0D47A1; }
-
-@media all and (max-width: 559px) {
-  .login-screen {
-    background-image: url(/images/login-background-mobile.jpg);
-    background-size: auto 100%;
-  }
-
-  .login-screen-content > img {
-    margin: 5vh auto 0 auto;
-    width: 80%;
-  }
-
-  .login-screen-content > section {
-    position: absolute;
-    bottom: 8px;
-  }
-}
-
-@media all and (min-width: 560px) {
-  .login-screen {
-    background-image: url(/images/login-background.jpg);
-    background-size: cover;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    min-height: 475px;
-  }
-
-  .login-screen-content {
-    min-width: 500px;
-    max-width: 40%;
-
-    padding-bottom: calc(30vh - 150px);
-  }
-
-  .login-screen-content > img {
-    margin: 0 auto 32px auto;
-  }
-}
-
 /** The left-hand menu should always be visible **/
 
 @media (min-width: 768px) {
@@ -989,14 +929,6 @@ nav#main-menu {
 
   min-width: 280px;
   order: -1;
-}
-
-#content:not(.login-screen) {
-  position: absolute;
-  top: 56px;
-  left: 280px;
-  bottom: 0px;
-  right: 0px;
 }
 
 }

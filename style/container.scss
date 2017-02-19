@@ -1,0 +1,40 @@
+// Copyright 2017 Peter Beverloo. All rights reserved.
+// Use of this source code is governed by the MIT license, a copy of which can
+// be found in the LICENSE file.
+
+.container {
+    width: 100%;
+    height: 100%;
+
+    @include flex-display;
+    @include flex-direction(column);
+
+    background-color: white;
+
+    // The container begins in an invisible state so that it can be faded in.
+    transition: opacity 0.4s ease-in-out;
+    opacity: 0;
+
+    // Stable state to transition to once the first frame has been painted.
+    &.visible { opacity: 1; }
+}
+
+#content {
+    @include flex(1);
+
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+
+    background-color: #f0f0f0;
+}
+
+// TODO: This should probably move to menu.scss
+@include desktop {
+    #content.application {
+        position: absolute;
+        top: 56px;
+        left: 280px;
+        bottom: 0px;
+        right: 0px;
+    }
+}

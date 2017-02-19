@@ -12,4 +12,6 @@ body {
     font-size: $font-size-base;
 }
 
-@import 'shell';
+@import 'container';
+@import 'containers/application';
+@import 'containers/identification';

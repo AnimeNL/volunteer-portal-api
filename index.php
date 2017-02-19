@@ -12,8 +12,8 @@ if (!$environment->isValid())
 $templates = [
   'event-page.html',
   'floors-page.html',
+  'identification.html',
   'layout.html',
-  'login.html',
   'overview-page.html',
   'schedule-page.html',
   'stewards-page.html'

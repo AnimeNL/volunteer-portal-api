@@ -10,16 +10,22 @@ template { display: none; }
     }
 }
 
-@mixin flex {
-    display: -webkit-flex;
-    display: -ms-flexbox;
-    display: flex;
+@mixin flex($amount) {
+    -webkit-flex: $amount;
+    -ms-flex: $amount;
+    flex: $amount;
 }
 
 @mixin flex-direction($direction) {
     -webkit-flex-direction: $direction;
     -ms-flex-direction: $direction;
     flex-direction: $direction;
+}
+
+@mixin flex-display {
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
 }
 
 @mixin text-overflow-ellipsis($max-width) {

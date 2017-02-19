@@ -2,23 +2,6 @@
 // Use of this source code is governed by the MIT license, a copy of which can
 // be found in the LICENSE file.
 
-.container {
-    width: 100%;
-    height: 100%;
-
-    @include flex;
-    @include flex-direction(column);
-
-    background-color: white;
-
-    // The container begins in an invisible state so that it can be faded in.
-    transition: opacity 0.4s ease-in-out;
-    opacity: 0;
-
-    // Stable state to transition to once the first frame has been painted.
-    &.visible { opacity: 1; }
-}
-
 header {
     // Height of the header, in pixels. Alignment will adjust automatically.
     $header-height: 56px;
