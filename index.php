@@ -41,7 +41,7 @@ Header('Content-Security-Policy: default-src \'self\'');
     <title>Anime Volunteer Portal</title>
   </head>
   <body>
-    <div class="container initial"></div>
+    <div class="container"></div>
 <?php
 foreach ($templates as $file)
   include(__DIR__ . '/templates/' . $file);

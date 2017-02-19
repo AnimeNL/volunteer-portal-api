@@ -1,0 +1,22 @@
+// Copyright 2017 Peter Beverloo. All rights reserved.
+// Use of this source code is governed by the MIT license, a copy of which can
+// be found in the LICENSE file.
+
+// -------------------------------------------------------------------------------------------------
+// SECTION: Typography
+// -------------------------------------------------------------------------------------------------
+
+@font-face {
+  font-family: 'Roboto';
+  font-weight: 400;
+  src: local('Roboto'), local('Roboto-Regular'), url(/images/Roboto-Regular.woff) format('woff');
+}
+
+@font-face {
+  font-family: 'Roboto';
+  font-weight: 700;
+  src: local('Roboto Bold'), local('Roboto-Bold'), url(/images/Roboto-Bold.woff) format('woff');
+}
+
+$font-family: 'Roboto', Arial, sans-serif;
+$font-size-base: 16px;

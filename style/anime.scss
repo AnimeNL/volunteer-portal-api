@@ -1,7 +1,15 @@
-// Copyright 2016 Peter Beverloo. All rights reserved.
+// Copyright 2017 Peter Beverloo. All rights reserved.
 // Use of this source code is governed by the MIT license, a copy of which can
 // be found in the LICENSE file.
 
+@import 'compat';
+@import 'theme';
+
+html, body { height: 100%; }
+
 body {
-  font-size: 16px;
+    font-family: $font-family;
+    font-size: $font-size-base;
 }
+
+@import 'shell';
