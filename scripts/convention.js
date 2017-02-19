@@ -16,9 +16,6 @@ class Convention {
         this.events_ = [];
         this.locations_ = [];
         this.volunteers_ = [];
-
-        // Observe the |user| class to be informed of user state changes.
-        user.observe(this.__proto__.onUserStateChanged.bind(this));
     }
 
     // Gets the list of events that will take place as part of this convention.
@@ -110,21 +107,6 @@ class Convention {
             return false;
 
         return this.loader_.isUpdateAvailable(this.user_.token);
-    }
-
-    // Will be invoked when the user identifies to an account, or signs out of their account. The
-    // convention's information will either have to be loaded, or discarded.
-    onUserStateChanged(user) {
-        this.user_ = user;
-
-        if (user.isIdentified()) {
-            this.loadForUser(user);
-            return;
-        }
-
-        this.events_ = [];
-        this.locations_ = [];
-        this.volunteers_ = [];
     }
 }
 

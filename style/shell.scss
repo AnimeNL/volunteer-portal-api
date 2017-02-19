@@ -11,34 +11,12 @@
 
     background-color: white;
 
-    // The container begis
+    // The container begins in an invisible state so that it can be faded in.
     transition: opacity 0.4s ease-in-out;
     opacity: 0;
 
     // Stable state to transition to once the first frame has been painted.
     &.visible {
         opacity: 1;
-    }
-
-    // Container-wide transitions applied when the user either logs in or logs out.
-    &.inserted {
-        transition: transform .6s ease-in-out;
-        transform: none;
-
-        // Applied when the user logs in to the application.
-        &.before-transition {
-            transform: translateX(100%);
-        }
-
-        // Applied when the user logs out of the application.
-        &.before-transition-reverse {
-            transform: translateX(-100%);
-        }
-
-        &.opening {
-            box-shadow: -4px 0 16px 0 rgba(0, 0, 0, 0.4);
-            position: absolute;
-            z-index: 2;
-        }
     }
 }

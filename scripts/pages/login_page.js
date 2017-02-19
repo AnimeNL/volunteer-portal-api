@@ -26,9 +26,7 @@ LoginPage.prototype.OnRender = function(application, container, content) {
   formElement.addEventListener('submit', function(event) {
     event.preventDefault();
 
-    user.identify(nameElement.value).then(function() {
-      window.location.href = '/';
-    }, function(error) {
+    user.identify(nameElement.value).catch(function(error) {
       errorElement.textContent = error.message;
 
       nameElement.parentElement.classList.add('error');

@@ -236,45 +236,12 @@ LegacyApplication.prototype.SetLayoutTemplate = function(templateName) {
 
   this.InstallHandlers(layout);
 
-  // Fast-path for the first page load, where the content will be added
-  // immediately rather than animate in from the right-hand side.
-  if (!this.container_.firstChild) {
-    this.container_.appendChild(layout);
+  if (this.container_.firstChild) {
+    alert('FATAL: The container already has a child.');
     return;
   }
 
-  // Slow-path for other transitions, which will occur when the user signs in or
-  // out. These transition the page in from the right-hand side.
-  var previousContainer = this.container_,
-      createdContainer = document.createElement('div');
-
-  var transitionDirection = templateName == 'login' ?
-      'before-transition-reverse' :
-      'before-transition';
-
-  createdContainer.className = 'container inserted opening '
-      + transitionDirection;
-
-  createdContainer.appendChild(layout);
-
-  var eventListener = function(event) {
-    // Remove the event listener since it's only needed as a one-shot.
-    createdContainer.removeEventListener('transitionend', eventListener);
-
-    previousContainer.parentElement.removeChild(previousContainer);
-    createdContainer.classList.remove('opening');
-  };
-
-  createdContainer.addEventListener('transitionend', eventListener);
-
-  this.container_.parentElement.insertBefore(createdContainer, this.container_);
-  this.container_ = createdContainer;
-
-  // Remove the 'opening' class in the next animation frame, which will start
-  // the slide-in transition automagically.
-  requestAnimationFrame(function() {
-    createdContainer.classList.remove(transitionDirection);
-  });
+  this.container_.appendChild(layout);
 };
 
 LegacyApplication.prototype.SetContent = function(contentNode) {
@@ -346,10 +313,7 @@ LegacyApplication.prototype.OnRefresh = function(event) {
 };
 
 LegacyApplication.prototype.OnSignOut = function(event) {
-  this.user_.signOut().then(function() {
-    this.Navigate('/');
-
-  }.bind(this));
+  this.user_.signOut();
 };
 
 // -----------------------------------------------------------------------------

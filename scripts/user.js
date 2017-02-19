@@ -12,7 +12,6 @@ class User {
 
         this.options_ = {};
 
-        this.observers_ = [];
         this.readyPromise_ = this.load();
     }
 
@@ -27,12 +26,6 @@ class User {
 
     // Gets the security token of this user, or null when unavailable.
     get token() { return this.token_; }
-
-    // Registers |observer| as a callable that is to be invoked when the user's state changes, that
-    // is, when they identify or sign out. Will be called with the updated User instance.
-    observe(observer) {
-        this.observers_.push(observer);
-    }
 
     // Gets the value of |option|, or |defaultValue| when the option has not been previously set.
     getOption(option, defaultValue = null) {
@@ -50,7 +43,8 @@ class User {
     }
 
     // Will attempt to identify for a volunteer named |name|. Returns a Promise that will be
-    // resolved with the logged in user when successful, or rejected with the error when it fails.
+    // rejected when identification fails. The returned Promise will never resolve -- a successful
+    // identification will result in the page being reloaded.
     identify(name) {
         const endpoint = '/anime/identify.php';
 
@@ -69,10 +63,9 @@ class User {
 
                         this.options_ = {};
 
-                        // The user has logged in, inform the observers of this action.
-                        this.observers_.forEach(observer => observer(this));
-
-                        return resolve(this.store());
+                        // Refresh the application after the updated status has been stored.
+                        this.store().then(() =>
+                            window.location.reload());
                     }
                 } catch (e) {
                     return reject(new Error('Server error: ' + e.message));
@@ -89,26 +82,21 @@ class User {
         });
     }
 
-    // Signs the local user out of their account by resetting the cached information. Returns a
-    // Promise that will be resolved with the guest-containing User instance when completed.
+    // Signs the local user out of their account by resetting the cached information.
     signOut() {
         this.name_ = null;
         this.token_ = null;
 
         this.options_ = {};
 
-        // The user has signed out, inform the observers of this action.
-        this.observers_.forEach(observer => observer(this));
-
-        return this.store();
+        // Refresh the application after the updated status has been stored.
+        this.store().then(() =>
+            window.location.reload());
     }
 
     // Loads information about the local user. Will remove stored information when deemed invalid.
     // Returns a Promise that will be resolved with the current instance when complete, because more
     // modern storage mechanisms rightfully require asynchronous operation.
-    //
-    // TODO: Switch to use IndexedDB for storage rather than localStorage, so that the information
-    //       is also available within the Service Worker.
     load() {
         return new Promise(resolve => {
             const serializedInfo = localStorage['userInfo'];
@@ -132,12 +120,11 @@ class User {
             resolve(null);
 
         }).then(user => {
-            if (!user)
-                return this.signOut();
-
-            this.name_ = user.name;
-            this.token_ = user.token;
-            this.options_ = user.options;
+            if (user) {
+                this.name_ = user.name;
+                this.token_ = user.token;
+                this.options_ = user.options;
+            }
 
             return this;
         });
