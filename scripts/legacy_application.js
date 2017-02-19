@@ -309,7 +309,7 @@ LegacyApplication.prototype.OnToggleHiddenEvents = function(event) {
 };
 
 LegacyApplication.prototype.OnRefresh = function(event) {
-  document.location.href = '/';
+  window.application.hardRefresh();
 };
 
 LegacyApplication.prototype.OnSignOut = function(event) {

@@ -36,6 +36,16 @@ class Application {
 
     // Gets the Promise that is to be resolved with the Application instance when it's ready.
     get ready() { return this.readyPromise_; }
+
+    // Performs a hard refresh of the application. The dynamic caches will be thrown away, after
+    // which the application will be reloaded to its root.
+    hardRefresh() {
+        const cacheDeleter = window.caches ? window.caches.delete('dynamic')
+                                           : Promise.resolve();
+
+        cacheDeleter.then(() =>
+            window.location.href = '/');
+    }
 }
 
 window.application = new Application();
