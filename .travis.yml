@@ -14,7 +14,7 @@ before_script:
 script:
   - composer test
   - composer lint
-  - gulp package
+  - gulp package-css package-js
 
 cache:
   directories:
