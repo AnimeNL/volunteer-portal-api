@@ -25,8 +25,8 @@ contact met ons op.
 ## Wat krijg je van ons?
 
   * Wij regelen en betalen een professionele stewardtraining voor je in Amersfoort. De trainingen
-    zullen dit jaar op **13 en 14 mei** plaatsvinden, en we verwachten nog een derde dag toe te
-    voegen. Stewards moeten deze training eens per twee jaar volgen.
+    duren één dag en zullen dit jaar plaatsvinden op **zaterdag 23 april**, **zaterdag 13 en
+    zondag 14 mei**. Stewards moeten deze training eens per twee jaar volgen.
 
   * De mogelijkheid om een slaapplaats in één van de festivalhotels te reserveren ([meer informatie
     en prijzen](hotel.html)).
