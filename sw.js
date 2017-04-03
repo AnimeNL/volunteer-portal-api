@@ -13,6 +13,9 @@ function promiseAny(promises) {
 
 // -------------------------------------------------------------------------------------------------
 
+// Path prefix for the photos, which will be lazily added to the static cache.
+var photoPrefix = '/images/photos/';
+
 // Static resources. These are presumed to never change.
 var staticResources = [
     'images/icon-continents.jpg',
@@ -31,12 +34,6 @@ var staticResources = [
     'images/Roboto-Bold.woff',
     'images/Roboto-Regular.woff'
 ];
-
-// Identifiers of the photos.
-[
-    995915586  // TODO: Add the photos
-
-].map(identifier => staticResources.push('images/photos/' + identifier + '.png'));
 
 // -------------------------------------------------------------------------------------------------
 
@@ -83,7 +80,10 @@ self.addEventListener('fetch', event => {
 
                 // (3) Fetch the request from the network, updating the dynamic cache on response.
                 fetch(request).then(response => {
-                    caches.open('dynamic').then(cache => cache.put(request, response));
+                    var cacheName = response.url.includes(photoPrefix) ? 'static' : 'dynamic';
+
+                    caches.open(cacheName).then(cache =>
+                        cache.put(request, response));
 
                     return response.clone();
                 })
