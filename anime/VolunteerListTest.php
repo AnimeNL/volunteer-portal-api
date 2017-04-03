@@ -117,11 +117,13 @@ class VolunteerListTest extends \PHPUnit\Framework\TestCase {
             'password'  => '',
 
             'type'      => array_key_exists('type', $options) ? $options['type'] : 'Volunteer',
+            'title'     => array_key_exists('title', $options) ? $options['title'] : null,
+
             'email'     => array_key_exists('email', $options) ? $options['email']
                                                                : 'info@example.com',
             'telephone' => array_key_exists('telephone', $options) ? $options['telephone']
                                                                    : '+31 (0)6 123 45 678',
-            'hotel'     => array_key_exists('hotel', $options) ? $options['hotel'] : '-',
+
             'visible'   => array_key_exists('visible', $options) ? $options['visible'] : true
         ];
     }

@@ -30,9 +30,9 @@ namespace Anime\Services;
 //     (2) The rest of the rows expect these exact columns, in order:
 //         (a) Full name
 //         (b) Type ({ Staff, Senior, Volunteer })
-//         (c) E-mail address
-//         (d) Telephone number
-//         (e) Hotel room
+//         (c) Custom title
+//         (d) E-mail address
+//         (e) Telephone number
 //         (f) Visibility ({ Visible, Hidden })
 //
 // The parser is strict in regards to these rules, but linient for the actual data values. The
@@ -112,11 +112,19 @@ class ImportTeamService implements Service {
             if (!in_array($type, ['Staff', 'Senior', 'Volunteer']))
                 throw new \Exception('Invalid type in "' . $sourceFile . '" for ' . $name);
 
+            // Custom title
+            $title = trim($line[2]);
+
+            if (!strlen($title))
+                $title = null;
+
             // Visibility ({ Visible, Hidden })
             $visibility = trim($line[5]);
 
             if (!in_array($visibility, ['Visible', 'Hidden']))
                 throw new \Exception('Invalid visibility in "' . $sourceFile . '" for ' . $name);
+
+            $visibility = $visibility === 'Visible';
 
             // Generate a password for the user.
             $password = $this->generatePassword($name);
@@ -125,10 +133,10 @@ class ImportTeamService implements Service {
                 'name'      => $name,
                 'password'  => $password,
                 'type'      => $type,
-                'email'     => trim($line[2]),
-                'telephone' => trim($line[3]),
-                'hotel'     => trim($line[4]),
-                'visible'   => trim($line[5]) !== 'Hidden',
+                'title'     => $title,
+                'email'     => trim($line[3]),
+                'telephone' => trim($line[4]),
+                'visible'   => $visibility,
             ];
         }
 

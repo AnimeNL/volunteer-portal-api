@@ -65,14 +65,13 @@ class ConventionData {
             $volunteerData = [
                 'name'      => $volunteer->getName(),
                 'type'      => $volunteer->getType(),
+                'title'     => $volunteer->getTitle(),
                 'photo'     => $volunteer->getPhoto()
             ];
 
             // Append the extra information if the volunteer should have access to it.
-            if ($this->isSeniorVolunteer() || $volunteer->isSeniorVolunteer()) {
+            if ($this->isSeniorVolunteer() || $volunteer->isSeniorVolunteer())
                 $volunteerData['telephone'] = $volunteer->getTelephone();
-                $volunteerData['hotel'] = $volunteer->getHotel();
-            }
 
             // Seniors and above are able to see each other's passwords, for convenience.
             if ($this->isSeniorVolunteer() && $volunteer->isSeniorVolunteer())

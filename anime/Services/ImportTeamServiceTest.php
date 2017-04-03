@@ -27,8 +27,8 @@ class ImportTeamServiceTest extends \PHPUnit\Framework\TestCase {
     // well as the guaranteed alphabetical ordering by full name in the generated file.
     public function testBasicImportTest() {
         $result = $this->importFromData([
-            ['John Doe', 'Volunteer', 'john@doe.co.uk', '+447000000000', '201 (Cool Hotel)', 'Visible'],
-            ['Jane Doe', 'Staff', 'jane@doe.co.uk', '+448000000000', '202 (Cool Hotel)', 'Hidden']
+            ['John Doe', 'Volunteer', '', 'john@doe.co.uk', '+447000000000', 'Visible'],
+            ['Jane Doe', 'Staff', 'My Custom Title', 'jane@doe.co.uk', '+448000000000', 'Hidden']
         ]);
 
         $this->assertEquals([
@@ -36,18 +36,18 @@ class ImportTeamServiceTest extends \PHPUnit\Framework\TestCase {
                 'name'      => 'Jane Doe',
                 'password'  => 'LCFP',
                 'type'      => 'Staff',
+                'title'     => 'My Custom Title',
                 'email'     => 'jane@doe.co.uk',
                 'telephone' => '+448000000000',
-                'hotel'     => '202 (Cool Hotel)',
                 'visible'   => false
             ],
             [
                 'name'      => 'John Doe',
                 'password'  => '2YB1',
                 'type'      => 'Volunteer',
+                'title'     => null,
                 'email'     => 'john@doe.co.uk',
                 'telephone' => '+447000000000',
-                'hotel'     => '201 (Cool Hotel)',
                 'visible'   => true
             ]
         ], $result);
@@ -57,7 +57,7 @@ class ImportTeamServiceTest extends \PHPUnit\Framework\TestCase {
     public function testTypeValidation() {
         $test = function () {
             $this->importFromData([
-                ['John Doe', 'FooType', 'john@doe.co.uk', '+447000000000', '201 (Cool Hotel)', 'Visible'],
+                ['John Doe', 'FooType', '', 'john@doe.co.uk', '+447000000000', 'Visible'],
             ]);
         };
 
@@ -68,7 +68,7 @@ class ImportTeamServiceTest extends \PHPUnit\Framework\TestCase {
     public function testVisibilityValidation() {
         $test = function () {
             $this->importFromData([
-                ['John Doe', 'Staff', 'john@doe.co.uk', '+447000000000', '201 (Cool Hotel)', 'FooVisibility'],
+                ['John Doe', 'Staff', '', 'john@doe.co.uk', '+447000000000', 'FooVisibility'],
             ]);
         };
 
