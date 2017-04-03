@@ -9,7 +9,7 @@ const DateUtils = require('./date_utils');
 // the volunteers, locations and events, to the extend the server thinks it's appropriate for them
 // to know about- controlled using the local user's token.
 class Convention {
-    constructor(user) {
+    constructor() {
         this.loader_ = new ConventionLoader();
         this.user_ = null;
 

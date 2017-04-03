@@ -2,6 +2,7 @@
 // Use of this source code is governed by the MIT license, a copy of which can
 // be found in the LICENSE file.
 
+const ContentManager = require('./content_manager');
 const Convention = require('./convention');
 const DateUtils = require('./date_utils');
 const User = require('./user');
@@ -11,13 +12,19 @@ const User = require('./user');
 class Application {
     constructor() {
         this.user_ = new User();
-        this.convention_ = new Convention(this.user_);
+        this.content_ = new ContentManager();
+        this.convention_ = new Convention();
 
         // Resolved when the user's information is available. When they have logged in to a
         // volunteer's account, it will also wait for the convention's information to have loaded.
         this.readyPromise_ = this.user_.ready.then(user => {
-            if (user.isIdentified())
-                return this.convention_.loadForUser(user).then(convention => this);
+            if (user.isIdentified()) {
+                return Promise.all([
+                    this.content_.loadForUser(user),
+                    this.convention_.loadForUser(user)
+
+                ]).then(() => this);
+            }
 
             return this;
         });
@@ -30,6 +37,9 @@ class Application {
 
     // Gets the User object representing the local user.
     get user() { return this.user_; }
+
+    // Gets the ContentManager object that manages arbitrary in-portal content.
+    get content() { return this.content_; }
 
     // Gets the Convention object representing the convention driving this portal.
     get convention() { return this.convention_; }
