@@ -7,9 +7,60 @@ var browserify = require('browserify');
 var concat = require('gulp-concat');
 var fs = require('fs');
 var gulp = require('gulp');
+var markdown = require('gulp-markdown');
 var sftp = require('gulp-sftp');
 var sass = require('gulp-sass');
 var source = require('vinyl-source-stream');
+var through2 = require('through2');
+var util = require('gulp-util');
+
+// Transform that can be used to concatenate one or more files that start with a shift identifier in
+// to a single JSON file containing identifier => content mappings. The identifier format is:
+//
+//   <!-- Shift ID: Value -->
+//
+// While parsing is relaxed, it's recommended that you adhere to the above format.
+function concatenateContentTransform(options) {
+    var contents = {};
+
+    return through2({ objectMode: true }, function(file, enc, callback) {
+        if (file.isNull())
+            return callback(null, file);
+
+        // Only support for buffers has been implemented, as that's what gulp-markdown gives us.
+        if (!file.isBuffer()) {
+            this.emit('error', new util.PluginError('anime', 'Only buffers are supported.'));
+            return callback();
+        }
+
+        // Identify this |file| by the path of the original input file.
+        var name = file.history[0];
+
+        var content = file.contents.toString(enc);
+        var identifier = content.match(/^<!--\s*shift\s*id\s*:\s*(.+?)\s*-->\s*/mi);
+
+        // Require that the |content| leads with a Shift ID comment.
+        if (!identifier) {
+            this.emit('error', new util.PluginError('anime', name + ' must lead with a shift ID'));
+            return callback();
+        }
+
+        // Store the |content| stripped of the |identifier|, and proceed with the next file.
+        contents[identifier[1]] = content.substr(identifier[0].length);
+
+        callback();
+
+    }, function(callback) {
+        fs.writeFile(options.output, JSON.stringify(contents), callback);
+    });
+}
+
+// Packages the files in the //content directory in a single file fit for transport.
+gulp.task('package-content', function() {
+    return gulp.src('content/*.md')
+        .pipe(markdown())
+        .pipe(concatenateContentTransform({ output: 'content.json' }));
+});
 
 // Packages the stylesheet code in a single file after processing it with SASS.
 gulp.task('package-css', function() {
@@ -29,7 +80,7 @@ gulp.task('package-js', function() {
 });
 
 // Deploys the packaged files to the server. Requires Sublime SFTP to be set up in the project.
-gulp.task('deploy', ['package-css', 'package-js'], function() {
+gulp.task('deploy', ['package-content', 'package-css', 'package-js'], function() {
     var sublimeConfig = fs.readFileSync('sftp-config.json').toString();
 
     // The Sublime SFTP configuration file allows comments in its JSON. Remove it, and convert it
@@ -49,7 +100,8 @@ gulp.task('deploy', ['package-css', 'package-js'], function() {
 
     var deployFiles = [
         './anime.css',
-        './anime.js'
+        './anime.js',
+        './content.json',
     ];
 
     return gulp.src(deployFiles).pipe(sftp(deployOptions));

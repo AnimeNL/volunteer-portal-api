@@ -7,6 +7,7 @@ VERSION
 anime.css
 anime.js
 composer.lock
+content.json
 npm-debug.log
 sftp-config.json
 *.psd

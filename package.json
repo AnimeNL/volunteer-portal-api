@@ -12,8 +12,10 @@
         "browserify": "^14.0.0",
         "gulp": "^3.9.1",
         "gulp-concat": "^2.6.1",
+        "gulp-markdown": "^1.2.0",
         "gulp-sass": "^3.1.0",
         "gulp-sftp": "^0.1.5",
+        "through2": "^2.0.3",
         "vinyl-source-stream": "^1.1.0"
     },
 
