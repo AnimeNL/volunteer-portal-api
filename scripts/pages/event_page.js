@@ -126,12 +126,14 @@ EventPage.prototype.BuildStewardRow = function(steward, beginTime, endTime) {
   return listContainer;
 };
 
-EventPage.prototype.RenderDetailsLink = function(container) {
+EventPage.prototype.RenderDetailsLink = function(legacyApplication, container) {
   var element = document.createElement('div'),
       link = document.createElement('a');
 
   link.textContent = '\uE88F';
-  link.setAttribute('href', '#');
+  link.setAttribute('handler', true);
+  link.setAttribute(
+    'handler-navigate', '/events/' + this.event_.slug + '/details/');
 
   element.className = 'event-details';
   element.appendChild(link);
@@ -139,7 +141,7 @@ EventPage.prototype.RenderDetailsLink = function(container) {
   container.insertBefore(element, container.firstChild);
 };
 
-EventPage.prototype.OnRender = function(_, container, content) {
+EventPage.prototype.OnRender = function(legacyApplication, container, content) {
   if (this.event_ == null)
     return;  // we don't know which event this is.
 
@@ -151,7 +153,7 @@ EventPage.prototype.OnRender = function(_, container, content) {
 
   var infoBox = content.querySelector('#info-box');
   if (infoBox && application.content.has(this.event_.id))
-    this.RenderDetailsLink(infoBox);
+    this.RenderDetailsLink(legacyApplication, infoBox);
 
   var sessionContainer = document.createDocumentFragment(),
       stewardContainer = document.createDocumentFragment(),

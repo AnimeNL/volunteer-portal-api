@@ -647,7 +647,7 @@ li.list-item-steward {
 }
 
 .steward-telephone > a { color: #0D47A1; }
-.event-details > a { color: #0277BD; }
+.event-details > a { color: #0277BD; cursor: pointer; }
 
 .steward-telephone > a, .event-details > a {
   display: block;

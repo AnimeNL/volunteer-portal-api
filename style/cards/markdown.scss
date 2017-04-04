@@ -1,0 +1,22 @@
+// Copyright 2017 Peter Beverloo. All rights reserved.
+// Use of this source code is governed by the MIT license, a copy of which can
+// be found in the LICENSE file.
+
+.card-markdown {
+    padding-bottom: 10px;
+}
+
+.card-markdown h1 {
+    padding: 17px 16px 8px 16px;
+    margin: 0px;
+
+    border-bottom: 1px solid rgba(0, 0, 0, .15);
+
+    font-size: 1em;
+    font-weight: normal;
+}
+
+.card-markdown p {
+    padding: 0 16px;
+    margin: 8px 0;
+}

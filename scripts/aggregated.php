@@ -19,6 +19,7 @@ $scripts = [
 ];
 
 $pages = [
+  'pages/event_details_page.js',
   'pages/event_page.js',
   'pages/floor_page.js',
   'pages/location_page.js',

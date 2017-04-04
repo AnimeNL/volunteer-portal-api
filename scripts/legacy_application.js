@@ -121,6 +121,8 @@ LegacyApplication.prototype.Navigate = function(path, ignoreNavigation) {
   switch (parameters[0]) {
     case 'events':
       targetPage = EventPage;
+      if (parameters.length > 2)
+        targetPage = EventDetailsPage;
       break;
 
     case 'floors':
