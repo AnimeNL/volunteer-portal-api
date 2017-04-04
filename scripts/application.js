@@ -50,11 +50,27 @@ class Application {
     // Performs a hard refresh of the application. The dynamic caches will be thrown away, after
     // which the application will be reloaded to its root.
     hardRefresh() {
-        const cacheDeleter = window.caches ? window.caches.delete('dynamic')
-                                           : Promise.resolve();
+        // TODO: This will become dangerous when we support Push Notifications for informing
+        // volunteers about their upcoming shifts.
 
-        cacheDeleter.then(() =>
-            window.location.href = '/');
+        let promises = [];
+
+        // Unregister the Service Workers so that we can start with a fresh registration.
+        if ('serviceWorker' in navigator) {
+            promises.push(navigator.serviceWorker.getRegistrations().then(workers => {
+                return Promise.all(workers.map(worker => worker.unregister()));
+            }));
+        }
+
+        // Unregister both the `static` and `dynamic` caches. They will be reinstated when the
+        // page reloads following this hard reset.
+        if ('caches' in window) {
+            promises.push(window.caches.delete('static'));
+            promises.push(window.caches.delete('dynamic'));
+        }
+
+        // Refresh the page after the hard refresh has completed.
+        Promise.all(promises).then(() => window.location.href = '/');
     }
 }
 

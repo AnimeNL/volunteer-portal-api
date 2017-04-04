@@ -2,17 +2,6 @@
 // Use of this source code is governed by the MIT license, a copy of which can
 // be found in the LICENSE file.
 
-// Thanks Jake - https://jakearchibald.com/2014/offline-cookbook/#on-install-as-a-dependency
-function promiseAny(promises) {
-    return new Promise((resolve, reject) => {
-        promises = promises.map(p => Promise.resolve(p));
-        promises.forEach(p => p.then(r => { if (r) resolve(r); }));
-        promises.reduce((a, b) => a.catch(() => b)).catch(() => reject(Error("All failed")));
-    });
-}
-
-// -------------------------------------------------------------------------------------------------
-
 // Path prefix for the photos, which will be lazily added to the static cache.
 var photoPrefix = '/images/photos/';
 
@@ -34,6 +23,25 @@ var staticResources = [
     'images/Roboto-Bold.woff',
     'images/Roboto-Regular.woff'
 ];
+
+// -------------------------------------------------------------------------------------------------
+
+// Thanks Jake - https://jakearchibald.com/2014/offline-cookbook/#on-install-as-a-dependency
+function promiseAny(promises) {
+    return new Promise((resolve, reject) => {
+        promises = promises.map(p => Promise.resolve(p));
+        promises.forEach(p => p.then(r => { if (r) resolve(r); }));
+        promises.reduce((a, b) => a.catch(() => b)).catch(() => reject(Error("All failed")));
+    });
+}
+
+// Returns the name of the cache in which the |response| should be stored.
+function getCacheForResponse(response) {
+    if (response.url.includes(photoPrefix))
+        return 'static';
+
+    return 'dynamic';
+}
 
 // -------------------------------------------------------------------------------------------------
 
@@ -80,9 +88,7 @@ self.addEventListener('fetch', event => {
 
                 // (3) Fetch the request from the network, updating the dynamic cache on response.
                 fetch(request).then(response => {
-                    var cacheName = response.url.includes(photoPrefix) ? 'static' : 'dynamic';
-
-                    caches.open(cacheName).then(cache =>
+                    caches.open(getCacheForResponse(response)).then(cache =>
                         cache.put(request, response));
 
                     return response.clone();
