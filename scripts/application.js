@@ -14,6 +14,7 @@ class Application {
         this.user_ = new User();
         this.content_ = new ContentManager();
         this.convention_ = new Convention();
+        this.serviceWorkerRegistration_ = null;
 
         // Resolved when the user's information is available. When they have logged in to a
         // volunteer's account, it will also wait for the convention's information to have loaded.
@@ -31,8 +32,11 @@ class Application {
 
         // Register a Service Worker to provide offline support when this feature is available in
         // the browser. At time of writing, this is the case for Chrome, Opera and Firefox.
-        if ('serviceWorker' in navigator)
-            navigator.serviceWorker.register('/sw.js', { scope: '/' });
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js', { scope: '/' })
+                .then(registration => this.serviceWorkerRegistration_ = registration)
+                .catch(error => console.warn(error));
+        }
     }
 
     // Gets the User object representing the local user.
@@ -47,6 +51,9 @@ class Application {
     // Gets the Promise that is to be resolved with the Application instance when it's ready.
     get ready() { return this.readyPromise_; }
 
+    // Gets the Service Worker Registration that's servicing this page load.
+    get serviceWorkerRegistration() { return this.serviceWorkerRegistration_; }
+
     // Performs a hard refresh of the application. The dynamic caches will be thrown away, after
     // which the application will be reloaded to its root.
     hardRefresh() {
@@ -56,11 +63,8 @@ class Application {
         let promises = [];
 
         // Unregister the Service Workers so that we can start with a fresh registration.
-        if ('serviceWorker' in navigator) {
-            promises.push(navigator.serviceWorker.getRegistrations().then(workers => {
-                return Promise.all(workers.map(worker => worker.unregister()));
-            }));
-        }
+        if (this.serviceWorkerRegistration_)
+            promises.push(this.serviceWorkerRegistration_.unregister());
 
         // Unregister both the `static` and `dynamic` caches. They will be reinstated when the
         // page reloads following this hard reset.
