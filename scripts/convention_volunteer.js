@@ -75,14 +75,15 @@ class ConventionVolunteer {
     isStaff() { return this.staff_; }
 
     // Returns the current status line of this vlunteer. This could be their level, current schedule
-    // or current availability.
-    getStatusLine() {
+    // or current availability. Optionally, the |short| flag can be set in case length matters.
+    getStatusLine(short) {
         if (this.title_)
             return this.title_;
         else if (this.staff_)
             return 'Staff';
         else if (this.senior_)
-            return 'Senior Steward';  // TODO: Suffix with their role.
+            return short ? 'Senior'
+                         : 'Senior Steward'
         else
             return 'Steward';  // TODO: Use their role instead.
     }
