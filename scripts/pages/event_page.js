@@ -126,16 +126,32 @@ EventPage.prototype.BuildStewardRow = function(steward, beginTime, endTime) {
   return listContainer;
 };
 
-EventPage.prototype.OnRender = function(application, container, content) {
+EventPage.prototype.RenderDetailsLink = function(container) {
+  var element = document.createElement('div'),
+      link = document.createElement('a');
+
+  link.textContent = '\uE88F';
+  link.setAttribute('href', '#');
+
+  element.className = 'event-details';
+  element.appendChild(link);
+
+  container.insertBefore(element, container.firstChild);
+};
+
+EventPage.prototype.OnRender = function(_, container, content) {
   if (this.event_ == null)
     return;  // we don't know which event this is.
 
   var sessionList = content.querySelector('#session-list'),
-      stewardList = content.querySelector('#steward-list'),
-      description = content.querySelector('#event-description');
+      stewardList = content.querySelector('#steward-list');
 
-  if (!sessionList || !stewardList || !description)
+  if (!sessionList || !stewardList)
     return;
+
+  var infoBox = content.querySelector('#info-box');
+  if (infoBox && application.content.has(this.event_.id))
+    this.RenderDetailsLink(infoBox);
 
   var sessionContainer = document.createDocumentFragment(),
       stewardContainer = document.createDocumentFragment(),
@@ -191,12 +207,12 @@ EventPage.prototype.OnRender = function(application, container, content) {
 
   sessionList.appendChild(sessionContainer);
   stewardList.appendChild(stewardContainer);
-
-  description.innerHTML = this.session_.description;
 };
 
 EventPage.prototype.ResolveVariable = function(variable) {
   switch(variable) {
+    case 'description':
+      return this.session_.description;
     case 'name':
       return this.GetTitle();
   }

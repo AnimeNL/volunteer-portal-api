@@ -638,7 +638,7 @@ li.list-item-steward {
   height: 19px;
 }
 
-.steward-telephone {
+.steward-telephone, .event-details {
   pointer-events: all;
 
   position: absolute;
@@ -646,7 +646,10 @@ li.list-item-steward {
   top: 16px;
 }
 
-.steward-telephone > a {
+.steward-telephone > a { color: #0D47A1; }
+.event-details > a { color: #0277BD; }
+
+.steward-telephone > a, .event-details > a {
   display: block;
 
   width: 38px;
@@ -657,7 +660,6 @@ li.list-item-steward {
   font-smooth: always;
 
   text-decoration: none;
-  color: #0D47A1;
 }
 
 .warning-card.future { display: block; }

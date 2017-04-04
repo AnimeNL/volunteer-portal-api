@@ -14,12 +14,13 @@ var source = require('vinyl-source-stream');
 var through2 = require('through2');
 var util = require('gulp-util');
 
-// Transform that can be used to concatenate one or more files that start with a shift identifier in
+// Transform that can be used to concatenate one or more files that start with a event identifier in
 // to a single JSON file containing identifier => content mappings. The identifier format is:
 //
-//   <!-- Shift ID: Value -->
+//   <!-- Event ID: Value -->
 //
-// While parsing is relaxed, it's recommended that you adhere to the above format.
+// While parsing is relaxed, it's recommended that you adhere to the above format. The event ID for
+// a particular shift can be found by looking at the URL while viewing an event on the portal.
 function concatenateContentTransform(options) {
     var contents = {};
 
@@ -37,11 +38,11 @@ function concatenateContentTransform(options) {
         var name = file.history[0];
 
         var content = file.contents.toString(enc);
-        var identifier = content.match(/^<!--\s*shift\s*id\s*:\s*(.+?)\s*-->\s*/mi);
+        var identifier = content.match(/^<!--\s*event\s*id\s*:\s*(.+?)\s*-->\s*/mi);
 
-        // Require that the |content| leads with a Shift ID comment.
+        // Require that the |content| leads with a Event ID comment.
         if (!identifier) {
-            this.emit('error', new util.PluginError('anime', name + ' must lead with a shift ID'));
+            this.emit('error', new util.PluginError('anime', name + ' must lead with a event ID'));
             return callback();
         }
 

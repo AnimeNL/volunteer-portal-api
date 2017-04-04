@@ -46,10 +46,10 @@ function getCacheForResponse(response) {
 // -------------------------------------------------------------------------------------------------
 
 self.addEventListener('install', event => {
-    event.waitUntil(Promise.all([
-        caches.open('static').then(cache => cache.addAll(staticResources)),
-        skipWaiting()
-    ]));
+    event.waitUntil(
+         caches.open('static')
+             .then(cache => cache.addAll(staticResources))
+             .then(skipWaiting));
 });
 
 self.addEventListener('activate', event => {
