@@ -121,7 +121,7 @@ LegacyApplication.prototype.Navigate = function(path, ignoreNavigation) {
   switch (parameters[0]) {
     case 'events':
       targetPage = EventPage;
-      if (parameters.length > 2)
+      if (parameters.length > 2 && parameters[2] === 'details')
         targetPage = EventDetailsPage;
       break;
 

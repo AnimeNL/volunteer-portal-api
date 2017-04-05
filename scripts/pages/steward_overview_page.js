@@ -69,6 +69,8 @@ StewardOverviewPage.prototype.OnRender = function(application, container, conten
   // rather cares about their shift and then the event's information.
   this.steward_.shifts.forEach(function(shift) {
     var session = shift.event.getSessionForTime(currentTime);
+    var timespan = shift.beginTime + '-' + shift.endTime;
+
     entries.push({
       name: session.name,
       description: session.description,
@@ -77,7 +79,7 @@ StewardOverviewPage.prototype.OnRender = function(application, container, conten
       endTime: shift.endTime,
 
       location: session.location.name,
-      url: '/events/' + shift.event.slug + '/',
+      url: '/events/' + shift.event.slug + '/' + timespan + '/',
 
       className: session.isHidden() ? 'hidden' : ''
     });

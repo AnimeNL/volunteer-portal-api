@@ -12,6 +12,7 @@ var EventPage = function(application, parameters) {
   this.event_ = null;
   this.session_ = null;
   this.schedule_ = null;
+  this.timespan_ = null;
 };
 
 EventPage.prototype = Object.create(Page.prototype);
@@ -29,7 +30,7 @@ EventPage.prototype.PrepareRender = function() {
 
   return this.application_.GetSchedule().then(function(schedule) {
     if (self.parameters_.length < 2)
-        return;  // no event name in the URL.
+      return;  // no event name in the URL.
 
     for (var i = 0; i < schedule.events.length; ++i) {
       if (schedule.events[i].slug != self.parameters_[1])
@@ -38,6 +39,19 @@ EventPage.prototype.PrepareRender = function() {
       self.event_ = schedule.events[i];
       self.session_ = schedule.events[i].sessions[0];
       self.schedule_ = schedule;
+
+      // The timespan for a given session can be indicated in the URL.
+      if (self.parameters_.length > 2) {
+        var timespan = self.parameters_[2].split('-');
+        if (timespan.length == 2) {
+          var beginTime = parseInt(timespan[0], 10),
+              endTime = parseInt(timespan[1], 10);
+
+          if (Number.isSafeInteger(beginTime) && Number.isSafeInteger(endTime))
+            self.timespan_ = [beginTime, endTime];
+        }
+      }
+
       return;
     }
   });
@@ -82,7 +96,7 @@ EventPage.prototype.BuildEmptyStewardRow = function() {
   return listContainer;
 };
 
-EventPage.prototype.BuildStewardRow = function(steward, beginTime, endTime) {
+EventPage.prototype.BuildStewardRow = function(steward, beginTime, endTime, highlight) {
   var listContainer = document.createElement('li');
   var image = document.createElement('img'),
       dataContainer = document.createElement('div'),
@@ -90,6 +104,9 @@ EventPage.prototype.BuildStewardRow = function(steward, beginTime, endTime) {
       when = document.createElement('p');
 
   listContainer.className = 'list-item-steward material-ripple light';
+  if (highlight)
+    listContainer.className += ' list-item-highlight';
+
   listContainer.setAttribute('event-begin', beginTime);
   listContainer.setAttribute('event-end', endTime);
 
@@ -130,7 +147,7 @@ EventPage.prototype.RenderDetailsLink = function(legacyApplication, container) {
   var element = document.createElement('div'),
       link = document.createElement('a');
 
-  link.textContent = '\uE88F';
+  link.textContent = '\uE616';
   link.setAttribute('handler', true);
   link.setAttribute(
     'handler-navigate', '/events/' + this.event_.slug + '/details/');
@@ -140,6 +157,10 @@ EventPage.prototype.RenderDetailsLink = function(legacyApplication, container) {
 
   container.insertBefore(element, container.firstChild);
 };
+
+function ShiftInTimespan(shift, timespan) {
+  return shift.beginTime < timespan[1] && shift.endTime > timespan[0];
+}
 
 EventPage.prototype.OnRender = function(legacyApplication, container, content) {
   if (this.event_ == null)
@@ -181,6 +202,16 @@ EventPage.prototype.OnRender = function(legacyApplication, container, content) {
 
   var stewardShifts = this.event_.shifts.slice() /* make a copy */;
   stewardShifts.sort(function(lhs, rhs) {
+    if (self.timespan_) {
+      var lhsInTimespan = ShiftInTimespan(lhs, self.timespan_),
+          rhsInTimespan = ShiftInTimespan(rhs, self.timespan_);
+
+/**
+      if (lhsInTimespan != rhsInTimespan)
+        return lhsInTimespan ? -1 : 1;
+**/
+    }
+
     if (lhs.endTime <= currentTime && rhs.endTime > currentTime)
       return 1;
 
@@ -200,8 +231,12 @@ EventPage.prototype.OnRender = function(legacyApplication, container, content) {
   });
 
   stewardShifts.forEach(function(shift) {
+//    var highlight = self.timespan_ && ShiftInTimespan(shift, self.timespan_);
+    var highlight = false;
+
     stewardContainer.appendChild(
-        self.BuildStewardRow(shift.volunteer, shift.beginTime, shift.endTime));
+        self.BuildStewardRow(shift.volunteer, shift.beginTime, shift.endTime,
+                             highlight));
   });
 
   if (!stewardShifts.length)

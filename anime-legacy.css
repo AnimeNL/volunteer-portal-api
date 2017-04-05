@@ -558,6 +558,18 @@ li.list-item-room-event {
 
 /** List: Steward fields **/
 
+li.list-item-highlight {
+  border-left: 4px solid #0D47A1;
+}
+
+li.list-item-highlight:first-of-type {
+  border-top: 2px solid #0D47A1;
+}
+
+li.list-item-highlight:last-of-type {
+  outline-bottom: 2px solid #0D47A1;
+}
+
 li.list-item-steward-no-pointer { cursor: default; }
 
 li.list-item-steward.active:active {
@@ -647,7 +659,7 @@ li.list-item-steward {
 }
 
 .steward-telephone > a { color: #0D47A1; }
-.event-details > a { color: #0277BD; cursor: pointer; }
+.event-details > a { color: #333333; cursor: pointer; }
 
 .steward-telephone > a, .event-details > a {
   display: block;
