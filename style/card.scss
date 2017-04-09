@@ -3,10 +3,14 @@
 // be found in the LICENSE file.
 
 .card {
+    display: inline-block;
+    position: relative;
+
     background-color: white;
     border-radius: 2px;
 
     margin: 0 8px 16px 8px;
+    width: calc(100% - 16px);
 
     box-sizing: border-box;
     box-shadow: 0 2px 5px  0 rgba(0, 0, 0, 0.16),

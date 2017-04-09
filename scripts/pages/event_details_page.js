@@ -34,12 +34,35 @@ EventDetailsPage.prototype.PrepareRender = function() {
 
 EventDetailsPage.prototype.OnRender = function(_, container, content) {
   var contentElement = content.querySelector('#event-details-content');
-  var content = application.content.get(this.event_.id);
+  var contentCode = application.content.get(this.event_.id);
 
   if (!contentElement || !content)
     return;
 
-  contentElement.innerHTML = content;
+  var contentFragment = document.createRange().createContextualFragment(contentCode),
+      contentBox = null;
+
+  while (contentFragment.firstChild) {
+    var element = contentFragment.firstChild;
+
+    // Create a new content box for the initial content, as well as for the headers. This way we can
+    // enable the content writers to use main headers for new boxes.
+    if (!contentBox || element.tagName == 'H1') {
+      var box = document.createElement('div');
+      box.className = 'card card-markdown';
+
+      if (contentBox)
+        contentElement.appendChild(contentBox);
+
+      contentBox = box;
+    }
+
+    // Moves the |element| to the created content box.
+    contentBox.appendChild(element);
+  }
+
+  if (contentBox)
+    contentElement.appendChild(contentBox);
 };
 
 EventDetailsPage.prototype.ResolveVariable = function(variable) {

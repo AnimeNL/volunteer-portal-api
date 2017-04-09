@@ -1,7 +1,6 @@
 <!-- Event ID: 1000000 -->
 
 # Steward briefing
-
 The briefing is the official kick off for your duties as a steward at Anime 2017!
 
 We'll introduce you to our friends at the World Forum, the Security and First Aid teams and of
