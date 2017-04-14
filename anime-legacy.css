@@ -217,6 +217,10 @@ ul.material-menu {
 
 /** Forms: Input field **/
 
+.form-error { display: none; }
+
+.form-emphasis { color: #7B1FA2; }
+
 .material-form-input-text { position: relative; }
 
 .material-form-input-text > input {
@@ -518,6 +522,12 @@ div.past > h2::after { opacity: .8; }
 }
 
 .list-item-event > div.event > h2 { height: 19px; }
+
+/** Floor: List floor rooms **/
+
+img.floor {
+  border-radius: 8px;
+}
 
 /** List: Room event fields **/
 

@@ -2,7 +2,7 @@
 
 Te gek! Vul het volgende formulier in en we zullen snel contact met je opnemen!
 
-<p style="display: none" id="error" class="error">Eén van de velden was niet goed ingevuld, sorry! Probeer het nog eens.</p>
+<p class="form-error" id="error" class="error">Eén van de velden was niet goed ingevuld, sorry! Probeer het nog eens.</p>
 <script>
 if (document.location.hash == '#error')
   document.getElementById('error').style.display = 'block';
@@ -36,7 +36,7 @@ if (document.location.hash == '#error')
     </li>
   </ol>
 
-<span style="color: #7B1FA2">▼</span> Daarnaast hebben we ook nog wat vragen over je eerdere
+<span class="form-emphasis">▼</span> Daarnaast hebben we ook nog wat vragen over je eerdere
 ervaringen betreft veiligheid, stewarden en vrijwilligerswerk.
 
   <ol>
@@ -58,7 +58,7 @@ ervaringen betreft veiligheid, stewarden en vrijwilligerswerk.
     </li>
   </ol>
 
-<span style="color: #7B1FA2">▼</span> En ten slotte enkele korte vragen over je voorkeuren betreft
+<span class="form-emphasis">▼</span> En ten slotte enkele korte vragen over je voorkeuren betreft
 inzet tijdens Anime 2017.
 
   <ol>
