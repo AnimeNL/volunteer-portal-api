@@ -37,7 +37,6 @@ If you are running on a system that has SELinux set to enforcing, make sure you 
 of anime/Services/error.log to `httpd_sys_rw_content_t`
 (run `chcon -t httpd_sys_rw_content_t anime/Services/error.log`).
 
-**TODO**: Create a `post-install-cmd` hook for `composer` that creates these files.
 **TODO**: Document both backend and frontend deployment in this section.
 
 ## Frontend
