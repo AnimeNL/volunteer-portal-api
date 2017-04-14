@@ -10,6 +10,20 @@ frontend for both the client-side logic and the portal's visual interface.
 While this portal has been written for the [AnimeCon](http://www.animecon.nl/) convention, other
 events are most welcome to adopt it for their needs. Pull requests to make this easier are welcomed.
 
+## Development setup (Docker)
+You can easily get a development setup on Linux by using [Docker](https://www.docker.com/).
+To build the container, run `docker build -t anime2017 docker`.
+After that, run one of the following commands:
+- To run the services: `./bin/services`
+- To run a test webserver: `./bin/serve`
+- To run the linter: `./bin/lint`
+- To run the testsuite: `./bin/test`
+
+### Accessing development host
+By default, there is a base configuration for the "anime.test" environment.
+To access this after starting the development setup via Docker, add a line `127.0.0.1  anime.test` to the `/etc/hosts` file.
+After having done this, you can access the running development webserver at http://anime.test:8080/ .
+
 ## Backend code (PHP)
 The backend is located in the [/anime/](/anime/) directory and has been written in PHP.
 
