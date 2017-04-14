@@ -1,0 +1,3 @@
+id,eventId[,name,location,floor,description]
+1,-,"Test Event from mapping","mapping location","mapping floor","mapping description"
+5,2,,,,

@@ -1,0 +1,10 @@
+{
+    "name": "TESTING Portal",
+    "short_name": "TestPortal",
+    "hostname": "anime.test",
+    "hidden_events_public": true,
+    "team_data": "test_team.json",
+    "team_program": "program_test.json",
+    "team_shifts": "shifts_test.json",
+    "year": 2017
+}

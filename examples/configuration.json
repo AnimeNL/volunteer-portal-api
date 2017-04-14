@@ -1,0 +1,38 @@
+{
+    "convention": {
+        "duration": [ "2017-06-09 10:00:00", "2017-06-11 19:00:00" ]
+    },
+    "serviceLog": {
+        "alerts": true,
+        "from": "Your Portal <info@example.com>",
+        "recipients": [ "you@example.com" ],
+        "subject": "An error has occurred on your portal"
+    },
+    "services": [
+        {
+            "class": "Anime\\Services\\ImportTeamService",
+            "options": {"destination":"configuration/teams/test_team.json",
+                        "frequency": 5,
+                        "identifier": "anime.test.team",
+                        "source": "examples/team.csv",
+                        "password_salt": "test123"}
+        },
+        {
+            "class": "Anime\\Services\\ImportProgramService",
+            "options": {"destination": "configuration/program.json",
+                        "frequency": 5,
+                        "identifier": "anime.test.program",
+                        "source": "examples/program.json"}
+        },
+        {
+            "class": "Anime\\Services\\ImportScheduleService",
+            "options": {"frequency": 5,
+                        "identifier": "anime.test.schedule",
+                        "volunteers": "configuration/teams/test_team.json",
+                        "mapping": "examples/mapping.csv",
+                        "schedule": "examples/schedule.csv",
+                        "destination_shifts": "configuration/shifts_test.json",
+                        "destination_team_program": "configuration/program_test.json"}
+        }
+    ]
+}

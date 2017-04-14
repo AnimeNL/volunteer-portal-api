@@ -2,3 +2,5 @@ configuration.json
 program.json
 program_stewards.json
 shifts_stewards.json
+program_test.json
+shifts_test.json
