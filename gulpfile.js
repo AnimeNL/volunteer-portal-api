@@ -80,11 +80,11 @@ gulp.task('package-js', function() {
         .pipe(gulp.dest('./'));
 });
 
-// Packages all static content
-gulp.task('package', ['package-content', 'package-css', 'package-js'], function() {})
+// Packages all static content.
+gulp.task('package', ['package-content', 'package-css', 'package-js']);
 
 // Deploys the packaged files to the server. Requires Sublime SFTP to be set up in the project.
-gulp.task('deploy', ['package-content', 'package-css', 'package-js'], function() {
+gulp.task('deploy', ['package'], function() {
     var sublimeConfig = fs.readFileSync('sftp-config.json').toString();
 
     // The Sublime SFTP configuration file allows comments in its JSON. Remove it, and convert it
