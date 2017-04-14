@@ -14,8 +14,9 @@ class ImportScheduleService implements Service {
 
     // Initializes the service with |$options|, defined in the website's configuration file.
     public function __construct(array $options) {
-        $required = ['frequency', 'identifier', 'volunteers', 'program', 'mapping', 'schedule',
-                     'destination_shifts', 'destination_program'];
+        $required = ['frequency', 'identifier', 'volunteers', 'mapping', 'schedule',
+                     'destination_shifts', 'destination_team_program'];
+
         foreach ($required as $option) {
             if (!array_key_exists($option, $options))
                 throw new \Exception('The ImportTeamService requires a `' . $option . '` option.');
@@ -33,7 +34,6 @@ class ImportScheduleService implements Service {
     }
 
     public function execute() : void {
-        $program = $this->loadProgram();
         $volunteers = $this->loadVolunteers();
         $schedule = $this->loadSchedule();
         $mapping = $this->loadMapping();
@@ -178,12 +178,7 @@ class ImportScheduleService implements Service {
         // by the configuration of this service.
         file_put_contents($this->options['destination_shifts'], json_encode($volunteerShifts));
         file_put_contents(
-            $this->options['destination_program'], json_encode(array_values($programAdditions)));
-    }
-
-    // Loads the program from the configured data file.
-    private function loadProgram() : array {
-        return json_decode(file_get_contents($this->options['program']), true);
+            $this->options['destination_team_program'], json_encode(array_values($programAdditions)));
     }
 
     // Loads the list of volunteers from the configured data file.
