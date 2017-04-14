@@ -11,7 +11,7 @@ if (!array_key_exists('token', $_GET) || !is_numeric($_GET['token']))
 
 $token = intval($_GET['token']);
 
-$environment = \Anime\Environment::createForHostname($_SERVER['HTTP_HOST']);
+$environment = \Anime\Environment::createForHostname($_SERVER['SERVER_NAME']);
 if (!$environment->isValid())
     dieWithError('Unrecognized volunteer portal environment.');
 

@@ -5,7 +5,7 @@
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-$environment = \Anime\Environment::createForHostname($_SERVER['HTTP_HOST']);
+$environment = \Anime\Environment::createForHostname($_SERVER['SERVER_NAME']);
 if (!$environment->isValid())
   die('This domain name has not been configured for the volunteer portal.');
 

@@ -6,7 +6,7 @@
 require __DIR__ . '/../vendor/autoload.php';
 require __DIR__ . '/Error.php';
 
-$environment = \Anime\Environment::createForHostname($_SERVER['HTTP_HOST']);
+$environment = \Anime\Environment::createForHostname($_SERVER['SERVER_NAME']);
 if (!$environment->isValid())
     dieWithError('Unrecognized volunteer portal environment.');
 
