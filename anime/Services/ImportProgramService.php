@@ -11,6 +11,15 @@ namespace Anime\Services;
 // will be taking place. The format of the input is entirely proprietary to AnimeCon, so an
 // intermediate format has been developed to make adoption for other input types easier.
 //
+// This service has the following configuration options that must be supplied:
+//
+//     'destination'  File to which the parsed program information should be written in JSON format.
+//
+//     'frequency'    Frequency at which to execute the service (in minutes). This value should most
+//                    likely be adjusted to run more frequently as the event comes closer.
+//
+//     'source'       Absolute URL to the JSON source document as described below.
+//
 // For the Anime 2017 conference, the JSON format has been chosen to serve as the input for this
 // website's data. It expects an array of event entries that each have the following fields:
 //
