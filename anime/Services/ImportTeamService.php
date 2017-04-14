@@ -23,6 +23,8 @@ namespace Anime\Services;
 //     'source'       Absolute URL to the published CSV of the Google Spreadsheet meeting the format
 //                    restrictions mentioned below.
 //
+//     'password_salt'  Random string to be used as password salt.
+//
 // It is important that this sheet follows a consistent format. Consider the following rules when
 // setting up a spreadsheet to match this.
 //
@@ -92,13 +94,15 @@ class ImportTeamService implements Service {
         array_shift($inputArray);
 
         // Iterate over the rest of the lines, parse them eagerly.
+        $linenum = 1;
         foreach (array_map('str_getcsv', $inputArray) as $line) {
+            $linenum++;
             if (!count($line))
                 continue;  // ignore empty lines
 
             // Only make sure that it's not less than required in order to be forward compatible.
             if (count($line) < 6)
-                throw new \Exception('Invalid data line found in: ' . $sourceFile);
+                throw new \Exception('Invalid data line found in: ' . $sourceFile . ':' . $linenum);
 
             // Full name
             $name = trim($line[0]);
