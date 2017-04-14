@@ -5,7 +5,7 @@
 
 require_once __DIR__ . '/anime/Environment.php';
 
-$environment = Anime\Environment::createForHostname($_SERVER['HTTP_HOST']);
+$environment = Anime\Environment::createForHostname($_SERVER['SERVER_NAME']);
 if (!$environment->isValid()) {
     Header('HTTP/1.0 404 Not Found');
     exit;
