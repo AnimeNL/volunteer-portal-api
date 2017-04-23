@@ -22,7 +22,7 @@ $templates = [
 // -------------------------------------------------------------------------------------------------
 
 // Set the actual CSP header, very strict with the exception of the inline stylesheet.
-Header('Content-Security-Policy: default-src \'self\'');
+Header('Content-Security-Policy: default-src \'self\'; style-src \'self\' \'unsafe-inline\'');
 
 ?>
 <!doctype html>
