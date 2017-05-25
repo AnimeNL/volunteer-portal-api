@@ -128,6 +128,9 @@ FloorPage.prototype.OnRender = function(application, container, content) {
   var floors = this.schedule_.findUpcomingEvents({ floor: currentFloor, hidden: include_hidden });
   Object.keys(floors).forEach(function(floor) {
     floors[floor].forEach(function(locationInfo) {
+      if (locationInfo.location.name == 'Marriott Hotel')
+        return;  // `Snooze` shift for two special stewards
+
       rendered_locations.push(self.BuildRoomCard(locationInfo));
     });
   });

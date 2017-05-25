@@ -140,6 +140,11 @@ class ImportScheduleService implements Service {
             $data = $entry['data'];
             $sessions = [];
 
+            if (count($entry['shifts']) == 0) {
+                unset($programAdditions[$eventId]);
+                continue;
+            }
+
             usort($entry['shifts'], function ($lhs, $rhs) {
                 if ($lhs['beginTime'] === $rhs['beginTime'])
                     return 0;
