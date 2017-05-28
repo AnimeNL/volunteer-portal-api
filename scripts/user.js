@@ -91,6 +91,12 @@ class User {
         if (!this.token_)
             return;  // silently fail, this case should never happen
 
+        if (!this.notifications_.isSupported()) {
+            // TODO(peter): Have some fancy way to tell the user that notifications cannot be
+            // supported by their browser.
+            return;
+        }
+
         if (window.legacyApplication)
             window.legacyApplication.StartAsyncOperation();
 
@@ -99,7 +105,12 @@ class User {
                 ? this.notifications_.unsubscribe()
                 : this.notifications_.subscribe(this.token_);
 
-        operation.then(subscribed => {
+        // TODO(peter): Should we have a minimum time for the "please wait" animation?
+        operation.catch(error => {
+            console.error('Unable to create the push subscription: ', error);
+            return false /* subscribed */;
+
+        }).then(subscribed => {
             this.setOption('notifications', subscribed);
             if (window.legacyApplication)
                 window.legacyApplication.FinishAsyncOperation();

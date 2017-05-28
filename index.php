@@ -22,7 +22,7 @@ $templates = [
 // -------------------------------------------------------------------------------------------------
 
 // Set the actual CSP header, very strict with the exception of the inline stylesheet.
-Header('Content-Security-Policy: default-src \'self\'');
+Header('Content-Security-Policy: default-src \'self\' https://fcm.googleapis.com');
 
 ?>
 <!doctype html>
