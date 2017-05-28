@@ -230,11 +230,32 @@ LegacyApplication.prototype.InstallHandlers = function(element) {
 LegacyApplication.prototype.StartAsyncOperation = function() {
   this.menu_.OnMenuClose();
 
-  // TODO(peter): Show a greyed-out spinner.
+  var overlay = document.getElementById('async-operation-overlay');
+  if (!overlay)
+    return;
+
+  // The double-RAF hack is necessary because of the silly event scheduling,
+  // without it the opacity will be changed instantaneously.
+  window.requestAnimationFrame(function() {
+    overlay.style.display = 'flex';
+
+    window.requestAnimationFrame(function() {
+      overlay.style.opacity = 1;
+    });
+  });
 };
 
 LegacyApplication.prototype.FinishAsyncOperation = function() {
-  // TODO(peter): Close the greyed-out spinner.
+  var overlay = document.getElementById('async-operation-overlay');
+  if (!overlay)
+    return;
+
+  overlay.style.opacity = 0;
+  window.requestAnimationFrame(function() {
+    setTimeout(function() {
+      overlay.style.display = 'none';
+    }, 400);
+  });
 };
 
 // -----------------------------------------------------------------------------
@@ -328,7 +349,6 @@ LegacyApplication.prototype.OnToggleNotifications = function(event) {
 };
 
 LegacyApplication.prototype.OnRefresh = function(event) {
-  return;
   window.application.hardRefresh();
 };
 

@@ -18,6 +18,7 @@ var staticResources = [
     'images/logo-192.png',
     'images/menu-header.jpg?2',
     'images/no-photo.png',
+    'images/notifications.png',
 
     'images/material-icons.woff',
     'images/Roboto-Bold.woff',
