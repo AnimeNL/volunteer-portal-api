@@ -82,6 +82,13 @@ class User {
         });
     }
 
+    // Toggles notifications for the user. They must be authenticated to their account in order to
+    // be able to receive notifications, as distribution is based on their token.
+    toggleNotifications() {
+        // TODO(Peter): Request permission, create a subscription, share with the FCM federation
+        // service and then share with the Anime backend.
+    }
+
     // Signs the local user out of their account by resetting the cached information.
     signOut() {
         this.name_ = null;

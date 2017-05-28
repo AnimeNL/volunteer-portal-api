@@ -86,6 +86,9 @@ ContentHandler.prototype.UpdateElement =
   } else if (variable == 'display-events-toggle') {
     value = this.application_.GetUser().getOption('hidden_events', true) ?
         'Hide hidden events' : 'Show hidden events';
+  } else if (variable == 'notifications-toggle') {
+    value = this.application_.GetUser().getOption('notifications', false) ?
+        'Disable notifications' : 'Enable notifications';
   } else if (variable == 'event-name') {
     value = this.application_.GetConfig().title;
   } else if (variable == 'time') {

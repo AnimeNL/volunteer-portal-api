@@ -310,6 +310,10 @@ LegacyApplication.prototype.OnToggleHiddenEvents = function(event) {
   document.location.reload();
 };
 
+LegacyApplication.prototype.OnToggleNotifications = function(event) {
+  this.user_.toggleNotifications();
+};
+
 LegacyApplication.prototype.OnRefresh = function(event) {
   window.application.hardRefresh();
 };

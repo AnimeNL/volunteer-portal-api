@@ -34,8 +34,10 @@ class Application {
         // the browser. At time of writing, this is the case for Chrome, Opera and Firefox.
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('/sw.js', { scope: '/' })
-                .then(registration => this.serviceWorkerRegistration_ = registration)
                 .catch(error => console.warn(error));
+
+            navigator.serviceWorker.ready.then(registration =>
+                this.serviceWorkerRegistration_ = registration);
         }
     }
 
