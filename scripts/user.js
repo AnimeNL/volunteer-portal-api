@@ -2,6 +2,8 @@
 // Use of this source code is governed by the MIT license, a copy of which can
 // be found in the LICENSE file.
 
+const UserNotifications = require('./user_notifications');
+
 // Encapsulates information about the local user of the volunteer portal, and provides the ability
 // to identify users based on the credentials they gave. Most of the functionality is asynchronous,
 // so wait for the |ready| Promise to resolve before using an instance of this class.
@@ -13,6 +15,7 @@ class User {
         this.options_ = {};
 
         this.readyPromise_ = this.load();
+        this.notifications_ = new UserNotifications();
     }
 
     // Gets the Promise that is to be resolved after the initial load of the local user's data.
@@ -85,8 +88,22 @@ class User {
     // Toggles notifications for the user. They must be authenticated to their account in order to
     // be able to receive notifications, as distribution is based on their token.
     toggleNotifications() {
-        // TODO(Peter): Request permission, create a subscription, share with the FCM federation
-        // service and then share with the Anime backend.
+        if (!this.token_)
+            return;  // silently fail, this case should never happen
+
+        if (window.legacyApplication)
+            window.legacyApplication.StartAsyncOperation();
+
+        const operation =
+            this.getOption('notifications', false)
+                ? this.notifications_.unsubscribe()
+                : this.notifications_.subscribe(this.token_);
+
+        operation.then(subscribed => {
+            this.setOption('notifications', subscribed);
+            if (window.legacyApplication)
+                window.legacyApplication.FinishAsyncOperation();
+        });
     }
 
     // Signs the local user out of their account by resetting the cached information.

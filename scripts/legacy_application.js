@@ -32,7 +32,7 @@ var LegacyApplication = function(config, container, callback) {
     new ContentHandler(this),
     new EventUpdateHandler(),
     new LinkHandler(this),
-    new MenuHandler(),
+    this.menu_ = new MenuHandler(),
     new RippleHandler()
   ];
 
@@ -225,6 +225,19 @@ LegacyApplication.prototype.InstallHandlers = function(element) {
 };
 
 // -----------------------------------------------------------------------------
+// Asynchronous operation methods.
+
+LegacyApplication.prototype.StartAsyncOperation = function() {
+  this.menu_.OnMenuClose();
+
+  // TODO(peter): Show a greyed-out spinner.
+};
+
+LegacyApplication.prototype.FinishAsyncOperation = function() {
+  // TODO(peter): Close the greyed-out spinner.
+};
+
+// -----------------------------------------------------------------------------
 // Layout and content methods.
 
 LegacyApplication.prototype.GetLayoutTemplate = function() {
@@ -315,6 +328,7 @@ LegacyApplication.prototype.OnToggleNotifications = function(event) {
 };
 
 LegacyApplication.prototype.OnRefresh = function(event) {
+  return;
   window.application.hardRefresh();
 };
 
