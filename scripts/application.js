@@ -59,14 +59,7 @@ class Application {
     // Performs a hard refresh of the application. The dynamic caches will be thrown away, after
     // which the application will be reloaded to its root.
     hardRefresh() {
-        // TODO: This will become dangerous when we support Push Notifications for informing
-        // volunteers about their upcoming shifts.
-
-        let promises = [];
-
-        // Unregister the Service Workers so that we can start with a fresh registration.
-        if (this.serviceWorkerRegistration_)
-            promises.push(this.serviceWorkerRegistration_.unregister());
+        let promises = [ Promise.resolve() ];
 
         // Unregister both the `static` and `dynamic` caches. They will be reinstated when the
         // page reloads following this hard reset.

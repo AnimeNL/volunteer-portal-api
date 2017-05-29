@@ -124,9 +124,12 @@ class User {
 
         this.options_ = {};
 
-        // Refresh the application after the updated status has been stored.
-        this.store().then(() =>
-            window.location.reload());
+        // Refresh the application after the updated status has been stored and any existing Push
+        // Notification subscriptions have been removed.
+        Promise.all([
+            this.notifications_.unsubscribe(),
+            this.store()
+        ]).then(() => window.location.reload());
     }
 
     // Loads information about the local user. Will remove stored information when deemed invalid.
