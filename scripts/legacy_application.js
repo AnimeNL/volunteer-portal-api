@@ -251,9 +251,13 @@ LegacyApplication.prototype.FinishAsyncOperation = function() {
     return;
 
   overlay.style.opacity = 0;
+
+  var self = this;
   window.requestAnimationFrame(function() {
     setTimeout(function() {
       overlay.style.display = 'none';
+      self.OnPeriodicUpdate();
+
     }, 400);
   });
 };

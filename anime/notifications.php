@@ -34,14 +34,6 @@ if (!array_key_exists('subscription', $_POST) || !array_key_exists('pushSet', $_
 $subscription = $_POST['subscription'];
 $pushSet = $_POST['pushSet'];
 
-// Adds the |$message| to the log file for notification subscriptions. This enables us to keep a
-// little bit of insight in what's happening.
-
-function logMessage($message) {
-    $line = date('[Y-m-d H:i:s] ') . $_SERVER['REMOTE_ADDR'] . ' ' . trim($message) . PHP_EOL;
-    file_put_contents(__DIR__ . '/notifications.log', $line, FILE_APPEND);
-}
-
 // All required information is now known in |$subscription|, |$pushSet| and the
 // |$volunteer|. Create a relation between the |$subscription| and the token
 // used to identify the |$volunteer| as a Firebase Topic.
@@ -67,10 +59,11 @@ $result = file_get_contents($url, false, stream_context_create([
 $result = trim($result);
 $success = $result === '{}';  // this is not fragile at all
 
-if ($success)
+if ($success) {
     logMessage('The subscription was associated with their topic.');
-else
+} else {
     logMessage('The subscription could not be associated with their topic: ' . $result);
+}
 
 echo json_encode([ 'success' => $success ]);
 
