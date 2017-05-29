@@ -87,6 +87,7 @@ foreach ($volunteers as $volunteer)
 
         fetch('send.php', {
           method: 'POST',
+          credentials: 'include',
           body: formData
         }).then(response => response.text())
           .then(response => {
