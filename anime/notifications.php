@@ -6,6 +6,8 @@
 require __DIR__ . '/../vendor/autoload.php';
 require __DIR__ . '/Error.php';
 
+$configuration = \Anime\Configuration::getInstance();
+
 if (!array_key_exists('token', $_GET) || !is_numeric($_GET['token']))
     dieWithError('Invalid token.');
 
@@ -32,9 +34,44 @@ if (!array_key_exists('subscription', $_POST) || !array_key_exists('pushSet', $_
 $subscription = $_POST['subscription'];
 $pushSet = $_POST['pushSet'];
 
-echo json_encode([
-    'volunteer' => $volunteer->getName(),
-    'subscription' => $subscription,
-    'pushSet' => $pushSet
-]);
+// Adds the |$message| to the log file for notification subscriptions. This enables us to keep a
+// little bit of insight in what's happening.
 
+function logMessage($message) {
+    $line = date('[Y-m-d H:i:s] ') . $_SERVER['REMOTE_ADDR'] . ' ' . trim($message) . PHP_EOL;
+    file_put_contents(__DIR__ . '/notifications.log', $line, FILE_APPEND);
+}
+
+// All required information is now known in |$subscription|, |$pushSet| and the
+// |$volunteer|. Create a relation between the |$subscription| and the token
+// used to identify the |$volunteer| as a Firebase Topic.
+//
+// https://developers.google.com/instance-id/reference/server#create_a_relation_mapping_for_an_app_instance
+
+$server_key = $configuration->get('firebase/server_key');
+$url = 'https://iid.googleapis.com/iid/v1/' . $subscription . '/rel/topics/' . $volunteer->getToken();
+
+logMessage('Associating a new subscription for ' . $volunteer->getName() . '...');
+
+$result = file_get_contents($url, false, stream_context_create([
+    'http' => [
+        'method'    => 'POST',
+        'header'    => [
+            'Content-Type: application/json',
+            'Content-Length: 0',
+            'Authorization: key=' . $server_key
+        ]
+    ]
+]));
+
+$result = trim($result);
+$success = $result === '{}';  // this is not fragile at all
+
+if ($success)
+    logMessage('The subscription was associated with their topic.');
+else
+    logMessage('The subscription could not be associated with their topic: ' . $result);
+
+echo json_encode([ 'success' => $success ]);
+
+// TODO(peter): Send a welcome notification to the |$subscription|.
