@@ -79,6 +79,10 @@ input[type="checkbox"] {
   top: 1px;
 }
 
+input[type="text"] {
+  width: 535px;
+}
+
 /** Footer styling **/
 
 section > footer {

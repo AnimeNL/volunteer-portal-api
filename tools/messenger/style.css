@@ -1,0 +1,12 @@
+input[type="button"] {
+  margin-bottom: 8px;
+}
+
+pre {
+  padding: 8px 16px;
+}
+
+pre.new {
+  font-style: italic;
+  color: #888;
+}
