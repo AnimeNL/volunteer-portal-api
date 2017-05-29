@@ -25,6 +25,22 @@ var staticResources = [
     'images/Roboto-Regular.woff'
 ];
 
+// Blacklist of path names that will be ignored when attempting to focus an existing window in
+// response to a click on a shown notification.
+var focusBlacklist = [
+    '/hallo',
+    '/images',
+    '/tools'
+];
+
+// The default notification that should be shown in case of an error.
+var defaultNotification = {
+    topic: 'An update is available',
+    icon: '/images/logo-192.png',
+    body: 'An update to the Anime 2017 schedule is now available!',
+    url: '/'
+};
+
 // -------------------------------------------------------------------------------------------------
 
 // Thanks Jake - https://jakearchibald.com/2014/offline-cookbook/#on-install-as-a-dependency
@@ -96,4 +112,69 @@ self.addEventListener('fetch', event => {
                 })
             ]);
         }));
+});
+
+self.addEventListener('push', event => {
+    event.waitUntil(
+        Promise.resolve(true)
+            .then(() => event.data.json())
+            .then(message => {
+                if (typeof message !== 'object')
+                    throw new Error('The JSON payload does not contain an object.');
+
+                var payload = message.data;
+                if (typeof payload !== 'object')
+                    throw new Error('The JSON payload does not contain a `data` object.');
+
+                for (const key of ['title', 'body', 'url']) {
+                    if (!payload.hasOwnProperty(key))
+                        throw new Error('Missing property: ' + key);
+                }
+
+                return payload;
+            })
+            .catch(error => {
+                console.error('Cannot handle push event: ', error);
+                return defaultNotification;
+            })
+            .then(message => {
+                // Only the `data` property will be set by the Service Worker, all the other fields
+                // included in the notification are controlled by the server.
+                message.data = { url: message.url };
+
+                return registration.showNotification(message.title, message);
+            })
+    );
+});
+
+self.addEventListener('notificationclick', event => {
+    var notification = event.notification,
+        url = notification.data.url;
+
+    notification.close();
+
+    // Focus the first client if any exists. Otherwise open a new window for the given URL.
+    event.waitUntil(
+        clients.matchAll({ type: 'window' }).then(clients => {
+            for (var index = 0; index < clients.length; ++index) {
+                var windowUrl = new URL(clients[index].url);
+                var candidate = true;
+
+                focusBlacklist.forEach(entry => {
+                    if (windowUrl.pathname.startsWith(entry))
+                        candidate = false;
+                });
+
+                if (!candidate)
+                    continue;
+
+                return Promise.all([
+                    clients[index].navigate(url),
+                    clients[index].focus()
+                ]);
+            }
+
+            return clients.openWindow(url);
+        })
+    );
 });
