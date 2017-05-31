@@ -5,8 +5,6 @@
 
 require __DIR__ . '/../../vendor/autoload.php';
 
-$configuration = \Anime\Configuration::getInstance();
-
 if ($_SERVER['REQUEST_METHOD'] !== 'POST')
     die('Invalid request method.');
 
@@ -31,26 +29,8 @@ $volunteer = $volunteers->findByToken($topic);
 if (!($volunteer instanceof \Anime\Volunteer))
     die('Invalid topic.');
 
-$server_key = $configuration->get('firebase/server_key');
-$payload = json_encode([
-    'to'    => '/topics/' . $topic,
-    'data'  => [
-        'title'     => 'Message from ' . $environment->getName(),
-        'icon'      => '/images/logo-192-2.png',
-        'body'      => $message,
-        'url'       => 'https://' . $environment->getHostname()
-    ]
+$notification = new \Anime\PushNotification('Message from ' . $environment->getName(), [
+    'body'      => $message
 ]);
 
-$result = file_get_contents('https://fcm.googleapis.com/fcm/send', false, stream_context_create([
-    'http' => [
-        'method'    => 'POST',
-        'header'    => [
-            'Content-Type: application/json',
-            'Authorization: key=' . $server_key
-        ],
-        'content'   => $payload
-    ]
-]));
-
-echo $result;
+echo \Anime\PushUtilities::sendToTopic($volunteer->getToken(), $notification);

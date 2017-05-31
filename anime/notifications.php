@@ -40,31 +40,16 @@ $pushSet = $_POST['pushSet'];
 //
 // https://developers.google.com/instance-id/reference/server#create_a_relation_mapping_for_an_app_instance
 
-$server_key = $configuration->get('firebase/server_key');
-$url = 'https://iid.googleapis.com/iid/v1/' . $subscription . '/rel/topics/' . $volunteer->getToken();
-
 logMessage('Associating a new subscription for ' . $volunteer->getName() . '...');
 
-$result = file_get_contents($url, false, stream_context_create([
-    'http' => [
-        'method'    => 'POST',
-        'header'    => [
-            'Content-Type: application/json',
-            'Content-Length: 0',
-            'Authorization: key=' . $server_key
-        ]
-    ]
-]));
-
-$result = trim($result);
-$success = $result === '{}';  // this is not fragile at all
-
+$success = \Anime\PushUtilities::subscribeToTopic($subscription, $volunteer->getToken());
 if ($success) {
     logMessage('The subscription was associated with their topic.');
+
+    // TODO(peter): Send a welcome notification to the |$subscription|.
+
 } else {
     logMessage('The subscription could not be associated with their topic: ' . $result);
 }
 
 echo json_encode([ 'success' => $success ]);
-
-// TODO(peter): Send a welcome notification to the |$subscription|.
