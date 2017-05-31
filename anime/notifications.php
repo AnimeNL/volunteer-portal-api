@@ -34,9 +34,9 @@ if (!array_key_exists('subscription', $_POST) || !array_key_exists('pushSet', $_
 $subscription = $_POST['subscription'];
 $pushSet = $_POST['pushSet'];
 
-// All required information is now known in |$subscription|, |$pushSet| and the
-// |$volunteer|. Create a relation between the |$subscription| and the token
-// used to identify the |$volunteer| as a Firebase Topic.
+// All required information is now known in |$subscription|, |$pushSet| and the |$volunteer|. Create
+// a relation between the |$subscription| and the token used to identify the |$volunteer| as a
+// Firebase Cloud Messaging Topic.
 //
 // https://developers.google.com/instance-id/reference/server#create_a_relation_mapping_for_an_app_instance
 
@@ -46,10 +46,22 @@ $success = \Anime\PushUtilities::subscribeToTopic($subscription, $volunteer->get
 if ($success) {
     logMessage('The subscription was associated with their topic.');
 
-    // TODO(peter): Send a welcome notification to the |$subscription|.
+    // Immediately send a message to the |$subscription| to let them know they are now subscribed to
+    // receiving notifications. Yay for fast server-side propagation on their end.
 
+    $notification = new \Anime\PushNotification('Notifications activated! 😍', [
+        'body'      => 'You will now receive reminders for your upcoming shifts!',
+        'icon'      => '/images/subscribed.png',
+        'vibrate'   => [ 500, 110, 500, 110, 450, 110, 200, 110, 170, 40, 450, 110, 200, 110, 170, 40, 500 ]
+    ]);
+
+    \Anime\PushUtilities::sendToSubscription($subscription, $notification);
+
+    logMessage('They have received a welcome notification.');
 } else {
     logMessage('The subscription could not be associated with their topic: ' . $result);
 }
+
+// And report back to the browser that the subscription was successful.
 
 echo json_encode([ 'success' => $success ]);
