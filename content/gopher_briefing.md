@@ -1,6 +1,5 @@
 <!-- Event ID: 1000001 -->
 
 # Gopher briefing
-Gophers will receive an overview of their tasks and responsibilities during the weekend.
-
-This is some additional content.
+The official kick-off meeting for the gophers of Anime 2017. Only those who we expect to be working
+with the gophers are requested to attend.

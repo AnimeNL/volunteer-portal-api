@@ -1,10 +1,11 @@
 <!-- Event ID: 1000000 -->
 
 # Steward briefing
-The briefing is the official kick off for your duties as a steward at Anime 2017!
-
-We'll introduce you to our friends at the World Forum, the Security and First Aid teams and of
-course your fellow steward team. You'll get a quick reminder of the most important aspects of
-your duties as a steward and the chance to ask any question that's on your mind.
-
-After the briefing, you'll pick up your safety vest, your walkie talkie and start your adventure…
+The official kick-off meeting for the stewards of Anime 2017, which you are required to attend.
+ 
+During this meeting we will introduce you to **Neil**, our safety and security manager, and to our
+steward leadership consisting of **Peter**, **Ferdi**, **Nardo** and **Remy**. We’ll also introduce
+you to the security and first-aid teams, as well as our partners at the World Forum.
+ 
+We’ll give you an overview of our expectations of you as a steward, of **stewards.team**, the most
+important shifts, and will finish by giving you the opportunity to ask any remaining questions.

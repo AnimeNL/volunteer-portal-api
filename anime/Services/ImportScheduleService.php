@@ -279,8 +279,24 @@ class ImportScheduleService implements Service {
         // This normally means that the volunteer schedule groups together an event that has several
         // entries in the AniPlanner. In such cases the actual Event ID should be hardcoded here
         // based on the given |$time|.
-
-        $time;  // unused
+        switch ($eventId) {
+            case 'SPECIAL1':  // Live house
+                if ($time <= 1497094200) {
+                    return 41220;
+                } else if ($time <= 1497101400) {
+                    return 41212;
+                } else {
+                    return 41242;
+                }
+                break;
+            case 'SPECIAL2':  // Whisky tasting
+                if ($time <= 1497038400) {
+                    return 41408;
+                } else {
+                    return 41273;
+                }
+                break;
+        }
 
         throw new \Exception('Unrecognized event Id: ' . $eventId);
     }

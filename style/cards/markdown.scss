@@ -26,4 +26,18 @@
     p {
         padding: 0 16px;
     }
+
+    // ---- Image content ------------------------------------------------------
+
+    @include mobile {
+        p > img:first-child {
+            padding-top: 8px;
+            border-top: 1px solid rgba(0, 0, 0, 0.15);
+
+            margin: 0 -16px -16px -16px;
+
+            max-width: 100%;
+            max-width: calc(100% + 32px);
+        }
+    }
 }
