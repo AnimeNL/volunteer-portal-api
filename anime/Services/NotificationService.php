@@ -166,7 +166,10 @@ class NotificationService implements Service {
             // Compile the PushNotification object.
             $notification = new PushNotification($title, [
                 'body'  => $message,
-                'url'   => '/stewards/me/'
+                'url'   => '/stewards/me/',
+
+                // XXXXXXXXXXXX REMOVE BEFORE THE EVENT STARTS XXXXXXXXXXXX
+                'requireInteraction'    => true
             ]);
 
             // (2d) Distribute the |$notification| the the list of |$tokens|.
