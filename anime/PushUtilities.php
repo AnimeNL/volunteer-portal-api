@@ -40,7 +40,21 @@ class PushUtilities {
         PushNotification $notification,
         ?int $ttl = null
     ) : string {
-        return self::sendToSubscription('/topics/' . $topic, $notification, $ttl);
+        return self::sendToTargets([ '/topics/' . $topic ], $notification, $ttl);
+    }
+
+    // Synchronously sends the |$notification| to the given |$topics|. Returns the response of the
+    // push service to which the message was distributed.
+    public static function sendToTopics(
+        array $topics,
+        PushNotification $notification,
+        ?int $ttl = null
+    ) : string {
+        $targets = array_map(function ($topic) {
+            return '/topics/' . $topic;
+        }, $topics);
+
+        return self::sendToTargets($targets, $notification, $ttl);
     }
 
     // Synchronously sends the |$notification| to the given |$subscription|, which may be the
@@ -51,28 +65,97 @@ class PushUtilities {
         PushNotification $notification,
         ?int $ttl = null
     ) : string {
+        return self::sendToTargets([ $subscription ], $notification, $ttl);
+    }
+
+    // Synchronously sends the |$notification| to the given |$subscriptions|, which may be the
+    // identifier of a topic when using appropriate syntax. Returns the response of the push service
+    // to which the message was distributed.
+    public static function sendToSubscriptions(
+        array $subscriptions,
+        PushNotification $notification,
+        ?int $ttl = null
+    ) : string {
+        return self::sendToTargets($subscriptions, $notification, $ttl);
+    }
+
+    // Synchronously sends the |$notification| to the given |$targets|, which is an array with the
+    // subscriptions and/or the topics of the recipients. Returns the response of the push service
+    // to which the message was distributed.
+    private static function sendToTargets(
+        array $targets,
+        PushNotification $notification,
+        ?int $ttl = null
+    ) : string {
         $configuration = Configuration::getInstance();
 
         $server_key = $configuration->get('firebase/server_key');
         $url = 'https://fcm.googleapis.com/fcm/send';
 
-        $payload = [
-            'to'    => $subscription,
-            'data'  => $notification->getOptions()
-        ];
-
+        $payload = [ 'data'  => $notification->getOptions() ];
         if (is_numeric($ttl))
             $payload['time_to_live'] = $ttl;
 
-        return file_get_contents($url, false, stream_context_create([
-            'http' => [
-                'method'    => 'POST',
-                'header'    => [
+        // The context owning all parallel CURL requests.
+        $context = curl_multi_init();
+        $requests = [];
+
+        foreach ($targets as $target) {
+            $request = curl_init();
+
+            $requestPayload = $payload;
+            $requestPayload['to'] = $target;
+
+            curl_setopt_array($request, [
+                CURLOPT_URL             => $url,
+                CURLOPT_POST            => true,
+                CURLOPT_HTTPHEADER      => [
                     'Content-Type: application/json',
                     'Authorization: key=' . $server_key
                 ],
-                'content'   => json_encode($payload)
-            ]
-        ]));
+                CURLOPT_POSTFIELDS      => json_encode($requestPayload),
+
+                CURLOPT_HEADER          => true,
+                CURLOPT_RETURNTRANSFER  => true
+            ]);
+
+            curl_multi_add_handle($context, $request);
+            $requests[] = $request;
+        }
+
+        // Finish all the requests simultaneously by first executing the handles, then selecting
+        // handles until their execution has been completed.
+
+        $active = null;
+        $state = CURLM_CALL_MULTI_PERFORM;
+
+        while ($state === CURLM_CALL_MULTI_PERFORM) {
+            $state = curl_multi_exec($context, $active);
+        }
+
+        while ($state === CURLM_OK && $active) {
+            if (curl_multi_select($context) === -1)
+                usleep(1);
+
+            $state = CURLM_CALL_MULTI_PERFORM;
+
+            while ($state === CURLM_CALL_MULTI_PERFORM) {
+                $state = curl_multi_exec($context, $active);
+            }
+        }
+
+        // Compile the output from all parallel requests as if there was only one.
+
+        $output = '';
+
+        foreach ($requests as $request) {
+            $output .= curl_multi_getcontent($request) . PHP_EOL . PHP_EOL;
+            curl_multi_remove_handle($context, $request);
+        }
+
+        // Close all remaining CURL handles and return the |$output|.
+
+        curl_multi_close($context);
+        return $output;
     }
 }
