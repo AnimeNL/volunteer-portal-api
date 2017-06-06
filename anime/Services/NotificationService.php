@@ -94,8 +94,12 @@ class NotificationService implements Service {
                 if ($shift['beginTime'] > $notificationTime)
                     continue;  // notifications are to be broadcasted in the future
 
-                if (!array_key_exists($shift['eventId'], $eventNotifications))
-                    $eventNotifications[$shift['eventId']] = [];
+                if (!array_key_exists($shift['eventId'], $eventNotifications)) {
+                    $eventNotifications[$shift['eventId']] = [
+                        'time'      => $shift['beginTime'],
+                        'tokens'    => []
+                    ];
+                }
 
                 // XXXXXXXXXXXX REMOVE BEFORE THE EVENT STARTS XXXXXXXXXXXX
                 if ($volunteerName !== 'Peter Beverloo')
@@ -110,7 +114,7 @@ class NotificationService implements Service {
                     $volunteerTokens[$volunteerName] = $volunteer->getToken();
                 }
 
-                $eventNotifications[$shift['eventId']][] = $volunteerTokens[$volunteerName];
+                $eventNotifications[$shift['eventId']]['tokens'][] = $volunteerTokens[$volunteerName];
             }
         }
 
@@ -122,7 +126,7 @@ class NotificationService implements Service {
         // (2) For each of the events that need notifications, find the event information in the
         // program and distribute it to the list of volunteer tokens.
 
-        foreach ($eventNotifications as $eventId => $tokens) {
+        foreach ($eventNotifications as $eventId => $shift) {
             $event = null;
             $session = null;
 
@@ -161,7 +165,7 @@ class NotificationService implements Service {
                 $previousTimezone = date_default_timezone_get();
                 date_default_timezone_set('Europe/Amsterdam');
 
-                $title = 'Your shift will begin at ' . date('G:i', $session['begin']) . '!';
+                $title = 'Your shift will begin at ' . date('G:i', $shift['time']) . '!';
 
                 date_default_timezone_set($previousTimezone);
             }
@@ -175,9 +179,9 @@ class NotificationService implements Service {
                 'requireInteraction'    => true
             ]);
 
-            // (2d) Distribute the |$notification| the the list of |$tokens|.
+            // (2d) Distribute the |$notification| the the list of |$shift['tokens']|.
 
-            $results = PushUtilities::sendToTopics($tokens, $notification, $this->reminderTime * 2);
+            $results = PushUtilities::sendToTopics($shift['tokens'], $notification, $this->reminderTime * 2);
             file_put_contents(self::NOTIFICATION_LOG_FILE, $results, FILE_APPEND);
         }
     }
@@ -220,7 +224,7 @@ class NotificationService implements Service {
     // Gets the UNIX timestamp for the current time ceiled to the nearest minute.
     private function getCurrentMinuteTime() : int {
         $offsetForTesting = 3 * 86400;  // 3 days (Tuesday -> Friday)
-        return (int) (ceil((time() + $offsetForTesting) / 60) * 60);
+        return (int) (ceil((time() + $offsetForTesting - 300) / 60) * 60);
     }
 
     // Gets the UNIX timestamp for the time for which notifications have to be distributed.
