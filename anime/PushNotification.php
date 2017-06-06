@@ -27,7 +27,7 @@ class PushNotification {
             'title' => $title,
 
             // Default option values.
-            'badge' => '/images/favicon-32.png',
+            'badge' => '/images/favicon-64.png',
             'icon'  => '/images/logo-192-2.png',
             'url'   => '/'
         ];
