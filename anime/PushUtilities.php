@@ -120,7 +120,7 @@ class PushUtilities {
             ]);
 
             curl_multi_add_handle($context, $request);
-            $requests[] = $request;
+            $requests[] = [$request, time(), $target];
         }
 
         // Finish all the requests simultaneously by first executing the handles, then selecting
@@ -148,7 +148,8 @@ class PushUtilities {
 
         $output = '';
 
-        foreach ($requests as $request) {
+        foreach ($requests as [$request, $time, $target]) {
+            $output .= 'MESSAGE [ ' . date('Y-m-d H:i:s', $time) . ' to ' . $target . ']' . PHP_EOL . PHP_EOL;
             $output .= curl_multi_getcontent($request) . PHP_EOL . PHP_EOL;
             curl_multi_remove_handle($context, $request);
         }

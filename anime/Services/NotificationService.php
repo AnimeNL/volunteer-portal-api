@@ -18,6 +18,9 @@ class NotificationService implements Service {
     // File that contains the timestamp at which notification broadcasts were last distributed.
     private const LAST_NOTIFICATION_FILE = __DIR__ . '/last_notification_time.dat';
 
+    // File to which logs will be written for distributing notifications.
+    private const NOTIFICATION_LOG_FILE = __DIR__ . '/notifications.log';
+
     // Absolute path to the JSON data file that contains the convention's program.
     private const PROGRAM_FILE = __DIR__ . '/../../configuration/program.json';
 
@@ -174,7 +177,8 @@ class NotificationService implements Service {
 
             // (2d) Distribute the |$notification| the the list of |$tokens|.
 
-            echo PushUtilities::sendToTopics($tokens, $notification, $this->reminderTime * 2);
+            $results = PushUtilities::sendToTopics($tokens, $notification, $this->reminderTime * 2);
+            file_put_contents(self::NOTIFICATION_LOG_FILE, $results, FILE_APPEND);
         }
     }
 
