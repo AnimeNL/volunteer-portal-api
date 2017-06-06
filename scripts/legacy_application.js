@@ -107,6 +107,10 @@ LegacyApplication.prototype.Navigate = function(path, ignoreNavigation) {
   if (!this.user_.isIdentified())
     return this.NavigateToPage(LoginPage);
 
+  // Special case for having a static URL to go to a steward's overview page.
+  if (path === '/stewards/me/')
+    return this.OnDisplayMySchedule();
+
   path = path || this.path_;
 
   if (this.path_ == path)
@@ -190,13 +194,13 @@ LegacyApplication.prototype.OnDisplayMySchedule = function(event) {
 
   // TODO: This should handle cases where the current user is a view-only one.
 
-  this.schedule_.then(function(schedule) {
+  return this.schedule_.then(function(schedule) {
     var volunteer = schedule.findVolunteer(self.user_.name);
 
     if (!volunteer)
-      self.Navigate('/');
+      return self.Navigate('/');
     else
-      self.Navigate('/stewards/' + volunteer.slug + '/me/');
+      return self.Navigate('/stewards/' + volunteer.slug + '/me/');
   });
 };
 

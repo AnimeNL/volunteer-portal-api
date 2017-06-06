@@ -174,7 +174,7 @@ self.addEventListener('notificationclick', event => {
                 ]);
             }
 
-            return clients.openWindow(url);
+            return self.clients.openWindow(url);
         })
     );
 });
