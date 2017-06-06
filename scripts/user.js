@@ -92,8 +92,7 @@ class User {
             return;  // silently fail, this case should never happen
 
         if (!this.notifications_.isSupported()) {
-            // TODO(peter): Have some fancy way to tell the user that notifications cannot be
-            // supported by their browser.
+            alert('Push Notifications are not supported by your browser, sorry!');
             return;
         }
 
@@ -108,6 +107,8 @@ class User {
         // TODO(peter): Should we have a minimum time for the "please wait" animation?
         operation.catch(error => {
             console.error('Unable to create the push subscription: ', error);
+            alert('Unable to create the push subscription: ' + error);
+
             return false /* subscribed */;
 
         }).then(subscribed => {
