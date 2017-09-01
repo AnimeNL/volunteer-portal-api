@@ -17,19 +17,18 @@ we voor Anime 2018 verwachten.
 
 ### Vrijdag
   * 10:00 - 11:00 - _Steward briefing_
-  * 12:00 - 14:00 - Ingang begeleiding
-  * 16:00 - 18:00 - Opening ceremony
-  * 21:00 - 22:30 - Dealerroom
+  * 12:00 - 13:00 - Ingang begeleiding
+  * 15:00 - 17:00 - Dealer room corridor begeleiding
+  * 22:00 - 00:00 - Concert rehearsal
 
 ### Zaterdag
-  * 10:00 - 12:00 - Ingang begeleiding
-  * 14:00 - 15:00 - _Backup_
-  * 18:00 - 19:00 - Patrouille
+  * 09:00 - 11:00 - Dealer room
+  * 12:00 - 13:00 - Live house: Desi
   * 20:00 - 23:00 - Concert
 
 ### Zondag
-  * 08:00 - 10:00 - Ingang begeleiding
-  * 12:00 - 14:00 - Dealerroom
+  * 10:00 - 12:00 - Game room
+  * 13:00 - 14:30 - Solo cosplay competitie
   * 17:00 - 18:00 - _Backup_
   * 18:00 - 18:30 - _Groepsfoto_
 
