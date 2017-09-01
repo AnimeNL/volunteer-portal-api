@@ -19,7 +19,7 @@ $fields = [
 
     'bhv'               => 'In bezit van BHV',
     'ehbo'              => 'In bezit van EBHO',
-    'stewardtraining'   => 'Stewardtraining in 2016 gedaan',
+    'stewardtraining'   => 'Stewardtraining in 2017 gedaan',
     'ervaring'          => 'Overige ervaring',
 
     'uren'              => 'Voorkeur inzet',

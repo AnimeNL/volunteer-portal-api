@@ -49,7 +49,7 @@ ervaringen betreft veiligheid, stewarden en vrijwilligerswerk.
       <input type="checkbox" name="ehbo" id="ehbo" />
     </li>
     <li>
-      <label for="stewardtraining">Stewardtraining in 2016 gevolgd? <sup>1</sup></label>
+      <label for="stewardtraining">Stewardtraining in 2017 gevolgd? <sup>1</sup></label>
       <input type="checkbox" name="stewardtraining" id="stewardtraining" />
     </li>
     <li>
@@ -59,7 +59,7 @@ ervaringen betreft veiligheid, stewarden en vrijwilligerswerk.
   </ol>
 
 <span style="color: #7B1FA2">▼</span> En ten slotte enkele korte vragen over je voorkeuren betreft
-inzet tijdens Anime 2017.
+inzet tijdens Anime 2018.
 
   <ol>
     <li>
@@ -87,11 +87,11 @@ inzet tijdens Anime 2017.
   <input type="submit" value="Verzenden" />
 </form>
 
-<sup>1 -</sup> Als je in 2016 een stewardtraining via Animecon óf Abunai hebt gevolgt, dan is de
-training in 2017 optioneel.</span>
+<sup>1 -</sup> Als je in 2017 een stewardtraining via Animecon hebt gevolgt, dan is de training in
+2018 optioneel.</span>
 
 <sup>2 -</sup> Van 10 uur 's ochtends op vrijdag tot 6 uur 's avonds op zondag.
 
-<sup>3 -</sup> We hebben privé WhatsApp en Facebook groepen voor het Anime 2017 stewardteam.
+<sup>3 -</sup> We hebben privé WhatsApp en Facebook groepen voor het Anime 2018 stewardteam.
 
 [« Vorige pagina](index.html)

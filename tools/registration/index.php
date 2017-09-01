@@ -12,7 +12,7 @@ $pages = [
   'index'        => 'introductie.md',
   'hotel'        => 'hotel.md',
   'rooster'      => 'rooster.md',
-  'registratie'  => 'registratie-gesloten.md',
+  'registratie'  => 'registratie.md',
   'registratie2' => 'registratie-gedaan.md',
 ];
 
@@ -28,7 +28,7 @@ $content = file_get_contents(__DIR__ . '/' . $pages[$page]);
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=no" />
-    <title>Anime 2017: Steward registratieformulier</title>
+    <title>Anime 2018: Steward registratieformulier</title>
     <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto" />
     <link rel="stylesheet" href="/tools/common/layout.css" />
     <link rel="stylesheet" href="/tools/common/desktop.css" media="screen and (min-device-width: 768px)" />
@@ -37,7 +37,7 @@ $content = file_get_contents(__DIR__ . '/' . $pages[$page]);
   </head>
   <body>
     <header>
-      <img src="/tools/common/logo.png" alt="Anime 2017 - Marieke's Magical Miracle!" />
+      <img src="/tools/common/logo.png" alt="Anime 2018 - Queens of the Round Table!" />
     </header>
     <section>
 <?php echo Parsedown::instance()->text($content); ?> 
