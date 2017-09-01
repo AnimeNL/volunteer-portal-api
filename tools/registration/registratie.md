@@ -82,6 +82,10 @@ inzet tijdens Anime 2018.
       <label for="social">Wil je in onze social media groepen? <sup>3</sup></label>
       <input type="checkbox" name="social" id="social" />
     </li>
+    <li>
+      <label for="night">Wil je in de nachtcrew? <sup>4</sup></label>
+      <input type="checkbox" name="night" id="night" />
+    </li>
   </ol>
 
   <input type="submit" value="Verzenden" />
@@ -93,5 +97,7 @@ inzet tijdens Anime 2018.
 <sup>2 -</sup> Van 10 uur 's ochtends op vrijdag tot 6 uur 's avonds op zondag.
 
 <sup>3 -</sup> We hebben privé WhatsApp en Facebook groepen voor het Anime 2018 stewardteam.
+
+<sup>4 -</sup> De nachtcrew werkt 's nachts tot een uur of zes door, maar kan wel lekker uitslapen!
 
 [« Vorige pagina](index.html)

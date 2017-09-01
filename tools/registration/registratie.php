@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] != 'POST' || !isset($_POST['naam']) || empty($_PO
     exit;
 }
 
-$boolean = ['bhv', 'ehbo', 'stewardtraining', 'aanwezig', 'hotel', 'social'];
+$boolean = ['bhv', 'ehbo', 'stewardtraining', 'aanwezig', 'hotel', 'social', 'night'];
 $fields = [
     'naam'              => 'Naam',
     'geboortedatum'     => 'Geboortedatum',
@@ -26,6 +26,7 @@ $fields = [
     'aanwezig'          => 'Volledig aanwezig',
     'hotel'             => 'Hotelkamer',
     'social'            => 'Social media',
+    'night'             => 'Nachtcrew',
 ];
 
 
