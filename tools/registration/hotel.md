@@ -18,7 +18,8 @@ ruimte te hebben voor stewards in zowel het
 Afgelopen jaar waren de prijzen voor de kamers, inclusief de verplichte stadsbelasting, als volgt.
 De precieze kosten zijn afhankelijk van het hotel waar je boeking terecht komt.
 
-<p class="waarschuwing">Deze prijzen zijn nog indicatief!</p>
+<p class="waarschuwing">Dit overzicht is enkel indicatief voor de prijzen die we dit jaar
+verwachten!</p>
 
 **2-persoons kamer**:
 - € 115,70 per nacht zonder ontbijt. _(€ 57,85 p.p.p.n.)_
