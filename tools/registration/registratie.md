@@ -1,6 +1,9 @@
 # Registratieformulier
 
-Te gek! Vul het volgende formulier in en we zullen snel contact met je opnemen!
+Deel via dit formulier je belangstelling om als steward mee te helpen tijdens Anime 2018.
+
+<p class="waarschuwing">We zullen je direct uitnodigen om kennis te maken met het team, maar we
+kunnen je begin volgend jaar pas uitsluitsel geven over je deelname.</p>
 
 <p style="display: none" id="error" class="error">Eén van de velden was niet goed ingevuld, sorry! Probeer het nog eens.</p>
 <script>
@@ -29,10 +32,6 @@ if (document.location.hash == '#error')
     <li>
       <label for="telefoonnummer">Telefoonnummer:</label>
       <input type="text" required name="telefoonnummer" id="telefoonnummer" />
-    </li>
-    <li>
-      <label for="forumnickname"><a href="https://forum.animecon.nl" target="_blank">Forum</a> nickname:</label>
-      <input type="text" name="forumnickname" id="forumnickname" />
     </li>
   </ol>
 
@@ -75,16 +74,16 @@ inzet tijdens Anime 2018.
       <input type="checkbox" name="aanwezig" id="aanwezig" />
     </li>
     <li>
+      <label for="night">Wil je bij de nachtcrew aansluiten? <sup>3</sup></label>
+      <input type="checkbox" name="night" id="night" />
+    </li>
+    <li>
       <label for="hotel">Heb je interesse in een hotelkamer?</label>
       <input type="checkbox" name="hotel" id="hotel" />
     </li>
     <li>
-      <label for="social">Wil je in onze social media groepen? <sup>3</sup></label>
+      <label for="social">Wil je in onze social media groepen? <sup>4</sup></label>
       <input type="checkbox" name="social" id="social" />
-    </li>
-    <li>
-      <label for="night">Wil je in de nachtcrew? <sup>4</sup></label>
-      <input type="checkbox" name="night" id="night" />
     </li>
   </ol>
 
@@ -92,12 +91,13 @@ inzet tijdens Anime 2018.
 </form>
 
 <sup>1 -</sup> Als je in 2017 een stewardtraining via Animecon hebt gevolgt, dan is de training in
-2018 optioneel.</span>
+2018 niet verplicht.</span>
 
-<sup>2 -</sup> Van 10 uur 's ochtends op vrijdag tot 6 uur 's avonds op zondag.
+<sup>2 -</sup> We verwachten dat je tussen 10 uur 's ochtends op vrijdag en 6 uur 's avonds op
+zondag aanwezig kunt zijn.
 
-<sup>3 -</sup> We hebben privé WhatsApp en Facebook groepen voor het Anime 2018 stewardteam.
+<sup>3 -</sup> De nachtcrew werkt 's nachts tot een uur of zes door, maar kan wel lekker uitslapen!
 
-<sup>4 -</sup> De nachtcrew werkt 's nachts tot een uur of zes door, maar kan wel lekker uitslapen!
+<sup>4 -</sup> We hebben privé WhatsApp en Facebook groepen voor het Anime 2018 stewardteam.
 
 [« Vorige pagina](index.html)

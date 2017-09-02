@@ -15,7 +15,6 @@ $fields = [
     'geboortedatum'     => 'Geboortedatum',
     'haarkleur'         => 'E-mail adres',
     'telefoonnummer'    => 'Telefoonnummer',
-    'forumnickname'     => 'Forum nickname',
 
     'bhv'               => 'In bezit van BHV',
     'ehbo'              => 'In bezit van EBHO',
