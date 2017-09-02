@@ -9,14 +9,6 @@ input[type="submit"] {
     color: #ffffff;
 }
 
-ol:first-of-type li:nth-child(3) { display: none; }
-
-ol:first-of-type li:nth-child(4) label { font-size: 0px; }
-ol:first-of-type li:nth-child(4) label::after {
-    content: 'E-mail adres:';
-    font-size: 16px;
-}
-
 .error {
     background-color: rgba(255, 0, 0, .1);
     border: 1px solid red;

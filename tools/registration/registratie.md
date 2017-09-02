@@ -23,11 +23,7 @@ if (document.location.hash == '#error')
     </li>
     <li>
       <label for="email">E-mail adres:</label>
-      <input type="email" name="email" id="email" />
-    </li>
-    <li>
-      <label for="haarkleur">Haarkleur:</label>
-      <input type="text" required name="haarkleur" id="haarkleur" />
+      <input type="text" required name="email" id="email" />
     </li>
     <li>
       <label for="telefoonnummer">Telefoonnummer:</label>

@@ -4,7 +4,7 @@
 // be found in the LICENSE file.
 
 if ($_SERVER['REQUEST_METHOD'] != 'POST' || !isset($_POST['naam']) || empty($_POST['naam']) ||
-    !empty($_POST['email']) || !isset($_POST['haarkleur']) || !filter_var($_POST['haarkleur'], FILTER_VALIDATE_EMAIL)) {
+    !isset($_POST['email']) || !filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
     Header('Location: registratie.html#error');
     exit;
 }
@@ -13,7 +13,7 @@ $boolean = ['bhv', 'ehbo', 'stewardtraining', 'aanwezig', 'hotel', 'social', 'ni
 $fields = [
     'naam'              => 'Naam',
     'geboortedatum'     => 'Geboortedatum',
-    'haarkleur'         => 'E-mail adres',
+    'email'             => 'E-mail adres',
     'telefoonnummer'    => 'Telefoonnummer',
 
     'bhv'               => 'In bezit van BHV',

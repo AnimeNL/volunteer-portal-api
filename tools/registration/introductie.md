@@ -32,7 +32,7 @@ contact met ons op.
   * De mogelijkheid om een slaapplaats in één van de festivalhotels te reserveren ([meer informatie
     en prijzen](hotel.html)).
 
-  * Muntjes om tijdens de lunch een lekkere versnapering te halen.
+  * Lunch, snacks en versnaperingen tijdens de dag.
 
   * Een gratis weekend-ticket voor het festival het jaar _nadat_ je vrijwilliger bent geweest.
     Vergeet niet zelf een kaartje te kopen als dit de eerste keer is dat je meehelpt!
