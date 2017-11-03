@@ -28,7 +28,7 @@ After having done this, you can access the running development webserver at http
 The backend is located in the [/anime/](/anime/) directory and has been written in PHP.
 
 A large portion of the backend code exists to import data from third-party sources in a rather
-pedantic way, given that this has caused issues in the past, for which a Service Manager has been
+pendantic way, given that this has caused issues in the past, for which a Service Manager has been
 created in the [/anime/Services/](/anime/Services/) directory.
 
 A number of external dependencies will be pulled in using [Composer](https://getcomposer.org). Be
