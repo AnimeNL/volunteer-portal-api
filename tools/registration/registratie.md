@@ -2,9 +2,6 @@
 
 Deel via dit formulier je belangstelling om als steward mee te helpen tijdens Anime 2018.
 
-<p class="waarschuwing">We zullen je direct uitnodigen om kennis te maken met het team, maar we
-kunnen je begin volgend jaar pas uitsluitsel geven over je deelname.</p>
-
 <p style="display: none" id="error" class="error">Eén van de velden was niet goed ingevuld, sorry! Probeer het nog eens.</p>
 <script>
 if (document.location.hash == '#error')
