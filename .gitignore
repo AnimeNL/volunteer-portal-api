@@ -12,3 +12,4 @@ npm-debug.log
 sftp-config.json
 *.psd
 anime/notifications.log
+package-lock.json

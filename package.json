@@ -4,7 +4,6 @@
     "description": "Volunteer Portal for the Anime 2017 convention.",
     "license": "MIT",
     "private": true,
-
     "dependencies": {
         "babelify": "^7.3.0",
         "babel-plugin-transform-async-to-generator": "*",
@@ -19,7 +18,6 @@
         "through2": "^2.0.3",
         "vinyl-source-stream": "^1.1.0"
     },
-
     "scripts": {
         "build": "gulp package"
     }
