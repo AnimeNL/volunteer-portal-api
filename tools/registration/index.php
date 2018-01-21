@@ -40,7 +40,7 @@ $content = file_get_contents(__DIR__ . '/' . $pages[$page]);
       <img src="/tools/common/logo.png" alt="Anime 2018 - Queens of the Round Table!" />
     </header>
     <section>
-<?php echo Parsedown::instance()->text($content); ?> 
+<?php echo Parsedown::instance()->text($content); ?>
     </section>
     <footer>
       <p>
