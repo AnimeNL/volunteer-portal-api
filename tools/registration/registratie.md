@@ -28,7 +28,7 @@ if (document.location.hash == '#error')
     </li>
   </ol>
 
-<span style="color: #7B1FA2">▼</span> Daarnaast hebben we ook nog wat vragen over je eerdere
+<span style="color: #883133">▼</span> Daarnaast hebben we ook nog wat vragen over je eerdere
 ervaringen betreft veiligheid, stewarden en vrijwilligerswerk.
 
   <ol>
@@ -50,7 +50,7 @@ ervaringen betreft veiligheid, stewarden en vrijwilligerswerk.
     </li>
   </ol>
 
-<span style="color: #7B1FA2">▼</span> En ten slotte enkele korte vragen over je voorkeuren betreft
+<span style="color: #883133">▼</span> En ten slotte enkele korte vragen over je voorkeuren betreft
 inzet tijdens Anime 2018.
 
   <ol>
