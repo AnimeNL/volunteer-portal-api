@@ -17,8 +17,8 @@ regelen, waar de prijzen iets hoger zijn.
 
 ## Prijzen
 
-Afgelopen jaar waren de prijzen voor de kamers, inclusief de verplichte stadsbelasting, als volgt.
-De precieze kosten zijn afhankelijk van het hotel waar je boeking terecht komt.
+Dit jaar zijn de prijzen voor de kamers, inclusief de verplichte stadsbelasting, als volgt. De
+precieze kosten zijn afhankelijk van het hotel waar je boeking terecht komt.
 
 **2-persoons kamer**:
 - € 116 – € 142 per nacht zonder ontbijt. _(€ 58 – € 71 p.p.p.n.)_
