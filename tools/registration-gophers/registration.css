@@ -1,0 +1,59 @@
+a[href="registratie.html"],
+input[type="submit"] {
+    display: inline-block;
+    padding: 8px 16px;
+
+    border: none;
+    background-color: #883133;
+    font-size: 16px;
+    color: #ffffff;
+}
+
+.error {
+    background-color: rgba(255, 0, 0, .1);
+    border: 1px solid red;
+    padding: 16px;
+}
+
+form {
+    padding: 0 16px;
+}
+
+form ol {
+    list-style-type: none;
+    padding: 0px;
+}
+
+form li {
+    margin-top: 4px;
+    margin-bottom: 2px;
+    min-height: 28px;
+    vertical-align: middle;
+}
+
+form label {
+    display: inline-block;
+    width: 285px;
+}
+
+form input[type="text"],
+form input[type="email"],
+form input[type="date"],
+form select {
+    border: 1px solid #E2E2E2;
+    border-bottom: 1px solid #BDBDBD;
+    font-size: 16px;
+    padding: 4px 8px;
+    width: 200px;
+}
+
+select { width: 218px; }
+
+.waarschuwing {
+    background-color: #FFEBEE;
+    padding: 4px;
+}
+
+sup {
+    color: red;
+}
