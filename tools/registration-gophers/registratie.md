@@ -54,16 +54,20 @@ inzet tijdens Anime 2018.
 
   <ol>
     <li>
-      <label for="uren">Hoeveel uur werk heeft je voorkeur?</label>
-      <select name="uren" id="uren">
-        <option>12 – 16 uur</option>
-        <option selected>16 – 20 uur</option>
-        <option>20+ uur</option>
-      </select>
-    </li>
-    <li>
       <label for="aanwezig">Ben je het hele weekend aanwezig? <sup>1</sup></label>
       <input type="checkbox" name="aanwezig" id="aanwezig" />
+    </li>
+    <li>
+      <label for="location">Waar verblijf je tijdens de con?</label>
+      <input type="text" required name="location" id="location" />
+    </li>
+    <li>
+      <label for="night">Kan je ook een nachtshift oppakken? <sup>2</sup></label>
+      <input type="checkbox" name="night" id="night" checked />
+    </li>
+    <li>
+      <label for="ticket">Heb je al een kaartje? <sup>3</sup></label>
+      <input type="checkbox" name="ticket" id="ticket" />
     </li>
   </ol>
 
@@ -72,5 +76,12 @@ inzet tijdens Anime 2018.
 
 <sup>1 -</sup> We verwachten dat je tussen 10 uur 's ochtends op vrijdag en 6 uur 's avonds op
 zondag aanwezig kunt zijn.
+
+<sup>2 -</sup> Gezien het festival ook 's nachts doorloopt zullen we een aantal vrijwilligers
+vragen om ook een nachtshift te draaien.
+
+<sup>3 -</sup> We vragen je om <a href="https://tickets.animecon.nl" target="_blank">zelf een
+kaartje te kopen</a> als dit de eerste keer is dat je meehelpt. Je krijgt een gratis kaartje voor
+het jaar nádat je meegeholpen hebt.
 
 [« Vorige pagina](index.html)
