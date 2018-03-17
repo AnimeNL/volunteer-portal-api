@@ -66,6 +66,16 @@ inzet tijdens Anime 2018.
       <input type="checkbox" name="night" id="night" checked />
     </li>
     <li>
+      <label for="tshirt">Welke t-shirtmaat heb je?</label>
+      <select name="tshirt" id="tshirt">
+        <option>S</option>
+        <option selected>M</option>
+        <option>L</option>
+        <option>XL</option>
+        <option>XXL</option>
+      </select>
+    </li>
+    <li>
       <label for="ticket">Heb je al een kaartje? <sup>3</sup></label>
       <input type="checkbox" name="ticket" id="ticket" />
     </li>

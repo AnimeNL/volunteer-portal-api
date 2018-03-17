@@ -24,6 +24,7 @@ $fields = [
     'aanwezig'          => 'Volledig aanwezig',
     'location'          => 'Verblijfsplaats',
     'night'             => 'Nachtshifts?',
+    'tshirt'            => 'T-shirtmaat',
     'ticket'            => 'Ticket',
 ];
 
