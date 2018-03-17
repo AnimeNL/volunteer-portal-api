@@ -79,6 +79,10 @@ inzet tijdens Anime 2018.
       <label for="ticket">Heb je al een kaartje? <sup>3</sup></label>
       <input type="checkbox" name="ticket" id="ticket" />
     </li>
+    <li>
+      <label for="social">Wil je in onze social media groepen? <sup>4</sup></label>
+      <input type="checkbox" name="social" id="social" />
+    </li>
   </ol>
 
   <input type="submit" value="Verzenden" />
@@ -93,5 +97,7 @@ vragen om ook een nachtshift te draaien.
 <sup>3 -</sup> We vragen je om <a href="https://tickets.animecon.nl" target="_blank">zelf een
 kaartje te kopen</a> als dit de eerste keer is dat je meehelpt. Je krijgt een gratis kaartje voor
 het jaar nádat je meegeholpen hebt.
+
+<sup>4 -</sup> We hebben privé WhatsApp en Facebook groepen voor het Anime 2018 gopherteam.
 
 [« Vorige pagina](index.html)

@@ -26,6 +26,7 @@ $fields = [
     'night'             => 'Nachtshifts?',
     'tshirt'            => 'T-shirtmaat',
     'ticket'            => 'Ticket',
+    'social'            => 'Social media',
 ];
 
 
