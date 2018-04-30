@@ -7,20 +7,26 @@ ontzichtbare, maar net zo belangrijke werk.
 
 Lees op deze pagina meer over de functies en meld je direct aan als je mee wilt helpen!
 
-## Tof! Hoe kan ik jullie helpen?
+## Tof! Met wat voor shifts kan ik jullie helpen?
 
-  * De **technische crew** helpt mee met het neerzetten van het videoprogramma. Je hebt basiskennis
-    van audiovisuele apparatuur nodig, en we zullen je vragen om één shift tijdens de nacht op je
-    te nemen.
+  * Bij de **video shift** help je mee met het neerzetten van het videoprogramma. Je hebt
+    basiskennis van audiovisuele apparatuur nodig.
 
-  * De **desk crew** heet bezoekers welkom en zorgt dat iedereen z'n weg kan vinden. Dit is perfect
-    als je altijd een glimlach op je gezicht hebt! :D
+  * Bij de **registratie desk** heet je bezoekers welkom en zorg je dat iedereen z'n weg kan vinden.
+    Dit is perfect als je altijd een glimlach op je gezicht hebt! :D
 
-  * De **event crew** helpt mee met het opzetten en uitvoeren van de events op het festival—van
-    de workshops tot de lectures en de Bring & Buy, je hoeft je nooit te vervelen.
+  * Bij **events** help je mee met het opzetten en uitvoeren van verschillende events op het
+    festival—van de workshops tot de lectures je hoeft je nooit te vervelen.
 
-  * De **cloakroom crew** zorgt dat mensen hun spullen snel en veilig bij ons achter kunnen laten.
-    Soms is het rustig, soms is het druk, maar het is altijd gezellig.
+  * Bij de **garderobe** shiftzorg je dat mensen hun spullen snel en veilig bij ons achter kunnen
+    laten. Soms is het rustig, soms is het druk, maar het is altijd gezellig.
+
+  * Bij de **infodesk** sta je de bezoekers te woord en beantwoord je hun vragen zo goed als
+    mogelijk. Ook ben je verantwoordelijk voor de verkoop van een aantal tickets voor bepaalde
+    events.
+
+  * Bij de **Bring en Buy** ben je verantwoordelijk voor de verkoop van spullen aangeboden door de
+    bezoekers.
 
 Als je hier enthusiast van wordt en je ons tijdens Anime 2018 (**15–17 juni 2018**) met een paar
 shifts van vier uur wilt komen helpen, lees dan vooral verder!
@@ -30,7 +36,7 @@ shifts van vier uur wilt komen helpen, lees dan vooral verder!
   * Je krijgt tijdens het festival toegang tot de **gopher lounge** waar je rustig kunt zitten en
     kunt genieten van het drinken, broodjes en andere versnaperingen die we voor je gaan verzorgen.
 
-  * Toegang tot het **gopher forums** op onze [forums](https://forum.animecon.nl). Hier kun je met
+  * Toegang tot het **gopher forum** op onze [forums](https://forum.animecon.nl). Hier kun je met
     andere vrijwilligers en de Staff over alles en nog wat praten.
 
   * Een **gratis t-shirt** waarmee je herkenbaar zult zijn als een vrijwlliger, en natuurlijk een

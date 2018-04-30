@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] != 'POST' || !isset($_POST['naam']) || empty($_PO
     exit;
 }
 
-$boolean = ['tech', 'desk', 'events', 'cloakroom', 'aanwezig', 'night', 'ticket'];
+$boolean = ['tech', 'desk', 'events', 'cloakroom', 'aanwezig', 'night', 'ticket', 'girly'];
 $fields = [
     'naam'              => 'Naam',
     'geboortedatum'     => 'Geboortedatum',
@@ -25,6 +25,7 @@ $fields = [
     'location'          => 'Verblijfsplaats',
     'night'             => 'Nachtshifts?',
     'tshirt'            => 'T-shirtmaat',
+    'girly'             => 'T-shirtmaat (girly?)',
     'ticket'            => 'Ticket',
     'social'            => 'Social media',
 ];
@@ -50,10 +51,6 @@ foreach ($fields as $name => $label) {
 }
 
 $message .= '</table>';
-
-mail('peter@lvp-media.com', 'Gopheraanmelding: ' . htmlspecialchars($_POST['naam']), $message,
-         'From: aanmelding@gophers.team' . PHP_EOL .
-         'Content-Type: text/html; charset=UTF-8');
 
 mail('gopherplanning@animecon.nl', 'Gopheraanmelding: ' . htmlspecialchars($_POST['naam']), $message,
          'From: aanmelding@gophers.team' . PHP_EOL .

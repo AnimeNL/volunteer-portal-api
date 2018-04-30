@@ -28,7 +28,7 @@ if (document.location.hash == '#error')
     </li>
   </ol>
 
-<span style="color: #883133">▼</span> Met wat voor shifts wil je ons komen helpen?
+<span style="color: #883133">▼</span> Welke taak heeft je voorkeur?
 
   <ol>
     <li>
@@ -74,6 +74,10 @@ inzet tijdens Anime 2018.
         <option>XL</option>
         <option>XXL</option>
       </select>
+    </li>
+    <li>
+      <label for="girly">... in een girly fit?</label>
+      <input type="checkbox" name="girly" id="girly" />
     </li>
     <li>
       <label for="ticket">Heb je al een kaartje? <sup>3</sup></label>
