@@ -36,7 +36,7 @@ echo '// config.json' . PHP_EOL;
 echo '// =============================================================================' . PHP_EOL;
 echo PHP_EOL;
 
-echo 'var config = { "event-data": "", "theme-color": "", "title": "Anime 2017", "year": "2017" };';
+echo 'var config = { "event-data": "", "theme-color": "", "title": "Anime 2018", "year": "2018" };';
 echo PHP_EOL . PHP_EOL;
 
 foreach ($scripts as $file) {

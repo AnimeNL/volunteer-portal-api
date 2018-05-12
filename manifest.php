@@ -15,7 +15,7 @@ if (!$environment->isValid()) {
 Header('Content-Type: application/manifest+json');
 ?>
 {
-    "name": "Anime 2017 <?php echo $environment->getName(); ?>",
+    "name": "Anime 2018 <?php echo $environment->getName(); ?>",
     "short_name": "<?php echo $environment->getShortName(); ?>",
 
     "start_url": "/",
