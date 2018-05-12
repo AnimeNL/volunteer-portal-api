@@ -59,13 +59,9 @@ class ConventionData {
         $volunteers = [];
 
         foreach ($this->environment->loadVolunteers() as $volunteer) {
-            if ($volunteer->getVisible() === false)
-                continue;
-
             $volunteerData = [
                 'name'      => $volunteer->getName(),
                 'type'      => $volunteer->getType(),
-                'title'     => $volunteer->getTitle(),
                 'photo'     => $volunteer->getPhoto()
             ];
 

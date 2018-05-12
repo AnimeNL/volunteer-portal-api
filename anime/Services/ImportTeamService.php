@@ -32,10 +32,8 @@ namespace Anime\Services;
 //     (2) The rest of the rows expect these exact columns, in order:
 //         (a) Full name
 //         (b) Type ({ Staff, Senior, Volunteer })
-//         (c) Custom title
-//         (d) E-mail address
-//         (e) Telephone number
-//         (f) Visibility ({ Visible, Hidden })
+//         (c) E-mail address
+//         (d) Telephone number
 //
 // The parser is strict in regards to these rules, but linient for the actual data values. The
 // conditions, as well known mistakes, are tested in the ImportTeamServiceTest.
@@ -101,7 +99,7 @@ class ImportTeamService implements Service {
                 continue;  // ignore empty lines
 
             // Only make sure that it's not less than required in order to be forward compatible.
-            if (count($line) < 6)
+            if (count($line) < 4)
                 throw new \Exception('Invalid data line found in: ' . $sourceFile . ':' . $linenum);
 
             // Full name
@@ -116,20 +114,6 @@ class ImportTeamService implements Service {
             if (!in_array($type, ['Staff', 'Senior', 'Volunteer']))
                 throw new \Exception('Invalid type in "' . $sourceFile . '" for ' . $name);
 
-            // Custom title
-            $title = trim($line[2]);
-
-            if (!strlen($title))
-                $title = null;
-
-            // Visibility ({ Visible, Hidden })
-            $visibility = trim($line[5]);
-
-            if (!in_array($visibility, ['Visible', 'Hidden']))
-                throw new \Exception('Invalid visibility in "' . $sourceFile . '" for ' . $name);
-
-            $visibility = $visibility === 'Visible';
-
             // Generate a password for the user.
             $password = $this->generatePassword($name);
 
@@ -137,10 +121,8 @@ class ImportTeamService implements Service {
                 'name'      => $name,
                 'password'  => $password,
                 'type'      => $type,
-                'title'     => $title,
-                'email'     => trim($line[3]),
-                'telephone' => trim($line[4]),
-                'visible'   => $visibility,
+                'email'     => trim($line[2]),
+                'telephone' => trim($line[3])
             ];
         }
 

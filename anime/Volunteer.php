@@ -30,17 +30,11 @@ class Volunteer {
     // Type of volunteer, must be one of the constants defined earlier in this class.
     private $type;
 
-    // Custom title to be assigned to the volunteer, when useful for clarity.
-    private $title;
-
     // E-mail address of the volunteer. Must validate.
     private $email;
 
     // Telephone number of the volunteer.
     private $telephone;
-
-    // Whether the volunteer should be visible.
-    private $visible;
 
     // Constructs a new Volunteer object based on |$volunteerData|. The input data will be checked
     // for correctness to ensure the instance is valid.
@@ -65,11 +59,6 @@ class Volunteer {
 
         $this->type = $volunteerData['type'];
 
-        if (!array_key_exists('title', $volunteerData))
-            throw new \TypeError('The volunteer\'s `title` is expected to be present.');
-
-        $this->title = $volunteerData['title'];
-
         if (!array_key_exists('email', $volunteerData) || !is_string($volunteerData['email']))
             throw new \TypeError('The volunteer\'s `email` is expected to be a string.');
 
@@ -88,11 +77,6 @@ class Volunteer {
         }
 
         $this->telephone = preg_replace('/\s|\(\d\)/s', '', $volunteerData['telephone']);
-
-        if (!array_key_exists('visible', $volunteerData) || !is_bool($volunteerData['visible']))
-            throw new \TypeError('The volunteer\'s `visible` is expected to be a boolean.');
-
-        $this->visible = $volunteerData['visible'];
     }
 
     // Returns the volunteer's full name as a string.
@@ -121,11 +105,6 @@ class Volunteer {
         return $this->type;
     }
 
-    // Returns the custom title assigned to this volunteer, if any.
-    public function getTitle() : ?string {
-        return $this->title;
-    }
-
     // Returns a relative URL to a photo representing this volunteer. If a PNG file named by the
     // crc32 hash of their name exists in the /images/photos/ directory it will be used, otherwise
     // the /images/no-photo.png file will be returned.
@@ -147,10 +126,5 @@ class Volunteer {
     // Returns the telephone number of this volunteer.
     public function getTelephone() : string {
         return $this->telephone;
-    }
-
-    // Returns whether this volunteer should be visible on the website.
-    public function getVisible() : bool {
-        return $this->visible;
     }
 }

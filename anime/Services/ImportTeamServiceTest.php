@@ -27,8 +27,8 @@ class ImportTeamServiceTest extends \PHPUnit\Framework\TestCase {
     // well as the guaranteed alphabetical ordering by full name in the generated file.
     public function testBasicImportTest() {
         $result = $this->importFromData([
-            ['John Doe', 'Volunteer', '', 'john@doe.co.uk', '+447000000000', 'Visible'],
-            ['Jane Doe', 'Staff', 'My Custom Title', 'jane@doe.co.uk', '+448000000000', 'Hidden']
+            ['John Doe', 'Volunteer', 'john@doe.co.uk', '+447000000000'],
+            ['Jane Doe', 'Staff', 'jane@doe.co.uk', '+448000000000']
         ]);
 
         $this->assertEquals([
@@ -36,19 +36,15 @@ class ImportTeamServiceTest extends \PHPUnit\Framework\TestCase {
                 'name'      => 'Jane Doe',
                 'password'  => 'LCFP',
                 'type'      => 'Staff',
-                'title'     => 'My Custom Title',
                 'email'     => 'jane@doe.co.uk',
-                'telephone' => '+448000000000',
-                'visible'   => false
+                'telephone' => '+448000000000'
             ],
             [
                 'name'      => 'John Doe',
                 'password'  => '2YB1',
                 'type'      => 'Volunteer',
-                'title'     => null,
                 'email'     => 'john@doe.co.uk',
-                'telephone' => '+447000000000',
-                'visible'   => true
+                'telephone' => '+447000000000'
             ]
         ], $result);
     }
@@ -57,18 +53,7 @@ class ImportTeamServiceTest extends \PHPUnit\Framework\TestCase {
     public function testTypeValidation() {
         $test = function () {
             $this->importFromData([
-                ['John Doe', 'FooType', '', 'john@doe.co.uk', '+447000000000', 'Visible'],
-            ]);
-        };
-
-        $this->assertException($test->bindTo($this));
-    }
-
-    // Verifies that an invalid value for 'visible' will throw an exception.
-    public function testVisibilityValidation() {
-        $test = function () {
-            $this->importFromData([
-                ['John Doe', 'Staff', '', 'john@doe.co.uk', '+447000000000', 'FooVisibility'],
+                ['John Doe', 'FooType', 'john@doe.co.uk', '+447000000000'],
             ]);
         };
 

@@ -86,8 +86,8 @@ StewardsPage.prototype.PrepareRender = function() {
 };
 
 // Builds the Steward Overview page, listing all the stewards of this event
-// with a photo (when available), their name, title and whether they're on
-// a shift at this very moment.
+// with a photo (when available), their name and whether they're on a shift
+// at this very moment.
 StewardsPage.prototype.OnRender = function(application, container, content) {
   var listContainer = content.querySelector('#steward-list');
   if (!listContainer)

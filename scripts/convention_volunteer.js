@@ -17,8 +17,6 @@ class ConventionVolunteer {
         if (!volunteerData.hasOwnProperty('type') || typeof volunteerData.type !== 'string')
             throw new Error('A volunteer must be assigned a type.');
 
-        this.title_ = volunteerData.title || null;  // the server can provide custom titles
-
         this.staff_ = false;
         this.senior_ = false;
 
@@ -77,9 +75,7 @@ class ConventionVolunteer {
     // Returns the current status line of this vlunteer. This could be their level, current schedule
     // or current availability. Optionally, the |short| flag can be set in case length matters.
     getStatusLine(short) {
-        if (this.title_)
-            return this.title_;
-        else if (this.staff_)
+        if (this.staff_)
             return 'Staff';
         else if (this.senior_)
             return short ? 'Senior'
