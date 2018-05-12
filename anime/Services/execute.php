@@ -9,6 +9,9 @@ use Anime\Configuration;
 
 require __DIR__ . '/../../vendor/autoload.php';
 
+// Pass -f or --force to force immediate execution of all services.
+$force = count(getopt('f', [ 'force' ])) > 0;
+
 // This file is the entry-point for executing the periodic services. It is adviced to create a cron
 // job that runs every minute (for best frequency accuracy) executing this file.
 
@@ -20,5 +23,5 @@ $serviceManager->loadState();
 foreach (Configuration::getInstance()->get('services') as $service)
     $serviceManager->registerService(new $service['class']($service['options']));
 
-$serviceManager->execute();
+$serviceManager->execute($force);
 $serviceManager->saveState();

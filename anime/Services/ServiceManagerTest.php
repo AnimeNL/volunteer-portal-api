@@ -97,7 +97,7 @@ class ServiceManagerTest extends \PHPUnit\Framework\TestCase {
 
         // Immitate the time passing for three hours by adding to |$currentTimestamp|.
         for ($minute = 0; $minute < 3 * 60; ++$minute)
-            $serviceManager->execute($currentTimestamp + $minute * 60);
+            $serviceManager->execute(false /* force */, $currentTimestamp + $minute * 60);
 
         // Verify that the services' respective counters are set to the expected values.
         $this->assertEquals(180, $minuteService->counter);
@@ -106,6 +106,18 @@ class ServiceManagerTest extends \PHPUnit\Framework\TestCase {
 
         // Verify that an equal number of log entries have been written to the log.
         $this->assertEquals(195, count($serviceLog->log));
+
+        // Execute all services by setting the |$force| flag. This should cause execution times to
+        // be ignored altogether, causing immediate execution of all services.
+        $serviceManager->execute(true /* force */);
+
+        // Verify that the services' respective counters are set to the expected values.
+        $this->assertEquals(181, $minuteService->counter);
+        $this->assertEquals(13, $quarterlyService->counter);
+        $this->assertEquals(4, $hourlyService->counter);
+
+        // Verify that an equal number of log entries have been written to the log.
+        $this->assertEquals(198, count($serviceLog->log));
     }
 
     // Verifies that entries will be written to the service log as expected, and generate either
@@ -149,7 +161,7 @@ class ServiceManagerTest extends \PHPUnit\Framework\TestCase {
         }));
 
         // Execute the service manager. All services will be executed immediately.
-        $serviceManager->execute();
+        $serviceManager->execute(false /* force */);
 
         // Verify that the data in the service log is what we expect it to be.
         $this->assertEquals(2, count($serviceLog->log));

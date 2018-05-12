@@ -63,8 +63,9 @@ class ServiceManager {
 
     // Executes the services that are up for execution according to their stored state and indicated
     // frequency. Services with no known state will be executed regardless. The |$timeForTesting|
-    // parameter may be set to a Unix timestamp only for the purposes of running unit tests.
-    public function execute($timeForTesting = 0) : void {
+    // parameter may be set to a Unix timestamp only for the purposes of running unit tests, which
+    // can be ignored entirely by setting |$force| to TRUE.
+    public function execute($force, $timeForTesting = 0) : void {
         $time = $timeForTesting ?: time();
 
         $executionQueue = [];
@@ -74,7 +75,7 @@ class ServiceManager {
                 $frequencyMinutes = $service->getFrequencyMinutes();
                 $stalenessTime = $time - $frequencyMinutes * 60;
 
-                if ($this->state[$identifier] > $stalenessTime)
+                if (!$force && $this->state[$identifier] > $stalenessTime)
                     continue;
             }
 
