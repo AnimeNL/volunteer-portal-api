@@ -51,9 +51,6 @@ class User {
     identify(name) {
         const endpoint = '/anime/identify.php';
 
-        if (name != 'Peter Beverloo')
-            return Promise.reject(new Error('The portal has been disabled.'));
-
         return new Promise((resolve, reject) => {
             const request = new XMLHttpRequest();
             request.addEventListener('load', () => {
@@ -158,7 +155,7 @@ class User {
 
             } catch (e) {}
 
-            // The user's information could not be parsed or was invalid. 
+            // The user's information could not be parsed or was invalid.
             resolve(null);
 
         }).then(user => {

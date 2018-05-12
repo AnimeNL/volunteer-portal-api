@@ -211,7 +211,7 @@ class ImportScheduleService implements Service {
             if (empty($scheduleLine[$NAME_COLUMN]))
                 continue;  // the non-empty validation check failed
 
-            $name = $scheduleLine[$NAME_COLUMN];
+            $name = trim($scheduleLine[$NAME_COLUMN]);
             $shifts = [];
 
             for ($j = $SCHEDULE_BEGIN; $j <= $SCHEDULE_END; ++$j) {
