@@ -26,6 +26,8 @@ class Configuration {
                 throw new \Exception('Unable to open the configuration file: it is not readable.');
 
             $configurationData = file_get_contents(Configuration::CONFIGURATION_FILE);
+            $configurationData = preg_replace('/\/\*.*?\*\//s', '', $configurationData);
+
             $configuration = json_decode($configurationData, true);
 
             if (!is_array($configuration))
