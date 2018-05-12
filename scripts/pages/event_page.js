@@ -8,7 +8,7 @@ var EventPage = function(application, parameters) {
   Page.call(this, application);
 
   this.parameters_ = parameters;
-  
+
   this.event_ = null;
   this.session_ = null;
   this.schedule_ = null;
@@ -71,7 +71,7 @@ EventPage.prototype.BuildSessionRow = function(session) {
   // event has finished, otherwise it won't be displayed anywhere anymore.
   listContainer.setAttribute('event-class-past', 'past-no-collapse');
 
-  when.textContent = DateUtils.format(session.beginTime, DateUtils.FORMAT_SHORT_DAY) + ', ' + 
+  when.textContent = DateUtils.format(session.beginTime, DateUtils.FORMAT_SHORT_DAY) + ', ' +
                      DateUtils.format(session.beginTime, DateUtils.FORMAT_SHORT_TIME) + ' until ' +
                      DateUtils.format(session.endTime, DateUtils.FORMAT_SHORT_TIME);
 
@@ -121,7 +121,7 @@ EventPage.prototype.BuildStewardRow = function(steward, beginTime, endTime, high
 
   name.textContent = steward.name;
   when.textContent = whenPrefix +
-                     DateUtils.format(beginTime, DateUtils.FORMAT_SHORT_DAY) + ', ' + 
+                     DateUtils.format(beginTime, DateUtils.FORMAT_SHORT_DAY) + ', ' +
                      DateUtils.format(beginTime, DateUtils.FORMAT_SHORT_TIME) + ' until ' +
                      DateUtils.format(endTime, DateUtils.FORMAT_SHORT_TIME);
 
@@ -220,6 +220,12 @@ EventPage.prototype.OnRender = function(legacyApplication, container, content) {
 
     if (lhs.beginTime != rhs.beginTime)
       return lhs.beginTime > rhs.beginTime ? 1 : -1;
+
+    if (lhs.volunteer.isStaff() && !rhs.volunteer.isStaff())
+      return -1;
+
+    if (!lhs.volunteer.isStaff() && rhs.volunteer.isStaff())
+      return 1;
 
     if (lhs.volunteer.isSenior() && !rhs.volunteer.isSenior())
       return -1;

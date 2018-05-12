@@ -731,7 +731,7 @@ nav#main-menu > img {
 }
 
 nav#main-menu > h1 {
-  background-color: #0D47A1;
+  background-color: #01579B;
 
   line-height: 48px;
   height: 48px;
@@ -794,9 +794,15 @@ nav#main-menu > ol > li.icon-overview::before {
   content: "\e892";
 }
 
+nav#main-menu > ol > li.icon-schedule,
+nav#main-menu > ol > li.icon-stewards {
+  text-indent: 0px;
+  padding-left: 72px;
+}
+
 nav#main-menu > ol > li.icon-schedule::before {
   position: absolute;
-  left: -56px;
+  left: 16px;
 
   font-family: 'material-icons';
   font-size: 22px;
@@ -806,7 +812,7 @@ nav#main-menu > ol > li.icon-schedule::before {
 
 nav#main-menu > ol > li.icon-stewards::before {
   position: absolute;
-  left: -56px;
+  left: 16px;
 
   font-family: 'material-icons';
   font-size: 20px;
@@ -956,7 +962,7 @@ nav#main-menu {
 
   position: absolute;
   z-index: 1337;
-  
+
   top: 0;
   right: 0;
   bottom: 0;

@@ -95,7 +95,7 @@ class ImportScheduleService implements Service {
                         $eventId = $this->resolveEventId($mapping[$type]['eventId'], $beginTime);
                         break;
                 }
-                
+
                 $shifts[] = [
                     'shiftType'     => $shiftType,
                     'eventId'       => $eventId,
@@ -200,7 +200,7 @@ class ImportScheduleService implements Service {
         $SKIP_HEADER_ROWS = 2;
         $NAME_COLUMN = 0 /* A */;
         $SCHEDULE_BEGIN = 1 /* B */;
-        $SCHEDULE_BEGIN_TIME = 1496995200 /* 10am, Friday June 9th, 2017 */;
+        $SCHEDULE_BEGIN_TIME = 1529056800 /* 10am, Friday June 15th, 2018 */;
         $SCHEDULE_END = 57 /* BF */;
 
         for ($i = $SKIP_HEADER_ROWS; $i < count($scheduleLines); ++$i) {

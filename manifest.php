@@ -22,6 +22,8 @@ Header('Content-Type: application/manifest+json');
     "display": "standalone",
     "orientation": "portrait",
 
+    "theme_color": "#01579B",
+
     "icons": [
         {
             "src": "images/logo-256.png",
