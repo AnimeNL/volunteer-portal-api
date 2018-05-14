@@ -14,7 +14,7 @@ class ImportScheduleService implements Service {
 
     // Initializes the service with |$options|, defined in the website's configuration file.
     public function __construct(array $options) {
-        $required = ['frequency', 'identifier', 'volunteers', 'mapping', 'schedule',
+        $required = ['frequency', 'identifier', 'volunteers', 'mapping', 'schedule', 'prefix',
                      'destination_shifts', 'destination_team_program'];
 
         foreach ($required as $option) {
@@ -39,7 +39,7 @@ class ImportScheduleService implements Service {
         $mapping = $this->loadMapping();
 
         $programAdditions = [];
-        $programAdditionId = 1000000;
+        $programAdditionId = $this->options['prefix'];
 
         // (1) Process new entries in the mapping and create new program events for them, to make
         // sure that they can show up using the regular front-end infrastructure.
