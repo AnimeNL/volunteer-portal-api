@@ -144,7 +144,7 @@ LegacyApplication.prototype.Navigate = function(path, ignoreNavigation) {
     case 'stewards':
     case 'volunteers':
       targetPage = StewardsPage;
-      if (parameters.length > 1)
+      if (parameters.length > 1 && parameters[1].substr(0, 2) != 'g:')
         targetPage = StewardOverviewPage;
       break;
   }

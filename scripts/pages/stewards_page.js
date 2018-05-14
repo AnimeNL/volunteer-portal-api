@@ -4,11 +4,12 @@
 
 "use strict";
 
-var StewardsPage = function(application) {
+var StewardsPage = function(application, parameters) {
   Page.call(this, application);
 
-  this.schedule_ = null;
+  this.parameters_ = parameters;
   this.volunteer_ = null;
+  this.schedule_ = null;
 
   this.ResetNextUpdate();
 };
@@ -112,14 +113,22 @@ StewardsPage.prototype.OnRender = function(application, container, content) {
 
   var displayGroup = null;
 
-  // Determine the volunteer group that should be displayed. For regular
-  // volunteers this will be their own group, for senior volunteers this defaults
-  // to their own group, but can be switched to other ones.
-  for (var volunteerGroup in volunteerGroups) {
-    if (volunteerGroup == this.volunteer_.group)
+  // First attempt to filter by request parameter if one has been made available.
+  if (this.parameters_.length > 1) {
+    var filterGroup = this.parameters_[1].substr(2);
+    for (var volunteerGroup in volunteerGroups) {
+      if (volunteerGroup.toLowerCase() != filterGroup)
+        continue;
+
       displayGroup = volunteerGroup;
+      break;
+    }
   }
 
+  // Otherwise fall back to the local volunteer's own group.
+  displayGroup = displayGroup || this.volunteer_.group;
+
+  // Sort the volunteers based on availability, then alphabetically by full name.
   volunteers.sort(function(lhs, rhs) {
     if (lhs.cachedIsAvailable && !rhs.cachedIsAvailable)
       return -1;
