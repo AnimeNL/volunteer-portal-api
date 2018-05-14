@@ -8,6 +8,8 @@ var StewardsPage = function(application) {
   Page.call(this, application);
 
   this.schedule_ = null;
+  this.volunteer_ = null;
+
   this.ResetNextUpdate();
 };
 
@@ -81,6 +83,7 @@ StewardsPage.prototype.BuildStewardRow = function(volunteer) {
 StewardsPage.prototype.PrepareRender = function() {
   return this.application_.GetSchedule().then(function(schedule) {
     this.schedule_ = schedule;
+    this.volunteer_ = schedule.findVolunteer(this.application_.GetUser().name);
 
   }.bind(this));
 };
@@ -94,16 +97,30 @@ StewardsPage.prototype.OnRender = function(application, container, content) {
     return;
 
   var currentTime = DateUtils.getTime();
-  var stewardList = document.createDocumentFragment(),
-      stewards = this.schedule_.volunteers.slice() /* make a copy */,
+
+  var volunteerList = document.createDocumentFragment(),
+      volunteerGroups = {},
+      volunteers = this.schedule_.volunteers.slice() /* make a copy */,
       self = this;
 
   // Calling isAvailable() within the sorting function would be too expensive.
-  stewards.forEach(function(steward) {
-    steward.cachedIsAvailable = steward.isAvailable(currentTime);
+  // Also gather a set of volunteer groups to enable a tabbed display.
+  volunteers.forEach(function(volunteer) {
+    volunteer.cachedIsAvailable = volunteer.isAvailable(currentTime);
+    volunteerGroups[volunteer.group] = true;
   });
 
-  stewards.sort(function(lhs, rhs) {
+  var displayGroup = null;
+
+  // Determine the volunteer group that should be displayed. For regular
+  // volunteers this will be their own group, for senior volunteers this defaults
+  // to their own group, but can be switched to other ones.
+  for (var volunteerGroup in volunteerGroups) {
+    if (volunteerGroup == this.volunteer_.group)
+      displayGroup = volunteerGroup;
+  }
+
+  volunteers.sort(function(lhs, rhs) {
     if (lhs.cachedIsAvailable && !rhs.cachedIsAvailable)
       return -1;
     if (!lhs.cachedIsAvailable && rhs.cachedIsAvailable)
@@ -112,14 +129,17 @@ StewardsPage.prototype.OnRender = function(application, container, content) {
     return lhs.name.localeCompare(rhs.name);
   });
 
-  stewards.forEach(function(steward) {
-    stewardList.appendChild(self.BuildStewardRow(steward));
+  volunteers.forEach(function(volunteer) {
+    if (displayGroup && volunteer.group != displayGroup)
+      return;
+
+    volunteerList.appendChild(self.BuildStewardRow(volunteer));
   });
 
   while (listContainer.firstChild)
     listContainer.removeChild(listContainer.firstChild);
 
-  listContainer.appendChild(stewardList);
+  listContainer.appendChild(volunteerList);
 };
 
 // The steward overview page should refresh itself when the shifts change.
@@ -135,6 +155,6 @@ Page.prototype.OnPeriodicUpdate = function() {
   this.application_.InstallHandlers(document.querySelector('#content'));
 };
 
-StewardsPage.prototype.GetTitle = function() { return 'Stewards'; };
+StewardsPage.prototype.GetTitle = function() { return 'Volunteers'; };
 
 StewardsPage.prototype.GetTemplate = function() { return 'stewards-page'; };
