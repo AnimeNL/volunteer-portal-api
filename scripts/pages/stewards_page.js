@@ -89,12 +89,58 @@ StewardsPage.prototype.PrepareRender = function() {
   }.bind(this));
 };
 
+// Renders the list of available groups into |list|.
+StewardsPage.prototype.RenderGroupSwitcher = function(list, groups, currentGroup) {
+  // Empty the |list| of any existing groups.
+  while (list.firstChild)
+    list.removeChild(list.firstChild);
+
+  // First build an array containing the groups we'd like to display, in order.
+  // The volunteer's own group comes first, then any other group in alphabetical
+  // order. (I guess this makes it most predictable.)
+
+  var volunteerGroup = this.volunteer_.group;
+  var volunteerGroups = [];
+
+  for (var group in groups) {
+    if (group == volunteerGroup)
+      continue;
+
+    volunteerGroups.push(group);
+  }
+
+  volunteerGroups.sort();
+  volunteerGroups.unshift(volunteerGroup);
+
+  // If there is just one entry in |volunteerGroups|, there is no point in
+  // displaying a tab switcher.
+  if (volunteerGroups.length <= 1) {
+    list.style.display = 'none';
+    return;
+  }
+
+  // Add rows for each of the |volunteerGroups| to the |list|.
+  volunteerGroups.forEach(function(group) {
+    var tab = document.createElement('li');
+    if (currentGroup == group)
+      tab.className = 'selected';
+
+    tab.setAttribute('handler', true);
+    tab.setAttribute('handler-navigate', '/volunteers/g:' + group.toLowerCase() + '/');
+    tab.textContent = group;
+
+    list.appendChild(tab);
+  });
+};
+
 // Builds the Steward Overview page, listing all the stewards of this event
 // with a photo (when available), their name and whether they're on a shift
 // at this very moment.
 StewardsPage.prototype.OnRender = function(application, container, content) {
-  var listContainer = content.querySelector('#steward-list');
-  if (!listContainer)
+  var groupSwitcher = content.querySelector('#volunteer-type-tabs'),
+      listContainer = content.querySelector('#steward-list');
+
+  if (!groupSwitcher || !listContainer)
     return;
 
   var currentTime = DateUtils.getTime();
@@ -144,6 +190,8 @@ StewardsPage.prototype.OnRender = function(application, container, content) {
 
     volunteerList.appendChild(self.BuildStewardRow(volunteer));
   });
+
+  this.RenderGroupSwitcher(groupSwitcher, volunteerGroups, displayGroup);
 
   while (listContainer.firstChild)
     listContainer.removeChild(listContainer.firstChild);
