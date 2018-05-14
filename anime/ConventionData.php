@@ -20,7 +20,7 @@ class ConventionData {
         return [
             'events'        => $compiler->compileEvents(),
             'volunteers'    => $compiler->compileVolunteers(),
-            'shifts'        => $environment->loadShifts()
+            'shifts'        => $compiler->compileShifts()
         ];
     }
 
@@ -94,6 +94,16 @@ class ConventionData {
         }
 
         return $volunteers;
+    }
+
+    // Compiles an array with all shifts spreading all environments.
+    private function compileShifts() : array {
+        $shifts = [];
+
+        foreach ($this->environments as $environment)
+            $shifts = array_merge($environment->loadShifts(), $shifts);
+
+        return $shifts;
     }
 
     // Returns whether the current volunteer is of either the Senior or Staff level.
