@@ -24,8 +24,8 @@ OverviewPage.prototype.FormatTime = function(time) {
     return Math.floor(minutes / 60) + ' hours';
   else if (minutes > 60)
     return Math.floor(minutes / 60) + ':' + ('0' + (minutes % 60)).substr(-2) + ' hours';
-  
-  return minutes + ' minutes'; 
+
+  return minutes + ' minutes';
 };
 
 // Formats a list of other stewards which will be joining the current user on a
@@ -54,10 +54,10 @@ OverviewPage.prototype.FormatOtherStewards = function(shift, plurals, suffix, se
   }
 
   var prefix = '';
-  if (volunteers.length >= 8) prefix = 'Plenty of other stewards ' + plurals[1];
-  else if (volunteers.length == 7) prefix = 'Seven other stewards ' + plurals[1];
-  else if (volunteers.length == 6) prefix = 'Six other stewards ' + plurals[1];
-  else if (volunteers.length == 5) prefix = 'Five other stewards ' + plurals[1];
+  if (volunteers.length >= 8) prefix = 'Plenty of other volunteers ' + plurals[1];
+  else if (volunteers.length == 7) prefix = 'Seven other volunteers ' + plurals[1];
+  else if (volunteers.length == 6) prefix = 'Six other volunteers ' + plurals[1];
+  else if (volunteers.length == 5) prefix = 'Five other volunteers ' + plurals[1];
   else if (volunteers.length == 1) prefix = GetFirstName(volunteers[0].name) + ' ' + plurals[0];
   else {
     volunteers.sort(function(lhs, rhs) {

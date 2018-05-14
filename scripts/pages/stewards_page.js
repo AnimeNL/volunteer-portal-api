@@ -72,7 +72,7 @@ StewardsPage.prototype.BuildStewardRow = function(volunteer) {
   row.appendChild(container);
 
   row.setAttribute('handler', true);
-  row.setAttribute('handler-navigate', '/stewards/' + volunteer.slug + '/');
+  row.setAttribute('handler-navigate', '/volunteers/' + volunteer.slug + '/');
 
   return row;
 };

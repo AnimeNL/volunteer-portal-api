@@ -92,7 +92,7 @@ EventPage.prototype.BuildEmptyStewardRow = function() {
   var listContainer = document.createElement('li');
 
   listContainer.className = 'list-item-no-content';
-  listContainer.innerHTML = '<i>No stewards have been scheduled for this event.</i>';
+  listContainer.innerHTML = '<i>No volunteers have been scheduled for this event.</i>';
   return listContainer;
 };
 
@@ -111,7 +111,7 @@ EventPage.prototype.BuildStewardRow = function(steward, beginTime, endTime, high
   listContainer.setAttribute('event-end', endTime);
 
   listContainer.setAttribute('handler', true);
-  listContainer.setAttribute('handler-navigate', '/stewards/' + steward.slug + '/');
+  listContainer.setAttribute('handler-navigate', '/volunteers/' + steward.slug + '/');
 
   image.setAttribute('src', steward.photo);
 

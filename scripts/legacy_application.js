@@ -114,7 +114,7 @@ LegacyApplication.prototype.Navigate = function(path, ignoreNavigation) {
     return this.NavigateToPage(LoginPage);
 
   // Special case for having a static URL to go to a steward's overview page.
-  if (path === '/stewards/me/')
+  if (path === '/volunteers/me/')
     return this.OnDisplayMySchedule();
 
   path = path || this.path_;
@@ -142,6 +142,7 @@ LegacyApplication.prototype.Navigate = function(path, ignoreNavigation) {
       break;
 
     case 'stewards':
+    case 'volunteers':
       targetPage = StewardsPage;
       if (parameters.length > 1)
         targetPage = StewardOverviewPage;
@@ -206,7 +207,7 @@ LegacyApplication.prototype.OnDisplayMySchedule = function(event) {
     if (!volunteer)
       return self.Navigate('/');
     else
-      return self.Navigate('/stewards/' + volunteer.slug + '/me/');
+      return self.Navigate('/volunteers/' + volunteer.slug + '/me/');
   });
 };
 

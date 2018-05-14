@@ -32,7 +32,7 @@ RewriteRule ^manifest.json$ /manifest.php [L]
 RewriteRule ^anime-legacy.js$ /scripts/aggregated.php [L]
 
 # URLs used by the client-side application.
-RewriteRule ^(events|floors|stewards)/ / [L]
+RewriteRule ^(events|floors|stewards|volunteers)/ / [L]
 
 # Disable caching for the content package.
 <FilesMatch "\.(css|js|json)">
