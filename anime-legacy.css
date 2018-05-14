@@ -291,6 +291,38 @@ ul.material-menu {
   line-height: 1.3em;
 }
 
+/** Tabs **/
+
+.material-tabs {
+  background-color: #01579B;
+  height: 56px;
+
+  margin: 0px;
+  padding: 0px;
+}
+
+.material-tabs > li {
+  border-bottom: 4px solid #00476B;
+  cursor: pointer;
+
+  list-style-type: none;
+  display: inline-block;
+
+  text-align: center;
+  text-transform: uppercase;
+  line-height: 52px;
+  color: white;
+}
+
+.material-tabs > li.selected {
+  border-bottom: 4px solid #64B5F6;
+}
+
+.material-tabs.tab-count-1 > li { width: 100%; }
+.material-tabs.tab-count-2 > li { width: 50%; }
+.material-tabs.tab-count-3 > li { width: 33%; }
+.material-tabs.tab-count-4 > li { width: 25%; }
+
 /** Lists **/
 
 .material-list {

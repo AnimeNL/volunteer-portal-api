@@ -119,11 +119,13 @@ StewardsPage.prototype.RenderGroupSwitcher = function(list, groups, currentGroup
     return;
   }
 
+  list.classList.add('tab-count-' + volunteerGroups.length);
+
   // Add rows for each of the |volunteerGroups| to the |list|.
   volunteerGroups.forEach(function(group) {
     var tab = document.createElement('li');
     if (currentGroup == group)
-      tab.className = 'selected';
+      tab.classList.add('selected');
 
     tab.setAttribute('handler', true);
     tab.setAttribute('handler-navigate', '/volunteers/g:' + group.toLowerCase() + '/');
