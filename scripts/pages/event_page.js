@@ -75,8 +75,7 @@ EventPage.prototype.BuildSessionRow = function(session) {
                      DateUtils.format(session.beginTime, DateUtils.FORMAT_SHORT_TIME) + ' until ' +
                      DateUtils.format(session.endTime, DateUtils.FORMAT_SHORT_TIME);
 
-  where.textContent = this.session_.location.name + ', ' +
-        EventPage.FLOORS[this.session_.location.floor];
+  where.textContent = session.location.name + ', ' + EventPage.FLOORS[session.location.floor];
 
   dataContainer.className = 'event';
 
