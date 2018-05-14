@@ -45,6 +45,25 @@ class Environment {
         return new Environment($valid, $settings);
     }
 
+    // Loads all the existing configurations, keyed by the hostname they can be loaded with.
+    public static function getAll() : array {
+        $filenames = glob(Environment::CONFIGURATION_DIRECTORY . '*.json');
+        $environments = [];
+
+        foreach ($filenames as $filename) {
+            $filename = str_replace(Environment::CONFIGURATION_DIRECTORY, '', $filename);
+            $hostname = str_replace('.json', '', $filename);
+
+            $environment = Environment::createForHostname($hostname);
+            if (!$environment->isValid())
+                continue;
+
+            $environments[$hostname] = $environment;
+        }
+
+        return $environments;
+    }
+
     private $valid;
 
     private $team;
@@ -71,6 +90,7 @@ class Environment {
 
         $this->name = $settings['name'];
         $this->shortName = $settings['short_name'];
+        $this->titles = $settings['titles'];
         $this->hostname = $settings['hostname'];
         $this->hiddenEventsPublic = $settings['hidden_events_public'];
         $this->teamDataFile = $settings['team_data'];
@@ -92,6 +112,14 @@ class Environment {
     // Returns the short name of the environment, that can be used for display purposes.
     public function getShortName() : string {
         return $this->shortName;
+    }
+
+    // Returns the Environment-specific title associated with a volunteer's type.
+    public function typeToTitle(string $type) : string {
+        if (!array_key_exists($type, $this->titles))
+            return $type;
+
+        return $this->titles[$type];
     }
 
     // Returns the canonical hostname (origin) associated with this environment.

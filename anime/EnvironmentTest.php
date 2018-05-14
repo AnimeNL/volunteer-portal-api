@@ -25,7 +25,7 @@ class EnvironmentTest extends \PHPUnit\Framework\TestCase {
             // TypeError exception will be thrown when the configuration contains an invalid value.
             $environment->getName();
             $environment->getHostname();
-            
+
             $hostnamesTested++;
         }
 
@@ -47,6 +47,11 @@ class EnvironmentTest extends \PHPUnit\Framework\TestCase {
         $settings = [
             'name'                  => 'Example environment',
             'short_name'            => 'Example',
+            'titles'                => [
+                'Volunteer'             => 'Random Volunteer',
+                'Senior'                => 'Senior Volunteer',
+                'Staff'                 => 'Staff Volunteer'
+            ],
             'hostname'              => 'example.com',
             'hidden_events_public'  => true,
             'team_data'             => 'team.json',
@@ -60,6 +65,12 @@ class EnvironmentTest extends \PHPUnit\Framework\TestCase {
 
         $this->assertEquals($settings['name'], $environment->getName());
         $this->assertEquals($settings['short_name'], $environment->getShortName());
+
+        $this->assertEquals('Random Volunteer', $environment->typeToTitle(Volunteer::TYPE_VOLUNTEER));
+        $this->assertEquals('Senior Volunteer', $environment->typeToTitle(Volunteer::TYPE_SENIOR));
+        $this->assertEquals('Staff Volunteer', $environment->typeToTitle(Volunteer::TYPE_STAFF));
+        $this->assertEquals('Penguin', $environment->typeToTitle('Penguin'));
+
         $this->assertEquals($settings['hostname'], $environment->getHostname());
         $this->assertEquals($settings['hidden_events_public'], $environment->areHiddenEventsPublic());
 

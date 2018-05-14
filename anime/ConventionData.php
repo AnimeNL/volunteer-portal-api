@@ -14,8 +14,9 @@ class ConventionData {
 
     // Compiles the convention data required by the front-end for the |$volunteer|. The used data
     // will depend on the active |$environment|. Returns an array that could be send to the user.
-    public static function compileForVolunteer(Environment $environment, Volunteer $volunteer) {
-        $compiler = new ConventionData($environment, $volunteer);
+    public static function compileForVolunteer(array $environments, Environment $environment,
+                                               Volunteer $volunteer) {
+        $compiler = new ConventionData($environments, $environment, $volunteer);
         return [
             'events'        => $compiler->compileEvents(),
             'volunteers'    => $compiler->compileVolunteers(),
@@ -23,13 +24,18 @@ class ConventionData {
         ];
     }
 
+    // The full list of environments the volunteer has access to.
+    private $environments;
+
     // The environment based on which data is being compiled.
     private $environment;
 
     // The volunteer for whom data is being compiled.
     private $volunteer;
 
-    private function __construct(Environment $environment, Volunteer $volunteer) {
+    private function __construct(array $environments, Environment $environment,
+                                 Volunteer $volunteer) {
+        $this->environments = $environments;
         $this->environment = $environment;
         $this->volunteer = $volunteer;
     }
@@ -45,11 +51,13 @@ class ConventionData {
             }));
         }
 
-        $additions = $this->environment->loadProgram();
-        if (!count($additions))
-            return $program;
+        foreach ($this->environments as $environment) {
+            $additions = $environment->loadProgram();
+            if (count($additions))
+                $program = array_merge($program, $additions);
+        }
 
-        return array_merge($program, $additions);
+        return $program;
     }
 
     // Compiles an array with all volunteers that should be sent to the user. Hidden volunteers will
@@ -58,22 +66,31 @@ class ConventionData {
     private function compileVolunteers() : array {
         $volunteers = [];
 
-        foreach ($this->environment->loadVolunteers() as $volunteer) {
-            $volunteerData = [
-                'name'      => $volunteer->getName(),
-                'type'      => $volunteer->getType(),
-                'photo'     => $volunteer->getPhoto()
-            ];
+        foreach ($this->environments as $environment) {
+            foreach ($environment->loadVolunteers() as $volunteer) {
+                $type = $volunteer->getType();
 
-            // Append the extra information if the volunteer should have access to it.
-            if ($this->isSeniorVolunteer() || $volunteer->isSeniorVolunteer())
-                $volunteerData['telephone'] = $volunteer->getTelephone();
+                $volunteerData = [
+                    'name'      => $volunteer->getName(),
+                    'photo'     => $volunteer->getPhoto(),
 
-            // Seniors and above are able to see each other's passwords, for convenience.
-            if ($this->isSeniorVolunteer() && $volunteer->isSeniorVolunteer())
-                $volunteerData['password'] = $volunteer->getPassword();
+                    'type'      => $type,
+                    'title'     => $environment->typeToTitle($type),
 
-            $volunteers[] = $volunteerData;
+                    'group'     => $environment->getShortName()
+
+                ];
+
+                // Append the extra information if the volunteer should have access to it.
+                if ($this->isSeniorVolunteer() || $volunteer->isSeniorVolunteer())
+                    $volunteerData['telephone'] = $volunteer->getTelephone();
+
+                // Seniors and above are able to see each other's passwords, for convenience.
+                if ($this->isSeniorVolunteer() && $volunteer->isSeniorVolunteer())
+                    $volunteerData['password'] = $volunteer->getPassword();
+
+                $volunteers[] = $volunteerData;
+            }
         }
 
         return $volunteers;

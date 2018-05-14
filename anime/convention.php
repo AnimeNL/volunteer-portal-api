@@ -23,5 +23,15 @@ $volunteer = $volunteers->findByToken($token);
 if (!($volunteer instanceof \Anime\Volunteer))
     dieWithError('Invalid token.');
 
+// By default volunteers only have access to their own environment. Senior and Staff members get
+// access to all volunteering environments.
+$environments = $volunteer->isSeniorVolunteer() ? \Anime\Environment::getAll()
+                                                : [];
+
+// Make sure that |$environment| is always used for the current context, since its list of
+// volunteers  has already been initialized.
+$environments[$_SERVER['SERVER_NAME']] = $environment;
+
 // The ConventionData class is in charge of making the actual data selections.
-die(json_encode(\Anime\ConventionData::compileForVolunteer($environment, $volunteer)));
+die(json_encode(\Anime\ConventionData::compileForVolunteer($environments, $environment,
+                                                           $volunteer)));

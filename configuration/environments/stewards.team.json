@@ -1,6 +1,11 @@
 {
     "name": "Steward Portal",
     "short_name": "Stewards",
+    "titles": {
+        "Volunteer": "Steward",
+        "Senior": "Senior Steward",
+        "Staff": "Staff"
+    },
     "hostname": "stewards.team",
     "hidden_events_public": true,
     "team_data": "stewards.json",
