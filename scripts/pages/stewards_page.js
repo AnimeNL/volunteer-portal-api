@@ -29,7 +29,7 @@ StewardsPage.prototype.BuildStewardRow = function(volunteer) {
   row.className = 'list-item-steward material-ripple light';
   image.src = volunteer.photo;
   name.textContent = volunteer.name;
-  titleHighlight.textContent = volunteer.getStatusLine();
+  titleHighlight.textContent = volunteer.title;
 
   title.appendChild(titleHighlight);
 

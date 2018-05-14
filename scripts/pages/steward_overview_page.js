@@ -103,5 +103,5 @@ StewardOverviewPage.prototype.GetDescription = function() {
   if (!this.steward_)
     return null;
 
-  return this.steward_.getStatusLine();
+  return this.steward_.title;
 };

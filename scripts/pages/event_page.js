@@ -117,7 +117,7 @@ EventPage.prototype.BuildStewardRow = function(steward, beginTime, endTime, high
 
   var whenPrefix = '';
   if (steward.isSenior())
-    whenPrefix = steward.getStatusLine(true /* short */) + ' - ';
+    whenPrefix = steward.type + ' - ';
 
   name.textContent = steward.name;
   when.textContent = whenPrefix +

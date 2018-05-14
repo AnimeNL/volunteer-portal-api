@@ -33,6 +33,9 @@ class ConventionVolunteer {
                 throw new Error('Invalid volunteer type: ' + volunteerData.type);
         }
 
+        this.type_ = volunteerData.type;
+        this.title_ = volunteerData.title || volunteerData.type;
+
         if (!volunteerData.hasOwnProperty('photo') || typeof volunteerData.photo !== 'string')
             throw new Error('A volunteer must be assigned a photo.');
 
@@ -54,6 +57,12 @@ class ConventionVolunteer {
     // Gets the full name of this volunteer.
     get name() { return this.name_; }
 
+    // Gets the type of volunteer, which is one of {Volunteer, Senior, Staff}.
+    get type() { return this.type_; }
+
+    // Gets the title of this volunteer, specific to their environment.
+    get title() { return this.title_; }
+
     // Gets the slug of this volunteer, using which they can be identified in a URL.
     get slug() { return this.slug_; }
 
@@ -71,18 +80,6 @@ class ConventionVolunteer {
 
     // Returns whether this volunteer is a staff member of the group.
     isStaff() { return this.staff_; }
-
-    // Returns the current status line of this vlunteer. This could be their level, current schedule
-    // or current availability. Optionally, the |short| flag can be set in case length matters.
-    getStatusLine(short) {
-        if (this.staff_)
-            return 'Staff';
-        else if (this.senior_)
-            return short ? 'Senior'
-                         : 'Senior Steward'
-        else
-            return 'Steward';  // TODO: Use their role instead.
-    }
 
     // Adds the time span between |beginTime| and |endTime| as time where this volunteer is not
     // available. They will appear greyed out in the interface of the application.
