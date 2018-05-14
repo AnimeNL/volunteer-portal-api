@@ -14,6 +14,11 @@ class ConventionVolunteer {
         this.name_ = volunteerData.name;
         this.slug_ = Utils.createSlug(this.name_);
 
+        if (!volunteerData.hasOwnProperty('group') || typeof volunteerData.group !== 'string')
+            throw new Error('A volunteer must be assigned a group.');
+
+        this.group_ = volunteerData.group;
+
         if (!volunteerData.hasOwnProperty('type') || typeof volunteerData.type !== 'string')
             throw new Error('A volunteer must be assigned a type.');
 
@@ -59,6 +64,9 @@ class ConventionVolunteer {
 
     // Gets the type of volunteer, which is one of {Volunteer, Senior, Staff}.
     get type() { return this.type_; }
+
+    // Gets the group this volunteer is part of.
+    get group() { return this.group_; }
 
     // Gets the title of this volunteer, specific to their environment.
     get title() { return this.title_; }

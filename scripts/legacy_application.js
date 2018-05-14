@@ -51,7 +51,8 @@ var LegacyApplication = function(config, container, callback) {
   // required in order to know who goes where and when.
   this.schedule_ = window.application.ready.then(function(application) {
     this.user_ = application.user;
-  
+    this.convention_ = application.convention;
+
     // Trigger the first periodic update, which will automatically trigger further
     // updates depending visibility of the screen.
     this.OnPeriodicUpdate();
@@ -89,6 +90,11 @@ LegacyApplication.prototype.GetPage = function() {
 // Returns the schedule of the event. Requires the event to be loaded.
 LegacyApplication.prototype.GetSchedule = function() {
   return this.schedule_;
+};
+
+// Returns the Convention object belonging to the current application.
+LegacyApplication.prototype.GetConvention = function() {
+  return this.convention_;
 };
 
 // Returns the User object belonging to the current application.
@@ -303,7 +309,7 @@ LegacyApplication.prototype.SetContent = function(contentNode) {
   // Clear out the existing content.
   while (container.firstChild)
     container.removeChild(container.firstChild);
-  
+
   // Add |contentNode| as the only contents of the content container.
   container.appendChild(contentNode);
 
@@ -337,7 +343,7 @@ LegacyApplication.prototype.SetTitle = function(title) {
   // Then update the page's <title> element.
   if (!this.titleElement_)
     return;
-  
+
   if (title && title.length && title != this.config_.title)
     this.titleElement_.textContent = title + ' | ' + suffix;
   else

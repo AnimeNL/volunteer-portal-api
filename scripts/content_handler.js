@@ -83,22 +83,42 @@ ContentHandler.prototype.UpdateElement =
 
   if (this.cache_.hasOwnProperty(variable)) {
     value = this.cache_[variable];
-  } else if (variable == 'display-events-toggle') {
-    value = this.application_.GetUser().getOption('hidden_events', true) ?
-        'Hide hidden events' : 'Show hidden events';
-  } else if (variable == 'notifications-toggle') {
-    value = this.application_.GetUser().getOption('notifications', false) ?
-        'Disable notifications' : 'Enable notifications';
-  } else if (variable == 'event-name') {
-    value = this.application_.GetConfig().title;
-  } else if (variable == 'time') {
-    value = DateUtils.format(DateUtils.getTime(), DateUtils.FORMAT_ISO_8601);
-  } else if (variable == 'username') {
-    value = this.application_.GetUser().name;
   } else {
-    var page = this.application_.GetPage();
-     if (page)
-        value = page.ResolveVariable(variable);
+    switch (variable) {
+      case 'display-events-toggle':
+        value = this.application_.GetUser().getOption('hidden_events', true)
+                    ? 'Hide hidden events'
+                    : 'Show hidden events';
+        break;
+      case 'event-name':
+        value = this.application_.GetConfig().title;
+        break;
+      case 'label-volunteers':
+        var user = this.application_.GetUser();
+        var volunteer = this.application_.GetConvention().findVolunteer(user.name);
+
+        if (!volunteer || volunteer.isSenior())
+          value = 'Volunteers';
+        else
+          value = volunteer.group;
+        break;
+      case 'notifications-toggle':
+        value = this.application_.GetUser().getOption('notifications', false)
+                    ? 'Disable notifications'
+                    : 'Enable notifications';
+        break;
+      case 'time':
+        value = DateUtils.format(DateUtils.getTime(), DateUtils.FORMAT_ISO_8601);
+        break;
+      case 'username':
+        value = this.application_.GetUser().name;
+        break;
+      default:
+        var page = this.application_.GetPage();
+        if (page)
+          value = page.ResolveVariable(variable);
+        break;
+    }
   }
 
   if (label)
