@@ -1,5 +1,5 @@
 configuration.json
 configuration.json*
 program.json
-program_stewards.json
-shifts_stewards.json
+program_*.json
+shifts_*.json
