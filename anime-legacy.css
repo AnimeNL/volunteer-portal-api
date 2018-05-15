@@ -549,7 +549,8 @@ div.past > h2::after { opacity: .8; }
   height: 19px;
 }
 
-.list-item-event > div.event > h2 { height: 19px; }
+.list-item-event > div.event > p { margin-top: -1px; }
+.list-item-event > div.event > h2 { height: 21px; }
 
 /** List: Room event fields **/
 
@@ -671,7 +672,7 @@ li.list-item-steward {
 }
 
 .list-item-steward div h2 {
-  margin: 16px 0 2px 0;
+  margin: 16px 0 0px 0;
 
   text-overflow: ellipsis;
 
@@ -679,7 +680,7 @@ li.list-item-steward {
   overflow: hidden;
 
   width: 100%;
-  height: 19px;
+  height: 21px;
 }
 
 .steward-telephone, .event-details {
