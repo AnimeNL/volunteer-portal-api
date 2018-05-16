@@ -12,7 +12,7 @@ $pages = [
   'index'        => 'introductie.md',
   'hotel'        => 'hotel.md',
   'rooster'      => 'rooster.md',
-  'registratie'  => 'registratie.md',
+  'registratie'  => 'registratie-gesloten.md',
   'registratie2' => 'registratie-gedaan.md',
 ];
 
