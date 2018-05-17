@@ -311,11 +311,12 @@ ul.material-menu {
   text-align: center;
   text-transform: uppercase;
   line-height: 52px;
-  color: white;
+  color: #CFD8DC;
 }
 
 .material-tabs > li.selected {
-  border-bottom: 4px solid #64B5F6;
+  border-bottom: 4px solid white;
+  color: white;
 }
 
 .material-tabs.tab-count-1 > li { width: 100%; }
@@ -669,6 +670,14 @@ li.list-item-steward {
   height: 71px;
 
   border-top: 1px solid #eee;
+}
+
+.stewards-page li:first-child {
+  box-shadow: inset 0 7px 9px -7px rgba(0,0,0,0.4);
+}
+
+.stewards-page li:first-child > div {
+  border-top: none;
 }
 
 .list-item-steward div h2 {
