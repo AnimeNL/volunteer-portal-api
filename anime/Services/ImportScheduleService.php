@@ -279,22 +279,28 @@ class ImportScheduleService implements Service {
         // This normally means that the volunteer schedule groups together an event that has several
         // entries in the AniPlanner. In such cases the actual Event ID should be hardcoded here
         // based on the given |$time|.
+
         switch ($eventId) {
             case 'SPECIAL1':  // Live house
-                if ($time <= 1497094200) {
-                    return 41220;
-                } else if ($time <= 1497101400) {
-                    return 41212;
-                } else {
-                    return 41242;
-                }
+                if ($time <= strtotime('2018-06-16 12:00:00'))
+                    return 41598;  // Speakerheadz
+                else if ($time <= strtotime('2018-06-16 14:00:00'))
+                    return 41558;  // Necronomidol
+                else if ($time <= strtotime('2018-06-16 15:40:00'))
+                    return 41557;  // Numb'n'Dub
+                else if ($time <= strtotime('2018-06-16 17:00:00'))
+                    return 41586;  // Savage States
+                else if ($time <= strtotime('2018-06-16 19:30:00'))
+                    return 41556;  // X Made Alcoholic Santaclaus
+                else if ($time <= strtotime('2018-06-17 15:30:00'))
+                    return 41559;  // Dress Up Town
                 break;
+
             case 'SPECIAL2':  // Whisky tasting
-                if ($time <= 1497038400) {
-                    return 41408;
-                } else {
-                    return 41273;
-                }
+                if ($time <= strtotime('2018-06-15 22:00:00'))
+                    return 41493;  // The Taste of Japanese Whisky 8th Edition
+                else if ($time <= strtotime('2018-06-17 16:00:00'))
+                    return 41603;  // Taste of Japanese Whisky Anniversary Edition
                 break;
         }
 
