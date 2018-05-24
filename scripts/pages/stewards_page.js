@@ -49,7 +49,10 @@ StewardsPage.prototype.BuildStewardRow = function(volunteer) {
     activeText += DateUtils.format(shift.endTime, DateUtils.FORMAT_SHORT_TIME);
 
     title.appendChild(document.createTextNode(activeText));
+
     row.className += ' active';
+    if (session.name == 'Backup')
+      row.className += ' active-backup';
   }
 
   // Store the next update time for the stewards overview page.

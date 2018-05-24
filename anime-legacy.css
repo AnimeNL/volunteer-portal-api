@@ -610,6 +610,16 @@ li.list-item-steward.active:active {
   background-color: #FFF59D;
 }
 
+li.list-item-steward.active-backup h2:after {
+  font-family: 'material-icons';
+  font-size: .75em;
+
+  margin-left: 4px;
+
+  content: "\e52d";
+  color: #43A047;
+}
+
 li.list-item-steward.unavailable {
   background-color: #ECEFF1;
 }
