@@ -97,6 +97,11 @@ class Convention {
             this.events_ = data.events;
             this.locations_ = data.locations;
             this.volunteers_ = data.volunteers;
+
+            // Verify that the |user| is a volunteer for this convention.
+            if (!this.findVolunteer(this.user_.name, false /* isSlug */))
+                this.user_.signOut();
+
             return this;
         });
     }
