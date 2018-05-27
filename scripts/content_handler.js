@@ -102,6 +102,26 @@ ContentHandler.prototype.UpdateElement =
         else
           value = volunteer.group;
         break;
+      case 'title-group':
+        var user = this.application_.GetUser();
+        var volunteer = this.application_.GetConvention().findVolunteer(user.name);
+
+        if (!volunteer) {
+          value = 'Volunteer';
+        } else {
+          switch (volunteer.group) {
+            case 'Gophers':
+              value = 'Gopher';
+              break;
+            case 'Stewards':
+              value = 'Steward';
+              break;
+            default:
+              value = 'Volunteer';
+              break;
+          }
+        }
+        break;
       case 'notifications-toggle':
         value = this.application_.GetUser().getOption('notifications', false)
                     ? 'Disable notifications'
