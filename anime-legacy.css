@@ -553,6 +553,18 @@ div.past > h2::after { opacity: .8; }
 .list-item-event > div.event > p { margin-top: -1px; }
 .list-item-event > div.event > h2 { height: 21px; }
 
+.list-item-event.event-night h2::after {
+  font-family: 'material-icons';
+  font-size: .7em;
+
+  content: "\e3a8";
+  color: #1976d2;
+
+  display: inline-block;
+  transform: rotate(20deg);
+  padding-left: 3px;
+}
+
 /** List: Room event fields **/
 
 .list-room-event { margin: 4px 0 3px 0; }

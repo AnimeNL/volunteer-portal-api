@@ -59,13 +59,16 @@ SchedulePage.prototype.RenderSingleEntry = function(entry) {
       eventDescription = document.createElement('p');
 
   listContainer.className = 'list-item-event ' + (entry.className || '');
+  if (DateUtils.isNight(entry.beginTime))
+    listContainer.className += ' event-night';
+
   listContainer.setAttribute('event-begin', entry.beginTime);
   listContainer.setAttribute('event-end', entry.endTime);
 
   if (entry.url) {
     listContainer.setAttribute('handler', true);
     listContainer.setAttribute('handler-navigate', entry.url);
-  } 
+  }
 
   function DateToDisplayTime(date) {
     return date.toTimeString().match(/\d{2}:\d{2}/)[0];
@@ -115,7 +118,7 @@ SchedulePage.prototype.RenderNoEntriesBar = function(noDataMessage) {
 SchedulePage.prototype.RenderEntries = function(entries, noDataMessage) {
   var entriesPerDay = {},
       self = this;
-  
+
   if (!entries.length)
     return this.RenderNoEntriesBar(noDataMessage);
 

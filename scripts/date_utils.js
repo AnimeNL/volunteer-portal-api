@@ -120,6 +120,12 @@ class DateUtils {
                 throw new Error('Unexpected format type: ' + format);
         }
     }
+
+    // Returns whether the given |time| takes place during the time.
+    static isNight(time) {
+        const localDate = DateUtils.toTargetTimezone(time);
+        return localDate.getUTCHours() < 8;
+    }
 }
 
 // Formats the time as "YYYY-MM-DDTHH:II:SS+[OFFSET]" (ISO 8601).
