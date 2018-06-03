@@ -8,24 +8,38 @@ a {
     text-decoration: none;
 }
 
-h1 {
-    cursor: pointer; 
-    margin-bottom: 0px;
-    font-size: 1.7em;
+.shifts-distribution {
+    border-spacing: 0px;
+    border-collapse: collapse;
+    font-size: .9em;
 }
 
-div {
-    overflow: hidden;
-    transition: height 1s ease-in-out;
+.shifts-distribution thead th { border: 1px solid #dadada; padding: 1px 0px; }
+
+.shifts-distribution thead tr.hours th:not(:first-child) { border-bottom-color: #000000; }
+
+.shifts-distribution thead tr.hours th { min-width: 24px; }
+
+.shifts-distribution thead tr.days th:nth-child(2) { background-color: #9fc5e8; }
+.shifts-distribution thead tr.days th:nth-child(3) { background-color: #93c47d; }
+.shifts-distribution thead tr.days th:nth-child(4) { background-color: #ffd966; }
+
+.shifts-distribution tbody td:first-child {
+    border: 1px solid #dadada;
+    border-right-width: 0px;
 }
 
-table.metrics td:first-of-type {
-    font-weight: bold;
-    padding-right: 16px;
+.shifts-distribution tbody td:not(:first-child) {
+    background-color: #999999;
+    border: 1px solid #000000;
 }
 
-.steward-grid > div {
-    display: inline-block;
-    padding-right: 50px;
-    vertical-align: top;
+.shifts-distribution tbody td.scheduled {
+    background-color: white;
+    text-align: center;
+}
+
+.shifts-distribution tbody td.split {
+    padding: 0px 2px;
+    min-width: 12px;
 }

@@ -1,325 +1,111 @@
 <?php
-// Copyright 2016 Peter Beverloo. All rights reserved.
+// Copyright 2018 Peter Beverloo. All rights reserved.
 // Use of this source code is governed by the MIT license, a copy of which can
 // be found in the LICENSE file.
 
-require_once __DIR__ . '/functions.php';
+date_default_timezone_set('Europe/Amsterdam');
 
+define('CONFIG_FILE', __DIR__ . '/../../configuration/configuration.json');
 define('PROGRAM_FILE', __DIR__ . '/../../configuration/program.json');
-define('STEWARD_PROGRAM_FILE', __DIR__ . '/../../configuration/program_stewards.json');
-define('STEWARD_FILE', __DIR__ . '/../../configuration/teams/stewards.json');
-define('SHIFTS_FILE', __DIR__ . '/../../configuration/shifts_stewards.json');
 
+$data = [
+    'stewards' => [
+        'program'    => 'program_stewards.json',
+        'members'    => 'stewards.json',
+        'shifts'     => 'shifts_stewards.json'
+    ],
+    'gophers'  => [
+        'program'    => 'program_gophers.json',
+        'members'    => 'gophers.json',
+        'shifts'     => 'shifts_gophers.json'
+    ]
+];
+
+$team = 'stewards';
+
+if (array_key_exists('team', $_GET) && array_key_exists($_GET['team'], $data))
+    $team = $_GET['team'];
+
+define('TEAM_PROGRAM_FILE', __DIR__ . '/../../configuration/' . $data[$team]['program']);
+define('TEAM_MEMBER_FILE', __DIR__ . '/../../configuration/teams/' . $data[$team]['members']);
+define('TEAM_SHIFTS_FILE', __DIR__ . '/../../configuration/' . $data[$team]['shifts']);
+
+$sections = [
+    // Table displaying the number of volunteers scheduled to be present at individual shifts over
+    // the course of the festival.
+    'shifts_distribution'  => '[Shifts] Distribution',
+];
+
+$configuration = json_decode(file_get_contents(CONFIG_FILE), true);
 $program = [];
-$stewards = [];
+$volunteers = [];
 $shifts = [];
-
-$stewardShifts = [];
 
 // (1) Load the normal, publicized AnimeCon program.
 foreach (json_decode(file_get_contents(PROGRAM_FILE), true) as $entry)
     $program[$entry['id']] = $entry;
 
-// (2) Load the steward-specific program additions.
-foreach (json_decode(file_get_contents(STEWARD_PROGRAM_FILE), true) as $entry)
+// (2) Load the volunteer-specific program additions.
+foreach (json_decode(file_get_contents(TEAM_PROGRAM_FILE), true) as $entry)
     $program[$entry['id']] = $entry;
 
-// (3) Load the list of stewards that will participate in this event.
-foreach (json_decode(file_get_contents(STEWARD_FILE), true) as $entry)
-    $stewards[$entry['name']] = $entry;
+// (3) Load the list of volunteer that will participate in this event.
+foreach (json_decode(file_get_contents(TEAM_MEMBER_FILE), true) as $entry)
+    $volunteers[$entry['name']] = $entry;
 
-// (4) Load the list of shifts that the stewards have been assigned to.
-foreach (json_decode(file_get_contents(SHIFTS_FILE), true) as $steward => $data) {
-    $stewardShifts[$steward] = $data;
-}
+// (4) Load the list of shifts that the volunteer have been assigned to.
+foreach (json_decode(file_get_contents(TEAM_SHIFTS_FILE), true) as $volunteer => $data)
+    $shifts[$volunteer] = $data;
 
 // -------------------------------------------------------------------------------------------------
 
-$hoursPerSteward = [];
-$typesPerSteward = [];
+$firstShift = PHP_INT_MAX;
+$lastShift = PHP_INT_MIN;
 
-foreach ($stewards as $steward => $data) {
-    $hours = 0;
+foreach ($shifts as $volunteerShifts) {
+    foreach ($volunteerShifts as $volunteerShift) {
+        if ($volunteerShift['shiftType'] != 'event')
+            continue;
 
-    $typesPerSteward[$steward] = [];
-
-    if (array_key_exists($steward, $stewardShifts)) {
-        foreach ($stewardShifts[$steward] as $shift) {
-            if ($shift['shiftType'] !== 'event')
-                continue;
-
-            if (IsIgnoredShift($shift))
-                continue;
-
-            $hours += ($shift['endTime'] - $shift['beginTime']) / 3600;
-            $typesPerSteward[$steward][$shift['eventId']] = 1;
-        }
+        if ($volunteerShift['beginTime'] < $firstShift)
+            $firstShift = $volunteerShift['beginTime'];
+        if ($volunteerShift['endTime'] > $lastShift)
+            $lastShift = $volunteerShift['endTime'];
     }
-
-    $hoursPerSteward[$steward] = $hours;
 }
 
-foreach ($typesPerSteward as $steward => $types)
-    $typesPerSteward[$steward] = count($types);
-
-SortByCountThenName($hoursPerSteward);
-SortByCountThenName($typesPerSteward);
-
-$hoursPerStewardLabels = implode("', '", array_keys($hoursPerSteward));
-$hoursPerStewardValues = implode(', ', array_values($hoursPerSteward));
-$hoursPerStewardMetrics = [
-    'Minimum'   => min(array_values($hoursPerSteward)),
-    'Maximum'   => max(array_values($hoursPerSteward)),
-    'Average'   => array_sum($hoursPerSteward) / count($hoursPerSteward),
-    'Total'     => array_sum($hoursPerSteward)
-];
-
-$typesPerStewardLabels = implode("', '", array_keys($typesPerSteward));
-$typesPerStewardValues = implode(', ', array_values($typesPerSteward));
-$typesPerStewardMetrics = [
-    'Minimum'   => min(array_values($typesPerSteward)),
-    'Maximum'   => max(array_values($typesPerSteward)),
-    'Average'   => round(array_sum($typesPerSteward) / count($typesPerSteward), 1)
-];
-
 // -------------------------------------------------------------------------------------------------
+
+// Requirement: the first and last shifts must begin and finish on a full hour. Extend the schedule
+// if need be, because this assumption holds throughout the verification tools.
+$firstShift = (int) (floor($firstShift / 3600) * 3600);
+$lastShift = (int) (ceil($lastShift / 3600) * 3600);
+
 ?>
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="robots" content="noindex" />
-    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=no" />
-    <title>Anime 2016 - Shift Distribution</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.min.js"></script>
+    <title>Anime 2018 - Scheduling Overview Tool</title>
     <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto:400,700,400italic" />
     <link rel="stylesheet" href="shifts.css" />
   </head>
   <body>
-    <p>
-      <b>Notes:</b> The <i>Group Photo</i> shift is ignored.<br />
-      <b>Actions:</b> <a href="javascript:expandAll()">expand all</a>, <a href="javascript:collapseAll()">collapse all</a>.
-    </p>
-    <h1 id="scheduled-hours-per-steward">Scheduled hours per steward <a href="#scheduled-hours-per-steward">#</a></h1>
-    <div>
-      <canvas id="scheduled-hours-per-steward-chart" width="800" height="300"></canvas>
-      <script>
-        (function() {
-            var element = document.getElementById('scheduled-hours-per-steward-chart');
-            new Chart(element, {
-                type: 'bar',
-                options: {
-                    scales: {
-                        xAxes: [{ ticks: { autoSkip: false } }],
-                        yAxes: [{ ticks: { beginAtZero: true } }]
-                    }
-                },
-                data: {
-                    labels: [ '<?php echo $hoursPerStewardLabels; ?>' ],
-                    datasets: [
-                        {
-                            label: 'Scheduled hours',
-                            backgroundColor: 'rgba(25, 118, 210, 0.9)',
-                            data: [ <?php echo $hoursPerStewardValues; ?> ]
-                        }
-                    ],
-                }
-          });
-        })();
-      </script>
-      <?php RenderTimeMetrics($hoursPerStewardMetrics); ?>
-    </div>
-
-    <h1 id="shift-types-per-steward">Shift types per steward <a href="#shift-types-per-steward">#</a></h1>
-    <div>
-      <canvas id="shift-types-per-steward-chart" width="800" height="300"></canvas>
-      <script>
-        (function() {
-            var element = document.getElementById('shift-types-per-steward-chart');
-            new Chart(element, {
-                type: 'bar',
-                options: {
-                    scales: {
-                        xAxes: [{ ticks: { autoSkip: false } }],
-                        yAxes: [{ ticks: { beginAtZero: true } }]
-                    }
-                },
-                data: {
-                    labels: [ '<?php echo $typesPerStewardLabels; ?>' ],
-                    datasets: [
-                        {
-                            label: 'Different shift types',
-                            backgroundColor: 'rgba(25, 118, 210, 0.9)',
-                            data: [ <?php echo $typesPerStewardValues; ?> ]
-                        }
-                    ],
-                }
-          });
-        })();
-      </script>
-      <?php RenderMetrics($typesPerStewardMetrics); ?>
-    </div>
-
+    <h1>Anime 2018 - Shift Distribution</h1>
+    <ol>
 <?php
-foreach ($stewardShifts as $steward => $shiftData) {
-    $slug = 'steward-' . CreateSlug($steward);
-
-    $hoursPerShiftType = [];
-    $hoursPerDay = ['Friday' => 0, 'Saturday' => 0, 'Sunday' => 0];
-
-    foreach ($shiftData as $shift) {
-        if ($shift['shiftType'] !== 'event')
-                continue;
-
-        if (IsIgnoredShift($shift))
-            continue;
-
-        $name = $program[$shift['eventId']]['sessions'][0]['name'];
-        if (!array_key_exists($name, $hoursPerShiftType))
-            $hoursPerShiftType[$name] = 0;
-
-        $hours = ($shift['endTime'] - $shift['beginTime']) / 3600;
-        $hoursPerShiftType[$name] += $hours;
-
-        if ($shift['beginTime'] < 1465596000)
-            $hoursPerDay['Friday'] += $hours;
-        else if ($shift['beginTime'] < 1465682400)
-            $hoursPerDay['Saturday'] += $hours;
-        else
-            $hoursPerDay['Sunday'] += $hours;
-    }
-
-    SortByCountThenName($hoursPerShiftType);
-
-    $hoursPerShiftTypeLabels = implode("', '", array_keys($hoursPerShiftType));
-    $hoursPerShiftTypeValues = implode(', ', array_values($hoursPerShiftType));
-
-    $hoursPerDayValues = implode(', ', array_values($hoursPerDay));
-
-?>
-    <h1 id="<?php echo $slug; ?>">Steward: <?php echo $steward; ?> <a href="#<?php echo $slug; ?>">#</a></h1>
-    <div class="steward-grid">
-        <div>
-            <canvas id="<?php echo $slug; ?>-chart" width="700" height="350"></canvas>
-            <script>
-              (function() {
-                  var element = document.getElementById('<?php echo $slug; ?>-chart');
-                  new Chart(element, {
-                      type: 'bar',
-                      options: {
-                          responsive: false,
-                          scales: {
-                              xAxes: [{ ticks: { autoSkip: false } }],
-                              yAxes: [{ ticks: { beginAtZero: true } }]
-                          }
-                      },
-                      data: {
-                          labels: [ '<?php echo $hoursPerShiftTypeLabels; ?>' ],
-                          datasets: [
-                              {
-                                  label: 'Hours',
-                                  backgroundColor: 'rgba(25, 118, 210, 0.9)',
-                                  data: [ <?php echo $hoursPerShiftTypeValues; ?> ]
-                              }
-                          ],
-                      }
-                });
-              })();
-            </script>
-        </div>
-        <div>
-            <canvas id="<?php echo $slug; ?>-chart2" width="700" height="350"></canvas>
-            <script>
-              (function() {
-                  var element = document.getElementById('<?php echo $slug; ?>-chart2');
-                  new Chart(element, {
-                      type: 'bar',
-                      options: {
-                          responsive: false,
-                          scales: {
-                              xAxes: [{ ticks: { autoSkip: false } }],
-                              yAxes: [{ ticks: { beginAtZero: true } }]
-                          }
-                      },
-                      data: {
-                          labels: [ 'Friday', 'Saturday', 'Sunday' ],
-                          datasets: [
-                              {
-                                  label: 'Hours',
-                                  backgroundColor: 'rgba(25, 118, 210, 0.9)',
-                                  data: [ <?php echo $hoursPerDayValues; ?> ]
-                              }
-                          ],
-                      }
-                });
-              })();
-            </script>
-        </div>
-    </div>
-<?php
+foreach ($sections as $filename => $name) {
+    echo '      <li><a href="#' . $filename . '">' . $name . '</a></li>' . PHP_EOL;
 }
 ?>
+    </ol>
 
-    <!-- All elements on the page should be accordions, collapsed by default -->
-    <script>
-      function findAll() {
-          var containers = [];
-
-          var headers = document.querySelectorAll('h1');
-          for (var i = 0; i < headers.length; ++i) {
-              var container = headers[i].nextElementSibling;
-              if (container.tagName == 'DIV')
-                  containers.push(container);
-          }
-
-          return containers;
-      }
-
-      function collapse(container) {
-          container.classList.add('collapsed');
-          container.style.height = 0 + 'px';
-      }
-
-      function collapseAll() {
-          findAll().forEach(collapse);
-      }
-
-      function expand(container) {
-          container.classList.remove('collapsed');
-          container.style.height = container.originalHeight + 'px';
-      }
-
-      function expandAll() {
-          findAll().forEach(expand);
-      }
-
-      window.addEventListener('load', function() {
-          var headers = document.querySelectorAll('h1');
-          for (var i = 0; i < headers.length; ++i) {
-            var header = headers[i];
-            var container = header.nextElementSibling;
-
-            if (container.tagName != 'DIV')
-                continue;
-
-            header.onclick = function(container) {
-                return function() {
-                    if (container.classList.contains('collapsed'))
-                        expand(container);
-                    else
-                        collapse(container);
-                };
-            }(container);
-
-            container.originalHeight = container.offsetHeight;
-
-            if (document.location.hash == '#' + header.id)
-                container.style.height = container.offsetHeight + 'px';
-            else
-                collapse(container);
-          }
-      });
-
-    </script>
+<?php
+foreach ($sections as $filename => $name) {
+    echo '    <h2 id="' . $filename . '">' . $name . '</h2>' . PHP_EOL;
+    require __DIR__ . '/sections/' . $filename . '.php';
+}
+?>
   </body>
 </html>
