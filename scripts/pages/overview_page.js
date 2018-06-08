@@ -179,6 +179,15 @@ OverviewPage.prototype.OnRender = function(application, container, content) {
                                           titlePrefix: 'Next shift: ',
                                           future: true }));
   }
+
+  // 2018 hack - happy birthday display
+  var happyBirthday = content.querySelector('#happy-birthday');
+  if (happyBirthday) {
+    var normalizedCurrentTime = DateUtils.toTargetTimezone(currentTime);
+    if (DateUtils.formatDate(normalizedCurrentTime) === '2018-06-14')
+      happyBirthday.style.display = 'block';
+  }
+
 };
 
 // Re-render the contents of the page every time a periodic update occurs.
