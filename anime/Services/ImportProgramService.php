@@ -268,6 +268,13 @@ class ImportProgramService implements Service {
         // Iterate over all entries which have been merged since, storing them in a series of events
         // each of which have one or multiple sessions.
         foreach ($entries as $entry) {
+            // 2018 hack - override settings for Event #41738
+            if ($entry['eventId'] == 41738) {
+                $entry['name'] = 'Private Event';
+                $entry['comment'] = 'Invitation-only event presenting guests with a colourful questionnaire.';
+            }
+            // ----------------------------------------------
+
             $session = [
                 'name'          => $entry['name'],
                 'description'   => $entry['comment'],
