@@ -5,6 +5,11 @@
 // Path prefix for the photos, which will be lazily added to the static cache.
 var photoPrefix = '/images/photos/';
 
+// Name of the caches. And a list of caches that should be removed from storage.
+var kDeprecatedCaches = [ 'static', 'dynamic' ];
+var kStaticCache = 'static-2018';
+var kDynamicCache = 'dynamic-2018';
+
 // Static resources. These are presumed to never change.
 var staticResources = [
     'images/icon-continents.jpg',
@@ -37,7 +42,7 @@ var focusBlacklist = [
 var defaultNotification = {
     topic: 'An update is available',
     icon: '/images/logo-192.png',
-    body: 'An update to the Anime 2017 schedule is now available!',
+    body: 'An update to the Anime 2018 schedule is now available!',
     url: '/'
 };
 
@@ -55,18 +60,29 @@ function promiseAny(promises) {
 // Returns the name of the cache in which the |response| should be stored.
 function getCacheForResponse(response) {
     if (response.url.includes(photoPrefix))
-        return 'static';
+        return kStaticCache;
 
-    return 'dynamic';
+    return kDynamicCache;
 }
 
 // -------------------------------------------------------------------------------------------------
 
 self.addEventListener('install', event => {
+    var tasks = [];
+
+    // Make sure that any deprecated caches have been removed.
+    kDeprecatedCaches.forEach(cacheName =>
+        tasks.push(caches.delete(cacheName)));
+
+    // Make sure the latest static cache has been preloaded.
+    tasks.push(
+        caches.open(kStaticCache)
+            .then(cache => cache.addAll(staticResources)));
+
+    // Consider the Service Worker to have installed when all |tasks| have completed. At that point
+    // don't wait for any still running Service Worker to complete.
     event.waitUntil(
-         caches.open('static')
-             .then(cache => cache.addAll(staticResources))
-             .then(skipWaiting));
+        Promise.all(tasks).then(() => self.skipWaiting()));
 });
 
 self.addEventListener('activate', event => {
@@ -76,11 +92,11 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', event => {
     var requestUrl = new URL(event.request.url);
     if (event.request.method !== 'GET' || requestUrl.pathname.startsWith('/tools/') ||
-        requestUrl.pathname.startsWith('/hallo')) {
+        requestUrl.pathname.startsWith('/hallo') || requestUrl.pathname.startsWith('/hello')) {
         event.respondWith(fetch(event.request));
         return;
     }
-    
+
     var responseUrl = null;
 
     if (requestUrl.pathname.endsWith('.woff'))
@@ -88,14 +104,14 @@ self.addEventListener('fetch', event => {
 
     if (requestUrl.pathname.startsWith('/events/') ||
         requestUrl.pathname.startsWith('/floors/') ||
-        requestUrl.pathname.startsWith('/stewards/')) {
+        requestUrl.pathname.startsWith('/volunteers/')) {
         responseUrl = '/';
     }
 
     var request = responseUrl || event.request;
     event.respondWith(
         // (1) Check if the request can be served from the static resource cache.
-        caches.match(request, { cacheName: 'static' }).then(response => {
+        caches.match(request, { cacheName: kStaticCache }).then(response => {
             if (response)
                 return response;
 
