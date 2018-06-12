@@ -6,9 +6,8 @@
 var photoPrefix = '/images/photos/';
 
 // Name of the caches. And a list of caches that should be removed from storage.
-var kDeprecatedCaches = [ 'static', 'dynamic' ];
-var kStaticCache = 'static-2018';
-var kDynamicCache = 'dynamic-2018';
+var kStaticCache = 'static-2018-2';
+var kDynamicCache = 'dynamic-2018-2';
 
 // Static resources. These are presumed to never change.
 var staticResources = [
@@ -71,8 +70,17 @@ self.addEventListener('install', event => {
     var tasks = [];
 
     // Make sure that any deprecated caches have been removed.
-    kDeprecatedCaches.forEach(cacheName =>
-        tasks.push(caches.delete(cacheName)));
+    tasks.push(caches.keys().then(cacheNames => {
+        var deletionQueue = [ Promise.resolve() ];
+        cacheNames.forEach(cacheName => {
+            if (cacheName == kStaticCache || cacheName == kDynamicCache)
+                return;
+
+            deletionQueue.push(caches.delete(cacheName));
+        });
+
+        return Promise.all(deletionQueue);
+    }));
 
     // Make sure the latest static cache has been preloaded.
     tasks.push(

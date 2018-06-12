@@ -61,12 +61,24 @@ class Application {
     hardRefresh() {
         let promises = [ Promise.resolve() ];
 
-        // Unregister both the `static` and `dynamic` caches. They will be reinstated when the
-        // page reloads following this hard reset.
+        // Drop all non-static caches entirely.
         if ('caches' in window) {
-            promises.push(window.caches.delete('static'));
-            promises.push(window.caches.delete('dynamic'));
+            promises.push(caches.keys().then(cacheNames => {
+                var deletionQueue = [ Promise.resolve() ];
+                cacheNames.forEach(cacheName => {
+                    if (cacheName == 'static-2018-2')
+                        return;
+
+                    deletionQueue.push(caches.delete(cacheName));
+                });
+
+                return Promise.all(deletionQueue);
+            }));
         }
+
+        // Force-update the Service Worker on this command as well.
+        if (this.serviceWorkerRegistration_)
+            promises.push(this.serviceWorkerRegistration_.update());
 
         // Refresh the page after the hard refresh has completed.
         Promise.all(promises).then(() => window.location.href = '/');
