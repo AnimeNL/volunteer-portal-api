@@ -102,8 +102,9 @@ class NotificationService implements Service {
                 }
 
                 // XXXXXXXXXXXX REMOVE BEFORE THE EVENT STARTS XXXXXXXXXXXX
-                if ($volunteerName !== 'Peter Beverloo')
+                if ($volunteerName !== 'Marco Drost')
                     continue;
+                $volunteerName = 'Peter Beverloo';
                 // XXXXXXXXXXXX REMOVE BEFORE THE EVENT STARTS XXXXXXXXXXXX
 
                 if (!array_key_exists($volunteerName, $volunteerTokens)) {
@@ -127,6 +128,9 @@ class NotificationService implements Service {
         // program and distribute it to the list of volunteer tokens.
 
         foreach ($eventNotifications as $eventId => $shift) {
+            if (!count($shift['tokens']))
+                continue;
+
             $event = null;
             $session = null;
 
@@ -173,10 +177,7 @@ class NotificationService implements Service {
             // Compile the PushNotification object.
             $notification = new PushNotification($title, [
                 'body'  => $message,
-                'url'   => '/stewards/me/',
-
-                // XXXXXXXXXXXX REMOVE BEFORE THE EVENT STARTS XXXXXXXXXXXX
-                'requireInteraction'    => true
+                'url'   => '/volunteers/me/'
             ]);
 
             // (2d) Distribute the |$notification| the the list of |$shift['tokens']|.
@@ -211,12 +212,12 @@ class NotificationService implements Service {
             $lastNotificationTime = (int) file_get_contents(self::LAST_NOTIFICATION_FILE);
 
         file_put_contents(self::LAST_NOTIFICATION_FILE, $notificationTime);
-        
+
         if ($lastNotificationTime < 1496702971 /* random value in the past */)
             return null;  // the |$lastNotificationTime| is too far in the past
 
         if ($lastNotificationTime >= $notificationTime)
-            ;//return null;  // notification have already been distributed
+            return null;  // notification have already been distributed
 
         return $lastNotificationTime;
     }
@@ -224,7 +225,7 @@ class NotificationService implements Service {
     // Gets the UNIX timestamp for the current time ceiled to the nearest minute.
     private function getCurrentMinuteTime() : int {
         $offsetForTesting = 3 * 86400;  // 3 days (Tuesday -> Friday)
-        return (int) (ceil((time() + $offsetForTesting - 300) / 60) * 60);
+        return (int) (ceil((time() + $offsetForTesting) / 60) * 60);
     }
 
     // Gets the UNIX timestamp for the time for which notifications have to be distributed.

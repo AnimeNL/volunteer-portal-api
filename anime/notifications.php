@@ -40,7 +40,7 @@ $pushSet = $_POST['pushSet'];
 //
 // https://developers.google.com/instance-id/reference/server#create_a_relation_mapping_for_an_app_instance
 
-logMessage('Associating a new subscription for ' . $volunteer->getName() . '...');
+logMessage('Associating a new subscription for ' . $volunteer->getName() . ' (topic: ' . $volunteer->getToken() . ')...');
 
 $success = \Anime\PushUtilities::subscribeToTopic($subscription, $volunteer->getToken());
 if ($success) {
