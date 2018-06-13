@@ -15,9 +15,6 @@ use \Anime\PushUtilities;
 // prior and after the shift during which delivery of the notification will be considered can be
 // configured in the configuration file.
 class NotificationService implements Service {
-    // File that contains the timestamp at which notification broadcasts were last distributed.
-    private const LAST_NOTIFICATION_FILE = __DIR__ . '/last_notification_time.dat';
-
     // File to which logs will be written for distributing notifications.
     private const NOTIFICATION_LOG_FILE = __DIR__ . '/notifications.log';
 
@@ -29,6 +26,9 @@ class NotificationService implements Service {
 
     // Frequency, in minutes, at which this service will be executed.
     private $frequency;
+
+    // File that contains the timestamp at which notification broadcasts were last distributed.
+    private $dataFile;
 
     // The environment for which notifications might have to be broadcasted.
     private $environment;
@@ -44,6 +44,11 @@ class NotificationService implements Service {
             throw new \Exception('The NotificationService requires a `reminderTime` option.');
 
         $this->reminderTime = $options['reminderTime'];
+
+        if (!array_key_exists('data', $options))
+            throw new \Exception('The NotificationService requires a `data` option.');
+
+        $this->dataFile = __DIR__ . '/' . $options['data'];
 
         if (!array_key_exists('context', $options))
             throw new \Exception('The NotificationService requires a `context` option.');
@@ -101,12 +106,6 @@ class NotificationService implements Service {
                     ];
                 }
 
-                // XXXXXXXXXXXX REMOVE BEFORE THE EVENT STARTS XXXXXXXXXXXX
-                if ($volunteerName !== 'Marco Drost')
-                    continue;
-                $volunteerName = 'Peter Beverloo';
-                // XXXXXXXXXXXX REMOVE BEFORE THE EVENT STARTS XXXXXXXXXXXX
-
                 if (!array_key_exists($volunteerName, $volunteerTokens)) {
                     $volunteer = $volunteers->findByName($volunteerName);
                     if (!$volunteer)
@@ -119,7 +118,7 @@ class NotificationService implements Service {
             }
         }
 
-        if (count($eventNotifications) == 0)
+        if (!count($eventNotifications))
             return;  // no notifications have to be send at this time
 
         $program = $this->loadProgram();
@@ -208,10 +207,10 @@ class NotificationService implements Service {
         $lastNotificationTime = 0;
         $notificationTime = $this->getNotificationTime();
 
-        if (file_exists(self::LAST_NOTIFICATION_FILE))
-            $lastNotificationTime = (int) file_get_contents(self::LAST_NOTIFICATION_FILE);
+        if (file_exists($this->dataFile))
+            $lastNotificationTime = (int) file_get_contents($this->dataFile);
 
-        file_put_contents(self::LAST_NOTIFICATION_FILE, $notificationTime);
+        file_put_contents($this->dataFile, $notificationTime);
 
         if ($lastNotificationTime < 1496702971 /* random value in the past */)
             return null;  // the |$lastNotificationTime| is too far in the past
