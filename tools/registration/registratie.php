@@ -15,10 +15,11 @@ $fields = [
     'geboortedatum'     => 'Geboortedatum',
     'email'             => 'E-mail adres',
     'telefoonnummer'    => 'Telefoonnummer',
+    'kennis'            => 'Gesprekjes 2018',
 
     'bhv'               => 'In bezit van BHV',
     'ehbo'              => 'In bezit van EBHO',
-    'stewardtraining'   => 'Stewardtraining in 2017 gedaan',
+    'stewardtraining'   => 'Stewardtraining in 2018 gedaan',
     'ervaring'          => 'Overige ervaring',
 
     'uren'              => 'Voorkeur inzet',

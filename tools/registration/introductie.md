@@ -5,11 +5,11 @@ problemen. Als je mee wilt helpen met _crowd management_, leeftijd- en veilighei
 voor de VIPs en tevens onze beveiliging en EHBO'ers bij wilt staan, dan zijn we op zoek naar **jou**!
 
 Meld je hier direct aan als je deel wilt uitmaken van een te gekke groep vrijwilligers die er samen
-voor zorgen dat ook Anime 2018 weer een veilig en fantastisch festival wordt.
+voor zorgen dat ook Anime 2019 weer een veilig en fantastisch festival wordt.
 
 ## Wat verwachten we van je?
 
-  * Je bent tenminste 18 jaar oud tijdens Anime 2018 (**15–17 juni 2018**) en kunt goed verbaal
+  * Je bent tenminste 18 jaar oud tijdens Anime 2019 (**14–16 juni 2019**) en kunt goed verbaal
     communiceren in zowel het Nederlands als in het Engels.
 
   * Je bent tussen 10 uur 's ochtends op vrijdag en 6 uur 's avonds op zondag beschikbaar op het
@@ -25,17 +25,15 @@ contact met ons op.
 ## Wat krijg je van ons?
 
   * Wij regelen en betalen een professionele stewardtraining voor je in Amersfoort. De training zal
-    een volle dag duren, en we verwachten dat je hier dan ook volledig bij kunt zijn. Dit jaar
-    zullen de trainingen op **zaterdag 2 juni** en **zondag 3 juni** plaatsvinden. Stewards moeten
-    deze training eens per twee jaar volgen.
+    een volle dag duren, en we verwachten dat je hier dan ook volledig bij kunt zijn. Stewards
+    moeten deze training eens per twee jaar volgen.
 
-  * De mogelijkheid om een slaapplaats in één van de festivalhotels te reserveren ([meer informatie
-    en prijzen](hotel.html)).
+  * De mogelijkheid om een slaapplaats in één van de festivalhotels te reserveren, alsmede op het
+    goedkopere kampeerterrein direct naast Ahoy.
 
   * Lunch, snacks en versnaperingen tijdens de dag.
 
   * Een gratis weekend-ticket voor het festival het jaar _nadat_ je vrijwilliger bent geweest.
-    Vergeet niet zelf een kaartje te kopen als dit de eerste keer is dat je meehelpt!
 
 ## Doe je mee?
 

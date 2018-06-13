@@ -106,6 +106,12 @@ class NotificationService implements Service {
                     ];
                 }
 
+                // XXXXXXXXXXXX REMOVE BEFORE THE EVENT STARTS XXXXXXXXXXXX
+                if ($volunteerName !== 'Sofie Teulings' && $volunteerName !== 'Safae el Hachioui')
+                    continue;
+                $volunteerName = 'Peter Beverloo';
+                // XXXXXXXXXXXX REMOVE BEFORE THE EVENT STARTS XXXXXXXXXXXX
+
                 if (!array_key_exists($volunteerName, $volunteerTokens)) {
                     $volunteer = $volunteers->findByName($volunteerName);
                     if (!$volunteer)

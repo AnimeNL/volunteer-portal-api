@@ -1,6 +1,6 @@
 # Registratieformulier
 
-Deel via dit formulier je belangstelling om als steward mee te helpen tijdens Anime 2018.
+Deel via dit formulier je belangstelling om als steward mee te helpen tijdens Anime 2019.
 
 <p style="display: none" id="error" class="error">Eén van de velden was niet goed ingevuld, sorry! Probeer het nog eens.</p>
 <script>
@@ -41,7 +41,7 @@ ervaringen betreft veiligheid, stewarden en vrijwilligerswerk.
       <input type="checkbox" name="ehbo" id="ehbo" />
     </li>
     <li>
-      <label for="stewardtraining">Stewardtraining in 2017 gevolgd? <sup>1</sup></label>
+      <label for="stewardtraining">Stewardtraining in 2018 gevolgd? <sup>1</sup></label>
       <input type="checkbox" name="stewardtraining" id="stewardtraining" />
     </li>
     <li>
@@ -51,9 +51,17 @@ ervaringen betreft veiligheid, stewarden en vrijwilligerswerk.
   </ol>
 
 <span style="color: #883133">▼</span> En ten slotte enkele korte vragen over je voorkeuren betreft
-inzet tijdens Anime 2018.
+inzet tijdens Anime 2019.
 
   <ol>
+    <li class="gratis-kaartje">
+      <label for="kennis">Welke stewards heb je ontmoet?</label>
+      <input type="text" name="kennis" id="kennis" />
+      <p>
+        Noteer de namen van alle stewards waarmee je tijdens Anime 2018 gesproken hebt om kans te
+        maken op een <strong>gratis kaartje</strong> tijdens Anime 2019. Hoe meer, hoe beter!
+      </p>
+    </li>
     <li>
       <label for="uren">Hoeveel uur werk heeft je voorkeur?</label>
       <select name="uren" id="uren">
@@ -63,11 +71,7 @@ inzet tijdens Anime 2018.
       </select>
     </li>
     <li>
-      <label for="aanwezig">Ben je het hele weekend aanwezig? <sup>2</sup></label>
-      <input type="checkbox" name="aanwezig" id="aanwezig" />
-    </li>
-    <li>
-      <label for="night">Wil je bij de nachtcrew aansluiten? <sup>3</sup></label>
+      <label for="night">Wil je bij de nachtcrew aansluiten? <sup>2</sup></label>
       <input type="checkbox" name="night" id="night" />
     </li>
     <li>
@@ -75,22 +79,29 @@ inzet tijdens Anime 2018.
       <input type="checkbox" name="hotel" id="hotel" />
     </li>
     <li>
-      <label for="social">Wil je in onze social media groepen? <sup>4</sup></label>
+      <label for="social">Wil je in onze social media groepen? <sup>3</sup></label>
       <input type="checkbox" name="social" id="social" />
+    </li>
+    <li class="aanwezigheid">
+      <label for="aanwezig">Ben je het hele weekend aanwezig?</label>
+      <input type="checkbox" name="aanwezig" id="aanwezig" />
+      <p>
+        We verwachten dat je tussen 10 uur 's ochtends op vrijdag en 6 uur 's avonds op zondag
+        beschikbaar bent op het festival. Als dit niet het geval is, stuur ons dan eerst een
+        <a href="mailto:security@animecon.nl">e-mailtje</a> om je situatie uit te leggen. Uiteraard
+        zullen we ons best doen om je hiermee, alsmede je eigen voorkeuren, tegemoet te komen.
+      </p>
     </li>
   </ol>
 
   <input type="submit" value="Verzenden" />
 </form>
 
-<sup>1 -</sup> Als je in 2017 een stewardtraining via Animecon hebt gevolgt, dan is de training in
+<sup>1 -</sup> Als je in 2018 een stewardtraining via Animecon hebt gevolgt, dan is de training in
 2018 niet verplicht.</span>
 
-<sup>2 -</sup> We verwachten dat je tussen 10 uur 's ochtends op vrijdag en 6 uur 's avonds op
-zondag aanwezig kunt zijn.
+<sup>2 -</sup> De nachtcrew werkt 's nachts tot een uur of zes door, maar kan wel lekker uitslapen!
 
-<sup>3 -</sup> De nachtcrew werkt 's nachts tot een uur of zes door, maar kan wel lekker uitslapen!
-
-<sup>4 -</sup> We hebben privé WhatsApp en Facebook groepen voor het Anime 2018 stewardteam.
+<sup>3 -</sup> We hebben privé WhatsApp en Facebook groepen voor het Anime 2019 stewardteam.
 
 [« Vorige pagina](index.html)

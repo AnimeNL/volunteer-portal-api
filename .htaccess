@@ -45,6 +45,7 @@ RewriteRule ^(events|floors|stewards|volunteers)/ / [L]
 
 # Vanity URLs for the tools hosted on these domains.
 RewriteRule ^hallo$ /hallo/ [R=301]
+RewriteRule ^hello$ /hello/ [R=301]
 
 # gophers.team/hallo
 RewriteCond %{HTTP_HOST} gophers\.team [NC]
@@ -52,6 +53,7 @@ RewriteRule ^hallo/?(.*) /tools/registration-gophers/$1 [L]
 
 # stewards.team/hallo
 RewriteRule ^hallo/?(.*) /tools/registration/$1 [L]
+RewriteRule ^hello/?(.*) /tools/registration/$1 [L]
 
 RewriteRule ^schedule$ /schedule/ [R=301]
 RewriteRule ^schedule/?(.*) /tools/schedule/$1 [L]
