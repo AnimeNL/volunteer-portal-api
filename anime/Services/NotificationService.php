@@ -136,6 +136,8 @@ class NotificationService implements Service {
             if (!count($shift['tokens']))
                 continue;
 
+            $shift['tokens'] = array_unique($shift['tokens']);
+
             $event = null;
             $session = null;
 
