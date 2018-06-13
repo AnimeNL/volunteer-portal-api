@@ -12,7 +12,7 @@ welke op Android telefoons ook zonder internet beschikbaar zal zijn.
 
 ## Hoe ziet zo'n rooster er uit?
 
-Het volgende rooster was van één van de Anime 2019 stewards, en is indicatief voor de roosters die
+Het volgende rooster was van één van de Anime 2018 stewards, en is indicatief voor de roosters die
 we voor Anime 2019 verwachten.
 
 ### Vrijdag
