@@ -90,10 +90,10 @@ inzet tijdens Anime 2019.
 </form>
 
 <sup>1 -</sup> Als je in 2018 een stewardtraining via Animecon hebt gevolgt, dan is de training in
-2018 niet verplicht.</span>
+2019 niet verplicht.</span>
 
 <sup>2 -</sup> De nachtcrew werkt 's nachts tot een uur of zes door, maar kan wel lekker uitslapen!
 
-<sup>3 -</sup> We hebben privé WhatsApp en Facebook groepen voor het Anime 2019 stewardteam.
+<sup>3 -</sup> We hebben een privé WhatsApp groep voor het Anime 2019 stewardteam.
 
 [« Vorige pagina](index.html)
