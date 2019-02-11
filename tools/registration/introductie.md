@@ -24,9 +24,10 @@ contact met ons op.
 
 ## Wat krijg je van ons?
 
-  * Wij regelen en betalen een professionele stewardtraining voor je in Amersfoort. De training zal
-    een volle dag duren, en we verwachten dat je hier dan ook volledig bij kunt zijn. Stewards
-    moeten deze training eens per twee jaar volgen.
+  * Wij regelen en betalen een [professionele stewardtraining](training.html) voor je in Amersfoort.
+    Dit zal een volle dag duren en we verwachten dat je hier dan ook volledig bij kunt zijn. Stewards
+    moeten deze training eens per twee jaar volgen. De trainingen zullen dit jaar in de weekenden
+    van **25 en 26 mei** en **1 en 2 juni** plaatsvinden.
 
   * De mogelijkheid om een slaapplaats in één van de festivalhotels te reserveren, alsmede op het
     goedkopere kampeerterrein direct naast Ahoy.

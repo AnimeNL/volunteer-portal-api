@@ -14,6 +14,8 @@ $pages = [
   'rooster'      => 'rooster.md',
   'registratie'  => 'registratie.md',
   'registratie2' => 'registratie-gedaan.md',
+  'training'     => 'training.md',
+  'updates'      => 'updates.md',
 ];
 
 if (isset ($_GET['page']) && array_key_exists($_GET['page'], $pages))
