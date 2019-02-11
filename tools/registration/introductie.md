@@ -38,4 +38,3 @@ contact met ons op.
 ## Doe je mee?
 
 [Ja, ik ben van de partij!](registratie.html)
-<span class="gratis-kaartje-banner">.. en maak kans op een gratis kaartje?!</span>

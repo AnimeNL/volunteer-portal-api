@@ -54,17 +54,6 @@ select { width: 218px; }
     padding: 4px;
 }
 
-.gratis-kaartje-banner {
-    font-weight: bold;
-    color: #883133;
-}
-
-.gratis-kaartje label { font-weight: bold; }
-.gratis-kaartje {
-    background-color: #EEFFEE;
-    padding: 16px 8px;
-}
-
 .aanwezigheid label { font-weight: bold; }
 .aanwezigheid {
     background-color: #FFEBEE;

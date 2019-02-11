@@ -54,14 +54,6 @@ ervaringen betreft veiligheid, stewarden en vrijwilligerswerk.
 inzet tijdens Anime 2019.
 
   <ol>
-    <li class="gratis-kaartje">
-      <label for="kennis">Welke stewards heb je ontmoet?</label>
-      <input type="text" name="kennis" id="kennis" />
-      <p>
-        Noteer de namen van alle stewards waarmee je tijdens Anime 2018 gesproken hebt om kans te
-        maken op een <strong>gratis kaartje</strong> tijdens Anime 2019. Hoe meer, hoe beter!
-      </p>
-    </li>
     <li>
       <label for="uren">Hoeveel uur werk heeft je voorkeur?</label>
       <select name="uren" id="uren">
