@@ -51,7 +51,8 @@ select { width: 218px; }
 
 .waarschuwing {
     background-color: #FFEBEE;
-    padding: 4px;
+    padding: 8px;
+    margin: 0 16px 16px 16px;
 }
 
 .aanwezigheid label { font-weight: bold; }

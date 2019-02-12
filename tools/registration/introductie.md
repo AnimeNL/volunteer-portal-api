@@ -29,8 +29,9 @@ contact met ons op.
     moeten deze training eens per twee jaar volgen. De trainingen zullen dit jaar in de weekenden
     van **25 en 26 mei** en **1 en 2 juni** plaatsvinden.
 
-  * De mogelijkheid om een slaapplaats in één van de festivalhotels te reserveren, alsmede op het
-    goedkopere kampeerterrein direct naast Ahoy.
+  * De mogelijkheid om [een slaapplaats](hotel.html) in één van de festivalhotels te reserveren,
+    alsmede op het goedkopere kampeerterrein direct naast Ahoy. Kosten voor het gebruik van het
+    festival's nachtvervoer zullen vergoed worden.
 
   * Lunch, snacks en versnaperingen tijdens de dag.
 

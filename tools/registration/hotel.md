@@ -1,31 +1,37 @@
 # Hotelinformatie
 
-Ook tijdens Anime 2018 zullen we je weer de mogelijkheid aanbieden om een slaapplaats te reserveren
-in één van de festivalhotels.
+Ook tijdens Anime 2019 zullen we je weer de mogelijkheid aanbieden om een slaapplaats te reserveren
+in één van de festivalhotels, en hopelijk voor de goedkopere camping op het parkeerterrein direct
+naast Ahoy.
 
-Dit zal doorgaans iets duurder zijn dan zelf voor je accommodatie te zorgen, maar heeft als voordeel
-dat je slechts enkele minuten bij het festival vandaan zit. Daarnaast leert de ervaring dat het ook
-gezelliger is! Je zult deze kamer delen met één of twee andere stewards.
+Indien je via ons een kamer reserveert dan vragen we je om deze met een andere steward te delen. In
+onze ervaring is dit niet alleen heel gezellig, maar ook heel praktisch omdat onze uren niet altijd
+gelijk zijn aan die van de bezoekers.
 
-We hebben nog geen definitieve informatie over de beschikbaarheid van kamers, maar we verwachten
-ruimte te hebben voor stewards in zowel het
-[Novotel](http://www.novotel.com/gb/hotel-5389-novotel-den-haag-world-forum/index.shtml) als het
-[Marriott](http://www.marriott.co.uk/hotels/travel/rtmmc-the-hague-marriott-hotel/). Bij voorkeur
-kunnen we ook een kamer in het
-[Crowne Plaza](https://www.ihg.com/crowneplaza/hotels/gb/en/den-haag/dnhpr/hoteldetail) voor je
-regelen, waar de prijzen iets hoger zijn.
+<div class="waarschuwing">We hopen dit jaar ook plaatsen aan te kunnen bieden op de goedkopere
+camping op het parkeerterrein van Ahoy, maar de beschikbaarheid hiervan is nog niet vastgesteld.
+We zullen het laten weten zodra dit veranderd!</div>
 
-## Prijzen
+## Inntel
 
-Dit jaar zijn de prijzen voor de kamers, inclusief de verplichte stadsbelasting, als volgt. De
-precieze kosten zijn afhankelijk van het hotel waar je boeking terecht komt.
+Een groot deel van de organisatie zal in het [Inntel](https://www.inntelhotelsrotterdamcentre.nl/)
+verblijven, direct naast de Erasmusbrug.
 
-**2-persoons kamer**:
-- € 116 – € 142 per nacht zonder ontbijt. _(€ 58 – € 71 p.p.p.n.)_
-- € 155 – € 157 per nacht met ontbijt. _(€ 78 – € 79 p.p.p.n.)_
+## De officiële festivalhotels
 
-**3-persoons kamer**:
-- € 155 – € 171 per nacht zonder ontbijt. _(€ 52 – € 57 p.p.p.n.)_
-- € 213 – € 221 per nacht met ontbijt. _(€ 71 – € 74 p.p.p.n.)_
+Als steward kun je ook gebruik maken van de
+[officiële festivalhotels](https://www.preferredreservations.nl/animecon-2019). Er zijn nog flink
+wat beschikbare kamers in elke prijsklasse. Het festival zal tussen 22:00 en 06:00 nachtvervoer
+regelen naar deze hotels, behalve het Novotel. Dit vervoer zal voor stewards vergoed worden.
+
+## Zelf een hotelkamer regelen
+
+Via verschillende websites, zoals [booking.com](https://booking.com), kan je ook zelf een kamer
+regelen. Dit geeft je een bredere keuze voor elk budget, maar je zult wel rekening moeten houden met
+vervoer van- en naar het festival.
+
+We raden je aan om naar het [ART Hotel Rotterdam](https://www.booking.com/hotel/nl/arthotelrotterdam.en-gb.html)
+te kijken. Dit hotel is iets goedkoper dan de festivalhotels in de afgelopen jaren, en is slechts
+20 minuutjes lopen bij Ahoy vandaan—dichterbij dan elk ander hotel!
 
 [« Vorige pagina](index.html)
