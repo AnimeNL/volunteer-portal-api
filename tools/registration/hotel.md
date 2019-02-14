@@ -15,7 +15,19 @@ We zullen het laten weten zodra dit veranderd!</div>
 ## Inntel
 
 Een groot deel van de organisatie zal in het [Inntel](https://www.inntelhotelsrotterdamcentre.nl/)
-verblijven, direct naast de Erasmusbrug.
+verblijven, direct naast de Erasmusbrug. Hier zijn de volgende kamertypes beschikbaar:
+
+**2-persoons**
+- Twin Room _(twee bedden)_: €120 per nacht
+- Queen Room _(één groot bed)_: €120 per nacht
+- Panorama _(één of twee bedden)_: €135 per nacht
+
+**3-persoons**
+- City View _(drie bedden)_: €180 per nacht
+- Panorama _(drie bedden)_: €205 per nacht
+
+Deze prijzen zijn exclusief 6.5% toeristenbelasting. Ontbijt kost €15 per persoon per dag; kosten
+voor de eerste persoon zijn inbegrepen bij de kamer.
 
 ## De officiële festivalhotels
 
