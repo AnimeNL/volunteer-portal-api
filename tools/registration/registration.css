@@ -55,6 +55,13 @@ select { width: 218px; }
     margin: 0 16px 16px 16px;
 }
 
+.melding {
+    background-color: #EEFFEE;
+    padding: 8px;
+    margin: 0 16px 16px 16px;
+    font-weight: bold;
+}
+
 .aanwezigheid label { font-weight: bold; }
 .aanwezigheid {
     background-color: #FFEBEE;
