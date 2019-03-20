@@ -29,9 +29,6 @@ verblijven, direct naast de Erasmusbrug. Hier zijn de volgende kamertypes beschi
 Deze prijzen zijn exclusief 6.5% toeristenbelasting. Ontbijt kost €15 per persoon per dag; kosten
 voor de eerste persoon zijn inbegrepen bij de kamer.
 
-<div class="melding">Eind februari zullen we een formulier met je delen waarin je deze kamers aan
-kunt vragen. We verwachten dan ook meer te kunnen melden over de kampeeropties.</div>
-
 ## De officiële festivalhotels
 
 Als steward kun je ook gebruik maken van de

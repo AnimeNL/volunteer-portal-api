@@ -28,7 +28,6 @@ $fields = [
     'night'             => 'Nachtcrew',
 ];
 
-
 $message  = 'Iemand heeft zich aangemeld als steward op <a href="https://stewards.team/hallo">stewards.team</a>, ';
 $message .= 'via het IP adres ' . $_SERVER['REMOTE_ADDR'] . '.<br /><br />';
 

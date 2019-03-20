@@ -1,2 +1,7 @@
 RewriteEngine On
-RewriteRule (hotel|index|registratie|registratie2|rooster|training|updates).html$ index.php?page=$1
+
+RewriteRule data.json - [F,L,NC]
+
+RewriteRule aanmelding/(.+?)\.html$ index.php?page=aanmelding&slug=$1
+
+RewriteRule (hotel|index|registratie|registratie2|rooster|training|updates|dataverwerking|aanmelding2).html$ index.php?page=$1

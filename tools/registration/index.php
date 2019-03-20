@@ -4,18 +4,22 @@
 // be found in the LICENSE file.
 
 require_once __DIR__ . '/../common/parsedown.php';
+require_once __DIR__ . '/aanmelding.php';
 
 setlocale(LC_ALL, 'nl_NL.utf8');
 
 $page  = 'index';
 $pages = [
-  'index'        => 'introductie.md',
-  'hotel'        => 'hotel.md',
-  'rooster'      => 'rooster.md',
-  'registratie'  => 'registratie.md',
-  'registratie2' => 'registratie-gedaan.md',
-  'training'     => 'training.md',
-  'updates'      => 'updates.md',
+  'aanmelding'     => 'aanmelding.md',
+  'aanmelding2'    => 'aanmelding-gedaan.md',
+  'dataverwerking' => 'dataverwerking.md',
+  'index'          => 'introductie.md',
+  'hotel'          => 'hotel.md',
+  'rooster'        => 'rooster.md',
+  'registratie'    => 'registratie.md',
+  'registratie2'   => 'registratie-gedaan.md',
+  'training'       => 'training.md',
+  'updates'        => 'updates.md',
 ];
 
 if (isset ($_GET['page']) && array_key_exists($_GET['page'], $pages))
@@ -23,6 +27,9 @@ if (isset ($_GET['page']) && array_key_exists($_GET['page'], $pages))
 
 $lastUpdated = strftime('%A %e %B', filemtime(__DIR__ . '/' . $pages[$page]));
 $content = file_get_contents(__DIR__ . '/' . $pages[$page]);
+
+if ($page == 'aanmelding' && array_key_exists('slug', $_GET))
+  $content = replaceRegistrationPlaceholders($content, $_GET['slug']);
 
 ?>
 <!doctype html>
