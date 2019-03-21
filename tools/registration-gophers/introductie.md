@@ -1,7 +1,7 @@
 # So you want to be a gopher?
 
 Gophers vormen de grootste, en misschien wel de belangrijkste groep vrijwilligers voor
-[Anime 2018](https://animecon.nl/). Samen met ruim honderd anderen ben je verantwoordelijk voor het
+[Anime 2019](https://animecon.nl/). Samen met ruim honderd anderen ben je verantwoordelijk voor het
 neerzetten van een fantastisch festival, zowel in zichtbare, publieksgerichte functies als in het
 ontzichtbare, maar net zo belangrijke werk.
 
@@ -28,7 +28,7 @@ Lees op deze pagina meer over de functies en meld je direct aan als je mee wilt 
   * Bij de **Bring en Buy** ben je verantwoordelijk voor de verkoop van spullen aangeboden door de
     bezoekers.
 
-Als je hier enthusiast van wordt en je ons tijdens Anime 2018 (**15–17 juni 2018**) met een paar
+Als je hier enthusiast van wordt en je ons tijdens Anime 2019 (**14–16 juni 2019**) met een paar
 shifts van vier uur wilt komen helpen, lees dan vooral verder!
 
 ## Wat krijg je van ons?

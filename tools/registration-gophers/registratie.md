@@ -1,6 +1,6 @@
 # Registratieformulier
 
-Deel via dit formulier je belangstelling om als gopher mee te helpen tijdens Anime 2018.
+Deel via dit formulier je belangstelling om als gopher mee te helpen tijdens Anime 2019.
 
 <p style="display: none" id="error" class="error">Eén van de velden was niet goed ingevuld, sorry! Probeer het nog eens.</p>
 <script>
@@ -50,7 +50,7 @@ if (document.location.hash == '#error')
   </ol>
 
 <span style="color: #883133">▼</span> En ten slotte enkele korte vragen over je voorkeuren betreft
-inzet tijdens Anime 2018.
+inzet tijdens Anime 2019.
 
   <ol>
     <li>
@@ -102,6 +102,6 @@ vragen om ook een nachtshift te draaien.
 kaartje te kopen</a> als dit de eerste keer is dat je meehelpt. Je krijgt een gratis kaartje voor
 het jaar nádat je meegeholpen hebt.
 
-<sup>4 -</sup> We hebben privé WhatsApp en Facebook groepen voor het Anime 2018 gopherteam.
+<sup>4 -</sup> We hebben privé WhatsApp en Facebook groepen voor het Anime 2019 gopherteam.
 
 [« Vorige pagina](index.html)
