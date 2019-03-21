@@ -46,7 +46,7 @@ if ($page == 'aanmelding' && array_key_exists('slug', $_GET))
   </head>
   <body>
     <header>
-      <img src="/tools/common/logo-2019.png" alt="Anime 2019 in Rotterdam Ahoy" />
+      <img src="/tools/common/logo-2019b.png" alt="Anime 2019 in Rotterdam Ahoy" />
     </header>
     <section>
 <?php echo Parsedown::instance()->text($content); ?>

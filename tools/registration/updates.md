@@ -3,6 +3,15 @@
 Op deze pagina is een overzicht te zien van de veranderingen die we aan de
 registratieportal aanbrengen.
 
+## ➜ Aanpassingen donderdag 21 maart 2019
+
+  * Nieuw uiterlijk voor Anime 2019.
+
+  * Informatie over onze [dataverwerking](dataverwerking.html).
+
+  * Gegevensformulier voor alle ontvangen aanmeldingen.
+
+
 ## ➜ Aanpassingen donderdag 14 februari 2019
 
   * Informatie over de [stewardtrainingen](training.html) is gepubliceerd. Dit jaar vinden de

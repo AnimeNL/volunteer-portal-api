@@ -1,17 +1,17 @@
 
 @media (min-width: 1200px) {
   section:first-of-type::before {
-    content: url(/tools/common/header-left.png);
+    content: url(/tools/common/clara.png);
     position: absolute;
 
     margin: -200px 0 0 60px;
   }
 
   section:first-of-type > h1::before {
-    content: url(/tools/common/header-right.png);
+    content: url(/tools/common/marieke.png);
     position: absolute;
 
-    margin: -200px 40px 0 0;
+    margin: -220px 0 0 0;
     right: 0;
   }
 
@@ -20,12 +20,8 @@
   body {
     overflow-y: scroll;
 
-    /** Modern browsers supporting multiple backgrounds **/
-    background: url(/tools/common/footer.png) bottom left no-repeat,
-                url(/tools/common/top-left.png) top left no-repeat,
-                url(/tools/common/top-right.png) top right no-repeat,
-                url(/tools/common/background.jpg),
-                #e8c4aa;
+    background: url(/tools/common/background.jpg) top left / cover,
+                linear-gradient(to bottom, rgba(36, 157, 247, 1) 0%, rgba(234, 245, 254, 1) 100%);
   }
 
   section { margin-bottom: 36px; }
