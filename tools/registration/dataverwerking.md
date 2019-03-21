@@ -4,7 +4,7 @@ De [Anime 2019](https://animecon.nl) stewardleiding slaat de volgende gevoelige 
 om je deelname te kunnen ondersteunen:
 
 <ul>
-  <li>Je volledige naam, geslacht, e-mailadres en telefoonnummer</li>
+  <li>Je volledige naam, geslacht, geboortedatum, e-mailadres en telefoonnummer</li>
   <li>Indien publiekelijk beschikbaar, een pasfoto</li>
 </ul>
 
