@@ -1,31 +1,7 @@
-# Copyright 2017 Peter Beverloo. All rights reserved.
-# Use of this source code is governed by the MIT license, a copy of which can
-# be found in the LICENSE file.
+# TODO: Convert to nginx
+
 
 RewriteEngine On
-
-# Only allow the portals to be used from secured connections
-Header set Strict-Transport-Security "max-age=31536000" env=HTTPS
-
-# Enable PHP errors and warnings
-php_flag display_startup_errors on
-php_flag display_errors on
-php_flag html_errors on
-php_value error_reporting -1
-
-# Disallow access to .git and .gitignore entirely.
-RedirectMatch 404 /\.git
-RedirectMatch 404 /\.gitignore
-
-# Disallow access to other files that don't have to be web-accessible.
-RedirectMatch 404 /configuration/
-RedirectMatch 404 /composer.json
-RedirectMatch 404 /composer.lock
-RedirectMatch 404 /gulpfile.js
-RedirectMatch 404 /node_modules/
-RedirectMatch 404 /package.json
-RedirectMatch 404 /phpcs.xml
-RedirectMatch 404 /phpunit.xml
 
 # These files will be generated based on the environment and needs.
 RewriteRule ^manifest.json$ /manifest.php [L]
@@ -42,18 +18,6 @@ RewriteRule ^(events|floors|stewards|volunteers)/ / [L]
   Header set Pragma "no-cache"
   Header set Expires "Fri, 9 Jun 1989 01:00:00 GMT"
 </FilesMatch>
-
-# Vanity URLs for the tools hosted on these domains.
-RewriteRule ^hallo$ /hallo/ [R=301]
-RewriteRule ^hello$ /hello/ [R=301]
-
-# gophers.team/hallo
-RewriteCond %{HTTP_HOST} gophers\.team [NC]
-RewriteRule ^hallo/?(.*) /tools/registration-gophers/$1 [L]
-
-# stewards.team/hallo
-RewriteRule ^hallo/?(.*) /tools/registration/$1 [L]
-RewriteRule ^hello/?(.*) /tools/registration/$1 [L]
 
 RewriteRule ^schedule$ /schedule/ [R=301]
 RewriteRule ^schedule/?(.*) /tools/schedule/$1 [L]
