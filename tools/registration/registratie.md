@@ -1,6 +1,6 @@
 # Registratieformulier
 
-Deel via dit formulier je belangstelling om als steward mee te helpen tijdens Anime 2019.
+Deel via dit formulier je belangstelling om als steward mee te helpen tijdens AnimeCon 2019.
 
 <p style="display: none" id="error" class="error">Eén van de velden was niet goed ingevuld, sorry! Probeer het nog eens.</p>
 <script>
@@ -51,7 +51,7 @@ ervaringen betreft veiligheid, stewarden en vrijwilligerswerk.
   </ol>
 
 <span style="color: #883133">▼</span> En ten slotte enkele korte vragen over je voorkeuren betreft
-inzet tijdens Anime 2019.
+inzet tijdens AnimeCon 2019.
 
   <ol>
     <li>
@@ -89,11 +89,11 @@ inzet tijdens Anime 2019.
   <input type="submit" value="Verzenden" />
 </form>
 
-<sup>1 -</sup> Als je in 2018 een stewardtraining via Animecon hebt gevolgt, dan is de training in
+<sup>1 -</sup> Als je in 2018 een stewardtraining via AnimeCon hebt gevolgt, dan is de training in
 2019 niet verplicht.</span>
 
 <sup>2 -</sup> De nachtcrew werkt 's nachts tot een uur of zes door, maar kan wel lekker uitslapen!
 
-<sup>3 -</sup> We hebben een privé WhatsApp groep voor het Anime 2019 stewardteam.
+<sup>3 -</sup> We hebben een privé WhatsApp groep voor het AnimeCon 2019 stewardteam.
 
 [« Vorige pagina](index.html)

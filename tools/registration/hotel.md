@@ -1,8 +1,8 @@
 # Hotelinformatie
 
-Ook tijdens Anime 2019 zullen we je weer de mogelijkheid aanbieden om een slaapplaats te reserveren
-in één van de festivalhotels, en hopelijk voor de goedkopere camping op het parkeerterrein direct
-naast Ahoy.
+Ook tijdens AnimeCon 2019 zullen we je weer de mogelijkheid aanbieden om een slaapplaats te
+reserveren in één van de festivalhotels, en hopelijk voor de goedkopere camping op het
+parkeerterrein direct naast Ahoy.
 
 Indien je via ons een kamer reserveert dan vragen we je om deze met een andere steward te delen. In
 onze ervaring is dit niet alleen heel gezellig, maar ook heel praktisch omdat onze uren niet altijd

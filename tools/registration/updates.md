@@ -3,6 +3,11 @@
 Op deze pagina is een overzicht te zien van de veranderingen die we aan de
 registratieportal aanbrengen.
 
+## ➜ Aanpassingen vrijdag 22 maart 2019
+
+  * Anime 2019 hernoemd naar AnimeCon 2019.
+
+
 ## ➜ Aanpassingen donderdag 21 maart 2019
 
   * Nieuw uiterlijk voor Anime 2019.

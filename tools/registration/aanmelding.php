@@ -39,7 +39,7 @@ function replaceRegistrationPlaceholders($content, $slug) {
         '{{name}}'       => $registration[0],
         '{{email}}'      => $registration[1],
         '{{tel}}'        => $registration[2],
-        '{{training}}'   => trainingMessage($registration[6])
+        '{{training}}'   => trainingMessage($registration[7])
     ];
 
     return str_replace(array_keys($substitutions), array_values($substitutions), $content);
