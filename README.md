@@ -1,14 +1,6 @@
-[![Build Status](https://travis-ci.org/AnimeNL/anime-2017.svg?branch=master)](https://travis-ci.org/AnimeNL/anime-2017)
-[![NPM Dependencies](https://david-dm.org/AnimeNL/anime-2017.svg)](https://david-dm.org/AnimeNL/anime-2017/)
-
-Anime 2018 Volunteer Portal
+Anime 2019 Volunteer Portal
 ===
-This repository contains the code powering the Anime 2018 volunteer portals. It contains a limited
-amount of backend logic for importing and normalizing data from external parties, as well as the
-frontend for both the client-side logic and the portal's visual interface.
 
-While this portal has been written for the [AnimeCon](http://www.animecon.nl/) convention, other
-events are most welcome to adopt it for their needs. Pull requests to make this easier are welcomed.
 
 ## Development setup (Docker)
 You can easily get a development setup on Linux by using [Docker](https://www.docker.com/).
@@ -35,10 +27,6 @@ A number of external dependencies will be pulled in using [Composer](https://get
 sure to run `composer install` when starting to work with this repository, and `composer update`
 every time you pull new changes.
 
-## Frontend code (JavaScript)
-You need to generate anime.js, for which [Gulp](https://github.com/gulpjs/gulp) is used. Install nodejs
-and npm, and then run `npm install`. Afterwards, run `npm run-script build` to generate anime.js.
-
 ## Installation
 Create the following files, and make sure that they're readable by the current user, as well as the
 user that will be used for serving the application (e.g. _apache_).
@@ -52,11 +40,6 @@ of anime/Services/error.log to `httpd_sys_rw_content_t`
 (run `chcon -t httpd_sys_rw_content_t anime/Services/error.log`).
 
 **TODO**: Document both backend and frontend deployment in this section.
-
-## Frontend
-Now try to reach $yourhost/anime.css. If that gives you a Not Found error, you need to enable htaccess
-overrides (set "AllowOverride FileInfo Options" in your apache config for the directory where you are
-deploying, or copy all of the .htaccess entries into the apache configuration).
 
 ## Configuration
 Look in anime/Services/Import{Program,Schedule,Team}Service.php to see how the various services import
