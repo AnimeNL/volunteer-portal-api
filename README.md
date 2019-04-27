@@ -1,5 +1,23 @@
-Anime 2019 Volunteer Portal
+AnimeCon 2019 Volunteer Portal
 ===
+This repository contains a Volunteer Portal backend implementation for the
+[AnimeCon 2019](https://www.animecon.nl/) festival. The front-end may be found in the
+[portal](https://github.com/AnimeNL/portal) project, also published on GitHub.
+
+## API Documentation
+The [/api/](api/) directory implements the full set of
+[documented interfaces](https://github.com/AnimeNL/portal/blob/master/API.md). Because the
+implementation is provided in PHP, the following mappings must be set up with the webserver.
+
+| Request            | Handler |
+| :---               | :---    |
+| `/api/environment` | [/api/environment.php](api/environment.php) |
+| `/api/login`       | [/api/login.php](api/login.php) |
+
+
+
+
+# TODO: Clean up the following
 
 
 ## Development setup (Docker)
