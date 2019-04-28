@@ -15,11 +15,6 @@ class EnvironmentTest extends \PHPUnit\Framework\TestCase {
             if (!$iter->isFile() || $iter->getExtension() != 'json')
                 continue;
 
-            if (strpos($iter->getFilename(), 'configuration') !== false ||
-                strpos($iter->getFilename(), 'program') !== false) {
-                continue;
-            }
-
             $filename = $iter->getFilename();
             $hostname = substr($filename, 0, -5);
 

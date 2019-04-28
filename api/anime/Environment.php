@@ -12,7 +12,7 @@ namespace Anime;
 class Environment {
     // Directory in which the configuration files for the environments have been stored.
     // Marked public for testing purposes only.
-    public const CONFIGURATION_DIRECTORY = __DIR__ . '/../configuration/';
+    public const CONFIGURATION_DIRECTORY = __DIR__ . '/../configuration/environments/';
 
     // Directory in which information about the individual teams has been stored.
     private const TEAM_DATA_DIRECTORY = __DIR__ . '/../configuration/teams/';
