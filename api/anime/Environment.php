@@ -72,6 +72,8 @@ class Environment {
 
     private $name;
     private $shortName;
+    private $groupName;
+    private $groupToken;
     private $hostname;
     private $teamDataFile;
     private $teamProgramFile;
@@ -90,6 +92,8 @@ class Environment {
 
         $this->name = $settings['name'];
         $this->shortName = $settings['short_name'];
+        $this->groupName = $settings['group_name'];
+        $this->groupToken = $this->createGroupToken();
         $this->titles = $settings['titles'];
         $this->hostname = $settings['hostname'];
         $this->hiddenEventsPublic = $settings['hidden_events_public'];
@@ -112,6 +116,16 @@ class Environment {
     // Returns the short name of the environment, that can be used for display purposes.
     public function getShortName() : string {
         return $this->shortName;
+    }
+
+    // Returns the name that identifies this group of volunteers.
+    public function getGroupName() : string {
+        return $this->groupName;
+    }
+
+    // Returns the token that identifies this group of volunteers.
+    public function getGroupToken() : string {
+        return $this->groupToken;
     }
 
     // Returns the Environment-specific title associated with a volunteer's type.
@@ -167,5 +181,11 @@ class Environment {
     // Returns the year for which this environment has been created.
     public function getYear() : int {
         return $this->year;
+    }
+
+    // Generates the group token that identifies this group name.
+    private function createGroupToken() : string {
+        $hash = base_convert(hash('fnv164', $this->groupName), 16, 32);
+        return substr($hash, 0, 8);
     }
 }

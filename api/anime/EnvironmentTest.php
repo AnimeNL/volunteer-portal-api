@@ -47,6 +47,7 @@ class EnvironmentTest extends \PHPUnit\Framework\TestCase {
         $settings = [
             'name'                  => 'Example environment',
             'short_name'            => 'Example',
+            'group_name'            => 'Examples',
             'titles'                => [
                 'Volunteer'             => 'Random Volunteer',
                 'Senior'                => 'Senior Volunteer',
@@ -65,6 +66,7 @@ class EnvironmentTest extends \PHPUnit\Framework\TestCase {
 
         $this->assertEquals($settings['name'], $environment->getName());
         $this->assertEquals($settings['short_name'], $environment->getShortName());
+        $this->assertEquals($settings['group_name'], $environment->getGroupName());
 
         $this->assertEquals('Random Volunteer', $environment->typeToTitle(Volunteer::TYPE_VOLUNTEER));
         $this->assertEquals('Senior Volunteer', $environment->typeToTitle(Volunteer::TYPE_SENIOR));

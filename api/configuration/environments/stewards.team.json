@@ -1,6 +1,7 @@
 {
     "name": "Steward Portal",
     "short_name": "Stewards",
+    "group_name": "Stewards",
     "titles": {
         "Volunteer": "Steward",
         "Senior": "Senior Steward",

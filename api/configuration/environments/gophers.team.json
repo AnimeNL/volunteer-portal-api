@@ -1,6 +1,7 @@
 {
     "name": "Gopher Portal",
     "short_name": "Gophers",
+    "group_name": "Gophers",
     "titles": {
         "Volunteer": "Gopher",
         "Senior": "Senior Gopher",
