@@ -1,0 +1,15 @@
+{
+    "name": "Gopher Portal",
+    "short_name": "Gophers",
+    "titles": {
+        "Volunteer": "Gopher",
+        "Senior": "Senior Gopher",
+        "Staff": "Staff"
+    },
+    "hostname": "gophers.team",
+    "hidden_events_public": false,
+    "team_data": null,
+    "team_program": null,
+    "team_shifts": null,
+    "year": 2019
+}
