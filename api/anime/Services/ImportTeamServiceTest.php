@@ -28,7 +28,7 @@ class ImportTeamServiceTest extends \PHPUnit\Framework\TestCase {
     public function testBasicImportTest() {
         $result = $this->importFromData([
             ['John Doe', 'Volunteer', 'john@doe.co.uk', '+447000000000'],
-            ['Jane Doe', 'Staff', 'jane@doe.co.uk', '+448000000000']
+            ['Jane Doe', 'Staff', 'jane@doe.co.uk', '+448000000000', 'Yes', 'Yes']
         ]);
 
         $this->assertEquals([
@@ -37,14 +37,18 @@ class ImportTeamServiceTest extends \PHPUnit\Framework\TestCase {
                 'password'  => '7804',
                 'type'      => 'Staff',
                 'email'     => 'jane@doe.co.uk',
-                'telephone' => '+448000000000'
+                'telephone' => '+448000000000',
+                'is_admin'  => true,
+                'is_debug'  => true
             ],
             [
                 'name'      => 'John Doe',
                 'password'  => '1399',
                 'type'      => 'Volunteer',
                 'email'     => 'john@doe.co.uk',
-                'telephone' => '+447000000000'
+                'telephone' => '+447000000000',
+                'is_admin'  => false,
+                'is_debug'  => false
             ]
         ], $result);
     }

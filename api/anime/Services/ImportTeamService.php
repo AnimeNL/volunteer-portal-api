@@ -34,6 +34,8 @@ namespace Anime\Services;
 //         (b) Type ({ Staff, Senior, Volunteer })
 //         (c) E-mail address
 //         (d) Telephone number
+//         (e) Enable administrator rights?
+//         (f) Enable debugging rights?
 //
 // The parser is strict in regards to these rules, but linient for the actual data values. The
 // conditions, as well known mistakes, are tested in the ImportTeamServiceTest.
@@ -122,7 +124,9 @@ class ImportTeamService implements Service {
                 'password'  => $password,
                 'type'      => $type,
                 'email'     => trim($line[2]),
-                'telephone' => trim($line[3])
+                'telephone' => trim($line[3]),
+                'is_admin'  => count($line) >= 5 && $line[4] === 'Yes',
+                'is_debug'  => count($line) >= 6 && $line[5] === 'Yes',
             ];
         }
 
