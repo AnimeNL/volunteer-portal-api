@@ -7,7 +7,7 @@ namespace Anime\Services;
 
 use Anime\Configuration;
 
-require __DIR__ . '/../../vendor/autoload.php';
+require __DIR__ . '/../../../vendor/autoload.php';
 
 // Pass -f or --force to force immediate execution of all services.
 $force = count(getopt('f', [ 'force' ])) > 0;
