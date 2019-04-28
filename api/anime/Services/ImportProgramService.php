@@ -276,7 +276,7 @@ class ImportProgramService implements Service {
                 'end'           => strtotime($entry['end']),
 
                 'location'      => $entry['location'],
-                'floor'         => (int) (substr($entry['floor'], 6)),
+                'floor'         => $this->fixFloorNumber($entry['floor']),
             ];
 
             // Coalesce this session with the existing event if it exists.
@@ -293,5 +293,13 @@ class ImportProgramService implements Service {
         }
 
         return array_values($events);
+    }
+
+    // Fix the floor number - the AnimePlan tool mentions the 2nd floor as the -1 floor, presumably
+    // to be able to re-use configuration from the World Forum venue.
+    private function fixFloorNumber($input) : int {
+        $value = (int) (substr($input, 6));
+        return $value >= 0 ? $value
+                           : 3;
     }
 }
