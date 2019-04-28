@@ -27,8 +27,7 @@ var DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'S
 
     // Determine number of seconds of difference between the current timezone and that of the event.
     var timezoneCorrection =
-        ((new Date()).getTimezoneOffset() -
-            moment.tz.zone('Europe/Amsterdam').offset(conventionDuration.begin)) * 60;
+            moment.tz.zone('Europe/Amsterdam').offset(conventionDuration.begin) * -60;
 
     conventionDuration.begin += timezoneCorrection;
     conventionDuration.end += timezoneCorrection;
@@ -67,7 +66,7 @@ var DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'S
 
         var displayDay = date.getDay();
         var displayHour = date.getHours();
-        
+
         var hours = [];
         for (; displayHour < 24 && hour < conventionDuration.end; displayHour++) {
             hours.push(displayHour);

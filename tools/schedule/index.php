@@ -8,12 +8,6 @@ require __DIR__ . '/../../vendor/autoload.php';
 $schedule = json_decode(file_get_contents(__DIR__ . '/../../api/configuration/program.json'), true);
 $configuration = \Anime\Configuration::getInstance();
 
-if (!array_key_exists('showHidden', $_GET)) {
-    $schedule = array_filter($schedule, function ($event) {
-       return !$event['hidden'];
-    });
-}
-
 $conventionDuration = $configuration->get('convention/duration');
 
 $conventionBegin = strtotime($conventionDuration[0]);
