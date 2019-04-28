@@ -21,8 +21,8 @@ class Volunteer {
     // Full name of the volunteer.
     private $name;
 
-    // The randomly generated password for the volunteer.
-    private $password;
+    // The randomly access_code for the volunteer.
+    private $accessCode;
 
     // Token unique to this volunteer. Created by combining the name and e-mail address.
     private $token;
@@ -36,6 +36,12 @@ class Volunteer {
     // Telephone number of the volunteer.
     private $telephone;
 
+    // Whether the volunteer is an administrator.
+    private $isAdmin;
+
+    // Whether the volunteer should have debugging information enabled.
+    private $isDebug;
+
     // Constructs a new Volunteer object based on |$volunteerData|. The input data will be checked
     // for correctness to ensure the instance is valid.
     public function __construct($volunteerData) {
@@ -44,10 +50,12 @@ class Volunteer {
 
         $this->name = $volunteerData['name'];
 
-        if (!array_key_exists('password', $volunteerData) || !is_string($volunteerData['password']))
-            throw new \TypeError('The volunteer\'s `password` is expected to be a string.');
+        if (!array_key_exists('access_code', $volunteerData) ||
+            !is_string($volunteerData['access_code'])) {
+            throw new \TypeError('The volunteer\'s `access_code` is expected to be a string.');
+        }
 
-        $this->password = $volunteerData['password'];
+        $this->accessCode = $volunteerData['access_code'];
 
         if (!array_key_exists('type', $volunteerData) || !is_string($volunteerData['type']))
             throw new \TypeError('The volunteer\'s `type` is expected to be a string.');
@@ -69,7 +77,7 @@ class Volunteer {
 
         // Create the token unique to this volunteer. Changing how the token is calculated will
         // force-logout all users on the volunteer portal.
-        $this->token = strval(crc32($this->name) ^ crc32($this->email));
+        $this->token = strval(crc32($this->name)^(crc32($this->email) + crc32($this->accessCode)));
 
         if (!array_key_exists('telephone', $volunteerData) ||
             !is_string($volunteerData['telephone'])) {
@@ -77,6 +85,16 @@ class Volunteer {
         }
 
         $this->telephone = preg_replace('/\s|\(\d\)/s', '', $volunteerData['telephone']);
+
+        if (!array_key_exists('is_admin', $volunteerData) || !is_bool($volunteerData['is_admin']))
+            throw new \TypeError('The volunteer\'s `is_admin` is expected to be a boolean.');
+
+        $this->isAdmin = $volunteerData['is_admin'];
+
+        if (!array_key_exists('is_debug', $volunteerData) || !is_bool($volunteerData['is_debug']))
+            throw new \TypeError('The volunteer\'s `is_debug` is expected to be a boolean.');
+
+        $this->isDebug = $volunteerData['is_debug'];
     }
 
     // Returns the volunteer's full name as a string.
@@ -126,5 +144,15 @@ class Volunteer {
     // Returns the telephone number of this volunteer.
     public function getTelephone() : string {
         return $this->telephone;
+    }
+
+    // Returns whether this volunteer is an administrator.
+    public function isAdmin() : boolean {
+        return $this->isAdmin;
+    }
+
+    // Returns whether this volunteer should have debugging rights.
+    public function isDebug() : boolean {
+        return $this->isDebug;
     }
 }

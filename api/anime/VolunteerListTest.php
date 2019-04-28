@@ -113,18 +113,19 @@ class VolunteerListTest extends \PHPUnit\Framework\TestCase {
     // the optional properties that are being parsed in this method.
     private function createVolunteer(string $name, array $options = []) {
         return [
-            'name'      => $name,
-            'password'  => '',
+            'name'        => $name,
+            'access_code' => '',
 
-            'type'      => array_key_exists('type', $options) ? $options['type'] : 'Volunteer',
-            'title'     => array_key_exists('title', $options) ? $options['title'] : null,
+            'type'        => array_key_exists('type', $options) ? $options['type'] : 'Volunteer',
+            'title'       => array_key_exists('title', $options) ? $options['title'] : null,
 
-            'email'     => array_key_exists('email', $options) ? $options['email']
+            'email'       => array_key_exists('email', $options) ? $options['email']
                                                                : 'info@example.com',
-            'telephone' => array_key_exists('telephone', $options) ? $options['telephone']
+            'telephone'   => array_key_exists('telephone', $options) ? $options['telephone']
                                                                    : '+31 (0)6 123 45 678',
 
-            'visible'   => array_key_exists('visible', $options) ? $options['visible'] : true
+            'is_admin'    => array_key_exists('is_admin', $options) ? $options['is_admin'] : false,
+            'is_debug'    => array_key_exists('is_debug', $options) ? $options['is_debug'] : false
         ];
     }
 }
