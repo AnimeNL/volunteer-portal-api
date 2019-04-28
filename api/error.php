@@ -4,5 +4,5 @@
 // be found in the LICENSE file.
 
 function dieWithError($error) {
-    die(json_encode([ 'error' => $error ]));
+    die(json_encode([ 'success' => false, 'error' => $error ]));
 }

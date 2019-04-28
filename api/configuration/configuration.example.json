@@ -1,4 +1,9 @@
 {
+    "userTokenSalt": "Aadc3kmntFhCTycY9u7WHyrP",
+    "authTokenSalt": "NMrvP28XCLyvVWmZDc72LjQJ",
+
+    "sessionTimeoutMinutes": 43560,
+
     "convention": {
         "duration": [ "2019-06-14 10:00:00", "2019-06-16 18:00:00" ]
     },

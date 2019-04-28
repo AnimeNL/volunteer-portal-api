@@ -8,7 +8,7 @@
     },
     "hostname": "stewards.team",
     "hidden_events_public": true,
-    "team_data": null,
+    "team_data": "stewards.json",
     "team_program": null,
     "team_shifts": null,
     "year": 2019

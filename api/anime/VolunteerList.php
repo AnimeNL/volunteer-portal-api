@@ -51,9 +51,20 @@ class VolunteerList implements \ArrayAccess, \Countable, \IteratorAggregate {
 
     // Finds the volunteer associated with |$token|, or NULL when they cannot be found. This method
     // has O(n) complexity because it has to iterate over all volunteers.
-    public function findByToken(string $token) : ?Volunteer {
+    public function findByAuthToken(string $token) : ?Volunteer {
         foreach ($this->volunteers as $volunteer) {
-            if ($volunteer->getToken() == $token)
+            if ($volunteer->getAuthToken() == $token)
+                return $volunteer;
+        }
+
+        return null;
+    }
+
+    // Finds the volunteer associated with |$email|, or NULL when they cannot be found. This method
+    // has O(n) complexity because it has to iterate over all volunteers.
+    public function findByEmail(string $email) : ?Volunteer {
+        foreach ($this->volunteers as $volunteer) {
+            if ($volunteer->getEmail() == $email)
                 return $volunteer;
         }
 

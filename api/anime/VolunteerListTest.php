@@ -38,12 +38,12 @@ class VolunteerListTest extends \PHPUnit\Framework\TestCase {
         $this->AssertEquals($remy, $list->findByName('REMYEENDENKWAAKDEOUDE', true /* fuzzy */));
     }
 
-    // Verifies that the findByToken() method returns the expected volunteer.
-    public function testFindToken() {
+    // Verifies that the findByAuthToken() method returns the expected volunteer.
+    public function testFindAuthToken() {
         $list = VolunteerList::create([ $this->createVolunteer('MyName') ]);
 
         $this->assertInstanceOf(VolunteerList::class, $list);
-        $this->assertEquals($list[0], $list->findByToken($list[0]->getToken()));
+        $this->assertEquals($list[0], $list->findByAuthToken($list[0]->getAuthToken()));
     }
 
     // Verifies that the functionality of the ArrayAccess interface has been implemented correctly.

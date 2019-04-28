@@ -24,8 +24,9 @@ class Volunteer {
     // The randomly access_code for the volunteer.
     private $accessCode;
 
-    // Token unique to this volunteer. Created by combining the name and e-mail address.
-    private $token;
+    // Tokens unique to this volunteer. One for identification purposes, one for authentication ones
+    private $authToken;
+    private $userToken;
 
     // Type of volunteer, must be one of the constants defined earlier in this class.
     private $type;
@@ -75,9 +76,14 @@ class Volunteer {
 
         $this->email = $volunteerData['email'];
 
-        // Create the token unique to this volunteer. Changing how the token is calculated will
-        // force-logout all users on the volunteer portal.
-        $this->token = strval(crc32($this->name)^(crc32($this->email) + crc32($this->accessCode)));
+        // Calculate the unique token and authentication token for this volunteer. One is public,
+        // one is private, but other than that they're surprisingly similar.
+        {
+            $config = Configuration::getInstance();
+
+            $this->authToken = $this->generateHash($this->name, $config->get('authTokenSalt'));
+            $this->userToken = $this->generateHash($this->name, $config->get('userTokenSalt'));
+        }
 
         if (!array_key_exists('telephone', $volunteerData) ||
             !is_string($volunteerData['telephone'])) {
@@ -102,14 +108,19 @@ class Volunteer {
         return $this->name;
     }
 
-    // Return the volunteer's generated password as a string.
-    public function getPassword() : string {
-        return $this->password;
+    // Return the volunteer's generated access code as a string.
+    public function getAccessCode() : string {
+        return $this->accessCode;
     }
 
-    // Returns the token associated with this volunteer.
-    public function getToken() : string {
-        return $this->token;
+    // Returns the authentication token associated with this volunteer.
+    public function getAuthToken() : string {
+        return $this->authToken;
+    }
+
+    // Returns the identification token associated with this volunteer.
+    public function getUserToken() : string {
+        return $this->userToken;
     }
 
     // Returns whether this volunteer is a senior member of the volunteers.
@@ -147,12 +158,19 @@ class Volunteer {
     }
 
     // Returns whether this volunteer is an administrator.
-    public function isAdmin() : boolean {
+    public function isAdmin() : bool {
         return $this->isAdmin;
     }
 
     // Returns whether this volunteer should have debugging rights.
-    public function isDebug() : boolean {
+    public function isDebug() : bool {
         return $this->isDebug;
+    }
+
+    // Calculates a hash for the given |$data| with the given $salt. The returned string will be
+    // eight characters in length and stable for the input data.
+    private function generateHash($data, $hash) : string {
+        $phrase = base_convert(hash('fnv164', $data . $hash), 16, 32);
+        return substr($phrase, 0, 8);
     }
 }
