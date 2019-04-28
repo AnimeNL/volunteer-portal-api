@@ -40,9 +40,10 @@ namespace Anime\Services;
 // The parser is strict in regards to these rules, but linient for the actual data values. The
 // conditions, as well known mistakes, are tested in the ImportTeamServiceTest.
 class ImportTeamService implements Service {
-    // Length of the passwords to generate for each person in the team. See the generatePassword()
-    // method for an explanation of its use and sensitivity. Public for testing purposes only.
-    public const PASSWORD_LENGTH = 4;
+    // Length of the access codes to generate for each person in the team. See the
+    // generateAccessCode() method for an explanation of its use and sensitivity. Public for testing
+    // purposes only.
+    public const ACCESS_CODE_LENGTH = 4;
 
     private $options;
 
@@ -116,17 +117,14 @@ class ImportTeamService implements Service {
             if (!in_array($type, ['Staff', 'Senior', 'Volunteer']))
                 throw new \Exception('Invalid type in "' . $sourceFile . '" for ' . $name);
 
-            // Generate a password for the user.
-            $password = $this->generatePassword($name);
-
             $team[] = [
-                'name'      => $name,
-                'password'  => $password,
-                'type'      => $type,
-                'email'     => trim($line[2]),
-                'telephone' => trim($line[3]),
-                'is_admin'  => count($line) >= 5 && $line[4] === 'Yes',
-                'is_debug'  => count($line) >= 6 && $line[5] === 'Yes',
+                'name'        => $name,
+                'access_code' => $this->generateAccessCode($name),
+                'type'        => $type,
+                'email'       => trim($line[2]),
+                'telephone'   => trim($line[3]),
+                'is_admin'    => count($line) >= 5 && $line[4] === 'Yes',
+                'is_debug'    => count($line) >= 6 && $line[5] === 'Yes',
             ];
         }
 
@@ -139,15 +137,13 @@ class ImportTeamService implements Service {
         file_put_contents($this->options['destination'], json_encode($team));
     }
 
-    // Generates a password for |$name| by running it through a hashing function and selecting a
+    // Generates an access code for |$name| by running it through a hashing function and selecting a
     // certain number of characters from it. A salt for the generation can be configured in the
     // service's configuration section.
     //
-    // These passwords will only be required for Senior and Staff users who get access to additional
-    // information in the application. All other users will be able to log in using their name. In
-    // addition, those who require a password can see the passwords of all other users.
-    public function generatePassword($name) : string {
+    // These access codes are required for all volunteers in order to access the application.
+    public function generateAccessCode($name) : string {
         $phrase = base_convert(hash('fnv164', $name . $this->options['password_salt']), 16, 10);
-        return strtoupper(substr($phrase, 0, self::PASSWORD_LENGTH));
+        return strtoupper(substr($phrase, 0, self::ACCESS_CODE_LENGTH));
     }
 }

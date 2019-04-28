@@ -33,22 +33,22 @@ class ImportTeamServiceTest extends \PHPUnit\Framework\TestCase {
 
         $this->assertEquals([
             [
-                'name'      => 'Jane Doe',
-                'password'  => '7804',
-                'type'      => 'Staff',
-                'email'     => 'jane@doe.co.uk',
-                'telephone' => '+448000000000',
-                'is_admin'  => true,
-                'is_debug'  => true
+                'name'        => 'Jane Doe',
+                'access_code' => '7804',
+                'type'        => 'Staff',
+                'email'       => 'jane@doe.co.uk',
+                'telephone'   => '+448000000000',
+                'is_admin'    => true,
+                'is_debug'    => true
             ],
             [
-                'name'      => 'John Doe',
-                'password'  => '1399',
-                'type'      => 'Volunteer',
-                'email'     => 'john@doe.co.uk',
-                'telephone' => '+447000000000',
-                'is_admin'  => false,
-                'is_debug'  => false
+                'name'        => 'John Doe',
+                'access_code' => '1399',
+                'type'        => 'Volunteer',
+                'email'       => 'john@doe.co.uk',
+                'telephone'   => '+447000000000',
+                'is_admin'    => false,
+                'is_debug'    => false
             ]
         ], $result);
     }
@@ -64,9 +64,9 @@ class ImportTeamServiceTest extends \PHPUnit\Framework\TestCase {
         $this->assertException($test->bindTo($this));
     }
 
-    // Verifies that password can be generated given a name, and that the configurable salt will be
-    // honoured in doing so. The passwords are not meant to be personal or secret.
-    public function testPasswordGeneration() {
+    // Verifies that access code can be generated given a name, and that the configurable salt will
+    // be honoured in doing so. The passwords are not meant to be personal or secret.
+    public function testAccessCodeGeneration() {
         $firstService = new ImportTeamService([
             'destination'   => '',
             'frequency'     => 0,
@@ -84,18 +84,18 @@ class ImportTeamServiceTest extends \PHPUnit\Framework\TestCase {
         ]);
 
         // Passwords should have their expected length.
-        $this->assertEquals(
-            ImportTeamService::PASSWORD_LENGTH, strlen($firstService->generatePassword('Peter')));
-        $this->assertEquals(
-            ImportTeamService::PASSWORD_LENGTH, strlen($firstService->generatePassword('Ferdi')));
+        $this->assertEquals(ImportTeamService::ACCESS_CODE_LENGTH,
+                            strlen($firstService->generateAccessCode('Peter')));
+        $this->assertEquals(ImportTeamService::ACCESS_CODE_LENGTH,
+                            strlen($firstService->generateAccessCode('Ferdi')));
 
         // Passwords should be different depending on the name.
         $this->assertNotEquals(
-            $firstService->generatePassword('Peter'), $firstService->generatePassword('Ferdi'));
+            $firstService->generateAccessCode('Peter'), $firstService->generateAccessCode('Ferdi'));
 
         // Passwords should be different depending on the salt.
-        $this->assertNotEquals(
-            $firstService->generatePassword('Peter'), $secondService->generatePassword('Peter'));
+        $this->assertNotEquals($firstService->generateAccessCode('Peter'),
+                               $secondService->generateAccessCode('Peter'));
     }
 
     // Writes |$data| in CSV form to a file, then creates an ImportTeamService instance to parse it,
