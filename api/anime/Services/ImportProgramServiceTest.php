@@ -241,7 +241,7 @@ class ImportProgramServiceTest extends \PHPUnit\Framework\TestCase {
                         'begin'         => 1496966400,
                         'end'           => 1496968200,
                         'location'      => 'Asia',
-                        'floor'         => -1
+                        'floor'         => 3
                     ]
                 ],
                 'hidden'    => false,
@@ -298,7 +298,7 @@ class ImportProgramServiceTest extends \PHPUnit\Framework\TestCase {
                         'begin'         => 1496966400,
                         'end'           => 1496970000,
                         'location'      => 'Asia',
-                        'floor'         => -1
+                        'floor'         => 3
                     ]
                 ],
                 'hidden'    => false,
@@ -369,7 +369,7 @@ class ImportProgramServiceTest extends \PHPUnit\Framework\TestCase {
                         'begin'         => 1496966400,
                         'end'           => 1496970000,
                         'location'      => 'Asia',
-                        'floor'         => -1
+                        'floor'         => 3
                     ],
                     [
                         'name'          => 'Second session',
@@ -377,7 +377,7 @@ class ImportProgramServiceTest extends \PHPUnit\Framework\TestCase {
                         'begin'         => 1496970000,
                         'end'           => 1496973600,
                         'location'      => 'Oceania',
-                        'floor'         => -1
+                        'floor'         => 3
                     ]
                 ],
                 'hidden'    => false,
