@@ -150,6 +150,9 @@ class Environment {
     // instance. The instance will be cached, so multiple calls will return the same instance.
     public function loadVolunteers() : VolunteerList {
         if ($this->team === null) {
+            if ($this->teamDataFile === null)
+                return VolunteerList::create([]);
+
             $teamData = file_get_contents(self::TEAM_DATA_DIRECTORY . $this->teamDataFile);
             $this->team = VolunteerList::create(json_decode($teamData, true));
         }

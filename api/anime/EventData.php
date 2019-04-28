@@ -50,6 +50,29 @@ class EventData {
 
     // Returns an array detailing the available volunteers.
     public function getVolunteers() : array {
-        return [];
+        $isAdmin = $this->volunteer->isAdmin();
+        $volunteers = [];
+
+        foreach ($this->environments as $environment) {
+            $groupToken = $environment->getGroupToken();
+            foreach ($environment->loadVolunteers() as $volunteer) {
+                $accessCode = $isAdmin ? $volunteer->getAccessCode() : null;
+                $telephone = $isAdmin || $volunteer->isSeniorVolunteer()
+                    ? $volunteer->getTelephone()
+                    : null;
+
+                $volunteers[] = [
+                    'userToken'    => $volunteer->getUserToken(),
+                    'groupToken'   => $groupToken,
+                    'name'         => $volunteer->getName(),
+                    'avatar'       => null,
+                    'title'        => 'foo',
+                    'accessCode'   => $accessCode,
+                    'telephone'    => $telephone,
+                ];
+            }
+        }
+
+        return $volunteers;
     }
 }
