@@ -114,7 +114,7 @@ class ImportTeamService implements Service {
             // Type ({ Staff, Senior, Volunteer })
             $type = trim($line[1]);
 
-            if (!in_array($type, ['Staff', 'Senior', 'Volunteer']))
+            if (!in_array($type, ['Staff', 'Senior', 'Volunteer', 'Hidden']))
                 throw new \Exception('Invalid type in "' . $sourceFile . '" for ' . $name);
 
             $team[] = [

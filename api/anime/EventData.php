@@ -56,6 +56,9 @@ class EventData {
         foreach ($this->environments as $environment) {
             $groupToken = $environment->getGroupToken();
             foreach ($environment->loadVolunteers() as $volunteer) {
+                if ($volunteer->isHidden())
+                    continue;
+
                 $accessCode = $isAdmin ? $volunteer->getAccessCode() : null;
                 $telephone = $isAdmin || $volunteer->isSeniorVolunteer()
                     ? $volunteer->getTelephone()
@@ -66,7 +69,7 @@ class EventData {
                     'groupToken'   => $groupToken,
                     'name'         => $volunteer->getName(),
                     'avatar'       => null,
-                    'title'        => 'foo',
+                    'title'        => $environment->typeToTitle($volunteer->getType()),
                     'accessCode'   => $accessCode,
                     'telephone'    => $telephone,
                 ];

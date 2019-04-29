@@ -14,6 +14,7 @@ class Volunteer {
     public const TYPE_VOLUNTEER = 'Volunteer';
     public const TYPE_SENIOR = 'Senior';
     public const TYPE_STAFF = 'Staff';
+    public const TYPE_HIDDEN = 'Hidden';
 
     // Directory in which hashed photos of the volunteers are stored.
     private const PHOTO_DIRECTORY = __DIR__ . '/../images/photos/';
@@ -62,7 +63,7 @@ class Volunteer {
             throw new \TypeError('The volunteer\'s `type` is expected to be a string.');
 
         if (!in_array($volunteerData['type'], [ self::TYPE_VOLUNTEER, self::TYPE_SENIOR,
-                                                self::TYPE_STAFF ])) {
+                                                self::TYPE_STAFF, self::TYPE_HIDDEN ])) {
             throw new \TypeError('The volunteer\'s `type` has got an invalid value.');
         }
 
@@ -129,9 +130,14 @@ class Volunteer {
                $this->type === Volunteer::TYPE_STAFF;
     }
 
-    // Returns the type { 'Volunteer', 'Senior', 'Staff' } of this volunteer.
+    // Returns the type { 'Volunteer', 'Senior', 'Staff', 'Hidden' } of this volunteer.
     public function getType() : string {
         return $this->type;
+    }
+
+    // Returns whether this volunteer should be hidden from the portal.
+    public function isHidden() : bool {
+        return $this->type === Volunteer::TYPE_HIDDEN;
     }
 
     // Returns a relative URL to a photo representing this volunteer. If a PNG file named by the
