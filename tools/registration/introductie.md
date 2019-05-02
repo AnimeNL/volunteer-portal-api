@@ -1,7 +1,7 @@
 # So you want to be a steward?
 
 Stewards zijn de gastheren en -vrouwen van het festival; de eerste linie in het geval van vragen en
-problemen. Als je mee wilt helpen met _crowd management_, leeftijd- en veiligheidcontroles, escortes
+problemen. Als je mee wilt helpen met _crowd management_, leeftijd- en veiligheidscontroles, escortes
 voor de VIPs en tevens onze beveiliging en EHBO'ers bij wilt staan, dan zijn we op zoek naar **jou**!
 
 Meld je direct aan als je deel wilt uitmaken van een te gekke groep vrijwilligers die er samen voor
