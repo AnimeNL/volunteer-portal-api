@@ -29,7 +29,9 @@ $eventData = new \Anime\EventData($environment, $volunteer);
 
 echo json_encode([
     'success'           => true,
+    'events'            => $eventData->getEvents(),
     'floors'            => $eventData->getFloors(),
+    'locations'         => $eventData->getLocations(),
     'volunteerGroups'   => $eventData->getVolunteerGroups(),
     'volunteers'        => $eventData->getVolunteers()
 ]);

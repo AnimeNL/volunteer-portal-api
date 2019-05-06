@@ -12,6 +12,16 @@ namespace Anime;
 //
 // https://github.com/AnimeNL/portal/blob/master/API.md#apievent
 class EventData {
+    // File in which the program data will be written.
+    const EVENT_PROGRAM = __DIR__ . '/../configuration/program.json';
+
+    // The locations that exist for this event. The program import reads them as strings, but they
+    // need to be shared with unique Ids according to the API.
+    private $locations;
+
+    // The program for this event.
+    private $program;
+
     // The volunteer for whom the data is being compiled.
     private $volunteer;
 
@@ -29,6 +39,43 @@ class EventData {
             $this->environments = Environment::getAll();
         else
             $this->environments = [ $environment ];
+
+        $this->locations = [];
+        $this->program = $this->loadProgram();
+    }
+
+    // Loads the program for the event. The global program will be considered, as well as programs
+    // unique to each of the environments this volunteer has access to. This method will also
+    // initialize the |$locations| mapping.
+    private function loadProgram() : array {
+        $currentLocationId = 1;
+
+        $program = json_decode(file_get_contents(self::EVENT_PROGRAM), true);
+        // TODO: Support team-level programs.
+
+        // Sort the |$program| to make sure they're in incrementing order.
+        usort($program, function($lhs, $rhs) {
+            return $lhs['sessions'][0]['begin'] > $rhs['sessions'][0]['begin'];
+        });
+
+        // Identify the unique locations that are included in the |$program|.
+        foreach ($program as $programEvent) {
+            foreach ($programEvent['sessions'] as $programSession) {
+                if (array_key_exists($programSession['location'], $this->locations))
+                    continue;
+
+                $this->locations[$programSession['location']] = $currentLocationId++;
+            }
+        }
+
+        return $program;
+    }
+
+    // Returns an array detailing the events that will take place.
+    public function getEvents() : array {
+        $events = [];
+
+        return $events;
     }
 
     // Returns an array detailing the floors of the event's venue.
@@ -55,6 +102,20 @@ class EventData {
                 'icon'    => '/static/images/floors.svg#docks',
             ]
         ];
+    }
+
+    // Returns an array detailing the locations available for this event.
+    public function getLocations() : array {
+        $locations = [];
+
+        foreach ($this->locations as $label => $id) {
+            $locations[] = [
+                'id'       => $id,
+                'label'    => $label
+            ];
+        }
+
+        return $locations;
     }
 
     // Returns an array detailing the available volunteer groups.
