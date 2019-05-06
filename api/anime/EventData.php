@@ -37,22 +37,22 @@ class EventData {
             [
                 'id'      => 0,
                 'label'   => 'Halls',
-                'icon'    => null,
+                'icon'    => '/static/images/floors.svg#halls',
             ],
             [
                 'id'      => 1,
                 'label'   => 'Ports',
-                'icon'    => null,
+                'icon'    => '/static/images/floors.svg#ports',
             ],
             [
                 'id'      => 2,
                 'label'   => 'Conference',
-                'icon'    => null,
+                'icon'    => '/static/images/floors.svg#conference',
             ],
             [
                 'id'      => 3,
                 'label'   => 'Docks',
-                'icon'    => null,
+                'icon'    => '/static/images/floors.svg#docks',
             ]
         ];
     }
