@@ -64,7 +64,10 @@ class EventData {
                 if (array_key_exists($programSession['location'], $this->locations))
                     continue;
 
-                $this->locations[$programSession['location']] = $currentLocationId++;
+                $this->locations[$programSession['location']] = [
+                    $currentLocationId++,
+                    $programSession['floor'],
+                ];
             }
         }
 
@@ -74,6 +77,27 @@ class EventData {
     // Returns an array detailing the events that will take place.
     public function getEvents() : array {
         $events = [];
+
+        foreach ($this->program as $event) {
+            $sessions = [];
+
+            // TODO: Filter for hidden events?
+
+            foreach ($event['sessions'] as $session) {
+                $sessions[] = [
+                    'name'          => $session['name'],
+                    'description'   => $session['description'],
+                    'locationId'    => $this->locations[$session['location']][0],
+                    'beginTime'     => $session['begin'],
+                    'endTime'       => $session['end'],
+                ];
+            }
+
+            $events[] = [
+                'id'        => $event['id'],
+                'sessions'  => $sessions,
+            ];
+        }
 
         return $events;
     }
@@ -108,9 +132,10 @@ class EventData {
     public function getLocations() : array {
         $locations = [];
 
-        foreach ($this->locations as $label => $id) {
+        foreach ($this->locations as $label => [$id, $floorId]) {
             $locations[] = [
                 'id'       => $id,
+                'floorId'  => $floorId,
                 'label'    => $label
             ];
         }
