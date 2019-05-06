@@ -31,6 +31,32 @@ class EventData {
             $this->environments = [ $environment ];
     }
 
+    // Returns an array detailing the floors of the event's venue.
+    public function getFloors() : array {
+        return [
+            [
+                'id'      => 0,
+                'label'   => 'Halls',
+                'icon'    => null,
+            ],
+            [
+                'id'      => 1,
+                'label'   => 'Ports',
+                'icon'    => null,
+            ],
+            [
+                'id'      => 2,
+                'label'   => 'Conference',
+                'icon'    => null,
+            ],
+            [
+                'id'      => 3,
+                'label'   => 'Docks',
+                'icon'    => null,
+            ]
+        ];
+    }
+
     // Returns an array detailing the available volunteer groups.
     public function getVolunteerGroups() : array {
         $groups = [];
