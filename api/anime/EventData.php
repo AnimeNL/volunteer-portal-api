@@ -95,6 +95,7 @@ class EventData {
 
             $events[] = [
                 'id'        => $event['id'],
+                'internal'  => $event['hidden'],
                 'sessions'  => $sessions,
             ];
         }
