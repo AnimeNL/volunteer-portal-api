@@ -107,24 +107,28 @@ class EventData {
     public function getFloors() : array {
         return [
             [
-                'id'      => 0,
-                'label'   => 'Halls',
-                'icon'    => '/static/images/floors.svg#halls',
+                'id'          => 0,
+                'label'       => 'Halls',
+                'iconColor'   => '#F44336',
+                'icon'        => '/static/images/floors.svg#halls',
             ],
             [
-                'id'      => 1,
-                'label'   => 'Ports',
-                'icon'    => '/static/images/floors.svg#ports',
+                'id'          => 1,
+                'label'       => 'Ports',
+                'iconColor'   => '#00897B',
+                'icon'        => '/static/images/floors.svg#ports',
             ],
             [
-                'id'      => 2,
-                'label'   => 'Conference',
-                'icon'    => '/static/images/floors.svg#conference',
+                'id'          => 2,
+                'label'       => 'Conference',
+                'iconColor'   => '#6D4C41',
+                'icon'        => '/static/images/floors.svg#conference',
             ],
             [
-                'id'      => 3,
-                'label'   => 'Docks',
-                'icon'    => '/static/images/floors.svg#docks',
+                'id'          => 3,
+                'label'       => 'Docks',
+                'iconColor'   => '#FFB300',
+                'icon'        => '/static/images/floors.svg#docks',
             ]
         ];
     }
