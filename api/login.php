@@ -36,5 +36,5 @@ echo json_encode([
     'userToken'      => $volunteer->getUserToken(),
     'authToken'      => $volunteer->getAuthToken(),
     'expirationTime' => (time() + ($sessionTimeoutMinutes * 60)) * 1000,
-    'enableDebug'    => $volunteer->isDebug()
+    'abilities'      => $volunteer->getAbilities(),
 ]);

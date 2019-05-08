@@ -163,6 +163,19 @@ class Volunteer {
         return $this->telephone;
     }
 
+    // Returns an array with the abilities that should be available to this user.
+    public function getAbilities() : array {
+        $abilities = [];
+
+        if ($this->isAdmin)
+            $abilities[] = 'update-avatar-all';
+
+        if ($this->isDebug)
+            $abilities[] = 'debug';
+
+        return $abilities;
+    }
+
     // Returns whether this volunteer is an administrator.
     public function isAdmin() : bool {
         return $this->isAdmin;

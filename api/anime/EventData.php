@@ -127,7 +127,7 @@ class EventData {
             [
                 'id'          => 3,
                 'label'       => 'Docks',
-                'iconColor'   => '#FFB300',
+                'iconColor'   => '#FB8C00',
                 'icon'        => '/static/images/floors.svg#docks',
             ]
         ];
