@@ -133,6 +133,30 @@ class EventData {
         ];
     }
 
+    // Returns an array containing |key=>value| pairs to display on the Internals page. Only
+    // populated for administrators with debugging capabilities.
+    public function getInternalNotes() : array {
+        if (!$this->volunteer->isAdmin() || !$this->volunteer->isDebug())
+            return [];
+
+        $notes = [];
+
+        // (1) List the access codes of all Hidden volunteers.
+        foreach ($this->environments as $environment) {
+            foreach ($environment->loadVolunteers() as $volunteer) {
+                if (!$volunteer->isHidden())
+                    continue;
+
+                $key = 'Access code (' . $volunteer->getName() . ')';
+                $value = $volunteer->getAccessCode();
+
+                $notes[$key] = $value;
+            }
+        }
+
+        return $notes;
+    }
+
     // Returns an array detailing the locations available for this event.
     public function getLocations() : array {
         $locations = [];
@@ -209,7 +233,6 @@ class EventData {
 
         return false;
     }
-
 
     // Returns an array detailing the available volunteers.
     public function getVolunteers() : array {
