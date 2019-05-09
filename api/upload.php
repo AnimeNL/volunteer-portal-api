@@ -115,7 +115,13 @@ switch ($_POST['type']) {
                            AVATAR_HEIGHT_PX, $sourceWidth, $sourceHeight);
 
         ImageJPEG($avatar, TARGET_DIR . $targetVolunteer->getUserToken() . '.jpg', 85);
-        break;
+
+        echo json_encode([
+            'success'        => true,
+            'avatar'         => $targetVolunteer->getPhoto()
+        ]);
+
+        die();
 
     default:
         dieWithError('Unrecognized upload type.');
