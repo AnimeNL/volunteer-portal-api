@@ -17,7 +17,7 @@ class Volunteer {
     public const TYPE_HIDDEN = 'Hidden';
 
     // Directory in which hashed photos of the volunteers are stored.
-    private const PHOTO_DIRECTORY = __DIR__ . '/../images/photos/';
+    private const PHOTO_DIRECTORY = __DIR__ . '/../../avatars/';
 
     // Full name of the volunteer.
     private $name;
@@ -140,17 +140,16 @@ class Volunteer {
         return $this->type === Volunteer::TYPE_HIDDEN;
     }
 
-    // Returns a relative URL to a photo representing this volunteer. If a PNG file named by the
-    // crc32 hash of their name exists in the /images/photos/ directory it will be used, otherwise
-    // the /images/no-photo.png file will be returned.
-    public function getPhoto() : string {
-        $hash = crc32($this->name);
-        $filename = self::PHOTO_DIRECTORY . $hash . '.png';
+    // Returns a relative URL to a photo representing this volunteer. If a JPG file named by the
+    // user hash of their name exists in the /avatars/ directory it will be used.
+    public function getPhoto() {
+        $filename = self::PHOTO_DIRECTORY . $this->userToken . '.jpg';
 
-        if (file_exists($filename))
-            return '/images/photos/' . $hash . '.png';
+        if (!file_exists($filename))
+            return null;
 
-        return '/images/no-photo.png';
+        return 'https://' . $_SERVER['SERVER_NAME'] . '/avatars/' . filemtime($filename) .
+                                                      '/' . $this->userToken . '.jpg';
     }
 
     // Returns the e-mail address of this volunteer.

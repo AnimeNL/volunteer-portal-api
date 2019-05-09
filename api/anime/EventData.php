@@ -185,7 +185,7 @@ class EventData {
                     'userToken'    => $volunteer->getUserToken(),
                     'groupToken'   => $groupToken,
                     'name'         => $volunteer->getName(),
-                    'avatar'       => null,
+                    'avatar'       => $volunteer->getPhoto(),
                     'title'        => $environment->typeToTitle($volunteer->getType()),
                     'accessCode'   => $accessCode,
                     'telephone'    => $telephone,
