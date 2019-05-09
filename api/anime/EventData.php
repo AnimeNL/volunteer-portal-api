@@ -165,9 +165,54 @@ class EventData {
         return $groups;
     }
 
+    // Returns whether the access code of |$volunteer| can be disclosed.
+    //
+    // Volunteers can view access codes of users who are less senior than they are. Admins are an
+    // exception, who can see all access codes. Only admins can see the access codes of other
+    // admins.
+    private function discloseAccessCode($volunteer) : bool {
+        if ($this->volunteer->isAdmin())
+            return true;
+
+        if ($volunteer->isAdmin())
+            return false;
+
+        switch ($this->volunteer->getType()) {
+            case Volunteer::TYPE_VOLUNTEER:
+                return false;
+
+            case Volunteer::TYPE_SENIOR:
+                return $volunteer->getType() === Volunteer::TYPE_VOLUNTEER;
+
+            case Volunteer::TYPE_HIDDEN:
+            case Volunteer::TYPE_STAFF:
+                return $volunteer->getType() === Volunteer::TYPE_VOLUNTEER ||
+                       $volunteer->getType() === Volunteer::TYPE_SENIOR;
+        }
+
+        return false;
+    }
+
+    // Returns whether the telephone number of |$volunteer| can be disclosed.
+    //
+    // Volunteers can see the telephone numbers of both the senior and staff levels. People in
+    // either the senior of staff levels, and admins, can see the phone numbers of everyone.
+    private function discloseTelephone($volunteer) : bool {
+        if ($volunteer->isSeniorVolunteer())
+            return true;
+
+        if ($this->volunteer->isSeniorVolunteer())
+            return true;
+
+        if ($this->volunteer->isAdmin())
+            return true;
+
+        return false;
+    }
+
+
     // Returns an array detailing the available volunteers.
     public function getVolunteers() : array {
-        $isAdmin = $this->volunteer->isAdmin();
         $volunteers = [];
 
         foreach ($this->environments as $environment) {
@@ -176,10 +221,11 @@ class EventData {
                 if ($volunteer->isHidden())
                     continue;
 
-                $accessCode = $isAdmin ? $volunteer->getAccessCode() : null;
-                $telephone = $isAdmin || $volunteer->isSeniorVolunteer()
-                    ? $volunteer->getTelephone()
-                    : null;
+                $accessCode = $this->discloseAccessCode($volunteer) ? $volunteer->getAccessCode()
+                                                                    : null;
+
+                $telephone = $this->discloseTelephone($volunteer) ? $volunteer->getTelephone()
+                                                                  : null;
 
                 $volunteers[] = [
                     'userToken'    => $volunteer->getUserToken(),
