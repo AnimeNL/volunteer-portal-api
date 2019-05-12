@@ -17,6 +17,7 @@ if (!$environment->isValid())
     dieWithError('Unrecognized volunteer portal environment.');
 
 echo json_encode([
+    'timezone'    => 'Europe/Amsterdam',
     'portalTitle' => $environment->getName(),
     'seniorTitle' => $environment->typeToTitle(\Anime\Volunteer::TYPE_SENIOR),
     'year'        => $environment->getYear()
