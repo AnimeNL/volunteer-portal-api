@@ -165,6 +165,7 @@ class ImportScheduleService implements Service {
                 $sessions[] = [
                     'name'          => $data['name'],
                     'begin'         => $shift['beginTime'],
+                    'description'   => '',  // can be edited from within the portal
                     'end'           => $shift['endTime'],
                     'location'      => $data['location'],
                     'floor'         => (int) $data['floor']
@@ -199,7 +200,7 @@ class ImportScheduleService implements Service {
         $SKIP_HEADER_ROWS = 2;
         $NAME_COLUMN = 0 /* A */;
         $SCHEDULE_BEGIN = 1 /* B */;
-        $SCHEDULE_BEGIN_TIME = 1529056800 /* 10am, Friday June 15th, 2018 UTC */ - 2 * 3600 /* CEST */;
+        $SCHEDULE_BEGIN_TIME = 1560506400 /* 10am, Friday June 15th, 2018 UTC */ - 2 * 3600 /* CEST */;
         $SCHEDULE_END = 57 /* BF */;
 
         for ($i = $SKIP_HEADER_ROWS; $i < count($scheduleLines); ++$i) {
@@ -229,7 +230,7 @@ class ImportScheduleService implements Service {
         $mappingLines = file($this->options['mapping']);
         $mapping = [];
 
-        for ($i = 1 /* skip the header */; $i < count($mappingLines); ++$i) {
+        for ($i = 2 /* skip the headers */; $i < count($mappingLines); ++$i) {
             $mappingLine = str_getcsv(trim($mappingLines[$i]));
             if (count($mappingLine) < 5)
                 continue;
