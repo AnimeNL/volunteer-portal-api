@@ -165,7 +165,7 @@ class ImportScheduleService implements Service {
                 $sessions[] = [
                     'name'          => $data['name'],
                     'begin'         => $shift['beginTime'],
-                    'description'   => '',  // can be edited from within the portal
+                    'description'   => $data['description'],
                     'end'           => $shift['endTime'],
                     'location'      => $data['location'],
                     'floor'         => (int) $data['floor']
@@ -232,14 +232,15 @@ class ImportScheduleService implements Service {
 
         for ($i = 2 /* skip the headers */; $i < count($mappingLines); ++$i) {
             $mappingLine = str_getcsv(trim($mappingLines[$i]));
-            if (count($mappingLine) < 5)
+            if (count($mappingLine) < 6)
                 continue;
 
             $mapping[$mappingLine[0]] = [
                 'eventId'       => $mappingLine[1],
                 'name'          => $mappingLine[2],
                 'location'      => $mappingLine[3],
-                'floor'         => $mappingLine[4]
+                'floor'         => $mappingLine[4],
+                'description'   => $mappingLine[5],
             ];
         }
 
