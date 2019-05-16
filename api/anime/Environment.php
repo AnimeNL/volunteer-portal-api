@@ -164,8 +164,11 @@ class Environment {
     // created based on the schedule the team's staff has created.
     public function loadProgram() : array {
         if ($this->program === null) {
+            if ($this->teamProgramFile === null)
+                return [];
+
             $this->program =
-                json_decode(file_get_contents(self::DATA_DIRECTORY . $this->teamProgramFile), true);
+                json_decode(file_get_contents(self::TEAM_DATA_DIRECTORY . $this->teamProgramFile), true);
         }
 
         return $this->program;
@@ -174,8 +177,11 @@ class Environment {
     // Loads the shifts for the volunteers that are part of this team.
     public function loadShifts() : array {
         if ($this->shifts === null) {
+            if ($this->teamShiftsFile === null)
+                return [];
+
             $this->shifts =
-                json_decode(file_get_contents(self::DATA_DIRECTORY . $this->teamShiftsFile), true);
+                json_decode(file_get_contents(self::TEAM_DATA_DIRECTORY . $this->teamShiftsFile), true);
         }
 
         return $this->shifts;

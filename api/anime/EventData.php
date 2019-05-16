@@ -51,7 +51,12 @@ class EventData {
         $currentLocationId = 1;
 
         $program = json_decode(file_get_contents(self::EVENT_PROGRAM), true);
-        // TODO: Support team-level programs.
+
+        // Load the events unique to the environments this volunteer has access to.
+        foreach ($this->environments as $environment) {
+            foreach ($environment->loadProgram() as $programEntry)
+                array_push($program, $programEntry);
+        }
 
         // Sort the |$program| to make sure they're in incrementing order.
         usort($program, function($lhs, $rhs) {
