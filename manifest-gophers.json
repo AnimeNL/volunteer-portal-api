@@ -3,6 +3,11 @@
     "short_name": "Gophers",
     "icons": [
         {
+            "src": "static/images/logo-gophers-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        },
+        {
             "src": "static/images/logo-gophers-256.png",
             "sizes": "256x256",
             "type": "image/png"
@@ -15,6 +20,6 @@
     ],
     "display": "standalone",
     "theme_color": "#1565c0",
-    "background_color": "#b0bec5",
+    "background_color": "#607d8b",
     "start_url": "/"
 }
