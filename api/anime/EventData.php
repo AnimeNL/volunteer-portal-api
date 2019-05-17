@@ -194,6 +194,40 @@ class EventData {
         return $groups;
     }
 
+    // Returns an array detailing the shifts that are to take place during the event.
+    public function getShifts() : array {
+        $shifts = [];
+        $volunteers = [];
+
+        foreach ($this->environments as $environment) {
+            foreach ($environment->loadVolunteers() as $volunteer)
+                $volunteers[$volunteer->getName()] = $volunteer->getUserToken();
+        }
+
+        foreach ($this->environments as $environment) {
+            foreach ($environment->loadShifts() as $volunteerName => $environmentShifts) {
+                if (!array_key_exists($volunteerName, $volunteers)) {
+                    // TODO: We should log this somewhere, as it's a data loss.
+                    continue;
+                }
+
+                $userToken = $volunteers[$volunteerName];
+
+                foreach ($environmentShifts as $shift) {
+                    $shifts[] = [
+                        'userToken'    => $userToken,
+                        'type'         => $shift['shiftType'],
+                        'eventId'      => $shift['eventId'],
+                        'beginTime'    => $shift['beginTime'],
+                        'endTime'      => $shift['endTime'],
+                    ];
+                }
+            }
+        }
+
+        return $shifts;
+    }
+
     // Returns whether the access code of |$volunteer| can be disclosed.
     //
     // Volunteers can view access codes of users who are less senior than they are. Admins are an

@@ -33,6 +33,7 @@ echo json_encode([
     'floors'            => $eventData->getFloors(),
     'internalNotes'     => $eventData->getInternalNotes(),
     'locations'         => $eventData->getLocations(),
+    'shifts'            => $eventData->getShifts(),
     'volunteerGroups'   => $eventData->getVolunteerGroups(),
     'volunteers'        => $eventData->getVolunteers()
 ]);
