@@ -1,5 +1,5 @@
 [{
   "relation": ["delegate_permission/common.handle_all_urls"],
   "target" : { "namespace": "android_app", "package_name": "team.stewards.android",
-               "sha256_cert_fingerprints": ["70:F2:D0:0C:33:E0:41:16:24:DF:85:84:24:14:9A:28:3E:4A:3F:62:2D:A6:37:A8:A2:76:DE:1A:73:D2:77:52"] }
+               "sha256_cert_fingerprints": ["99:DD:49:38:D5:47:2A:83:5E:6A:E0:51:DE:6E:C9:53:04:18:2D:2A:BA:C0:14:1D:A0:49:FD:14:AF:AF:1E:21"] }
 }]
