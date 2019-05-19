@@ -67,8 +67,14 @@ switch ($_POST['type']) {
         if (!$targetVolunteer)
             dieWithError('Invalid target volunteer requested.');
 
-        // TODO: Validate whether the |$volunteer| is actually allowed to upload the avatar
-        // belonging to the |$targetVolunteer|.
+        // Validate that the |$volunteer| is actually allowed to update the avatar belonging to
+        // |$targetVolunteer|. There are two abilities that play in to this.
+        $abilities = $volunteer->getAbilities();
+
+        if (!in_array('update-avatar-all', $abilities)) {
+            if (!in_array('update-avatar-self', $abilities) || $targetVolunteer !== $volunteer)
+                dieWithError('Not allowed to update the avatar for this volunteer.');
+        }
 
         $imageData = $_POST['targetUserAvatar'];
         $imageDecodedData = null;
