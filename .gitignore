@@ -9,3 +9,4 @@ sftp-config.json
 *.psd
 anime/notifications.log
 package-lock.json
+api/configuration/notes.json

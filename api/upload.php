@@ -67,6 +67,9 @@ switch ($_POST['type']) {
         if (!$targetVolunteer)
             dieWithError('Invalid target volunteer requested.');
 
+        // TODO: Validate whether the |$volunteer| is actually allowed to upload the avatar
+        // belonging to the |$targetVolunteer|.
+
         $imageData = $_POST['targetUserAvatar'];
         $imageDecodedData = null;
 
@@ -119,6 +122,39 @@ switch ($_POST['type']) {
         echo json_encode([
             'success'        => true,
             'avatar'         => $targetVolunteer->getPhoto()
+        ]);
+
+        die();
+
+    // "update-event"
+    //
+    // Used to update internal notes associated with a particular event. Such notes will be visible
+    // for all volunteers using the portal. May only be used by volunteers who have the
+    // "manage-event-info" ability set in their account.
+    case 'update-event':
+        if (!array_key_exists('eventId', $_POST) || !array_key_exists('notes', $_POST))
+            dieWithError('Invalid input data given to this API.');
+
+        if (!in_array('manage-event-info', $volunteer->getAbilities()))
+            dieWithError('The authenticated user is not allowed to manage event info.');
+
+        $eventId = intval($_POST['eventId'], 10);
+        $eventNotes = $_POST['notes'];
+
+        // Update the notes in the event notes file.
+        {
+            $notes = json_decode(file_get_contents(\Anime\EventData::EVENT_NOTES), true);
+            if (strlen($eventNotes))
+                $notes[$eventId] = $eventNotes;
+            else if (array_key_exists($eventId, $notes))
+                unset($notes[$eventId]);
+
+            file_put_contents(\Anime\EventData::EVENT_NOTES, json_encode($notes));
+        }
+
+        echo json_encode([
+            'success'        => true,
+            'notes'          => strlen($eventNotes) ? $eventNotes : null
         ]);
 
         die();

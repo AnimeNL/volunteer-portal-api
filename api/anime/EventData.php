@@ -15,12 +15,18 @@ class EventData {
     // File in which the program data will be written.
     const EVENT_PROGRAM = __DIR__ . '/../configuration/program.json';
 
+    // File in which the program's notes will be written.
+    const EVENT_NOTES = __DIR__ . '/../configuration/notes.json';
+
     // The locations that exist for this event. The program import reads them as strings, but they
     // need to be shared with unique Ids according to the API.
     private $locations;
 
     // The program for this event.
     private $program;
+
+    // The notes for this event.
+    private $notes;
 
     // The volunteer for whom the data is being compiled.
     private $volunteer;
@@ -41,7 +47,9 @@ class EventData {
             $this->environments = [ $environment ];
 
         $this->locations = [];
+
         $this->program = $this->loadProgram();
+        $this->notes = json_decode(file_get_contents(self::EVENT_NOTES), true);
     }
 
     // Loads the program for the event. The global program will be considered, as well as programs
@@ -85,6 +93,10 @@ class EventData {
 
         foreach ($this->program as $event) {
             $sessions = [];
+            $notes = null;
+
+            if (array_key_exists($event['id'], $this->notes))
+                $notes = $this->notes[$event['id']];
 
             // TODO: Filter for hidden events?
 
@@ -101,6 +113,7 @@ class EventData {
             $events[] = [
                 'id'        => $event['id'],
                 'internal'  => $event['hidden'],
+                'notes'     => $notes,
                 'sessions'  => $sessions,
             ];
         }
