@@ -166,6 +166,9 @@ class Volunteer {
     public function getAbilities() : array {
         $abilities = [];
 
+        if ($this->isSeniorVolunteer())
+            $abilities[] = 'manage-event-info';
+
         if ($this->isAdmin)
             $abilities[] = 'update-avatar-all';
 
