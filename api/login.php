@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] != 'POST')
 if (!array_key_exists('email', $_POST) || !array_key_exists('accessCode', $_POST))
     dieWithError('Invalid input data given to this API.');
 
-$environment = \Anime\Environment::createForHostname($_SERVER['SERVER_NAME']);
+$environment = \Anime\Environment::createForHostname($_SERVER['HTTP_HOST']);
 if (!$environment->isValid())
     dieWithError('Unrecognized volunteer portal environment.');
 

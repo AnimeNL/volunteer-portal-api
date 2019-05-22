@@ -15,7 +15,7 @@ Header('Content-Type: application/json');
 if (!array_key_exists('authToken', $_GET))
     dieWithError('Invalid input data given to this API.');
 
-$environment = \Anime\Environment::createForHostname($_SERVER['SERVER_NAME']);
+$environment = \Anime\Environment::createForHostname($_SERVER['HTTP_HOST']);
 if (!$environment->isValid())
     dieWithError('Unrecognized volunteer portal environment.');
 

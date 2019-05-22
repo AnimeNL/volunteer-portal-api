@@ -12,7 +12,7 @@ require __DIR__ . '/error.php';
 Header('Access-Control-Allow-Origin: *');
 Header('Content-Type: application/json');
 
-$environment = \Anime\Environment::createForHostname($_SERVER['SERVER_NAME']);
+$environment = \Anime\Environment::createForHostname($_SERVER['HTTP_HOST']);
 if (!$environment->isValid())
     dieWithError('Unrecognized volunteer portal environment.');
 
