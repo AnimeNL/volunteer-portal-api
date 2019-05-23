@@ -200,8 +200,8 @@ class ImportScheduleService implements Service {
         $SKIP_HEADER_ROWS = 2;
         $NAME_COLUMN = 0 /* A */;
         $SCHEDULE_BEGIN = 1 /* B */;
-        $SCHEDULE_BEGIN_TIME = 1560506400 /* 10am, Friday June 15th, 2018 UTC */ - 2 * 3600 /* CEST */;
-        $SCHEDULE_END = 57 /* BF */;
+        $SCHEDULE_BEGIN_TIME = 1560502800 /* 9am, Friday June 15th, 2018 UTC */ - 2 * 3600 /* CEST */;
+        $SCHEDULE_END = 60 /* BI */;
 
         for ($i = $SKIP_HEADER_ROWS; $i < count($scheduleLines); ++$i) {
             $scheduleLine = str_getcsv(trim($scheduleLines[$i]));
