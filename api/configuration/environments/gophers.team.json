@@ -10,7 +10,7 @@
     "hostname": "gophers.team",
     "hidden_events_public": false,
     "team_data": "gophers.json",
-    "team_program": null,
-    "team_shifts": null,
+    "team_program": "gophers-program.json",
+    "team_shifts": "gophers-shifts.json",
     "year": 2019
 }
