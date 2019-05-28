@@ -17,8 +17,9 @@ if (!$environment->isValid())
     dieWithError('Unrecognized volunteer portal environment.');
 
 echo json_encode([
-    'timezone'    => 'Europe/Amsterdam',
+    'eventName'   => 'AnimeCon 2019',
     'portalTitle' => $environment->getName(),
     'seniorTitle' => $environment->typeToTitle(\Anime\Volunteer::TYPE_SENIOR),
+    'timezone'    => 'Europe/Amsterdam',
     'year'        => $environment->getYear()
 ]);
