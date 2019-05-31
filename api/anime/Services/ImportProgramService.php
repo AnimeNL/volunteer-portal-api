@@ -222,16 +222,28 @@ class ImportProgramService implements Service {
     // This method has public visibility for testing purposes only.
     public function mergeSplitEntries(array &$entries) : void {
         $openings = [];
+        $closings = [];
 
         for ($index = 0; $index < count($entries);) {
             $entry = $entries[$index];
             $tsId = $entry['tsId'];
 
             if ($entry['opening'] === 1 /* opening */) {
-                $openings[$tsId] = $index;
+                if (!array_key_exists($tsId, $closings)) {
+                    $openings[$tsId] = $index++;
+                    continue;
+                }
+
+                $entries[$closings[$tsId]] =
+                    $this->mergeEntries($entry, $entries[$closings[$tsId]]);
+                array_splice($entries, $index, 1);
+                continue;
+
             } else if ($entry['opening'] === -1 /* closing */) {
-                if (!array_key_exists($tsId, $openings))
-                    throw new \Exception('Unpaired opening/closing sequence for tsId: ' . $tsId);
+                if (!array_key_exists($tsId, $openings)) {
+                    $closings[$tsId] = $index++;
+                    continue;
+                }
 
                 $entries[$openings[$tsId]] =
                     $this->mergeEntries($entries[$openings[$tsId]], $entry);
