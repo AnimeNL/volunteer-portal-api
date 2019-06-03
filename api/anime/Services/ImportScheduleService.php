@@ -289,6 +289,39 @@ class ImportScheduleService implements Service {
                 else if ($time <= strtotime('2019-06-16 10:00:00'))
                     return 41791;  // Solo rehearsals
                 break;
+            case 'SPECIAL2':  // Second Stage misc
+                if ($time <= strtotime('2019-06-14 19:00:00'))
+                    return 41829;  // Vocaloid concert
+                else if ($time <= strtotime('2019-06-15 14:00:00'))
+                    return 41826;  // Elizabeth Maxwell Q&A
+                else if ($time <= strtotime('2019-06-15 18:30:00'))
+                    return 41821;  // Rekindle Q&A
+                else if ($time <= strtotime('2019-06-16 13:00:00'))
+                    return 41771;  // Casual Cosplay Compo
+                else if ($time <= strtotime('2019-06-16 16:30:00'))
+                    return 41865;  // Unmei Live!
+                break;
+            case 'SPECIAL3':  // Friday dancing
+                if ($time < strtotime('2019-06-14 22:00:00'))
+                    return 41804;  // SpeakerHeadz
+                else if ($time < strtotime('2019-06-14 23:00:00'))
+                    return 41950;  // TeddyLoid
+                else
+                    return 41803;  // Strictly K-Pop
+            case 'SPECIAL4':  // Alcohol tastings
+                if ($time <= strtotime('2019-06-14 18:30:00'))
+                    return 41894;  // Gin
+                else if ($time <= strtotime('2019-06-14 21:00:00'))
+                    return 41778;  // Whisky
+                else if ($time <= strtotime('2019-06-15 00:30:00'))
+                    return 41902;  // Sake
+                else if ($time <= strtotime('2019-06-15 16:30:00'))
+                    return 42045;  // Beer
+                else if ($time <= strtotime('2019-06-15 20:00:00'))
+                    return 41902;  // Sake
+                else if ($time <= strtotime('2019-06-16 16:00:00'))
+                    return 42045;  // Beer
+                break;
         }
 
         throw new \Exception('Unrecognized event Id: ' . $eventId);
