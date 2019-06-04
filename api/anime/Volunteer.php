@@ -169,7 +169,7 @@ class Volunteer {
         if ($this->isSeniorVolunteer())
             $abilities[] = 'manage-event-info';
 
-        if ($this->isAdmin)
+        if ($this->isAdmin || $this->isSeniorVolunteer())
             $abilities[] = 'update-avatar-all';
 
         if ($this->isDebug)
