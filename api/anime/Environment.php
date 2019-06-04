@@ -187,6 +187,20 @@ class Environment {
         return $this->shifts;
     }
 
+    // Returns the version of the Environment-specific data files.
+    public function getVersionData() : array {
+        $input = [];
+
+        if ($this->teamDataFile !== null)
+            $input[] = hash_file('crc32', self::TEAM_DATA_DIRECTORY . $this->teamDataFile);
+        if ($this->teamProgramFile !== null)
+            $input[] = hash_file('crc32', self::TEAM_DATA_DIRECTORY . $this->teamProgramFile);
+        if ($this->teamShiftsFile !== null)
+            $input[] = hash_file('crc32', self::TEAM_DATA_DIRECTORY . $this->teamShiftsFile);
+
+        return $input;
+    }
+
     // Returns the year for which this environment has been created.
     public function getYear() : int {
         return $this->year;

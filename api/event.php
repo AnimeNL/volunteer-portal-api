@@ -34,6 +34,7 @@ echo json_encode([
     'internalNotes'     => $eventData->getInternalNotes(),
     'locations'         => $eventData->getLocations(),
     'shifts'            => $eventData->getShifts(),
+    'version'           => $eventData->getVersion(),
     'volunteerGroups'   => $eventData->getVolunteerGroups(),
     'volunteers'        => $eventData->getVolunteers()
 ]);

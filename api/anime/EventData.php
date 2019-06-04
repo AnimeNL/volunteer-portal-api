@@ -241,6 +241,19 @@ class EventData {
         return $shifts;
     }
 
+    // Returns the version code of the current event data.
+    public function getVersion() : string {
+        $input = [
+            hash_file('crc32', self::EVENT_PROGRAM),
+            hash_file('crc32', self::EVENT_NOTES),
+        ];
+
+        foreach ($this->environments as $environment)
+            $input = array_merge($input, $environment->getVersionData());
+
+        return hash('sha256', implode('|', $input));
+    }
+
     // Returns whether the access code of |$volunteer| can be disclosed.
     //
     // Volunteers can view access codes of users who are less senior than they are. Admins are an
