@@ -48,6 +48,6 @@ foreach ($content as $url => $contentFilename) {
 }
 
 echo json_encode([
-    'lastUpdated'   => $lastUpdated,
+    'lastUpdate'    => $lastUpdated,
     'pages'         => $pages
 ]);
