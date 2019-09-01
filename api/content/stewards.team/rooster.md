@@ -1,2 +1,0 @@
-# Roosters
-hi

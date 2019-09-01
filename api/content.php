@@ -21,12 +21,13 @@ $content = null;
 switch ($environment->getHostname()) {
     case 'stewards.team':
         $content = [
-            '/'                 => 'index.md',
-            '/404'              => 'not-found.md',
+            '/'                             => 'index.md',
+            '/404'                          => 'not-found.md',
 
-            '/hotel.html'       => 'hotel.md',
-            '/rooster.html'     => 'rooster.md',
-            '/training.html'    => 'training.md'
+            '/registration/'                => 'registration-index.md',
+            '/registration/hotel.html'      => 'registration-hotel.md',
+            '/registration/rooster.html'    => 'registration-rooster.md',
+            '/registration/training.html'   => 'registration-training.md'
         ];
         break;
 
