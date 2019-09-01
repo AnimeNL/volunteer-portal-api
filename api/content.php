@@ -21,14 +21,20 @@ $content = null;
 switch ($environment->getHostname()) {
     case 'stewards.team':
         $content = [
-            '/'                             => 'index.md',
-            '/404'                          => 'not-found.md',
+            '/'                                 => 'index.md',
+            '/404'                              => 'not-found.md',
 
-            '/registration/'                => 'registration-index.md',
-            '/registration/faq.html'        => 'registration-faq.md',
-            '/registration/hotel.html'      => 'registration-hotel.md',
-            '/registration/rooster.html'    => 'registration-rooster.md',
-            '/registration/training.html'   => 'registration-training.md'
+            // Public pages part of the Registration application.
+            '/registration/'                    => 'registration-index.md',
+            '/registration/dataverwerking.html' => 'registration-dataverwerking.md',
+            '/registration/faq.html'            => 'registration-faq.md',
+            '/registration/hotel.html'          => 'registration-hotel.md',
+            '/registration/rooster.html'        => 'registration-rooster.md',
+            '/registration/training.html'       => 'registration-training.md',
+
+            // Internal pages part of the Registration application.
+            '/registration/internal/confirm'    => 'registration-form-confirm.md',
+            '/registration/internal/intro'      => 'registration-form-intro.md',
         ];
         break;
 
