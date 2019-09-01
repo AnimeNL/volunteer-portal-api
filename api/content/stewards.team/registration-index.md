@@ -17,9 +17,6 @@ naar **jou**!
   * Je zult tijdens het festival ongeveer 16 uur als steward [ingeroosterd](rooster.html) worden.
     Als je iets _echt_ niet wilt missen dan houden we daar natuurlijk rekening mee!
 
-Als je ergens niet helemaal zeker over bent, neem dan [per e-mail](mailto:security@animecon.nl) even
-contact met ons op.
-
 ## Wat krijg je van ons?
 
   * Wij regelen en betalen een [professionele stewardtraining](training.html) voor je, inclusief
@@ -34,4 +31,7 @@ contact met ons op.
   * Een gratis weekendticket voor één van onze festivals _nadat_ je vrijwilliger bent geweest, of
     een volledige vergoeding van je weekendticket.
 
-[Meld je direct aan](aanmelden.html)
+Als je ergens niet helemaal zeker over bent, kijk dan eens bij de [veelgestelde vragen](faq.html)
+of neem [per e-mail](mailto:security@animecon.nl) even contact met ons op.
+
+[1]: /registration-button

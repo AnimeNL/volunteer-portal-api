@@ -18,10 +18,10 @@ die we dit jaar in Almelo verwachten.
   * 10:00–11:30 _Steward briefing_
   * 13:00–15:00 Ingang begeleiding
   * 17:00–18:00 Begeleiding corridor
-  * 20:30–22:30 Begeleiding dansevenement
+  * 20:30–22:30 Begeleiding evenement
 
 ### Zaterdag
-  * 08:00–10:00 Tassencontrole 2e verdieping
+  * 08:00–10:00 Tassencontrole
   * 15:00–16:30 Begeleiding whisky tasting
   * 22:00–00:00 Patrouille
 

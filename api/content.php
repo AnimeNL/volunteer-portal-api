@@ -25,6 +25,7 @@ switch ($environment->getHostname()) {
             '/404'                          => 'not-found.md',
 
             '/registration/'                => 'registration-index.md',
+            '/registration/faq.html'        => 'registration-faq.md',
             '/registration/hotel.html'      => 'registration-hotel.md',
             '/registration/rooster.html'    => 'registration-rooster.md',
             '/registration/training.html'   => 'registration-training.md'
