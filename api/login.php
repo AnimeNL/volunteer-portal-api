@@ -33,6 +33,7 @@ $sessionTimeoutMinutes = $configuration->get('sessionTimeoutMinutes');
 
 echo json_encode([
     'success'        => true,
+    'userName'       => $volunteer->getName(),
     'userToken'      => $volunteer->getUserToken(),
     'authToken'      => $volunteer->getAuthToken(),
     'expirationTime' => (time() + ($sessionTimeoutMinutes * 60)) * 1000,
