@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace Anime\Services;
 
+require __DIR__ . '/generateAccessCode.php';
+
 // The ImportTeamService class implements the ability to import a Google Spreadsheet sheet to a
 // local data file containing information about a given team.
 //
@@ -23,8 +25,6 @@ namespace Anime\Services;
 //     'source'       Absolute URL to the published CSV of the Google Spreadsheet meeting the format
 //                    restrictions mentioned below.
 //
-//     'password_salt'  Random string to be used as password salt.
-//
 // It is important that this sheet follows a consistent format. Consider the following rules when
 // setting up a spreadsheet to match this.
 //
@@ -40,11 +40,6 @@ namespace Anime\Services;
 // The parser is strict in regards to these rules, but linient for the actual data values. The
 // conditions, as well known mistakes, are tested in the ImportTeamServiceTest.
 class ImportTeamService implements Service {
-    // Length of the access codes to generate for each person in the team. See the
-    // generateAccessCode() method for an explanation of its use and sensitivity. Public for testing
-    // purposes only.
-    public const ACCESS_CODE_LENGTH = 4;
-
     private $options;
 
     // Initializes the service with |$options|, defined in the website's configuration file.
@@ -60,9 +55,6 @@ class ImportTeamService implements Service {
 
         if (!array_key_exists('source', $options))
             throw new \Exception('The ImportTeamService requires a `source` option.');
-
-        if (!array_key_exists('password_salt', $options))
-            throw new \Exception('The ImportTeamService requires a `password_salt` option.');
 
         $this->options = $options;
     }
@@ -119,7 +111,7 @@ class ImportTeamService implements Service {
 
             $team[] = [
                 'name'        => $name,
-                'access_code' => $this->generateAccessCode($name),
+                'access_code' => generateAccessCode($name),
                 'type'        => $type,
                 'email'       => trim($line[2]),
                 'telephone'   => trim($line[3]),
@@ -135,15 +127,5 @@ class ImportTeamService implements Service {
 
         // Write the resulting |$team| array to the destination file.
         file_put_contents($this->options['destination'], json_encode($team));
-    }
-
-    // Generates an access code for |$name| by running it through a hashing function and selecting a
-    // certain number of characters from it. A salt for the generation can be configured in the
-    // service's configuration section.
-    //
-    // These access codes are required for all volunteers in order to access the application.
-    public function generateAccessCode($name) : string {
-        $phrase = base_convert(hash('fnv164', $name . $this->options['password_salt']), 16, 10);
-        return strtoupper(substr($phrase, 0, self::ACCESS_CODE_LENGTH));
     }
 }

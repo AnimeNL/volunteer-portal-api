@@ -7,6 +7,7 @@ error_reporting(E_ALL | E_STRICT);
 ini_set('display_errors', 1);
 
 require __DIR__ . '/../vendor/autoload.php';
+require __DIR__ . '/anime/Services/generateAccessCode.php';
 require __DIR__ . '/error.php';
 
 Header('Access-Control-Allow-Origin: *');
@@ -28,7 +29,8 @@ if (!filter_input(INPUT_POST, 'firstName') || !filter_input(INPUT_POST, 'lastNam
 if (!filter_input(INPUT_POST, 'emailAddress', FILTER_VALIDATE_EMAIL))
     dieWithError('E-mail address is missing or invalid.');
 
-$fullName = htmlspecialchars($_POST['firstName'] . ' ' . $_POST['lastName']);
+$fullName = $_POST['firstName'] . ' ' . $_POST['lastName'];
+$accessCode = \Anime\Services\generateAccessCode($fullName);
 
 $fieldConfiguration = [
     // name             => [ type <boolean, string>, label ]
@@ -69,15 +71,18 @@ foreach ($fieldConfiguration as $name => [ $type, $label ]) {
     $message .= '</tr>';
 }
 
+$message .= '<tr>';
+$message .= '<td><b>Access code</b>:</td>';
+$message .= '<td>' . $accessCode . '</td>';
+$message .= '</tr>';
+
 $message .= '</table>';
 
-mail('security@animecon.nl', 'Stewardaanmelding: ' . $fullName, $message,
+mail('security@animecon.nl', 'Stewardaanmelding: ' . htmlspecialchars($fullName), $message,
          'From: aanmelding@stewards.team' . PHP_EOL .
          'Content-Type: text/html; charset=UTF-8');
 
-// TODO: Create an accessCode
-
 echo json_encode([
-    'xsuccess'       => true,
-    'accessCode'    => '1477',
+    'success'       => true,
+    'accessCode'    => $accessCode,
 ]);
