@@ -30,7 +30,7 @@ if (!filter_input(INPUT_POST, 'emailAddress', FILTER_VALIDATE_EMAIL))
     dieWithError('E-mail address is missing or invalid.');
 
 $fullName = $_POST['firstName'] . ' ' . $_POST['lastName'];
-$accessCode = \Anime\Services\generateAccessCode($fullName);
+$accessCode = \Anime\Services\generateAccessCode($_POST['emailAddress']);
 
 $fieldConfiguration = [
     // name             => [ type <boolean, string>, label ]

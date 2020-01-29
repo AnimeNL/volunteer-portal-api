@@ -29,6 +29,22 @@ class VolunteerList implements \ArrayAccess, \Countable, \IteratorAggregate {
         $this->volunteers = $volunteers;
     }
 
+    // Creates a Volunteer instance for the given |$email| address, which is presumed to be a
+    // volunteer who's still in the sign-up process.
+    public function createPendingVolunteer(string $email, string $accessCode) : Volunteer {
+        return new Volunteer([
+            'name'          => strtok($email, '@'),
+            'email'         => $email,
+            'telephone'     => '+000000000000',
+
+            'access_code'   => $accessCode,
+            'type'          => Volunteer::TYPE_HIDDEN,            
+
+            'is_admin'      => false,
+            'is_debug'      => false,
+        ]);
+    }
+
     // Finds the volunteer named |$name|. If |$fuzzy| is set to true, differences in spacing and
     // non-alphabetic characters will be ignored. Returns the Volunteer object when found, or NULL
     // in case no suitable volunteer could be found. This method has O(n) complexity.

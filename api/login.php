@@ -7,6 +7,7 @@ error_reporting(E_ALL | E_STRICT);
 ini_set('display_errors', 1);
 
 require __DIR__ . '/../vendor/autoload.php';
+require __DIR__ . '/anime/Services/generateAccessCode.php';
 require __DIR__ . '/error.php';
 
 Header('Access-Control-Allow-Origin: *');
@@ -25,8 +26,19 @@ if (!$environment->isValid())
 $volunteers = $environment->loadVolunteers();
 $volunteer = $volunteers->findByEmail($_POST['email']);
 
-if ($volunteer === null || $volunteer->getAccessCode() != $_POST['accessCode'])
-    dieWithError('Unrecognized volunteer login information.');
+// |$volunteer| might be null when a registration hasn't been processed yet by the volunteering
+// team's leadership. Validate whether the access code matches the generated access code, in which
+// case we'll give them a temporary session with a restricted set of abilities.
+if ($volunteer === null) {
+    $generatedCode = \Anime\Services\generateAccessCode($_POST['email']);
+    if ($_POST['accessCode'] != $generatedCode)
+        dieWithError('Unknown volunteer login information.');
+    
+    $volunteer = $volunteers->createPendingVolunteer($_POST['email'], $_POST['accessCode']);
+
+} else if ($volunteer->getAccessCode() != $_POST['accessCode']) {
+    dieWithError('Invalid volunteer login information.');
+}
 
 $configuration = \Anime\Configuration::getInstance();
 $sessionTimeoutMinutes = $configuration->get('sessionTimeoutMinutes');
