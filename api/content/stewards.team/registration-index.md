@@ -3,8 +3,7 @@ problemen. Als je mee wilt helpen met _crowd management_, leeftijd- en veilighei
 escortes voor de VIPs en tevens onze beveiliging en EHBO'ers bij wilt staan, dan zijn we op zoek
 naar **jou**!
 
-> Aanmeldingen voor een tweede festival in 2020 zullen pas na afloop van het eerste festival
-> aangenomen worden.
+> We nemen op dit moment nog geen aanmeldingen aan voor een tweede festival in 2020.
 
 ## Wat verwachten we van je?
 
