@@ -38,7 +38,7 @@ class VolunteerList implements \ArrayAccess, \Countable, \IteratorAggregate {
             'telephone'     => '+000000000000',
 
             'access_code'   => $accessCode,
-            'type'          => Volunteer::TYPE_HIDDEN,            
+            'type'          => Volunteer::TYPE_HIDDEN,
 
             'is_admin'      => false,
             'is_debug'      => false,

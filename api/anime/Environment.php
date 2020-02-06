@@ -75,6 +75,8 @@ class Environment {
     private $groupName;
     private $groupToken;
     private $hostname;
+    private $spreadsheetId;
+    private $spreadsheetSheet;
     private $teamDataFile;
     private $teamProgramFile;
     private $teamShiftsFile;
@@ -97,6 +99,8 @@ class Environment {
         $this->titles = $settings['titles'];
         $this->hostname = $settings['hostname'];
         $this->hiddenEventsPublic = $settings['hidden_events_public'];
+        $this->spreadsheetId = $settings['spreadsheet_id'];
+        $this->spreadsheetSheet = $settings['spreadsheet_sheet'];
         $this->teamDataFile = $settings['team_data'];
         $this->teamProgramFile = $settings['team_program'];
         $this->teamShiftsFile = $settings['team_shifts'];
@@ -144,6 +148,16 @@ class Environment {
     // Returns whether hidden events are to be made visible for all volunteers, regardless of level.
     public function areHiddenEventsPublic() : bool {
         return $this->hiddenEventsPublic;
+    }
+
+    // Returns the ID of the Google Spreadsheet used for registration information.
+    public function getSpreadsheetId() : string {
+        return $this->spreadsheetId;
+    }
+
+    // Returns the sheet of the Google Spreadsheet used for registration information.
+    public function getSpreadsheetSheet() : int {
+        return $this->spreadsheetSheet;
     }
 
     // Loads the list of volunteers associated with this environment and returns a VolunteerList

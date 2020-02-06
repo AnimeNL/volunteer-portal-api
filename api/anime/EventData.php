@@ -41,10 +41,11 @@ class EventData {
         $this->volunteer = $volunteer;
         $this->volunteerGroupToken = $environment->getGroupToken();
 
-        if ($this->volunteer->isAdmin())
+        if ($this->volunteer->isAdmin()) {
             $this->environments = Environment::getAll();
-        else
+        } else {
             $this->environments = [ $environment ];
+        }
 
         $this->locations = [];
 
@@ -67,7 +68,7 @@ class EventData {
         }
 
         // Sort the |$program| to make sure they're in incrementing order.
-        usort($program, function($lhs, $rhs) {
+        usort($program, function ($lhs, $rhs) {
             return $lhs['sessions'][0]['begin'] > $rhs['sessions'][0]['begin'];
         });
 

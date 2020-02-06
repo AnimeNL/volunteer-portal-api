@@ -306,8 +306,6 @@ class ImportScheduleService implements Service {
                     return 41804;  // SpeakerHeadz
                 else if ($time < strtotime('2019-06-14 23:00:00'))
                     return 41950;  // TeddyLoid
-                else
-                    return 41803;  // Strictly K-Pop
             case 'SPECIAL4':  // Alcohol tastings
                 if ($time <= strtotime('2019-06-14 18:30:00'))
                     return 41894;  // Gin

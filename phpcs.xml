@@ -2,11 +2,10 @@
 <ruleset name="AnimeNL coding standard">
     <description>The AnimeNL coding standard</description>
 
-    <file>anime/</file>
-    <file>index.php</file>
+    <file>api/</file>
 
     <!-- Ignore the forked AssertException library. -->
-    <exclude-pattern>anime/Test/AssertException.php</exclude-pattern>
+    <exclude-pattern>api/anime/Test/AssertException.php</exclude-pattern>
 
     <!-- PSR-2 is the basis of our coding standard. -->
     <rule ref="PSR2">

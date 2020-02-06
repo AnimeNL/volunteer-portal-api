@@ -2,7 +2,7 @@
 <phpunit bootstrap="vendor/autoload.php" colors="true">
     <testsuites>
         <testsuite name="AnimeNL Portal Tests">
-            <directory>./anime/</directory>
+            <directory>./api/</directory>
         </testsuite>
     </testsuites>
 </phpunit>

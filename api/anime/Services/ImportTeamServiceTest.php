@@ -34,7 +34,7 @@ class ImportTeamServiceTest extends \PHPUnit\Framework\TestCase {
         $this->assertEquals([
             [
                 'name'        => 'Jane Doe',
-                'access_code' => '7804',
+                'access_code' => '8627',
                 'type'        => 'Staff',
                 'email'       => 'jane@doe.co.uk',
                 'telephone'   => '+448000000000',
@@ -43,7 +43,7 @@ class ImportTeamServiceTest extends \PHPUnit\Framework\TestCase {
             ],
             [
                 'name'        => 'John Doe',
-                'access_code' => '1399',
+                'access_code' => '2726',
                 'type'        => 'Volunteer',
                 'email'       => 'john@doe.co.uk',
                 'telephone'   => '+447000000000',
@@ -84,18 +84,11 @@ class ImportTeamServiceTest extends \PHPUnit\Framework\TestCase {
         ]);
 
         // Passwords should have their expected length.
-        $this->assertEquals(ImportTeamService::ACCESS_CODE_LENGTH,
-                            strlen($firstService->generateAccessCode('Peter')));
-        $this->assertEquals(ImportTeamService::ACCESS_CODE_LENGTH,
-                            strlen($firstService->generateAccessCode('Ferdi')));
+        $this->assertEquals(ACCESS_CODE_LENGTH, strlen(generateAccessCode('Peter')));
+        $this->assertEquals(ACCESS_CODE_LENGTH, strlen(generateAccessCode('Ferdi')));
 
         // Passwords should be different depending on the name.
-        $this->assertNotEquals(
-            $firstService->generateAccessCode('Peter'), $firstService->generateAccessCode('Ferdi'));
-
-        // Passwords should be different depending on the salt.
-        $this->assertNotEquals($firstService->generateAccessCode('Peter'),
-                               $secondService->generateAccessCode('Peter'));
+        $this->assertNotEquals(generateAccessCode('Peter'), generateAccessCode('Ferdi'));
     }
 
     // Writes |$data| in CSV form to a file, then creates an ImportTeamService instance to parse it,
