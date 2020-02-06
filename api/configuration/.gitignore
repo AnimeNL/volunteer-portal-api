@@ -1,3 +1,5 @@
 teams/
 configuration.json
+credentials.json
+credentials-token.json
 program.json
