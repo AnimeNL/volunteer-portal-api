@@ -29,7 +29,7 @@ class GoogleClient {
         $this->client->setAuthConfig(self::AUTH_CONFIG_FILE);
 
         // Update this if any additional scopes are necessary.
-        $this->client->setScopes(\Google_Service_Sheets::SPREADSHEETS_READONLY);
+        $this->client->setScopes(\Google_Service_Sheets::SPREADSHEETS);
     }
 
     // Authenticates, and refreshes the token if required. 
