@@ -54,6 +54,7 @@ class EnvironmentTest extends \PHPUnit\Framework\TestCase {
                 'Staff'                 => 'Staff Volunteer'
             ],
             'hostname'              => 'example.com',
+            'contact'               => 'user@example.com',
             'hidden_events_public'  => true,
             'spreadsheet_id'        => 'spreadsheet__id',
             'team_data'             => 'team.json',

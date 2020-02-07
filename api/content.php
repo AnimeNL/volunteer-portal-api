@@ -38,6 +38,22 @@ switch ($environment->getHostname()) {
         ];
         break;
 
+    case 'gophers.team':
+        $content = [
+            '/'                                 => 'index.md',
+            '/404'                              => 'not-found.md',
+
+            // Public pages part of the Registration application.
+            '/registration/'                    => 'registration-index.md',
+            '/registration/dataverwerking.html' => 'registration-dataverwerking.md',
+            '/registration/faq.html'            => 'registration-faq.md',
+
+            // Internal pages part of the Registration application.
+            '/registration/internal/confirm'    => 'registration-form-confirm.md',
+            '/registration/internal/intro'      => 'registration-form-intro.md',
+        ];
+    break;
+
     default:
         dieWithError('This method is not available for this team yet.');
 }

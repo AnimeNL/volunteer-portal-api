@@ -1,16 +1,16 @@
 Er komt heel wat kijken bij het organiseren van een festival, dus op deze pagina kan je een aantal
 **veelgestelde vragen** terugvinden. Voor andere vragen ben je natuurlijk op zowel WhatsApp als via
-[e-mail](mailto:security@animecon.nl) meer dan welkom.
+[e-mail](mailto:gopherplanning@animecon.nl) meer dan welkom.
 
 ### Is het Theaterhotel niet veel te klein?
 Het Theaterhotel is inderdaad een stuk kleiner dan Ahoy, en dit is bewust: AnimeCon Classic is een
 meer exclusief festival waarbij we ons richten op een betere, complete ervaring. Verwacht een
 volwassen evenement met sterke inhoud en goede organisatie.
 
-### Hebben we dan niet teveel stewards?
-Tijdens AnimeCon 2019 in Ahoy hadden we een team van 50 stewards, en dat was een groter team dan we
-in het Theaterhotel nodig zullen hebben. In maart zullen we een selectie maken uit de aanmeldingen
-waarbij we ons richten op vaardigheden, ervaring en beschikbaarheid.
+### Hebben we dan niet teveel gophers?
+Tijdens AnimeCon 2019 in Ahoy hadden we een team van ruim 100 gophers, en dat was een groter team
+dan we in het Theaterhotel nodig zullen hebben. In maart zullen we een selectie maken uit de
+aanmeldingen waarbij we ons richten op vaardigheden, ervaring en beschikbaarheid.
 
 Als je vorig jaar meegeholpen hebt dan kan je sowieso een vrijkaartje van ons krijgen.
 

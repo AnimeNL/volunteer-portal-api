@@ -89,8 +89,8 @@ $displayName = $_POST['firstName'] . ' ' . $_POST['lastName'];
     
     $message .= '</table>';
     
-    mail('security@animecon.nl', 'Aanmelding: ' . htmlspecialchars($displayName), $message,
-             'From: aanmelding@stewards.team' . PHP_EOL .
+    mail($environment->getContact(), 'Aanmelding: ' . htmlspecialchars($displayName), $message,
+             'From: aanmelding@' . $environment->getHostname() . PHP_EOL .
              'Content-Type: text/html; charset=UTF-8');
 }
 

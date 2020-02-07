@@ -8,6 +8,7 @@
         "Staff": "Staff"
     },
     "hostname": "gophers.team",
+    "contact": "gopherplanning@animecon.nl",
     "hidden_events_public": false,
     "spreadsheet_id": "1k_65ngqS5rcI-8IerXchkuY36sHCVi8N892P1bkH9TM",
     "team_data": "gophers.json",

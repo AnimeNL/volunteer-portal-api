@@ -75,6 +75,7 @@ class Environment {
     private $groupName;
     private $groupToken;
     private $hostname;
+    private $contact;
     private $spreadsheetId;
     private $teamDataFile;
     private $teamProgramFile;
@@ -97,6 +98,7 @@ class Environment {
         $this->groupToken = $this->createGroupToken();
         $this->titles = $settings['titles'];
         $this->hostname = $settings['hostname'];
+        $this->contact = $settings['contact'];
         $this->hiddenEventsPublic = $settings['hidden_events_public'];
         $this->spreadsheetId = $settings['spreadsheet_id'];
         $this->teamDataFile = $settings['team_data'];
@@ -141,6 +143,11 @@ class Environment {
     // Returns the canonical hostname (origin) associated with this environment.
     public function getHostname() : string {
         return $this->hostname;
+    }
+
+    // Returns the contact e-mail address for the leads of this organisation.
+    public function getContact() : string {
+        return $this->contact;
     }
 
     // Returns whether hidden events are to be made visible for all volunteers, regardless of level.
