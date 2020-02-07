@@ -10,12 +10,15 @@ namespace Anime\Storage;
 // Name of the sheet that contains the registration information.
 const REGISTRATIONS_SHEET_NAME = 'Registrations';
 
+// First row on which registrations exist on the registrations sheet.
+const REGISTRATIONS_SHEET_ROW = 2;
+
 // The GoogleDataSource implements the data source interface whilst being backed by the live Google
 // Spreadsheet that's used for volunteer administration.
 class GoogleDataSource implements VolunteerDataSource {
     private $spreadsheet;
 
-    private $registrationCache = null;
+    private $registrations = null;
 
     public function __construct(string $spreadsheetId) {
         // Create the backing GoogleSpreadsheet instance. An exception will be thrown if the client
@@ -26,21 +29,45 @@ class GoogleDataSource implements VolunteerDataSource {
     // ---------------------------------------------------------------------------------------------
     // VolunteerDataSource implementation
 
-    public function getRegistrations() : array {
-        if ($this->registrationCache === null) {
+    public function createRegistration(VolunteerRegistrationRequest $request) : void {
+        $registrationRow = REGISTRATIONS_SHEET_ROW;
+
+        // (1) Determine the row on which the registration should be inserted.
+        foreach ($this->getRegistrations() as $registration)
+            $registrationRow = max($registrationRow, 1 + $registration->getSpreadsheetRow());
+
+        // (2) Create the new VolunteerRegistration instance for the |$request|.
+        $newRegistration = VolunteerRegistration::FromRequest($request);
+        $newRegistration->setSpreadsheetRow($registrationRow);
+
+        // (3) Write the registration information back to the spreadsheet.
+        {
             $registrations = $this->spreadsheet->getSheet(REGISTRATIONS_SHEET_NAME);
-            $registrationData = $registrations->getRange('A2:L999');
+            $registrations->writeRow('A' . $registrationRow, $newRegistration->toSpreadsheetRow());
+        }
 
-            $this->registrationCache = [];
+        // (4) Store the new registration in the cached registrations.
+        $this->registrations[] = $newRegistration;
+    }
 
-            foreach ($registrationData as $registrationEntry) {
+    public function getRegistrations() : array {
+        if ($this->registrations === null) {
+            $registrations = $this->spreadsheet->getSheet(REGISTRATIONS_SHEET_NAME);
+            $registrationData = $registrations->getRange('A' . REGISTRATIONS_SHEET_ROW . ':L999');
+
+            $this->registrations = [];
+
+            foreach ($registrationData as $rowOffset => $registrationEntry) {
                 if (!VolunteerRegistration::Validate($registrationEntry))
                     continue;
                 
-                $this->registrationCache[] = new VolunteerRegistration($registrationEntry);
+                $registration = new VolunteerRegistration($registrationEntry);
+                $registration->setSpreadsheetRow($rowOffset + REGISTRATIONS_SHEET_ROW);
+
+                $this->registrations[] = $registration;
             }
         }
 
-        return $this->registrationCache;
+        return $this->registrations;
     }
 }

@@ -28,7 +28,5 @@ class VolunteerDatabase {
     public function __construct(string $googleSpreadsheetId, int $mode) {
         // TODO: Actually support a CachedDataSource if |$mode| allows.
         $this->dataSource = new GoogleDataSource($googleSpreadsheetId);
-        
-        print_r($this->dataSource->getRegistrations());
     }
 }
