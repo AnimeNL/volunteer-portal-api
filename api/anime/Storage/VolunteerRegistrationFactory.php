@@ -110,6 +110,14 @@ class VolunteerRegistrationFactory {
 
     // Asserts that the |$request| has valid and non-null fields in it.
     private static function AssertValidRequest(VolunteerRegistrationRequest $request) {
+        if (!strlen($request->firstName))
+            throw new \Exception('A non-empty first name is required for a request.');
+        
+        if (!strlen($request->accessCode))
+            throw new \Exception('A non-empty access code is required for a request.');
+
+        if (!strlen($request->emailAddress))
+            throw new \Exception('A non-empty e-mail address is required for a request.');
     }
 
     // Returns whether the |$values| row represents an empty, unused row on the spreadsheet.
