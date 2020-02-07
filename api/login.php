@@ -37,6 +37,7 @@ echo json_encode([
     'userName'       => $registration->getDisplayName(),
     'userToken'      => $registration->getUserToken(),
     'authToken'      => $registration->getAuthToken(),
+    'status'         => $registration->getStatus(),
     'expirationTime' => (time() + ($sessionTimeoutMinutes * 60)) * 1000,
     'abilities'      => [],  // TODO
 ]);
