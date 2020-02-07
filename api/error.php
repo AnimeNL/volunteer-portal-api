@@ -6,3 +6,7 @@
 function dieWithError($error) {
     die(json_encode([ 'success' => false, 'error' => $error ]));
 }
+
+function dieWithMessage($message) {
+    die(json_encode([ 'success' => false, 'error' => 'user issue', 'message' => $message ]));
+}
