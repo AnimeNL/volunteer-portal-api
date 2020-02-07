@@ -18,10 +18,6 @@ naar **jou**!
 
 ## Wat krijg je van ons?
 
-  * Wij regelen en betalen een [professionele stewardtraining](training.html) voor je, inclusief
-    een officieel [ERC](https://erc.europa.eu/) certificaat. Stewards moeten deze training eens per
-    twee jaar volgen.
-
   * De mogelijkheid om [een slaapplaats](hotel.html) in één van de festivalhotels te reserveren. Bij
     voldoende interesse kunnen we ook gezamelijke slaapgelegenheden organiseren.
 
