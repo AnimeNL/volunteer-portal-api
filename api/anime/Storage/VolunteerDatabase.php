@@ -29,4 +29,20 @@ class VolunteerDatabase {
         // TODO: Actually support a CachedDataSource if |$mode| allows.
         $this->dataSource = new GoogleDataSource($googleSpreadsheetId);
     }
+
+    // Creates a new registration per the given |$request|, all fields in which are mandatory.
+    // Expected to throw an exception for data sources which are not write-supported.
+    public function createRegistration(VolunteerRegistrationRequest $request) : void {
+        $this->dataSource->createRegistration($request);
+    }
+
+    // Returns the VolunteerRegistration for the given e-mail address, if any.
+    public function findRegistrationByEmailAddress(string $emailAddress): ?VolunteerRegistration {
+        foreach ($this->dataSource->getRegistrations() as $registration) {
+            if ($registration->getEmailAddress() == $emailAddress)
+                return $registration;
+        }
+
+        return null;
+    }
 }
