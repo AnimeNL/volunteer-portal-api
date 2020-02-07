@@ -7,10 +7,13 @@ declare(strict_types=1);
 
 namespace Anime\Storage;
 
-// Converts |$value| to either null (the empty string) or a boolean.
-function toNullableBool(string $value): ?bool {
-    return strlen($value) ? $value == 'Yes'
-                          : null;
+// Converts the |$index| in |$values| to either null (the empty string) or a boolean.
+function toNullableBool(array $values, int $index): ?bool {
+    if (count($values) <= $index)
+        return null;
+
+    return strlen($values[$index]) ? $values[$index] == 'Yes'
+                                   : null;
 }
 
 // Converts |$value| to a string representing the nullable boolean.
@@ -84,8 +87,8 @@ class VolunteerRegistrationFactory {
                                          /* emailAddress= */ $values[7],
                                          /* phoneNumber= */ $values[8],
                                          /* status=*/ $values[9],
-                                         /* hotel= */ toNullableBool($values[10]),
-                                         /* nightShifts= */ toNullableBool($values[11]));
+                                         /* hotel= */ toNullableBool($values, 10),
+                                         /* nightShifts= */ toNullableBool($values, 11));
     }
 
     // Converts the given |$registration| to an array that can be written to the spreadsheet.
@@ -122,10 +125,28 @@ class VolunteerRegistrationFactory {
 
     // Returns whether the |$values| row represents an empty, unused row on the spreadsheet.
     private static function IsEmptySpreadsheetRow(array $values) : bool {
-        return false;
+        return count($values) < 10 || !strlen($values[0]);
     }
 
     // Asserts that |$values| has valid and non-null fields in it.
     private static function AssertValidSpreadsheet(array $values) {
+        if (!in_array($values[5], [ VolunteerRegistration::TYPE_VOLUNTEER,
+                                    VolunteerRegistration::TYPE_SENIOR,
+                                    VolunteerRegistration::TYPE_STAFF ])) {
+            throw new \Exception('A valid volunteer type is required on the spreadsheet.');
+        }
+
+        if (!strlen($values[6]))
+            throw new \Exception('A non-empty access code is required on the spreadsheet.');
+
+        if (!strlen($values[7]))
+            throw new \Exception('A non-empty e-mail address is required on the spreadsheet.');
+        
+        if (!in_array($values[9], [ VolunteerRegistration::STATUS_NEW,
+                                    VolunteerRegistration::STATUS_PENDING,
+                                    VolunteerRegistration::STATUS_ACCEPTED,
+                                    VolunteerRegistration::STATUS_REJECTED ])) {
+            throw new \Exception('A valid volunteer status is required on the spreadsheet.');
+        }
     }
 }
