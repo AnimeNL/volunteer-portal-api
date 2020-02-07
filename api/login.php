@@ -23,31 +23,20 @@ $environment = \Anime\Environment::createForHostname($_SERVER['HTTP_HOST']);
 if (!$environment->isValid())
     dieWithError('Unrecognized volunteer portal environment.');
 
-$volunteers = $environment->loadVolunteers();
-$volunteer = $volunteers->findByEmail($_POST['email']);
+$database = $environment->createDatabase(/* readOnly= */ true);
 
-// |$volunteer| might be null when a registration hasn't been processed yet by the volunteering
-// team's leadership. Validate whether the access code matches the generated access code, in which
-// case we'll give them a temporary session with a restricted set of abilities.
-if ($volunteer === null) {
-    $generatedCode = \Anime\Services\generateAccessCode($_POST['email']);
-    if ($_POST['accessCode'] != $generatedCode)
-        dieWithError('Unknown volunteer login information.');
-    
-    $volunteer = $volunteers->createPendingVolunteer($_POST['email'], $_POST['accessCode']);
-
-} else if ($volunteer->getAccessCode() != $_POST['accessCode']) {
-    dieWithError('Invalid volunteer login information.');
-}
+$registration = $database->findRegistrationByEmailAddress($_POST['email']);
+if (is_null($registration))
+    dieWithError('Unknown volunteer login information.');
 
 $configuration = \Anime\Configuration::getInstance();
 $sessionTimeoutMinutes = $configuration->get('sessionTimeoutMinutes');
 
 echo json_encode([
     'success'        => true,
-    'userName'       => $volunteer->getName(),
-    'userToken'      => $volunteer->getUserToken(),
-    'authToken'      => $volunteer->getAuthToken(),
+    'userName'       => $registration->getDisplayName(),
+    'userToken'      => $registration->getUserToken(),
+    'authToken'      => $registration->getAuthToken(),
     'expirationTime' => (time() + ($sessionTimeoutMinutes * 60)) * 1000,
-    'abilities'      => $volunteer->getAbilities(),
+    'abilities'      => [],  // TODO
 ]);

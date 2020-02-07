@@ -76,7 +76,6 @@ class Environment {
     private $groupToken;
     private $hostname;
     private $spreadsheetId;
-    private $spreadsheetSheet;
     private $teamDataFile;
     private $teamProgramFile;
     private $teamShiftsFile;
@@ -100,7 +99,6 @@ class Environment {
         $this->hostname = $settings['hostname'];
         $this->hiddenEventsPublic = $settings['hidden_events_public'];
         $this->spreadsheetId = $settings['spreadsheet_id'];
-        $this->spreadsheetSheet = $settings['spreadsheet_sheet'];
         $this->teamDataFile = $settings['team_data'];
         $this->teamProgramFile = $settings['team_program'];
         $this->teamShiftsFile = $settings['team_shifts'];
@@ -155,9 +153,13 @@ class Environment {
         return $this->spreadsheetId;
     }
 
-    // Returns the sheet of the Google Spreadsheet used for registration information.
-    public function getSpreadsheetSheet() : int {
-        return $this->spreadsheetSheet;
+    // Creates the database for the current environment. A read-only instance will be returned,
+    // unless the |$readOnly| argument has been flipped.
+    public function createDatabase(bool $readOnly = true) : \Anime\Storage\VolunteerDatabase {
+        return new \Anime\Storage\VolunteerDatabase(
+            $this->spreadsheetId,
+            $readOnly ? \Anime\Storage\VolunteerDatabase::READ_ONLY
+                      : \Anime\Storage\VolunteerDatabase::READ_WRITE);
     }
 
     // Loads the list of volunteers associated with this environment and returns a VolunteerList
