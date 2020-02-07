@@ -27,6 +27,7 @@ class GoogleClient {
         $this->client->setAccessType('offline');
         $this->client->setApplicationName('Anime Volunteer Portal');
         $this->client->setAuthConfig(self::AUTH_CONFIG_FILE);
+        $this->client->setPrompt('select_account consent');
 
         // Update this if any additional scopes are necessary.
         $this->client->setScopes(\Google_Service_Sheets::SPREADSHEETS);
