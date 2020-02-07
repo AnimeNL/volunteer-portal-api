@@ -3,7 +3,7 @@
 // Use of this source code is governed by the MIT license, a copy of which can
 // be found in the LICENSE file.
 
-error_reporting(E_ALL | E_STRICT);
+error_reporting((E_ALL | E_STRICT) & ~E_WARNING);
 ini_set('display_errors', 1);
 
 const TARGET_DIR = __DIR__ . '/../avatars/';
