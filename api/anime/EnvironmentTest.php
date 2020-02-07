@@ -56,7 +56,6 @@ class EnvironmentTest extends \PHPUnit\Framework\TestCase {
             'hostname'              => 'example.com',
             'hidden_events_public'  => true,
             'spreadsheet_id'        => 'spreadsheet__id',
-            'spreadsheet_sheet'     => 123456,
             'team_data'             => 'team.json',
             'team_program'          => '',  // TODO: test this?
             'team_shifts'           => '',  // TODO: test this?
@@ -77,9 +76,7 @@ class EnvironmentTest extends \PHPUnit\Framework\TestCase {
 
         $this->assertEquals($settings['hostname'], $environment->getHostname());
         $this->assertEquals($settings['hidden_events_public'], $environment->areHiddenEventsPublic());
-
         $this->assertEquals($settings['spreadsheet_id'], $environment->getSpreadsheetId());
-        $this->assertEquals($settings['spreadsheet_sheet'], $environment->getSpreadsheetSheet());
 
         // TODO: Test the |loadTeam()| method.
 
