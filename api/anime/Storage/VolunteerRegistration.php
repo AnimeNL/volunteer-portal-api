@@ -37,8 +37,12 @@ class VolunteerRegistration {
     private string $emailAddress;
     private string $phoneNumber;
     private string $status;
+
     private ?bool $hotel = null;
     private ?bool $nightShifts = null;
+
+    private string $userToken;  // unique identification for this volunteer
+    private string $authToken;  // private authentication for this volunteer
 
     // Only used when the database has been opened in read/write mode.
     private $spreadsheetRow = null;
@@ -87,12 +91,24 @@ class VolunteerRegistration {
         return $this->status;
     }
 
+    // ---------------------------------------------------------------------------------------------
+
     public function getHotel() : ?bool {
         return $this->hotel;
     }
 
     public function getNightShifts() : ?bool {
         return $this->nightShifts;
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+    public function getUserToken() : string {
+        return $this->userToken;
+    }
+
+    public function getAuthToken() : string {
+        return $this->authToken;
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -127,7 +143,11 @@ class VolunteerRegistration {
         $this->emailAddress = $emailAddress;
         $this->phoneNumber = $phoneNumber;
         $this->status = $status;
+
         $this->hotel = $hotel;
         $this->nightShifts = $nightShifts;
+
+        $this->userToken = SecurityToken::GenerateUserToken($accessCode, $emailAddress);
+        $this->authToken = SecurityToken::GenerateAuthToken($accessCode, $emailAddress);
     }
 }
