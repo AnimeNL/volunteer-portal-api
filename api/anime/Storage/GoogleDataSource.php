@@ -37,13 +37,15 @@ class GoogleDataSource implements VolunteerDataSource {
             $registrationRow = max($registrationRow, 1 + $registration->getSpreadsheetRow());
 
         // (2) Create the new VolunteerRegistration instance for the |$request|.
-        $newRegistration = VolunteerRegistration::FromRequest($request);
+        $newRegistration = VolunteerRegistrationFactory::FromRequest($request);
         $newRegistration->setSpreadsheetRow($registrationRow);
 
         // (3) Write the registration information back to the spreadsheet.
         {
-            $registrations = $this->spreadsheet->getSheet(REGISTRATIONS_SHEET_NAME);
-            $registrations->writeRow('A' . $registrationRow, $newRegistration->toSpreadsheetRow());
+            $spreadsheet = $this->spreadsheet->getSheet(REGISTRATIONS_SHEET_NAME);
+            $spreadsheetRow = VolunteerRegistrationFactory::ToSpreadsheetRow($newRegistration);
+
+            $spreadsheet->writeRow('A' . $registrationRow, $spreadsheetRow);
         }
 
         // (4) Store the new registration in the cached registrations.
@@ -58,10 +60,10 @@ class GoogleDataSource implements VolunteerDataSource {
             $this->registrations = [];
 
             foreach ($registrationData as $rowOffset => $registrationEntry) {
-                if (!VolunteerRegistration::Validate($registrationEntry))
+                $registration = VolunteerRegistrationFactory::FromSpreadsheetRow($registrationEntry);
+                if (is_null($registration))
                     continue;
-                
-                $registration = new VolunteerRegistration($registrationEntry);
+
                 $registration->setSpreadsheetRow($rowOffset + REGISTRATIONS_SHEET_ROW);
 
                 $this->registrations[] = $registration;
