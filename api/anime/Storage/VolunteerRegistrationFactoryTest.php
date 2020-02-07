@@ -30,7 +30,7 @@ class VolunteerRegistrationFactoryTest extends \PHPUnit\Framework\TestCase {
             /* lastName= */ 'Last',
             /* gender= */ VolunteerRegistration::GENDER_MALE,
             /* tshirtSize= */ 'L',
-            /* fullName= */ null,
+            /* displayName= */ 'First Last',
             /* type= */ VolunteerRegistration::TYPE_VOLUNTEER,
             /* accessCode= */ 'KMFNEZ',
             /* emailAddress= */ 'user@example.com',
@@ -91,6 +91,9 @@ class VolunteerRegistrationFactoryTest extends \PHPUnit\Framework\TestCase {
         $request = $this->createValidRegistrationRequest();
         $registration = VolunteerRegistrationFactory::FromRequest($request);
 
+        $this->assertEquals(
+            $request->firstName . ' ' . $request->lastName, $registration->getDisplayName());
+
         $this->assertEquals(VolunteerRegistration::GENDER_UNDEFINED, $registration->getGender());
         $this->assertEquals('', $registration->getTshirtSize());
         $this->assertEquals(VolunteerRegistration::TYPE_VOLUNTEER, $registration->getType());
@@ -144,6 +147,7 @@ class VolunteerRegistrationFactoryTest extends \PHPUnit\Framework\TestCase {
 
         $this->assertEquals($values[0], $registration->getFirstName());
         $this->assertEquals($values[1], $registration->getLastName());
+        $this->assertEquals($values[4], $registration->getDisplayName());
         $this->assertEquals($values[2], $registration->getGender());
         $this->assertEquals($values[3], $registration->getTshirtSize());
         $this->assertEquals($values[5], $registration->getType());
@@ -159,7 +163,9 @@ class VolunteerRegistrationFactoryTest extends \PHPUnit\Framework\TestCase {
     public function testSpreadsheetRoundTrip() {
         $originalValues = $this->createValidSpreadsheetRow();
         $registration = VolunteerRegistrationFactory::FromSpreadsheetRow($originalValues);
+
         $serializedValues = VolunteerRegistrationFactory::ToSpreadsheetRow($registration);
+        $serializedValues[4] = $originalValues[4];  // display name is spreadsheet dictated
 
         $this->assertEquals($originalValues, $serializedValues);
     }

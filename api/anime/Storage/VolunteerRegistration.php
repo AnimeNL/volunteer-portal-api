@@ -29,6 +29,7 @@ class VolunteerRegistration {
 
     private string $firstName;
     private string $lastName;
+    private string $displayName;
     private string $gender = VolunteerRegistration::GENDER_UNDEFINED;
     private string $tshirtSize = '';
     private string $type;
@@ -52,6 +53,10 @@ class VolunteerRegistration {
 
     public function getLastName() : string {
         return $this->lastName;
+    }
+
+    public function getDisplayName() : string {
+        return $this->displayName;
     }
 
     public function getGender() : string {
@@ -108,12 +113,13 @@ class VolunteerRegistration {
     // ---------------------------------------------------------------------------------------------
 
     // Public constructor. Only to be called by the VolunteerRegistrationFactory.
-    public function __construct(string $firstName, string $lastName, string $gender,
-                                string $tshirtSize, string $type, string $accessCode,
-                                string $emailAddress, string $phoneNumber, string $status,
-                                ?bool $hotel, ?bool $nightShifts) {
+    public function __construct(string $firstName, string $lastName, string $displayName,
+                                string $gender, string $tshirtSize, string $type,
+                                string $accessCode, string $emailAddress, string $phoneNumber,
+                                string $status, ?bool $hotel, ?bool $nightShifts) {
         $this->firstName = $firstName;
         $this->lastName = $lastName;
+        $this->displayName = $displayName;
         $this->gender = $gender;
         $this->tshirtSize = $tshirtSize;
         $this->type = $type;

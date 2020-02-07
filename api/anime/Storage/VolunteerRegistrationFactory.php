@@ -59,6 +59,7 @@ class VolunteerRegistrationFactory {
 
         return new VolunteerRegistration($request->firstName,
                                          $request->lastName,
+                                         $request->firstName . ' ' . $request->lastName,
                                          VolunteerRegistration::GENDER_UNDEFINED,
                                          /* tshirtSize= */ '',
                                          VolunteerRegistration::TYPE_VOLUNTEER,
@@ -80,6 +81,7 @@ class VolunteerRegistrationFactory {
 
         return new VolunteerRegistration(/* firstName= */ $values[0],
                                          /* lastName= */ $values[1],
+                                         /* displayName= */ $values[4],
                                          /* gender= */ $values[2],
                                          /* tshirtSize= */ $values[3],
                                          /* type= */ $values[5],
