@@ -36,13 +36,15 @@ class GoogleClient {
     // Authenticates, and refreshes the token if required. 
     private function authenticate() : void {
         if (file_exists(self::AUTH_TOKEN_FILE)) {
-            $tokenConfiguration = json_decode(file_get_contents(self::AUTH_TOKEN_FILE), true);
-            $this->client->setAccessToken($tokenConfiguration);
+            $this->client->setAccessToken(
+                json_decode(file_get_contents(self::AUTH_TOKEN_FILE), true));
         }
 
         if ($this->client->isAccessTokenExpired()) {
-            if ($this->client->getRefreshToken()) {
-                $this->client->fetchAccessTokenWithRefreshToken($this->client->getRefreshToken());
+            $refreshToken = $this->client->getRefreshToken();
+
+            if (!is_null($refreshToken)) {
+                $this->client->fetchAccessTokenWithRefreshToken($refreshToken);
             } else if (php_sapi_name() == 'cli') {
                 // Manual authentication is necessary. This cannot be done whilst in the browser, so
                 // only allow the following steps on the CLI.
@@ -63,8 +65,11 @@ class GoogleClient {
             }
 
             if (!$this->client->isAccessTokenExpired()) {
-                file_put_contents(
-                    self::AUTH_TOKEN_FILE, json_encode($this->client->getAccessToken()));
+                $accessToken = $this->client->getAccessToken();
+                if (!array_key_exists('refresh_token', $accessToken) && !is_null($refreshToken))
+                    $accessToken['refresh_token'] = $refreshToken;
+
+                file_put_contents(self::AUTH_TOKEN_FILE, json_encode($accessToken));
             }
         }
 
