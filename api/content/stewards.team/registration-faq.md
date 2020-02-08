@@ -4,15 +4,34 @@ Er komt heel wat kijken bij het organiseren van een festival, dus op deze pagina
 
 ### Is het Theaterhotel niet veel te klein?
 Het Theaterhotel is inderdaad een stuk kleiner dan Ahoy, en dit is bewust: AnimeCon Classic is een
-meer exclusief festival waarbij we ons richten op een betere, complete ervaring. Verwacht een
-volwassen evenement met sterke inhoud en goede organisatie.
+meer exclusief festival waarbij we ons richten op een betere, complete ervaring, waarbij we ongeveer
+2,000 bezoekers per dag verwelkomen. Verwacht een volwassen evenement met sterke inhoud en goede
+organisatie.
 
 ### Hebben we dan niet teveel stewards?
-Tijdens AnimeCon 2019 in Ahoy hadden we een team van 50 stewards, en dat was een groter team dan we
-in het Theaterhotel nodig zullen hebben. In maart zullen we een selectie maken uit de aanmeldingen
-waarbij we ons richten op vaardigheden, ervaring en beschikbaarheid.
+Tijdens AnimeCon 2019 in Ahoy waren er 50 stewards, waar we verwachten dat we voor het Theaterhotel
+een groep van 25–30 stewards samen zullen stellen. Dit zal in maart en april gaan gebeuren, waarbij
+we een selectie maken op basis van vaardigheden, ervaring en beschikbaarheid.
 
-Als je vorig jaar meegeholpen hebt dan kan je sowieso een vrijkaartje van ons krijgen.
+Natuurlijk zijn er ook andere manieren waarop je mee kunt helpen:
+
+  * We zijn een nieuw **Festival Hosts** team aan het opstellen, waarbij je voornaamste taak is om
+    vragen van bezoekers te beantwoorden. Eigenlijk net iets andere patrouille shifts! Neem contact
+    op met de Peter of Neil mocht je hier interesse in hebben.
+
+  * De [gophers](https://gophers.team/registration/) helpen mee op een andere, maar net zo
+    belangrijke manier. Veel stewards hebben het altijd leuk gevonden om mee te helpen met de
+    registratie desk, en jullie ervaring zal zeker welkom zijn in het team.
+
+Als je vorig jaar meegeholpen hebt dan kan je sowieso een vrijkaartje van ons krijgen!
+
+### Wat zijn de openingstijden van het festival?
+AnimeCon 2020 zal bezoekers ontvangen tussen 12 uur op vrijdagmiddag, en 8 uur op zondagavond.
+Hiernaast zullen er op donderdagavond mogelijk ook al activiteiten zijn.
+
+We verwachten dat stewards tussen 10 uur 's ochtends op vrijdag en 6 uur 's avonds op zondag
+beschikbaar zijn. Buiten die tijden zullen we een _ad hoc_ planning toepassen op basis van de
+aanwezige vrijwilligers.
 
 ### Hoe zit het met een tweede festival?
 Er is nog geen informatie aangekondigd over een tweede, grotere AnimeCon festival in 2020. In elk

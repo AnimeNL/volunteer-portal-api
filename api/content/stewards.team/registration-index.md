@@ -21,7 +21,7 @@ naar **jou**!
   * De mogelijkheid om [een slaapplaats](hotel.html) in één van de festivalhotels te reserveren. Bij
     voldoende interesse kunnen we ook gezamelijke slaapgelegenheden organiseren.
 
-  * Broodjes, snacks, drinken en verdere versnaperingen tijdens het festival.
+  * Broodjes, snacks, drinken en verdere versnaperingen tijdens het festival in de Volunteer Lounge.
 
   * Een gratis weekendticket voor één van onze festivals _nadat_ je vrijwilliger bent geweest, of
     een volledige vergoeding van je weekendticket.
