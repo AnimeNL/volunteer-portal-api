@@ -1,7 +1,7 @@
-AnimeCon 2021 Volunteer Portal
+AnimeCon 2021 Volunteer Portal (backend)
 ===
 This repository contains a Volunteer Portal backend implementation for the
-[AnimeCon 2021](https://www.animecon.nl/) festival. The front-end may be found in the
+[AnimeCon 2021](https://www.animecon.nl/) festival. The frontend may be found in the
 [volunteer-portal](https://github.com/AnimeNL/volunteer-portal) project, also published on GitHub.
 
 ## API Documentation
