@@ -25,7 +25,7 @@ echo json_encode([
         [
             'name'                  => 'AnimeCon 2021',
             'enablePortal'          => false,
-            'enableRegistration'    => true,
+            'enableRegistration'    => false,
             'timezone'              => 'Europe/Amsterdam',
             'website'               => 'https://www.animecon.nl/',
         ],
