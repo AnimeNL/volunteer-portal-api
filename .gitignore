@@ -1,13 +1,8 @@
 .vscode/
-avatars/
 vendor/
 Thumbs.db
 VERSION
 composer.lock
 content.json
-npm-debug.log
 sftp-config.json
-*.psd
-anime/notifications.log
-package-lock.json
 api/configuration/notes.json
