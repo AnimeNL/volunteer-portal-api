@@ -1,1 +1,0 @@
-Welkom op de gopherportal voor het AnimeCon festival, 5–7 juni 2020 in het Theaterhotel in Almelo. Vrijwilligersroosters zullen begin mei vrijgegeven worden.

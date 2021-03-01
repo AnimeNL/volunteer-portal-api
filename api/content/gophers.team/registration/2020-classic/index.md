@@ -1,7 +1,7 @@
 Gophers vormen de grootste, en misschien wel de belangrijkste groep vrijwilligers voor
-[Anime 2020](https://www.animecon.nl/). Samen met de rest van het team ben je verantwoordelijk voor
-het neerzetten van een fantastisch festival, zowel in zichtbare, publieksgerichte functies als in
-het ontzichtbare, maar net zo belangrijke werk.
+[AnimeCon 2020](https://www.animecon.nl/): 5–7 juni in het Theaterhotel in Almelo. Samen met de rest
+van het team ben je verantwoordelijk voor het neerzetten van een fantastisch festival, zowel in
+zichtbare, publieksgerichte functies als in het ontzichtbare, maar net zo belangrijke werk.
 
 Lees op deze pagina meer over de functies en meld je direct aan als je mee wilt helpen!
 

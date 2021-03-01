@@ -16,62 +16,31 @@ $environment = \Anime\Environment::createForHostname($_SERVER['HTTP_HOST']);
 if (!$environment->isValid())
     dieWithError('Unrecognized volunteer portal environment.');
 
-$content = null;
-
-switch ($environment->getHostname()) {
-    case 'stewards.team':
-        $content = [
-            '/'                                 => 'index.md',
-            '/404'                              => 'not-found.md',
-
-            // Public pages part of the Registration application.
-            '/registration/'                    => 'registration-index.md',
-            '/registration/dataverwerking.html' => 'registration-dataverwerking.md',
-            '/registration/faq.html'            => 'registration-faq.md',
-            '/registration/hotel.html'          => 'registration-hotel.md',
-            '/registration/rooster.html'        => 'registration-rooster.md',
-            '/registration/training.html'       => 'registration-training.md',
-
-            // Internal pages part of the Registration application.
-            '/registration/internal/confirm'    => 'registration-form-confirm.md',
-            '/registration/internal/intro'      => 'registration-form-intro.md',
-        ];
-        break;
-
-    case 'gophers.team':
-        $content = [
-            '/'                                 => 'index.md',
-            '/404'                              => 'not-found.md',
-
-            // Public pages part of the Registration application.
-            '/registration/'                    => 'registration-index.md',
-            '/registration/dataverwerking.html' => 'registration-dataverwerking.md',
-            '/registration/faq.html'            => 'registration-faq.md',
-
-            // Internal pages part of the Registration application.
-            '/registration/internal/confirm'    => 'registration-form-confirm.md',
-            '/registration/internal/intro'      => 'registration-form-intro.md',
-        ];
-    break;
-
-    default:
-        dieWithError('This method is not available for this team yet.');
-}
-
-$lastUpdated = time();
 $pages = [];
 
-foreach ($content as $url => $contentFilename) {
-    $contentPath = __DIR__ . '/content/' . $environment->getHostname() . '/' . $contentFilename;
+$directoryPath = __DIR__ . '/content/' . $environment->getHostname();
+if (file_exists($directoryPath)) {
+    $directoryIterator = new RecursiveDirectoryIterator($directoryPath);
+    $iterator = new RecursiveIteratorIterator($directoryIterator);
 
-    $lastUpdated = max($lastUpdated, filemtime($contentPath));
-    $pages[] = [
-        'url'       => $url,
-        'content'   => file_get_contents($contentPath)
-    ];
+    foreach ($iterator as $file) {
+        if ($file->isDir())
+            continue;  // iterators will be visited recursively
+
+        $absolutePath = $file->getPathname();
+        if (!str_ends_with($absolutePath, '.html') && !str_ends_with($absolutePath, '.md'))
+            continue;  // only consider HTML and Markdown files for now.
+
+        $relativePath = str_replace($directoryPath, '', $absolutePath);
+        $normalizedPath = preg_replace('/\.(html|md)$/', '.html', $relativePath);
+        $filteredPath = str_replace('/index.html', '/', $normalizedPath);
+
+        $pages[] = [
+            'pathname'  => $filteredPath,
+            'content'   => file_get_contents($absolutePath),
+            'modified'  => $file->getMTime(),
+        ];
+    }
 }
 
-echo json_encode([
-    'lastUpdate'    => $lastUpdated,
-    'pages'         => $pages
-]);
+echo json_encode([ 'pages' => $pages ]);

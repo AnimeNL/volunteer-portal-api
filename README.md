@@ -13,6 +13,7 @@ implementation is provided in PHP, the following mappings must be set up with th
 
 | Request            | Handler |
 | :---               | :---    |
+| `/api/content`     | [/api/content.php](api/content.php) |
 | `/api/environment` | [/api/environment.php](api/environment.php) |
 | `/api/login`       | [/api/login.php](api/login.php) |
 
