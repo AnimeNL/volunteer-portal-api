@@ -24,18 +24,18 @@ echo json_encode([
     'events' => [
         [
             'name'                  => 'AnimeCon 2020: Classic',
-            'enablePortal'          => false,
-            'enableReferences'      => true,
-            'enableRegistration'    => true,
+            'enableContent'         => true,
+            'enableRegistration'    => false,
+            'enableSchedule'        => false,
             'slug'                  => '2020-classic',
             'timezone'              => 'Europe/Amsterdam',
             'website'               => 'https://www.animecon.nl/',
         ],
         [
             'name'                  => 'AnimeCon 2021',
-            'enablePortal'          => false,
-            'enableReferences'      => true,
+            'enableContent'         => false,
             'enableRegistration'    => false,
+            'enableSchedule'        => false,
             'slug'                  => '2021',
             'timezone'              => 'Europe/Amsterdam',
             'website'               => 'https://www.animecon.nl/',
