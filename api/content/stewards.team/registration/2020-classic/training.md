@@ -19,4 +19,4 @@ Stewards moeten de training om het jaar volgen. Als je niet beschikbaar kan zijn
 en dit je eerste jaar als steward is, of het langer dan twee jaar geleden is dat je de training voor
 het laatst gevolgd hebt, dan zal je niet als steward mee kunnen helpen.
 
-[« Vorige pagina](/registration/)
+[« Vorige pagina](/registration/2020-classic/)

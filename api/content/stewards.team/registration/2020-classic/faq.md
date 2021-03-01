@@ -54,4 +54,4 @@ Omdat de details nog niet bekend zijn kunnen we geen toezeggingen doen betreft h
 hebben een fantastisch team en houden het liefst iedereen bijeen, maar realiseren ons ook dat het
 kleinere festival dit moeilijk maakt.
 
-[« Vorige pagina](/registration/)
+[« Vorige pagina](/registration/2020-classic/)

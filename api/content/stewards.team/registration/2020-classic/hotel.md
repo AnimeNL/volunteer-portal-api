@@ -28,4 +28,4 @@ Voor **€90 per persoon** regelen we je verblijf voor het hele weekend, inclusi
 ontbijt, in een huis slechts tien minuutjes lopen van het Theaterhotel. Je deelt de locatie met een
 groep andere stewards, dus het is ook nog eens flink gezellig!
 
-[« Vorige pagina](/registration/)
+[« Vorige pagina](/registration/2020-classic/)

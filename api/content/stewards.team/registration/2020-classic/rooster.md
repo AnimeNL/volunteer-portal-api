@@ -29,4 +29,4 @@ die we dit jaar in Almelo verwachten.
   * 13:30–15:30 Cosplay Solo competitie
   * 18:00–19:00 Begeleiding Game Room
 
-[« Vorige pagina](/registration/)
+[« Vorige pagina](/registration/2020-classic/)

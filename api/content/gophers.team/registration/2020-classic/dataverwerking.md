@@ -16,4 +16,4 @@ De gegevens worden opgeslagen op [Google Drive](https://www.google.com/drive/).
 Zie [deze pagina](https://privacy.google.com/businesses/compliance/#!?modal_active=none) voor meer
 informatie over het AVG-gerelateerde beleid van Google.
 
-[« Vorige pagina](/registration/)
+[« Vorige pagina](/registration/2020-classic/)

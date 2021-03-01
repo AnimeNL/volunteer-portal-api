@@ -31,4 +31,4 @@ Er is nog geen informatie aangekondigd over een tweede, grotere AnimeCon festiva
 geval zullen we pas aanmeldingen gaan accepteren na afloop van AnimeCon Classic, dus midden
 juni 2020.
 
-[« Vorige pagina](/registration/)
+[« Vorige pagina](/registration/2020-classic/)
