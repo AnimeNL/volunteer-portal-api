@@ -33,32 +33,48 @@ class Environment {
         if ($settings === null)
             return new Environment(false);  // the |$hostname| does not have configuration
 
-        return new Environment(true, $settings);
+        return new Environment(true, $configuration, $settings);
     }
 
     // Initializes a new environment for |$settings|, only intended for use by tests. The |$valid|
     // boolean indicates whether the created environment should be valid.
-    public static function createForTests(bool $valid, array $settings): Environment {
-        return new Environment($valid, $settings);
+    public static function createForTests(
+            bool $valid, Configuration $configuration, array $settings): Environment {
+        return new Environment($valid, $configuration, $settings);
     }
 
-    private $valid;
+    private bool $valid;
 
-    private $contactName;
-    private $contactTarget;
-    private $title;
+    private string $contactName;
+    private string $contactTarget;
+    private array $events;
+    private string $title;
 
     // Constructor for the Environment class. The |$valid| boolean must be set, and, when set to
     // true, the |$settings| array must be given with all intended options.
-    private function __construct(bool $valid, array $settings = []) {
+    private function __construct(
+            bool $valid, Configuration $configuration = null, array $settings = []) {
         $this->valid = $valid;
-
         if (!$valid)
             return;
 
         $this->contactName = $settings['contactName'];
         $this->contactTarget = $settings['contactTarget'];
+        $this->events = [];
         $this->title = $settings['title'];
+
+        if (array_key_exists('events', $settings)) {
+            foreach ($settings['events'] as $eventIdentifier => $eventOverrides) {
+                $eventSettings = $configuration->get('events/' . $eventIdentifier);
+                $eventSettings = array_merge($eventSettings, $eventOverrides);
+
+                $event = new Event($eventIdentifier, $eventSettings);
+                if (!$event->isValid())
+                    continue;
+
+                $this->events[] = $event;
+            }
+        }
     }
 
     // Returns whether this Environment instance represents a valid environment.
@@ -71,9 +87,14 @@ class Environment {
         return $this->contactName;
     }
 
-    // Returns the link target of the person who can be contacted for questions, if any.
-    public function getContactTarget(): string | null {
+    // Returns the link target of the person who can be contacted for questions.
+    public function getContactTarget(): string {
         return $this->contactTarget;
+    }
+
+    // Returns an array with all the Event instances known to this environment.
+    public function getEvents(): array {
+        return $this->events;
     }
 
     // Returns the name of the Volunteer Portal instance, e.g. Volunteer Portal.

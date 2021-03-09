@@ -17,7 +17,11 @@
             // https://github.com/AnimeNL/volunteer-portal/blob/main/API.md#response-ienvironmentresponse
             "contactName": "Admin",
             "contactTarget": "mailto:info@example.com",
-            "events": [ "event-identifier" ],
+            "events": {
+                "event-identifier": {
+                    "enableRegistration": false,
+                },
+            },
             "title": "Volunteer Portal",
         },
     },
@@ -31,7 +35,6 @@
             "enableContent": true,
             "enableRegistration": true,
             "enableSchedule": false,
-            "slug": "event-identifier",
             "timezone": "Europe/London",
         }
     },

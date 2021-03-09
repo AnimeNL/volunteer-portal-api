@@ -40,9 +40,24 @@ class Api {
      * @see https://github.com/AnimeNL/volunteer-portal/blob/main/API.md#apienvironment
      */
     public function environment(): array {
+        $events = [];
+
+        foreach ($this->environment->getEvents() as $event) {
+            $events[] = [
+                'name'                  => $event->getName(),
+                'enableContent'         => $event->enableContent(),
+                'enableRegistration'    => $event->enableRegistration(),
+                'enableSchedule'        => $event->enableSchedule(),
+                'slug'                  => $event->getIdentifier(),  // FIXME
+                'timezone'              => $event->getTimezone(),
+                'website'               => $event->getWebsite() ?? '',
+            ];
+        }
+
         return [
             'contactName'   => $this->environment->getContactName(),
             'contactTarget' => $this->environment->getContactTarget(),
+            'events'        => $events,
             'title'         => $this->environment->getTitle(),
         ];
     }

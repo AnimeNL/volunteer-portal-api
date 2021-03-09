@@ -43,17 +43,50 @@ class EnvironmentTest extends \PHPUnit\Framework\TestCase {
     // Verifies that a given array of settings can be appropriately reflected by the getters made
     // available on the Environment instance.
     public function testSettingReflection() {
+        $configuration = Configuration::createForTests([
+            'events' => [
+                '2021-event'    => [
+                    'name'                  => 'PortalCon 2020',
+                    'enableContent'         => true,
+                    'enableRegistration'    => true,
+                    'enableSchedule'        => false,
+                    'timezone'              => 'Europe/London',
+                ],
+            ],
+        ]);
+
         $settings = [
             'contactName'   => 'Name',
             'contactTarget' => 'Target',
+            'events'        => [
+                '2021-event'    => [
+                    // Overrides the registration availability of the global event.
+                    'enableRegistration'    => false,
+                ],
+            ],
             'title'         => 'Title',
         ];
 
-        $environment = Environment::createForTests(true /* valid */, $settings);
+        $environment = Environment::createForTests(true /* valid */, $configuration, $settings);
         $this->assertTrue($environment->isValid());
 
         $this->assertEquals($settings['contactName'], $environment->getContactName());
         $this->assertEquals($settings['contactTarget'], $environment->getContactTarget());
         $this->assertEquals($settings['title'], $environment->getTitle());
+
+        $this->assertEquals(1, count($environment->getEvents()));
+        {
+            $events = $environment->getEvents();
+            $event = $events[0];
+
+            $this->assertTrue($event->isValid());
+
+            $this->assertEquals('PortalCon 2020', $event->getName());
+            $this->assertTrue($event->enableContent());
+            $this->assertFalse($event->enableRegistration());  // overridden
+            $this->assertFalse($event->enableSchedule());
+            $this->assertEquals('Europe/London', $event->getTimezone());
+            $this->assertNull($event->getWebsite());
+        }
     }
 }
