@@ -6,3 +6,4 @@ composer.lock
 content.json
 sftp-config.json
 api/configuration/notes.json
+.phpunit.result.cache

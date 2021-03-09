@@ -1,5 +1,5 @@
 teams/
-configuration.json
+configuration.json5
 credentials.json
 credentials-token.json
 program.json

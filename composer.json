@@ -8,7 +8,8 @@
         "php": ">=8.0.0",
         "google/apiclient": "^2.9",
         "google/apiclient-services": "^0.161.0",
-        "nette/mail": "^3.1"
+        "nette/mail": "^3.1",
+        "colinodell/json5": "^2.2"
     },
     "scripts": {
         "lint": "php vendor/squizlabs/php_codesniffer/bin/phpcs --colors --standard=phpcs.xml",

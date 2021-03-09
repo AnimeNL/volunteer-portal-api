@@ -1,0 +1,12 @@
+{
+    "authentication": {
+        // Salt which will be used when creating an authentication token for a particular volunteer.
+        "authTokenSalt": "NMrvP28XCLyvVWmZDc72LjQJ",
+
+        // Salt which will be used when creating a unique identifier for a particular volunteer.
+        "userTokenSalt": "CPQJ8b3qRChmQL53CSufXeM5",
+
+        // Number of minutes a session on the Volunteer Portal is allowed to last for.
+        "sessionTimeoutMinutes": 43560,
+    },
+}

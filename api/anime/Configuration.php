@@ -1,5 +1,5 @@
 <?php
-// Copyright 2017 Peter Beverloo. All rights reserved.
+// Copyright 2021 Peter Beverloo. All rights reserved.
 // Use of this source code is governed by the MIT license, a copy of which can
 // be found in the LICENSE file.
 
@@ -11,13 +11,13 @@ namespace Anime;
 // can be obtained by calling the `getInstance()` method. Configuration is immutable.
 class Configuration {
     // File that contains the configuration for this installation.
-    private const CONFIGURATION_FILE = __DIR__ . '/../configuration/configuration.json';
+    private const CONFIGURATION_FILE = __DIR__ . '/../configuration/configuration.json5';
 
     private static $instance;
 
     // Returns the global instance of the Configuration class. A new instance will be created if
     // none is in existence so far. Unable to read the configuration file is a fatal error.
-    public static function getInstance() : Configuration {
+    public static function getInstance(): Configuration {
         if (self::$instance === null) {
             if (!file_exists(Configuration::CONFIGURATION_FILE))
                 throw new \Exception('Unable to open the configuration file: it does not exist.');
@@ -26,9 +26,7 @@ class Configuration {
                 throw new \Exception('Unable to open the configuration file: it is not readable.');
 
             $configurationData = file_get_contents(Configuration::CONFIGURATION_FILE);
-            $configurationData = preg_replace('/\/\*.*?\*\//s', '', $configurationData);
-
-            $configuration = json_decode($configurationData, true);
+            $configuration = json5_decode($configurationData, true);
 
             if (!is_array($configuration))
                 throw new \Exception('Unable to open the configuration file: invalid json.');
@@ -41,7 +39,7 @@ class Configuration {
 
     // Returns a new instance of the Configuration class fed from |$configuration|. This method
     // should only be used for the purposes of testing.
-    public static function createForTests(array $configuration) : Configuration {
+    public static function createForTests(array $configuration): Configuration {
         return new Configuration($configuration);
     }
 

@@ -12,12 +12,12 @@ class ImportProgramServiceTest extends \PHPUnit\Framework\TestCase {
 
     private $storedTimezone;
 
-    protected function setUp() {
+    protected function setUp(): void {
         $this->storedTimezone = date_default_timezone_get();
         date_default_timezone_set('Etc/GMT-1');
     }
 
-    protected function tearDown() {
+    protected function tearDown(): void {
         date_default_timezone_set($this->storedTimezone);
     }
 

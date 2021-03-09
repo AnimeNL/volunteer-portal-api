@@ -4,32 +4,18 @@ This repository contains a Volunteer Portal backend implementation for the [Anim
 
 **This project has been designed specifically for AnimeCon, and will not consider contributions that are not immediately applicable to AnimeCon.**
 
-# TODO: Clean up the following
-
-## API Documentation
-The [/api/](api/) directory implements the full set of
-[documented interfaces](https://github.com/AnimeNL/volunteer-portal/blob/master/API.md). Because the
-implementation is provided in PHP, the following mappings must be set up with the webserver.
+## API-driven communication
+The frontend and backend communicate with each other through a set of [documented interfaces](https://github.com/AnimeNL/volunteer-portal/blob/master/API.md), which we provide an implementation for in the [/api/](api/) directory, with the following mapping:
 
 | Request            | Handler |
 | :---               | :---    |
+| `/api/auth`        | [/api/auth.php](api/auth.php) |
 | `/api/content`     | [/api/content.php](api/content.php) |
 | `/api/environment` | [/api/environment.php](api/environment.php) |
-| `/api/login`       | [/api/login.php](api/login.php) |
+| `/api/user`        | [/api/user.php](api/user.php) |
 
-## Development setup (Docker)
-You can easily get a development setup on Linux by using [Docker](https://www.docker.com/).
-To build the container, run `docker build -t anime2017 docker`.
-After that, run one of the following commands:
-- To run the services: `./bin/services`
-- To run a test webserver: `./bin/serve`
-- To run the linter: `./bin/lint`
-- To run the testsuite: `./bin/test`
 
-### Accessing development host
-By default, there is a base configuration for the "anime.test" environment.
-To access this after starting the development setup via Docker, add a line `127.0.0.1  anime.test` to the `/etc/hosts` file.
-After having done this, you can access the running development webserver at http://anime.test:8080/ .
+# TODO: Clean up the following
 
 ## Backend code (PHP)
 The backend is located in the [/anime/](/anime/) directory and has been written in PHP.

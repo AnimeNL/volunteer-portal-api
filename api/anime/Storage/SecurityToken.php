@@ -21,7 +21,7 @@ class SecurityToken {
         $configuration = \Anime\Configuration::getInstance();
 
         $data = $accessCode . $emailAddress;
-        $salt = $configuration->get('userTokenSalt');
+        $salt = $configuration->get('authentication/userTokenSalt');
 
         return substr(base_convert(hash('fnv164', $data . $salt), 16, 32), 0, 8);
     }
@@ -31,7 +31,7 @@ class SecurityToken {
         $configuration = \Anime\Configuration::getInstance();
 
         $data = $accessCode . $emailAddress;
-        $salt = $configuration->get('authTokenSalt');
+        $salt = $configuration->get('authentication/authTokenSalt');
 
         return substr(base_convert(hash('fnv164', $data . $salt), 16, 32), 0, 8);
     }
