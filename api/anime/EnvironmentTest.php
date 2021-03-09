@@ -6,25 +6,20 @@
 namespace Anime;
 
 class EnvironmentTest extends \PHPUnit\Framework\TestCase {
-    // Verifies that all configuration files available in this installation can be loaded as valid
+    // Verifies that all environment hostnames available in the configuration be loaded as valid
     // environments, avoiding silent breakages of less frequently used environments.
-    public function testValidConfigurationFiles() {
+    public function testConfigurationValidity() {
         $hostnamesTested = 0;
 
-        foreach (new \DirectoryIterator(Environment::CONFIGURATION_DIRECTORY) as $iter) {
-            if (!$iter->isFile() || $iter->getExtension() != 'json')
-                continue;
-
-            $filename = $iter->getFilename();
-            $hostname = substr($filename, 0, -5);
-
-            $environment = Environment::createForHostname($hostname);
+        $configuration = Configuration::getInstance();
+        foreach (Environment::all($configuration) as $environment) {
             $this->assertTrue($environment->isValid());
 
             // The values of the getters do not matter, but PHP's type hinting will ensure that a
             // TypeError exception will be thrown when the configuration contains an invalid value.
-            $environment->getName();
-            $environment->getHostname();
+            $environment->getContactName();
+            $environment->getContactTarget();
+            $environment->getTitle();
 
             $hostnamesTested++;
         }
@@ -33,11 +28,15 @@ class EnvironmentTest extends \PHPUnit\Framework\TestCase {
     }
 
     // Verifies that loading an environment for a non-existing hostname works as expected.
-    public function testInvalidConfigurationFiles() {
-        $invalidHostEnvironment = Environment::createForHostname('@#$!@#`12oneone');
+    public function testInvalidHostnames() {
+        $configuration = Configuration::getInstance();
+
+        $invalidHostEnvironment =
+            Environment::createForHostname($configuration, '@#$!@#`12oneone');
         $this->assertFalse($invalidHostEnvironment->isValid());
 
-        $unknownHostEnvironment = Environment::createForHostname('unknown.domain.com');
+        $unknownHostEnvironment =
+            Environment::createForHostname($configuration, 'unknown.domain.com');
         $this->assertFalse($unknownHostEnvironment->isValid());
     }
 
@@ -45,49 +44,16 @@ class EnvironmentTest extends \PHPUnit\Framework\TestCase {
     // available on the Environment instance.
     public function testSettingReflection() {
         $settings = [
-            'name'                  => 'Example environment',
-            'short_name'            => 'Example',
-            'group_name'            => 'Examples',
-            'titles'                => [
-                'Volunteer'             => 'Random Volunteer',
-                'Senior'                => 'Senior Volunteer',
-                'Staff'                 => 'Staff Volunteer'
-            ],
-            'hostname'              => 'example.com',
-            'contact'               => 'user@example.com',
-            'hidden_events_public'  => true,
-            'spreadsheet_id'        => 'spreadsheet__id',
-            'team_data'             => 'team.json',
-            'team_program'          => '',  // TODO: test this?
-            'team_shifts'           => '',  // TODO: test this?
-            'year'                  => 2024
+            'contactName'   => 'Name',
+            'contactTarget' => 'Target',
+            'title'         => 'Title',
         ];
 
         $environment = Environment::createForTests(true /* valid */, $settings);
         $this->assertTrue($environment->isValid());
 
-        $this->assertEquals($settings['name'], $environment->getName());
-        $this->assertEquals($settings['short_name'], $environment->getShortName());
-        $this->assertEquals($settings['group_name'], $environment->getGroupName());
-
-        $this->assertEquals('Random Volunteer', $environment->typeToTitle(Volunteer::TYPE_VOLUNTEER));
-        $this->assertEquals('Senior Volunteer', $environment->typeToTitle(Volunteer::TYPE_SENIOR));
-        $this->assertEquals('Staff Volunteer', $environment->typeToTitle(Volunteer::TYPE_STAFF));
-        $this->assertEquals('Penguin', $environment->typeToTitle('Penguin'));
-
-        $this->assertEquals($settings['hostname'], $environment->getHostname());
-        $this->assertEquals($settings['hidden_events_public'], $environment->areHiddenEventsPublic());
-        $this->assertEquals($settings['spreadsheet_id'], $environment->getSpreadsheetId());
-
-        // TODO: Test the |loadTeam()| method.
-
-        $this->assertEquals($settings['year'], $environment->getYear());
-    }
-
-    // Verifies that creating an invalid environment does not rely on any particular properties
-    // existing in the passed settings array.
-    public function testInvalidEnvironmentCreation() {
-        $environment = Environment::createForTests(false /* valid */, []);
-        $this->assertFalse($environment->isValid());
+        $this->assertEquals($settings['contactName'], $environment->getContactName());
+        $this->assertEquals($settings['contactTarget'], $environment->getContactTarget());
+        $this->assertEquals($settings['title'], $environment->getTitle());
     }
 }

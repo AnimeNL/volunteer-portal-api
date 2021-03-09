@@ -15,8 +15,9 @@ class Api {
 
     public function __construct(string $hostname) {
         $this->configuration = Configuration::getInstance();
-        $this->environment = Environment::createForHostname($hostname);
-        if (!$environment->isValid())
+        $this->environment = Environment::createForHostname($this->configuration, $hostname);
+
+        if (!$this->environment->isValid())
             throw new \Exception('The "' . $hostname . '" is not known as a valid environment.');
     }
 
@@ -38,8 +39,12 @@ class Api {
      *
      * @see https://github.com/AnimeNL/volunteer-portal/blob/main/API.md#apienvironment
      */
-    public function environment() {
-
+    public function environment(): array {
+        return [
+            'contactName'   => $this->environment->getContactName(),
+            'contactTarget' => $this->environment->getContactTarget(),
+            'title'         => $this->environment->getTitle(),
+        ];
     }
 
     /**

@@ -9,4 +9,30 @@
         // Number of minutes a session on the Volunteer Portal is allowed to last for.
         "sessionTimeoutMinutes": 43560,
     },
+
+    // Object containing all the environments available for the volunteer portal. The key for each
+    // entry is the hostname through which the content will be served.
+    "environments": {
+        "hostname.com": {
+            // https://github.com/AnimeNL/volunteer-portal/blob/main/API.md#response-ienvironmentresponse
+            "contactName": "Admin",
+            "contactTarget": "mailto:info@example.com",
+            "events": [ "event-identifier" ],
+            "title": "Volunteer Portal",
+        },
+    },
+
+    // Object containing all the events that should be serviced by the portal. Each event will have
+    // to be individually added to each of the environments, where they are applicable.
+    "events": {
+        "event-identifier": {
+            // https://github.com/AnimeNL/volunteer-portal/blob/main/API.md#response-ienvironmentresponseevent
+            "name": "PortalCon 2020",
+            "enableContent": true,
+            "enableRegistration": true,
+            "enableSchedule": false,
+            "slug": "event-identifier",
+            "timezone": "Europe/London",
+        }
+    },
 }

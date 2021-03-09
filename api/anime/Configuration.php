@@ -50,15 +50,15 @@ class Configuration {
         $this->configuration = $configuration;
     }
 
-    // Returns the configuration option that corresponds to |$path|. An exception will be thrown
-    // when the configuration option does not exist.
+    // Returns the configuration option that corresponds to |$path|. NULL will be returned when the
+    // data with the given |$path| could not be found.
     public function get(string $path) {
         $pathQueue = explode('/', $path);
         $pathCurrent = &$this->configuration;
 
         while ($key = array_shift($pathQueue)) {
             if (!is_array($pathCurrent) || !array_key_exists($key, $pathCurrent))
-                throw new \Exception('Unable to get setting "' . $path . '": it does not exist.');
+                return null;
 
             $pathCurrent = &$pathCurrent[$key];
         }
