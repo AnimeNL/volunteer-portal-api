@@ -69,7 +69,9 @@ class Api {
      * @see https://github.com/AnimeNL/volunteer-portal/blob/main/API.md#apicontent
      */
     public function content() {
-
+        return [
+            'pages' => $this->environment->getContent(),
+        ];
     }
 
     /**

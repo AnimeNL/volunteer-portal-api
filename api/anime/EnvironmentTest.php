@@ -21,6 +21,10 @@ class EnvironmentTest extends \PHPUnit\Framework\TestCase {
             $environment->getContactTarget();
             $environment->getTitle();
 
+            // Verify that content can be loaded without exceptions for this environment. This may
+            // cause quite a bit of file I/O, by loading all content in memory.
+            $environment->getContent();
+
             $hostnamesTested++;
         }
 
@@ -67,8 +71,11 @@ class EnvironmentTest extends \PHPUnit\Framework\TestCase {
             'title'         => 'Title',
         ];
 
-        $environment = Environment::createForTests(true /* valid */, $configuration, $settings);
+        $environment = Environment::createForTests(
+            true /* valid */, $configuration, 'example.com', $settings);
+
         $this->assertTrue($environment->isValid());
+        $this->assertEquals('example.com', $environment->getHostname());
 
         $this->assertEquals($settings['contactName'], $environment->getContactName());
         $this->assertEquals($settings['contactTarget'], $environment->getContactTarget());

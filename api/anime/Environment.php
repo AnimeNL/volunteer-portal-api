@@ -10,6 +10,9 @@ namespace Anime;
 // The Environment class represents the context for the application's data sources, for example to
 // allow split data sources based on the hostname.
 class Environment {
+    // Directory in which static environment content is located.
+    private const CONTENT_DIRECTORY = __DIR__ . '/../content/';
+
     // Returns an array with Environment instances for all environments that have been defined in
     // the configuration file. Both valid and invalid environments will be included.
     public static function all(Configuration $configuration): array {
@@ -33,17 +36,19 @@ class Environment {
         if ($settings === null)
             return new Environment(false);  // the |$hostname| does not have configuration
 
-        return new Environment(true, $configuration, $settings);
+        return new Environment(true, $configuration, $hostname, $settings);
     }
 
     // Initializes a new environment for |$settings|, only intended for use by tests. The |$valid|
     // boolean indicates whether the created environment should be valid.
     public static function createForTests(
-            bool $valid, Configuration $configuration, array $settings): Environment {
-        return new Environment($valid, $configuration, $settings);
+            bool $valid, Configuration $configuration, string $hostname,
+            array $settings): Environment {
+        return new Environment($valid, $configuration, $hostname, $settings);
     }
 
     private bool $valid;
+    private string $hostname;
 
     private string $contactName;
     private string $contactTarget;
@@ -53,7 +58,8 @@ class Environment {
     // Constructor for the Environment class. The |$valid| boolean must be set, and, when set to
     // true, the |$settings| array must be given with all intended options.
     private function __construct(
-            bool $valid, Configuration $configuration = null, array $settings = []) {
+            bool $valid, Configuration $configuration = null, string $hostname = 'unknown',
+            array $settings = []) {
         $this->valid = $valid;
         if (!$valid)
             return;
@@ -61,6 +67,7 @@ class Environment {
         $this->contactName = $settings['contactName'];
         $this->contactTarget = $settings['contactTarget'];
         $this->events = [];
+        $this->hostname = $hostname;
         $this->title = $settings['title'];
 
         if (array_key_exists('events', $settings)) {
@@ -92,9 +99,47 @@ class Environment {
         return $this->contactTarget;
     }
 
+    // Recursively loads all static content that has been made available for the current environment
+    // from the filesystem. This is a fairly heavy operation, whose result should be cached.
+    public function getContent(): array {
+        $directoryPath = self::CONTENT_DIRECTORY . $this->getHostname();
+        $content = [];
+
+        if (file_exists($directoryPath)) {
+            $directoryIterator = new \RecursiveDirectoryIterator($directoryPath);
+            $iterator = new \RecursiveIteratorIterator($directoryIterator);
+
+            foreach ($iterator as $file) {
+                if ($file->isDir())
+                    continue;  // iterators will be visited recursively
+
+                $absolutePath = $file->getPathname();
+                if (!str_ends_with($absolutePath, '.html') && !str_ends_with($absolutePath, '.md'))
+                    continue;  // only consider HTML and Markdown files for now.
+
+                $relativePath = str_replace($directoryPath, '', $absolutePath);
+                $normalizedPath = preg_replace('/\.(html|md)$/', '.html', $relativePath);
+                $filteredPath = str_replace('/index.html', '/', $normalizedPath);
+
+                $content[] = [
+                    'pathname'  => $filteredPath,
+                    'content'   => file_get_contents($absolutePath),
+                    'modified'  => $file->getMTime(),
+                ];
+            }
+        }
+
+        return $content;
+    }
+
     // Returns an array with all the Event instances known to this environment.
     public function getEvents(): array {
         return $this->events;
+    }
+
+    // Returns the hostname that this Environment instance represents.
+    public function getHostname(): string {
+        return $this->hostname;
     }
 
     // Returns the name of the Volunteer Portal instance, e.g. Volunteer Portal.
