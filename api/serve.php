@@ -24,6 +24,13 @@ if (str_contains($endpoint, '?')) {
 $api = new \Anime\Api($_SERVER['HTTP_HOST']);
 switch ($endpoint) {
     case '/api/auth':
+        if (!array_key_exists('emailAddress', $_POST))
+            echo json_encode([ 'error' => 'Missing parameter: emailAddress' ]);
+        else if (!array_key_exists('accessCode', $_POST))
+            echo json_encode([ 'error' => 'Missing parameter: accessCode' ]);
+        else
+            echo json_encode($api->auth($_POST['emailAddress'], $_POST['accessCode']));
+
         break;
 
     case '/api/content':
@@ -35,5 +42,10 @@ switch ($endpoint) {
         break;
 
     case '/api/user':
+        if (!array_key_exists('authToken', $parameters))
+            echo json_encode([ 'error' => 'Missing parameter: authToken' ]);
+        else
+            echo json_encode($api->user());
+
         break;
 }

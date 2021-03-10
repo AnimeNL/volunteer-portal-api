@@ -30,7 +30,10 @@ class Api {
      * @see https://github.com/AnimeNL/volunteer-portal/blob/main/API.md#apiauth
      */
     public function auth(string $emailAddress, string $accessCode) {
-
+        return [
+            'authToken'                 => 'abc123',
+            'authTokenExpiration'       => time() + /* two minutes= */ 120,
+        ];
     }
 
     /**
@@ -83,6 +86,9 @@ class Api {
      * @see https://github.com/AnimeNL/volunteer-portal/blob/main/API.md#apiuser
      */
     public function user(string $authToken) {
-
+        return [
+            'avatar'    => 'https://stewards.team/avatars/58u55jfn.jpg',
+            'name'      => 'Peter B',
+        ];
     }
 }
