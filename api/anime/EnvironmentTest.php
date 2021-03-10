@@ -12,7 +12,7 @@ class EnvironmentTest extends \PHPUnit\Framework\TestCase {
         $hostnamesTested = 0;
 
         $configuration = Configuration::getInstance();
-        foreach (Environment::all($configuration) as $environment) {
+        foreach (EnvironmentFactory::getAll($configuration) as $environment) {
             $this->assertTrue($environment->isValid());
 
             // The values of the getters do not matter, but PHP's type hinting will ensure that a
@@ -36,11 +36,11 @@ class EnvironmentTest extends \PHPUnit\Framework\TestCase {
         $configuration = Configuration::getInstance();
 
         $invalidHostEnvironment =
-            Environment::createForHostname($configuration, '@#$!@#`12oneone');
+            EnvironmentFactory::createForHostname($configuration, '@#$!@#`12oneone');
         $this->assertFalse($invalidHostEnvironment->isValid());
 
         $unknownHostEnvironment =
-            Environment::createForHostname($configuration, 'unknown.domain.com');
+            EnvironmentFactory::createForHostname($configuration, 'unknown.domain.com');
         $this->assertFalse($unknownHostEnvironment->isValid());
     }
 
@@ -48,6 +48,20 @@ class EnvironmentTest extends \PHPUnit\Framework\TestCase {
     // available on the Environment instance.
     public function testSettingReflection() {
         $configuration = Configuration::createForTests([
+            'environments' => [
+                'example.com'   => [
+                    'contactName'   => 'Name',
+                    'contactTarget' => 'Target',
+                    'events'        => [
+                        '2021-event'    => [
+                            // Overrides the registration availability of the global event.
+                            'enableRegistration'    => false,
+                        ],
+                    ],
+                    'title'         => 'Title',
+                ]
+            ],
+
             'events' => [
                 '2021-event'    => [
                     'name'                  => 'PortalCon 2020',
@@ -59,27 +73,14 @@ class EnvironmentTest extends \PHPUnit\Framework\TestCase {
             ],
         ]);
 
-        $settings = [
-            'contactName'   => 'Name',
-            'contactTarget' => 'Target',
-            'events'        => [
-                '2021-event'    => [
-                    // Overrides the registration availability of the global event.
-                    'enableRegistration'    => false,
-                ],
-            ],
-            'title'         => 'Title',
-        ];
-
-        $environment = Environment::createForTests(
-            true /* valid */, $configuration, 'example.com', $settings);
+        $environment = EnvironmentFactory::createForHostname($configuration, 'example.com');
 
         $this->assertTrue($environment->isValid());
         $this->assertEquals('example.com', $environment->getHostname());
 
-        $this->assertEquals($settings['contactName'], $environment->getContactName());
-        $this->assertEquals($settings['contactTarget'], $environment->getContactTarget());
-        $this->assertEquals($settings['title'], $environment->getTitle());
+        $this->assertEquals('Name', $environment->getContactName());
+        $this->assertEquals('Target', $environment->getContactTarget());
+        $this->assertEquals('Title', $environment->getTitle());
 
         $this->assertEquals(1, count($environment->getEvents()));
         {

@@ -13,40 +13,6 @@ class Environment {
     // Directory in which static environment content is located.
     private const CONTENT_DIRECTORY = __DIR__ . '/../content/';
 
-    // Returns an array with Environment instances for all environments that have been defined in
-    // the configuration file. Both valid and invalid environments will be included.
-    public static function all(Configuration $configuration): array {
-        $hostnames = array_keys($configuration->get('environments'));
-        $environments = [];
-
-        foreach ($hostnames as $hostname)
-            $environments[] = Environment::createForHostname($configuration, $hostname);
-
-        return $environments;
-    }
-
-    // Initializes a new environment for the |$hostname| with the given |$configuration|. An empty,
-    // invalid environment will be initialized when the configuration is not available.
-    public static function createForHostname(
-            Configuration $configuration, string $hostname): Environment {
-        if (!preg_match('/^([a-z0-9]+\.?){2,3}/s', $hostname))
-            return new Environment(false);  // invalid format for the |$hostname|.
-
-        $settings = $configuration->get('environments/' . $hostname);
-        if ($settings === null)
-            return new Environment(false);  // the |$hostname| does not have configuration
-
-        return new Environment(true, $configuration, $hostname, $settings);
-    }
-
-    // Initializes a new environment for |$settings|, only intended for use by tests. The |$valid|
-    // boolean indicates whether the created environment should be valid.
-    public static function createForTests(
-            bool $valid, Configuration $configuration, string $hostname,
-            array $settings): Environment {
-        return new Environment($valid, $configuration, $hostname, $settings);
-    }
-
     private bool $valid;
     private string $hostname;
 
@@ -57,31 +23,17 @@ class Environment {
 
     // Constructor for the Environment class. The |$valid| boolean must be set, and, when set to
     // true, the |$settings| array must be given with all intended options.
-    private function __construct(
-            bool $valid, Configuration $configuration = null, string $hostname = 'unknown',
-            array $settings = []) {
+    public function __construct(
+            bool $valid, string $hostname = 'unknown', array $events = [], array $settings = []) {
         $this->valid = $valid;
         if (!$valid)
             return;
 
         $this->contactName = $settings['contactName'];
         $this->contactTarget = $settings['contactTarget'];
-        $this->events = [];
+        $this->events = $events;
         $this->hostname = $hostname;
         $this->title = $settings['title'];
-
-        if (array_key_exists('events', $settings)) {
-            foreach ($settings['events'] as $eventIdentifier => $eventOverrides) {
-                $eventSettings = $configuration->get('events/' . $eventIdentifier);
-                $eventSettings = array_merge($eventSettings, $eventOverrides);
-
-                $event = new Event($eventIdentifier, $eventSettings);
-                if (!$event->isValid())
-                    continue;
-
-                $this->events[] = $event;
-            }
-        }
     }
 
     // Returns whether this Environment instance represents a valid environment.

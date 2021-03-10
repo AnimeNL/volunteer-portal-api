@@ -15,7 +15,7 @@ class Api {
 
     public function __construct(string $hostname) {
         $this->configuration = Configuration::getInstance();
-        $this->environment = Environment::createForHostname($this->configuration, $hostname);
+        $this->environment = EnvironmentFactory::createForHostname($this->configuration, $hostname);
 
         if (!$this->environment->isValid())
             throw new \Exception('The "' . $hostname . '" is not known as a valid environment.');
