@@ -23,6 +23,7 @@ if (str_contains($endpoint, '?')) {
 
 $api = new \Anime\Api($_SERVER['HTTP_HOST']);
 switch ($endpoint) {
+    // https://github.com/AnimeNL/volunteer-portal/blob/main/API.md#apiauth
     case '/api/auth':
         if (!array_key_exists('emailAddress', $_POST))
             echo json_encode([ 'error' => 'Missing parameter: emailAddress' ]);
@@ -33,14 +34,17 @@ switch ($endpoint) {
 
         break;
 
+    // https://github.com/AnimeNL/volunteer-portal/blob/main/API.md#apienvironment
     case '/api/content':
         echo json_encode($api->content());
         break;
 
+    // https://github.com/AnimeNL/volunteer-portal/blob/main/API.md#apienvironment
     case '/api/environment':
         echo json_encode($api->environment());
         break;
 
+    // https://github.com/AnimeNL/volunteer-portal/blob/main/API.md#apienvironment
     case '/api/user':
         if (!array_key_exists('authToken', $parameters))
             echo json_encode([ 'error' => 'Missing parameter: authToken' ]);
