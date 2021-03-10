@@ -38,4 +38,17 @@
             "timezone": "Europe/London",
         }
     },
+
+    "services": {
+        "logging": {
+            // Whether e-mail alerts should be send when a service error occurs.
+            "alerts": false,
+
+            // When enabled, list of e-mail addresses that should be receiving alerts.
+            "alertRecipients": [ "webmaster@example.com" ],
+
+            // When enabled, e-mail address from which alerts should originate.
+            "alertSender": "info@example.com",
+        }
+    },
 }

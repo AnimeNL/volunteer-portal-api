@@ -52,8 +52,8 @@ class ServiceLogTest extends \PHPUnit\Framework\TestCase {
 
         // Confirm that the |$body| mentions the identifiers of the services that threw an exception
         // as well as the log message associated with the exception.
-        $this->assertContains('id-throws', $body);
-        $this->assertContains('functionThatDoesNotExist', $body);
+        $this->assertTrue(str_contains($body, 'id-throws'));
+        $this->assertTrue(str_contains($body, 'functionThatDoesNotExist'));
     }
 
     // Verifies that successful runs of the service manager will write messages to the log, but will
