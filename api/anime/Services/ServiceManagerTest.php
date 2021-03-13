@@ -1,5 +1,5 @@
 <?php
-// Copyright 2017 Peter Beverloo. All rights reserved.
+// Copyright 2021 Peter Beverloo. All rights reserved.
 // Use of this source code is governed by the MIT license, a copy of which can
 // be found in the LICENSE file.
 
@@ -9,7 +9,7 @@ class ServiceManagerTest extends \PHPUnit\Framework\TestCase {
     // Creates a new ServiceLog that can be used for the purposes of testing. The implementation
     // writes all received callbacks, in order, to the |$log| member part of the instance. The
     // |$runtime| of the callbacks will be ignored as it would make the tests non-deterministic.
-    private function createServiceLog() : ServiceLog {
+    private function createServiceLog(): ServiceLog {
         return new class implements ServiceLog {
             public $finished = 0;
             public $log = [];

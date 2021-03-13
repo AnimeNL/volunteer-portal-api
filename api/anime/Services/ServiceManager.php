@@ -1,5 +1,5 @@
 <?php
-// Copyright 2017 Peter Beverloo. All rights reserved.
+// Copyright 2021 Peter Beverloo. All rights reserved.
 // Use of this source code is governed by the MIT license, a copy of which can
 // be found in the LICENSE file.
 
@@ -12,7 +12,7 @@ namespace Anime\Services;
 class ServiceManager {
     // File in which the Service Manager will write the current state.
     // Marked as public for testing purposes only.
-    public const STATE_FILE = __DIR__ . '/state.json';
+    public const STATE_FILE = __DIR__ . '/../../configuration/state.json';
 
     private $serviceLog;
     private $services;
@@ -27,7 +27,7 @@ class ServiceManager {
 
     // Loads the current service manager state from |STATE_FILE| and returns whether the state could
     // be loaded successfully. It will be stored in the |$state| member of the instance.
-    public function loadState() : bool {
+    public function loadState(): bool {
         if (!file_exists(ServiceManager::STATE_FILE) || !is_readable(ServiceManager::STATE_FILE))
             return false;  // unable to open the file for reading
 
@@ -43,7 +43,7 @@ class ServiceManager {
 
     // Saves the current service manager state to |STATE_FILE| and returns whether it could be
     // stored successfully. State will not persist when this fails.
-    public function saveState() : bool {
+    public function saveState(): bool {
         $directoryName = dirname(ServiceManager::STATE_FILE);
         if (!is_writeable(ServiceManager::STATE_FILE) && !is_writable($directoryName))
             return false;  // unable to open the file for reading
@@ -57,7 +57,7 @@ class ServiceManager {
 
     // Registers |$service| as a service that may have to be executed by this manager. Applicability
     // will be determined elsewhere, this method merely registers the |$service|.
-    public function registerService(Service $service) : void {
+    public function registerService(Service $service): void {
         $this->services[] = $service;
     }
 
@@ -65,7 +65,7 @@ class ServiceManager {
     // frequency. Services with no known state will be executed regardless. The |$timeForTesting|
     // parameter may be set to a Unix timestamp only for the purposes of running unit tests, which
     // can be ignored entirely by setting |$force| to TRUE.
-    public function execute($force, $timeForTesting = 0) : void {
+    public function execute($force, $timeForTesting = 0): void {
         $time = $timeForTesting ?: time();
 
         $executionQueue = [];
