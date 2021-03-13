@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace Anime\Storage\Model;
 
+use \Anime\Storage\SecurityToken;
+
 // Represents an individual volunteer stored in the registration sheet. Their data is split over a
 // sequence of columns, as follows:
 //
@@ -30,6 +32,9 @@ class Registration {
     private string $phoneNumber;
     private array $events;
 
+    private string $authToken;
+    private string $userToken;
+
     // Initializes the Registration object. Should only be called by the RegistrationDatabase. It
     // is assumed that validity of the |$spreadsheetRow| has been asserted already.
     public function __construct(array $spreadsheetRow, array $events) {
@@ -46,6 +51,9 @@ class Registration {
 
             $this->events[$eventIdentifier] = $value ?? 'Unregistered';
         }
+
+        $this->authToken = SecurityToken::GenerateAuthToken($this->accessCode, $this->emailAddress);
+        $this->userToken = SecurityToken::GenerateUserToken($this->accessCode, $this->emailAddress);
     }
 
     // Returns the first name of the person represented in this volunteer registration.
@@ -76,5 +84,15 @@ class Registration {
     // Returns the events through which this registration has a known status.
     public function getEvents(): array {
         return $this->events;
+    }
+
+    // Returns the authentication token associated with this registration.
+    public function getAuthToken(): string {
+        return $this->authToken;
+    }
+
+    // Returns the user token associated with this registration.
+    public function getUserToken(): string {
+        return $this->userToken;
     }
 }
