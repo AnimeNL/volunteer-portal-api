@@ -5,16 +5,16 @@
 
 declare(strict_types=1);
 
-namespace Anime\Storage;
+namespace Anime\Storage\Backend;
 
 // The GoogleClient class encapsulates authentication with the Google Cloud API, with a slightly
 // higher level API that hides some of our own file structure.
 class GoogleClient {
     // File in which the authentication configuration is stored.
-    const AUTH_CONFIG_FILE = __DIR__ . '/../../configuration/credentials.json';
+    const AUTH_CONFIG_FILE = __DIR__ . '/../../../configuration/google-credentials.json';
 
     // File in which the access and refresh tokens will be stored.
-    const AUTH_TOKEN_FILE = __DIR__ . '/../../configuration/credentials-token.json';
+    const AUTH_TOKEN_FILE = __DIR__ . '/../../../configuration/google-credentials-token.json';
 
     // The client instance, potentially unauthenticated.
     private $client;
@@ -34,7 +34,7 @@ class GoogleClient {
     }
 
     // Authenticates, and refreshes the token if required. 
-    private function authenticate() : void {
+    private function authenticate(): void {
         if (file_exists(self::AUTH_TOKEN_FILE)) {
             $this->client->setAccessToken(
                 json_decode(file_get_contents(self::AUTH_TOKEN_FILE), true));
@@ -77,7 +77,7 @@ class GoogleClient {
     }
 
     // Returns the initialized and authenticated Google_Client, or throws if that can't be done.
-    public function getClient() : \Google_Client {
+    public function getClient(): \Google_Client {
         if (!$this->didAuthenticate)
             $this->authenticate();
 
@@ -86,5 +86,4 @@ class GoogleClient {
         
         return $this->client;
     }
-
 }

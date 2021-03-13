@@ -1,11 +1,11 @@
 <?php
-// Copyright 2020 Peter Beverloo. All rights reserved.
+// Copyright 2021 Peter Beverloo. All rights reserved.
 // Use of this source code is governed by the MIT license, a copy of which can
 // be found in the LICENSE file.
 
 declare(strict_types=1);
 
-namespace Anime\Storage;
+namespace Anime\Storage\Backend;
 
 const DIRECTION_ROW = 'ROWS';
 const DIRECTION_COLUMN = 'COLUMNS';
@@ -29,7 +29,7 @@ class GoogleSheet {
     // ---------------------------------------------------------------------------------------------
 
     // Returns contents of the given |$cell|, which must be in the format of "A2".
-    public function getCell(string $cell) : ?string {
+    public function getCell(string $cell): ?string {
         $this->assertValidCell($cell);
 
         $values = $this->get($cell);
@@ -41,7 +41,7 @@ class GoogleSheet {
     }
 
     // Returns the contents of the given |$column|, which must be in the format of "A".
-    public function getColumn(string $column) : ?array {
+    public function getColumn(string $column): ?array {
         $this->assertValidColumn($column);
         
         $values = $this->get($column . ':' . $column);
@@ -57,7 +57,7 @@ class GoogleSheet {
     }
 
     // Returns the contents of the given |$range|, which must be in the format of "A2:C20".
-    public function getRange(string $range) : ?array {
+    public function getRange(string $range): ?array {
         $this->assertValidRange($range);
         
         $values = $this->get($range);
@@ -69,7 +69,7 @@ class GoogleSheet {
     }
 
     // Returns the contents of the given |$row|, which must be a valid number.
-    public function getRow(int $row) : ?array {
+    public function getRow(int $row): ?array {
         $values = $this->get('A' . $row . ':' . $row);
 
         if (count($values) == 1)
@@ -81,34 +81,34 @@ class GoogleSheet {
     // ---------------------------------------------------------------------------------------------
 
     // Clears the given |$cell|, which must be in the format of "A1".
-    public function clearCell(string $cell) : bool {
+    public function clearCell(string $cell): bool {
         $this->assertValidCell($cell);
         return $this->clear($cell);
     }
 
     // Clears the given |$column|, which must be in the format of "A".
-    public function clearColumn(string $column) : bool {
+    public function clearColumn(string $column): bool {
         $this->assertValidColumn($column);
         return $this->clear($column . ':' . $column);
 
     }
 
     // Clears the given |$range|, which must be in the format of "A1:E2".
-    public function clearRange(string $range) : bool {
+    public function clearRange(string $range): bool {
         $this->assertValidRange($range);
         return $this->clear($range);
 
     }
 
     // Clears the given |$row|, which must be a valid number.
-    public function clearRow(int $row) : bool {
+    public function clearRow(int $row): bool {
         return $this->clear('A' . $row . ':' . $row);
     }
 
     // ---------------------------------------------------------------------------------------------
 
     // Writes the given |$value| to the given |$cell|.
-    public function writeCell(string $cell, string $value) : bool {
+    public function writeCell(string $cell, string $value): bool {
         $this->assertValidCell($cell);
         
         return $this->write($cell, [ [ $value ] ], DIRECTION_ROW);
@@ -116,7 +116,7 @@ class GoogleSheet {
 
     // Writes the given |$values| to the given |$cell| as a 2-dimensional matrix. NULL values may be
     // used to indicate that a cell should be skipped when processing the update.
-    public function writeCells(string $cell, array $values) : bool {
+    public function writeCells(string $cell, array $values): bool {
         $this->assertValidCell($cell);
         $this->assertValidValueMatrix($values);
 
@@ -125,7 +125,7 @@ class GoogleSheet {
 
     // Writes the given |$values| to the given |$cell| as a column. NULL values may be used to
     // indicate that a cell should be skipped when processing the update.
-    public function writeColumn(string $cell, array $values) : bool {
+    public function writeColumn(string $cell, array $values): bool {
         $this->assertValidCell($cell);
         $this->assertValidSingleDimensionValues($values);
 
@@ -134,7 +134,7 @@ class GoogleSheet {
 
     // Writes the given |$values| to the given |$cell| as a row. NULL values may be used to indicate
     // that a cell should be skipped when processing the update.
-    public function writeRow(string $cell, array $values) : bool {
+    public function writeRow(string $cell, array $values): bool {
         $this->assertValidCell($cell);
         $this->assertValidSingleDimensionValues($values);
 
@@ -145,7 +145,7 @@ class GoogleSheet {
 
     // Internal function that actually retrieves the information from the spreadsheet sheet. Returns
     // an array with the contents of the given cells.
-    private function get(string $range) : ?array {
+    private function get(string $range): ?array {
         $localRange = $this->sheet . '!' . $range;
         $response = $this->service->spreadsheets_values->get($this->spreadsheetId, $localRange);
 
@@ -153,7 +153,7 @@ class GoogleSheet {
     }
 
     // Internal function that actually operates a write on the spreadsheet sheet.
-    private function write(string $range, array $values, string $direction) : bool {
+    private function write(string $range, array $values, string $direction): bool {
         $localRange = $this->sheet . '!' . $range;
         $request = new \Google_Service_Sheets_ValueRange([
             'majorDimension'    => $direction,
@@ -172,7 +172,7 @@ class GoogleSheet {
     }
 
     // Internal function that actually operates a clear on the spreadsheet sheet.
-    private function clear(string $range) : bool {
+    private function clear(string $range): bool {
         $localRange = $this->sheet . '!' . $range;
 
         $this->service->spreadsheets_values->clear(
@@ -202,7 +202,7 @@ class GoogleSheet {
     }
 
     // Validates whether the given |$value| is valid to be written to a single cell.
-    private function validateSingleValue($value) : bool {
+    private function validateSingleValue($value): bool {
         return is_string($value) || is_int($value) || is_null($value);
     }
 

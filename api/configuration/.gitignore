@@ -1,2 +1,5 @@
 configuration.json5
 error.log
+google-credentials-token.json
+google-credentials.json
+state.json
