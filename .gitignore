@@ -1,4 +1,5 @@
 .vscode/
+api/cache/
 vendor/
 Thumbs.db
 VERSION

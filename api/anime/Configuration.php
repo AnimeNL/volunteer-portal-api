@@ -10,6 +10,9 @@ namespace Anime;
 // The Configuration class provides access to site-wide configuration information. A single instance
 // can be obtained by calling the `getInstance()` method. Configuration is immutable.
 class Configuration {
+    // Path to the configuration directory on the filesystem.
+    public const CONFIGURATION_PATH = __DIR__ . '/../configuration';
+
     // File that contains the configuration for this installation.
     private const CONFIGURATION_FILE = __DIR__ . '/../configuration/configuration.json5';
 

@@ -10,10 +10,12 @@ namespace Anime;
 // Implementation of the actual API calls as methods whose input has been validated for syntax, and
 // for whom the appropriate environment is already available.
 class Api {
+    private Cache $cache;
     private Configuration $configuration;
     private Environment $environment;
 
     public function __construct(string $hostname) {
+        $this->cache = Cache::getInstance();
         $this->configuration = Configuration::getInstance();
         $this->environment = EnvironmentFactory::createForHostname($this->configuration, $hostname);
 
