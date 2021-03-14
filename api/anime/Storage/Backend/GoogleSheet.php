@@ -7,6 +7,9 @@ declare(strict_types=1);
 
 namespace Anime\Storage\Backend;
 
+use \Anime\Cache;
+use \Google_Service_Sheets;
+
 const DIRECTION_ROW = 'ROWS';
 const DIRECTION_COLUMN = 'COLUMNS';
 
@@ -14,13 +17,17 @@ const VALUE_INPUT_OPTION_RAW = 'RAW';
 const VALUE_INPUT_OPTION_USER_ENTERED = 'USER_ENTERED';
 
 // The GoogleSheet class encapsulates programmatic access to a particular sheet in a Google
-// Spreadsheet document. Should only be created by and obtained through GoogleSpreadsheet.
+// Spreadsheet document. Should only be created by and obtained through GoogleSpreadsheet. This
+// class operates on the assumption that interaction is read-write, but a specialized class is
+// available for enabling cache-driven read-only interactions.
 class GoogleSheet {
-    private $service;
-    private $spreadsheetId;
-    private $sheet;
+    protected Cache $cache;
+    private Google_Service_Sheets $service;
+    private string $spreadsheetId;
+    private string $sheet;
 
-    public function __construct(\Google_Service_Sheets $service, string $spreadsheetId, string $sheet) {
+    public function __construct(Cache $cache, Google_Service_Sheets $service, string $spreadsheetId, string $sheet) {
+        $this->cache = $cache;
         $this->service = $service;
         $this->spreadsheetId = $spreadsheetId;
         $this->sheet = $sheet;
@@ -145,15 +152,16 @@ class GoogleSheet {
 
     // Internal function that actually retrieves the information from the spreadsheet sheet. Returns
     // an array with the contents of the given cells.
-    private function get(string $range): ?array {
+    protected function get(string $range): ?array {
         $localRange = $this->sheet . '!' . $range;
         $response = $this->service->spreadsheets_values->get($this->spreadsheetId, $localRange);
 
         return $response->getValues();
     }
 
-    // Internal function that actually operates a write on the spreadsheet sheet.
-    private function write(string $range, array $values, string $direction): bool {
+    // Internal function that actually operates a write on the spreadsheet sheet. The cache will be
+    // invalidated following a successful write.
+    protected function write(string $range, array $values, string $direction): bool {
         $localRange = $this->sheet . '!' . $range;
         $request = new \Google_Service_Sheets_ValueRange([
             'majorDimension'    => $direction,
@@ -167,19 +175,37 @@ class GoogleSheet {
 
         $response = $this->service->spreadsheets_values->update(
             $this->spreadsheetId, $localRange, $request, $parameters);
+
+        $success = $response->updatedCells >= 1;
+        if ($success)
+            $this->cache->deleteItem($this->getCacheKey());
         
-        return $response->updatedCells >= 1;
+        return $success;
     }
 
-    // Internal function that actually operates a clear on the spreadsheet sheet.
-    private function clear(string $range): bool {
+    // Internal function that actually operates a clear on the spreadsheet sheet. The cache will be
+    // invalidated following a successful clear, as it manipulates the data.
+    protected function clear(string $range): bool {
         $localRange = $this->sheet . '!' . $range;
 
         $this->service->spreadsheets_values->clear(
             $this->spreadsheetId, $localRange, new \Google_Service_Sheets_ClearValuesRequest());
 
+        $this->cache->deleteItem($this->getCacheKey());
         return true;
     }
+
+    // ---------------------------------------------------------------------------------------------
+
+    // Returns the cache key under which data for this sheet has been cached, if at all. This must
+    // be a valid key per the PSR-6 definition, which is rather restrictive. Should be considered as
+    // a private method, but not marked as such to enable testing.
+    public function getCacheKey(): string {
+        return 'GS.' . sha1($this->spreadsheetId . $this->sheet);
+    }
+
+    // Returns whether the sheet has been opened in writable mode.
+    public function writable(): bool { return true; }
 
     // ---------------------------------------------------------------------------------------------
 

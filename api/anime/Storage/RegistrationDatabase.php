@@ -7,24 +7,20 @@ declare(strict_types=1);
 
 namespace Anime\Storage;
 
-use Anime\Storage\Backend\GoogleClient;
 use Anime\Storage\Backend\GoogleSheet;
-use Anime\Storage\Backend\GoogleSpreadsheet;
 use Anime\Storage\Model\Registration;
 
 // Provides access to the volunteer registrations. These are unique per environment, but shared
-// across events given that there is a possibility of having multiple events per year. The database
-// may be opened in a writable mode, in which case live data from the Google Sheets API is used.
+// across events given that there is a possibility of having multiple events per year. The instance
+// will be created by the RegistrationDatabaseFactory, which determines immutability.
 class RegistrationDatabase {
+    private GoogleSheet $sheet;
+
     private ?array $events = null;
     private ?array $registrations = null;
-    private GoogleSheet $sheet;
-    private GoogleSpreadsheet $spreadsheet;
 
-    public function __construct(
-            GoogleClient $client, bool $writable, string $spreadsheetId, string $sheet) {
-        $this->spreadsheet = new GoogleSpreadsheet($client, $spreadsheetId);
-        $this->sheet = $this->spreadsheet->getSheet($sheet, $writable);
+    public function __construct(GoogleSheet $sheet) {
+        $this->sheet = $sheet;
     }
 
     // ---------------------------------------------------------------------------------------------

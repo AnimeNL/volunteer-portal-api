@@ -79,13 +79,16 @@ class GoogleClient {
     }
 
     // Returns the initialized and authenticated Google_Client, or throws if that can't be done.
+    // Verification of the environment is skipped when PHPUnit is running, as no calls are expected.
     public function getClient(): \Google_Client {
-        if (!$this->didAuthenticate)
-            $this->authenticate();
+        if (!defined('PHPUNIT_COMPOSER_INSTALL')) {
+            if (!$this->didAuthenticate)
+                $this->authenticate();
 
-        if ($this->client->isAccessTokenExpired())
-            throw new \Exception('Unable to issue a client with a valid access token.');
-        
+            if ($this->client->isAccessTokenExpired())
+                throw new \Exception('Unable to issue a client with a valid access token.');
+        }
+
         return $this->client;
     }
 }

@@ -7,16 +7,21 @@ declare(strict_types=1);
 
 namespace Anime\Storage\Backend;
 
+use Anime\Cache;
+use \Google_Service_Sheets;
+
 // The GoogleSpreadsheet class encapsulates programmatic access to a Google Sheet Spreadsheet. It
 // requires a GoogleClient instance for authentication, and a spreadsheet ID.
 class GoogleSpreadsheet {
-    private $service;
-    private $spreadsheetId;
+    private Cache $cache;
+    private Google_Service_Sheets $service;
+    private string $spreadsheetId;
 
-    private $sheets = [];
+    private array $sheets = [];
 
-    public function __construct(GoogleClient $googleClient, string $spreadsheetId) {
-        $this->service = new \Google_Service_Sheets($googleClient->getClient());
+    public function __construct(GoogleClient $googleClient, Cache $cache, string $spreadsheetId) {
+        $this->cache = $cache;
+        $this->service = new Google_Service_Sheets($googleClient->getClient());
         $this->spreadsheetId = $spreadsheetId;
     }
 
@@ -24,10 +29,19 @@ class GoogleSpreadsheet {
     // indicates whether the sheet can be written to, influencing whether the data will be cached.
     // Safe to call multiple times, repeated sheets will be cached.
     public function getSheet(string $sheet, bool $writable = true): GoogleSheet {
-        // TODO: Actually change behaviour based on |$writable|.
-        if (!array_key_exists($sheet, $this->sheets))
-            $this->sheets[$sheet] = new GoogleSheet($this->service, $this->spreadsheetId, $sheet);
-        
+        if (!array_key_exists($sheet, $this->sheets)) {
+            if ($writable) {
+                $this->sheets[$sheet] = new GoogleSheet(
+                    $this->cache, $this->service, $this->spreadsheetId, $sheet);
+            } else {
+                $this->sheets[$sheet] = new GoogleSheetCache(
+                    $this->cache, $this->service, $this->spreadsheetId, $sheet);
+            }
+        }
+
+        if ($this->sheets[$sheet]->writable() !== $writable)
+            throw new \Exception('An instance already exists with incompatible mutability.');
+
         return $this->sheets[$sheet];
     }
 }
