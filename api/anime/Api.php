@@ -13,8 +13,9 @@ use \Anime\Storage\RegistrationDatabaseFactory;
 // Implementation of the actual API calls as methods whose input has been validated for syntax, and
 // for whom the appropriate environment is already available.
 class Api {
-    // Directory in which avatar information has been stored.
-    private const AVATAR_DIRECTORY = __DIR__ . '/../';
+    // Directory and request path in which avatar information has been stored.
+    private const AVATAR_DIRECTORY = __DIR__ . '/../../avatars/';
+    private const AVATAR_PATH = '/avatars/';
 
     private Cache $cache;
     private Configuration $configuration;
@@ -117,11 +118,13 @@ class Api {
                 if ($registration->getAuthToken() !== $authToken)
                     continue;  // non-matching authentication token
 
-                $avatarFile = '/avatars/' . $registration->getUserToken() . '.jpg';
+                $avatarFile = $registration->getUserToken() . '.jpg';
+                $avatarPath = self::AVATAR_PATH . $avatarFile;
+
                 $avatarUrl = '';  // no avatar specified
 
                 if (file_exists(self::AVATAR_DIRECTORY . $avatarFile))
-                    $avatarUrl = 'https://' . $this->environment->getHostname() . $avatarFile;
+                    $avatarUrl = 'https://' . $this->environment->getHostname() . $avatarPath;
 
                 $composedName = $registration->getFirstName() . ' ' . $registration->getLastName();
 
@@ -141,8 +144,11 @@ class Api {
     // unless the |$writable| argument has been set to TRUE.
     private function getRegistrationDatabase(bool $writable = false): ?RegistrationDatabase {
         $settings = $this->environment->getRegistrationDatabaseSettings();
+        if (!is_array($settings))
+            return null;  // no data has been specified for this environment
+
         if (!array_key_exists('spreadsheet', $settings) || !array_key_exists('sheet', $settings))
-            return null;
+            return null;  // invalid data has been specified for this environment
 
         $spreadsheetId = $settings['spreadsheet'];
         $sheet = $settings['sheet'];
