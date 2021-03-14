@@ -21,6 +21,8 @@ class Environment {
     private array $events;
     private string $title;
 
+    private array $registrationDatabase;
+
     // Constructor for the Environment class. The |$valid| boolean must be set, and, when set to
     // true, the |$settings| array must be given with all intended options.
     public function __construct(
@@ -34,6 +36,11 @@ class Environment {
         $this->events = $events;
         $this->hostname = $hostname;
         $this->title = $settings['title'];
+
+        if (!array_key_exists('registrationDatabase', $settings))
+            throw new \Exception('A registration database must be provided for each environment.');
+
+        $this->registrationDatabase = $settings['registrationDatabase'];
     }
 
     // Returns whether this Environment instance represents a valid environment.
@@ -97,5 +104,11 @@ class Environment {
     // Returns the name of the Volunteer Portal instance, e.g. Volunteer Portal.
     public function getTitle(): string {
         return $this->title;
+    }
+
+    // Returns the registration database settings for this environment. There should be two keys in
+    // the returned object, { spreadsheet, sheet }, per the documentation.
+    public function getRegistrationDatabaseSettings(): array {
+        return $this->registrationDatabase;
     }
 }

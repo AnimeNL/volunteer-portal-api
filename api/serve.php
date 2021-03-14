@@ -49,7 +49,7 @@ switch ($endpoint) {
         if (!array_key_exists('authToken', $parameters))
             echo json_encode([ 'error' => 'Missing parameter: authToken' ]);
         else
-            echo json_encode($api->user());
+            echo json_encode($api->user($parameters['authToken']));
 
         break;
 }

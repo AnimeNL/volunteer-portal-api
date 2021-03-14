@@ -23,6 +23,13 @@
                 },
             },
             "title": "Volunteer Portal",
+
+            // Each environment has a unique registration database, which is a spreadsheet following
+            // the format defined in the RegistrationDatabase class.
+            "registrationDatabase": {
+                "spreadsheet": "GOOGLE_SPREADSHEET_ID",
+                "sheet": "Registrations",
+            },
         },
     },
 

@@ -7,9 +7,15 @@ declare(strict_types=1);
 
 namespace Anime;
 
+use \Anime\Storage\RegistrationDatabase;
+use \Anime\Storage\RegistrationDatabaseFactory;
+
 // Implementation of the actual API calls as methods whose input has been validated for syntax, and
 // for whom the appropriate environment is already available.
 class Api {
+    // Directory in which avatar information has been stored.
+    private const AVATAR_DIRECTORY = __DIR__ . '/../';
+
     private Cache $cache;
     private Configuration $configuration;
     private Environment $environment;
@@ -32,10 +38,25 @@ class Api {
      * @see https://github.com/AnimeNL/volunteer-portal/blob/main/API.md#apiauth
      */
     public function auth(string $emailAddress, string $accessCode) {
-        return [
-            'authToken'                 => 'abc123',
-            'authTokenExpiration'       => time() + /* two minutes= */ 120,
-        ];
+        $database = $this->getRegistrationDatabase(/* writable= */ false);
+        if ($database) {
+            $registrations = $database->getRegistrations();
+
+            foreach ($registrations as $registration) {
+                if ($registration->getEmailAddress() !== $emailAddress)
+                    continue;  // non-matching e-mail address
+
+                if ($registration->getAccessCode() !== $accessCode)
+                    continue;  // non-matching access code
+
+                return [
+                    'authToken'             => $registration->getAuthToken(),
+                    'authTokenExpiration'   => time() + /* two minutes= */ 120,
+                ];
+            }
+        }
+
+        return [ /* invalid credentials */ ];
     }
 
     /**
@@ -88,9 +109,47 @@ class Api {
      * @see https://github.com/AnimeNL/volunteer-portal/blob/main/API.md#apiuser
      */
     public function user(string $authToken) {
-        return [
-            'avatar'    => 'https://stewards.team/avatars/58u55jfn.jpg',
-            'name'      => 'Peter B',
-        ];
+        $database = $this->getRegistrationDatabase(/* writable= */ false);
+        if ($database) {
+            $registrations = $database->getRegistrations();
+
+            foreach ($registrations as $registration) {
+                if ($registration->getAuthToken() !== $authToken)
+                    continue;  // non-matching authentication token
+
+                $avatarFile = '/avatars/' . $registration->getUserToken() . '.jpg';
+                $avatarUrl = '';  // no avatar specified
+
+                if (file_exists(self::AVATAR_DIRECTORY . $avatarFile))
+                    $avatarUrl = 'https://' . $this->environment->getHostname() . $avatarFile;
+
+                $composedName = $registration->getFirstName() . ' ' . $registration->getLastName();
+
+                return [
+                    'avatar'        => $avatarUrl,
+                    'name'          => trim($composedName),
+                ];
+            }
+        }
+
+        return [ /* invalid auth token */ ];
+    }
+
+    // ---------------------------------------------------------------------------------------------
+
+    // Returns the RegistrationDatabase instance for the current environment. Immutable by default
+    // unless the |$writable| argument has been set to TRUE.
+    private function getRegistrationDatabase(bool $writable = false): ?RegistrationDatabase {
+        $settings = $this->environment->getRegistrationDatabaseSettings();
+        if (!array_key_exists('spreadsheet', $settings) || !array_key_exists('sheet', $settings))
+            return null;
+
+        $spreadsheetId = $settings['spreadsheet'];
+        $sheet = $settings['sheet'];
+
+        if ($writable)
+            return RegistrationDatabaseFactory::openReadWrite($this->cache, $spreadsheetId, $sheet);
+        else
+            return RegistrationDatabaseFactory::openReadOnly($this->cache, $spreadsheetId, $sheet);
     }
 }
