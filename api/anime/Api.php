@@ -111,6 +111,8 @@ class Api {
      */
     public function user(string $authToken) {
         $database = $this->getRegistrationDatabase(/* writable= */ false);
+        $events = array_map(fn($event) => $event->getIdentifier(), $this->environment->getEvents());
+
         if ($database) {
             $registrations = $database->getRegistrations();
 
@@ -127,9 +129,16 @@ class Api {
                     $avatarUrl = 'https://' . $this->environment->getHostname() . $avatarPath;
 
                 $composedName = $registration->getFirstName() . ' ' . $registration->getLastName();
+                $filteredEvents = [];
+
+                foreach ($registration->getEvents() as $eventIdentifier => $role) {
+                    if (in_array($eventIdentifier, $events))
+                        $filteredEvents[$eventIdentifier] = $role;
+                }
 
                 return [
                     'avatar'        => $avatarUrl,
+                    'events'        => $registration->getEvents(),
                     'name'          => trim($composedName),
                 ];
             }
