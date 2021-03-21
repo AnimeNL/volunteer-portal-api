@@ -52,7 +52,7 @@ class Api {
 
                 return [
                     'authToken'             => $registration->getAuthToken(),
-                    'authTokenExpiration'   => time() + /* two minutes= */ 120,
+                    'authTokenExpiration'   => time() + /* 30 minutes= */ 1800,
                 ];
             }
         }
