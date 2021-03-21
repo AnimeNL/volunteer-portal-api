@@ -52,4 +52,8 @@ switch ($endpoint) {
             echo json_encode($api->user($parameters['authToken']));
 
         break;
+
+    default:
+        echo json_encode([ 'error' => 'Unknown API endpoint: ' . $endpoint ]);
+        break;
 }

@@ -75,7 +75,7 @@ class Api {
                 'enableContent'         => $event->enableContent(),
                 'enableRegistration'    => $event->enableRegistration(),
                 'enableSchedule'        => $event->enableSchedule(),
-                'slug'                  => $event->getIdentifier(),  // FIXME
+                'identifier'            => $event->getIdentifier(),
                 'timezone'              => $event->getTimezone(),
                 'website'               => $event->getWebsite() ?? '',
             ];
@@ -137,6 +137,7 @@ class Api {
                 }
 
                 return [
+                    'administrator' => $registration->isAdministrator(),
                     'avatar'        => $avatarUrl,
                     'events'        => $registration->getEvents(),
                     'name'          => trim($composedName),

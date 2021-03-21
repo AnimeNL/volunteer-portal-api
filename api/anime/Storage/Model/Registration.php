@@ -9,6 +9,9 @@ namespace Anime\Storage\Model;
 
 use \Anime\Storage\SecurityToken;
 
+// Values that will be accepted as being "truthy" in the spreadsheet. Lowercase.
+const TRUTHY_VALUES = [ 'yes', 'true' ];
+
 // Represents an individual volunteer stored in the registration sheet. Their data is split over a
 // sequence of columns, as follows:
 //
@@ -17,19 +20,21 @@ use \Anime\Storage\SecurityToken;
 // C: E-mail address
 // D: Access code
 // E: Phone number
-// F, ...: Registration status for a particular event
+// F: Administrator ("Yes", "True"; see TRUTHY_VALUES)
+// G, ...: Registration status for a particular event
 //
 // Because an arbitrary number of events are supported in the same sheet, Registration objects can
 // only be created when the RegistrationSheet is known.
 class Registration {
     // Number of colums in the shreadsheet that contain fixed data rather than events.
-    public const DATA_COLUMN_COUNT = 5;
+    public const DATA_COLUMN_COUNT = 6;
 
     private string $firstName;
     private string $lastName;
     private string $emailAddress;
     private string $accessCode;
     private string $phoneNumber;
+    private bool $administrator;
     private array $events;
 
     private string $authToken;
@@ -43,6 +48,7 @@ class Registration {
         $this->emailAddress = $spreadsheetRow[2];
         $this->accessCode = $spreadsheetRow[3];
         $this->phoneNumber = $spreadsheetRow[4];
+        $this->administrator = in_array(strtolower($spreadsheetRow[5]), TRUTHY_VALUES);
 
         $this->events = [];
         foreach ($events as $eventIndex => $eventIdentifier) {
@@ -84,6 +90,11 @@ class Registration {
     // Returns the events through which this registration has a known status.
     public function getEvents(): array {
         return $this->events;
+    }
+
+    // Returns whether this registration represents an administrator on the Volunteer Portal.
+    public function isAdministrator(): bool {
+        return $this->administrator;
     }
 
     // Returns the authentication token associated with this registration.
