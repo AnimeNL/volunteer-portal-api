@@ -24,6 +24,11 @@
             },
             "title": "Volunteer Portal",
 
+            // Usernames and passwords that will be accepted for privileged tools, using HTTP Auth.
+            "privilegedAccess": {
+                "admin": "PasswordGoesHere",
+            },
+
             // Each environment has a unique registration database, which is a spreadsheet following
             // the format defined in the RegistrationDatabase class.
             "registrationDatabase": {

@@ -21,6 +21,7 @@ class Environment {
     private array $events;
     private string $title;
 
+    private ?array $privilegedAccess;
     private ?array $registrationDatabase;
 
     // Constructor for the Environment class. The |$valid| boolean must be set, and, when set to
@@ -36,6 +37,9 @@ class Environment {
         $this->events = $events;
         $this->hostname = $hostname;
         $this->title = $settings['title'];
+
+        if (array_key_exists('privilegedAccess', $settings))
+            $this->privilegedAccess = $settings['privilegedAccess'];
 
         if (array_key_exists('registrationDatabase', $settings))
             $this->registrationDatabase = $settings['registrationDatabase'];
@@ -102,6 +106,11 @@ class Environment {
     // Returns the name of the Volunteer Portal instance, e.g. Volunteer Portal.
     public function getTitle(): string {
         return $this->title;
+    }
+
+    // Returns an associative array with username => password combinations for privileged access.
+    public function getPrivilegedAccessCredentials(): ?array {
+        return $this->privilegedAccess;
     }
 
     // Returns the registration database settings for this environment. There should be two keys in
