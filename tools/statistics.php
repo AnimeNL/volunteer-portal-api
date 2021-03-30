@@ -60,15 +60,26 @@ if ($registrationDatabaseSettings) {
         $dateOfBirth = strtotime($registration->getDateOfBirth());
         $gender = $registration->getGender();
 
+        $first = true;
+        $participatedAnyEvent = false;
+        $participatedPreviousEvent = false;
+
         foreach ($registration->getEvents() as $identifier => $participationRole) {
-            if (in_array($participationRole, ['Cancelled', 'Registered', 'Rejected', 'Unregistered']))
+            if (in_array($participationRole, ['Cancelled', 'Registered', 'Rejected', 'Unregistered'])) {
+                $participatedPreviousEvent = false;
+                $first = false;
                 continue;
+            }
 
             if (!array_key_exists($identifier, $events)) {
                 $events[$identifier] = [
                     // Participative roles, experience and tenure.
                     'roles'         => [],
                     'volunteers'    => 0,
+
+                    'retained'      => 0,
+                    'returned'      => 0,
+                    'recruited'     => 0,
 
                     // Demographics.
                     'age'           => [],
@@ -89,12 +100,23 @@ if ($registrationDatabaseSettings) {
             $events[$identifier]['roles'][$participationRole]++;
             $events[$identifier]['volunteers']++;
 
+            if ($participatedPreviousEvent)
+                $events[$identifier]['retained']++;
+            else if ($participatedAnyEvent)
+                $events[$identifier]['returned']++;
+            else
+                $events[$identifier]['recruited']++;
+
             // FIXME: Amend the condition if we have volunteers who are older than a hundred years.
             $eventTime = strtotime(substr($identifier, 0, 4) . '-07-01');
             $eventAge = floor(($eventTime - $dateOfBirth) / (365 * 86400));
 
             if ($eventAge >= 12 && $eventAge <= 100)
                 $events[$identifier]['age'][] = $eventAge;
+
+            $participatedAnyEvent = true;
+            $participatedPreviousEvent = true;
+            $first = false;
         }
     }
 
@@ -184,7 +206,8 @@ if ($currentEvent === null) {
 
     // (2) Prepare the chart data for each of the graphs by iterating over the event information
     //     again. Missing data values will default to zero - we populate all fields.
-    $volunteerCountData =  [ [ '', ...array_keys($roles) ] ];
+    $volunteerCountData = [ [ '', ...array_keys($roles) ] ];
+    $volunteerRetentionData = [ [ '', 'Retained', 'Returned', 'Recruited' ] ];
     $genderDistributionData = [];
     $ageDistributionData = [ [ '', '< 20', '20—24', '25—29', '30—34', '35—40', '40 >' ] ];
 
@@ -200,9 +223,17 @@ if ($currentEvent === null) {
             }, array_keys($roles)),
         ];
 
-        // (2b) Gender distribution
+        // (2b) Volunteer retention
+        $volunteerRetentionData[] = [
+            (string)$identifier,
+            $eventInformation['retained'] / $eventInformation['volunteers'],
+            $eventInformation['returned'] / $eventInformation['volunteers'],
+            $eventInformation['recruited'] / $eventInformation['volunteers'],
+        ];
 
-        // (2c) Age distribution
+        // (2c) Gender distribution
+
+        // (2d) Age distribution
         $ageDistributionData[] = [
             (string)$identifier,
             representationWithinRange($eventInformation['age'], 0, 19),
@@ -219,19 +250,23 @@ if ($currentEvent === null) {
                         <div id="chart-volunteer-count" class="card shadow-sm p-4"></div>
                     </div>
                     <div class="col">
-                        <div class="card shadow-sm p-2">
-                            <canvas id="chart-gender-distribution" width="598" height="300"></canvas>
-                        </div>
+                        <div id="chart-volunteer-retention" class="card shadow-sm p-4"></div>
                     </div>
                     <div class="col">
                         <div id="chart-age-distribution" class="card shadow-sm p-4"></div>
                     </div>
+                    <div class="col">
+                        <div class="card shadow-sm p-2">
+                            <canvas id="chart-gender-distribution" width="598" height="300"></canvas>
+                        </div>
+                    </div>
                     <script>
                         const volunteerCountElement = document.getElementById('chart-volunteer-count');
+                        const volunteerRetentionElement = document.getElementById('chart-volunteer-retention');
                         const genderDistributionElement = document.getElementById('chart-gender-distribution');
                         const ageDistributionElement = document.getElementById('chart-age-distribution');
 
-                        google.charts.load('current', { packages: [ 'corechart', 'bar' ] });
+                        google.charts.load('current', { packages: [ 'corechart', 'bar', 'line' ] });
                         google.charts.setOnLoadCallback(() => {
                             const volunteerCountData = google.visualization.arrayToDataTable(<?php echo json_encode($volunteerCountData); ?>);
                             const volunteerCountChart = new google.charts.Bar(volunteerCountElement);
@@ -241,6 +276,14 @@ if ($currentEvent === null) {
                                 hAxes: { title: 'none' },
                                 stacked: true,
                             });
+
+                            const volunteerRetentionData = google.visualization.arrayToDataTable(<?php echo json_encode($volunteerRetentionData); ?>);
+                            const volunteerRetentionChart = new google.charts.Line(volunteerRetentionElement);
+                            volunteerRetentionChart.draw(volunteerRetentionData, google.charts.Line.convertOptions({
+                                curveType: 'function',
+                                height: 300,
+                                vAxis: { format: 'percent' },
+                            }));
 
                             const ageDistributionData = google.visualization.arrayToDataTable(<?php echo json_encode($ageDistributionData); ?>);
                             const ageDistributionChart = new google.charts.Bar(ageDistributionElement);
