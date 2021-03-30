@@ -186,7 +186,7 @@ if ($currentEvent === null) {
     $roles = [];
 
     foreach ($events as $eventInformation) {
-        foreach ($eventInformation['genders'] as $gender => $count) {
+        foreach ($eventInformation['gender'] as $gender => $count) {
             if (!array_key_exists($gender, $genders))
                 $genders[$gender] = $count;
             else
@@ -201,16 +201,16 @@ if ($currentEvent === null) {
         }
     }
 
-    asort($genders);
+    arsort($genders);
     asort($roles);
 
     // (2) Prepare the chart data for each of the graphs by iterating over the event information
     //     again. Missing data values will default to zero - we populate all fields.
     $volunteerCountData = [ [ '', ...array_keys($roles) ] ];
     $volunteerRetentionData = [ [ '', 'Retained', 'Returned', 'Recruited' ] ];
-    $genderDistributionData = [];
     $ageDistributionData = [ [ '', '< 20', '20—24', '25—29', '30—34', '35—40', '40 >' ] ];
     $ageAveragesData = [ [ '', 'Average age', 'Median age' ] ];
+    $genderDistributionData = [ [ '', ...array_keys($genders) ] ];
 
     foreach ($events as $identifier => $eventInformation) {
         // (2a) Volunteer count
@@ -251,6 +251,15 @@ if ($currentEvent === null) {
         ];
 
         // (2e) Gender distribution
+        $genderDistributionData[] = [
+            (string)$identifier,
+            ...array_map(function ($gender) use ($eventInformation) {
+                return array_key_exists($gender, $eventInformation['gender'])
+                        ? $eventInformation['gender'][$gender]
+                        : 0;
+
+            }, array_keys($genders)),
+        ];
     }
 
 ?>
@@ -267,16 +276,14 @@ if ($currentEvent === null) {
                         <div id="chart-age-averages" class="card shadow-sm p-4"></div>
                     </div>
                     <div class="col">
-                        <div class="card shadow-sm p-2">
-                            <canvas id="chart-gender-distribution" width="598" height="300"></canvas>
-                        </div>
+                        <div id="chart-gender-distribution" class="card shadow-sm p-4"></div>
                     </div>
                     <script>
                         const volunteerCountElement = document.getElementById('chart-volunteer-count');
                         const volunteerRetentionElement = document.getElementById('chart-volunteer-retention');
-                        const genderDistributionElement = document.getElementById('chart-gender-distribution');
                         const ageDistributionElement = document.getElementById('chart-age-distribution');
                         const ageAveragesElement = document.getElementById('chart-age-averages');
+                        const genderDistributionElement = document.getElementById('chart-gender-distribution');
 
                         google.charts.load('current', { packages: [ 'corechart', 'bar', 'line' ] });
                         google.charts.setOnLoadCallback(() => {
@@ -312,6 +319,12 @@ if ($currentEvent === null) {
                                 height: 300,
                             }));
 
+                            const genderDistributionData = google.visualization.arrayToDataTable(<?php echo json_encode($genderDistributionData); ?>);
+                            const genderDistributionChart = new google.charts.Bar(genderDistributionElement);
+                            genderDistributionChart.draw(genderDistributionData, {
+                                colors: [ '#2979FF', '#FF3D00', '#00E676', '#795548' ],
+                                height: 300,
+                            });
                         });
                     </script>
 <?php
