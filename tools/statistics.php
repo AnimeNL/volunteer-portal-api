@@ -12,6 +12,13 @@ $cache = \Anime\Cache::getInstance();
 $configuration = \Anime\Configuration::getInstance();
 $environment = \Anime\EnvironmentFactory::createForHostname($configuration, $_SERVER['HTTP_HOST']);
 
+function representationWithinRange($haystack, $minimum, $maximum) {
+    return array_reduce($haystack, function ($carry, $age) use ($minimum, $maximum) {
+        return $age >= $minimum && $age <= $maximum ? $carry + 1
+                                                    : $carry;
+    }, /* initial= */ 0) / count($haystack);
+}
+
 // -------------------------------------------------------------------------------------------------
 // Confirm privileged access through HTTP Authentication.
 // -------------------------------------------------------------------------------------------------
@@ -177,15 +184,13 @@ if ($currentEvent === null) {
 
     // (2) Prepare the chart data for each of the graphs by iterating over the event information
     //     again. Missing data values will default to zero - we populate all fields.
-    $chartData = [
-        'volunteerCountData'        => [ [ '', ...array_keys($roles) ] ],
-        'genderDistributionData'    => [],
-        'ageDistributionData'       => [],
-    ];
+    $volunteerCountData =  [ [ '', ...array_keys($roles) ] ];
+    $genderDistributionData = [];
+    $ageDistributionData = [ [ '', '< 20', '20—24', '25—29', '30—34', '35—40', '40 >' ] ];
 
     foreach ($events as $identifier => $eventInformation) {
         // (2a) Volunteer count
-        $chartData['volunteerCountData'][] = [
+        $volunteerCountData[] = [
             (string)$identifier,
             ...array_map(function ($role) use ($eventInformation) {
                 return array_key_exists($role, $eventInformation['roles'])
@@ -198,7 +203,15 @@ if ($currentEvent === null) {
         // (2b) Gender distribution
 
         // (2c) Age distribution
-
+        $ageDistributionData[] = [
+            (string)$identifier,
+            representationWithinRange($eventInformation['age'], 0, 19),
+            representationWithinRange($eventInformation['age'], 20, 24),
+            representationWithinRange($eventInformation['age'], 25, 29),
+            representationWithinRange($eventInformation['age'], 30, 34),
+            representationWithinRange($eventInformation['age'], 35, 39),
+            representationWithinRange($eventInformation['age'], 40, 100),
+        ];
     }
 
 ?>
@@ -211,9 +224,7 @@ if ($currentEvent === null) {
                         </div>
                     </div>
                     <div class="col">
-                        <div class="card shadow-sm p-2">
-                            <canvas id="chart-age-distribution" width="598" height="300"></canvas>
-                        </div>
+                        <div id="chart-age-distribution" class="card shadow-sm p-4"></div>
                     </div>
                     <script>
                         const volunteerCountElement = document.getElementById('chart-volunteer-count');
@@ -222,21 +233,23 @@ if ($currentEvent === null) {
 
                         google.charts.load('current', { packages: [ 'corechart', 'bar' ] });
                         google.charts.setOnLoadCallback(() => {
-<?php
-foreach ($chartData as $variableName => $data) {
-    echo '                            const ' . $variableName . ' = google.visualization.arrayToDataTable(';
-    echo json_encode($data) . ');' . PHP_EOL;
-}
-?>
-
+                            const volunteerCountData = google.visualization.arrayToDataTable(<?php echo json_encode($volunteerCountData); ?>);
                             const volunteerCountChart = new google.charts.Bar(volunteerCountElement);
-
                             volunteerCountChart.draw(volunteerCountData, {
-                                colors: [ '#2979FF' ],
+                                colors: [ '#0D47A1' ],
                                 height: 300,
                                 hAxes: { title: 'none' },
                                 stacked: true,
                             });
+
+                            const ageDistributionData = google.visualization.arrayToDataTable(<?php echo json_encode($ageDistributionData); ?>);
+                            const ageDistributionChart = new google.charts.Bar(ageDistributionElement);
+                            ageDistributionChart.draw(ageDistributionData, {
+                                colors: [ '#0D47A1' ],
+                                height: 300,
+                                stacked: true,
+                            });
+
 
                         });
                     </script>
