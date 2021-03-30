@@ -210,6 +210,7 @@ if ($currentEvent === null) {
     $volunteerRetentionData = [ [ '', 'Retained', 'Returned', 'Recruited' ] ];
     $genderDistributionData = [];
     $ageDistributionData = [ [ '', '< 20', '20—24', '25—29', '30—34', '35—40', '40 >' ] ];
+    $ageAveragesData = [ [ '', 'Average age', 'Median age' ] ];
 
     foreach ($events as $identifier => $eventInformation) {
         // (2a) Volunteer count
@@ -231,9 +232,7 @@ if ($currentEvent === null) {
             $eventInformation['recruited'] / $eventInformation['volunteers'],
         ];
 
-        // (2c) Gender distribution
-
-        // (2d) Age distribution
+        // (2c) Age distribution
         $ageDistributionData[] = [
             (string)$identifier,
             representationWithinRange($eventInformation['age'], 0, 19),
@@ -243,6 +242,15 @@ if ($currentEvent === null) {
             representationWithinRange($eventInformation['age'], 35, 39),
             representationWithinRange($eventInformation['age'], 40, 100),
         ];
+
+        // (2d) Age averages
+        $ageAveragesData[] = [
+            (string)$identifier,
+            /* average= */ array_sum($eventInformation['age']) / count($eventInformation['age']),
+            /* median= */ $eventInformation['age'][floor(count($eventInformation['age']) / 2)],
+        ];
+
+        // (2e) Gender distribution
     }
 
 ?>
@@ -256,6 +264,9 @@ if ($currentEvent === null) {
                         <div id="chart-age-distribution" class="card shadow-sm p-4"></div>
                     </div>
                     <div class="col">
+                        <div id="chart-age-averages" class="card shadow-sm p-4"></div>
+                    </div>
+                    <div class="col">
                         <div class="card shadow-sm p-2">
                             <canvas id="chart-gender-distribution" width="598" height="300"></canvas>
                         </div>
@@ -265,6 +276,7 @@ if ($currentEvent === null) {
                         const volunteerRetentionElement = document.getElementById('chart-volunteer-retention');
                         const genderDistributionElement = document.getElementById('chart-gender-distribution');
                         const ageDistributionElement = document.getElementById('chart-age-distribution');
+                        const ageAveragesElement = document.getElementById('chart-age-averages');
 
                         google.charts.load('current', { packages: [ 'corechart', 'bar', 'line' ] });
                         google.charts.setOnLoadCallback(() => {
@@ -293,6 +305,12 @@ if ($currentEvent === null) {
                                 stacked: true,
                             });
 
+                            const ageAveragesData = google.visualization.arrayToDataTable(<?php echo json_encode($ageAveragesData); ?>);
+                            const ageAveragesChart = new google.charts.Line(ageAveragesElement);
+                            ageAveragesChart.draw(ageAveragesData, google.charts.Line.convertOptions({
+                                curveType: 'function',
+                                height: 300,
+                            }));
 
                         });
                     </script>
