@@ -358,6 +358,20 @@ if ($currentEvent === null) {
     // ---------------------------------------------------------------------------------------------
 
     // TODO
+
+?>
+                    <div class="col">
+                        <div id="chart-volunteer-roles" class="card shadow-sm p-4"></div>
+                    </div>
+                    <script>
+                        const volunteerRolesElement = document.getElementById('chart-volunteer-roles');
+
+                        google.charts.load('current', { packages: [ 'corechart', 'bar', 'line' ] });
+                        google.charts.setOnLoadCallback(() => {
+
+                        });
+                    </script>
+<?php
 }
 ?>
                 </div>
