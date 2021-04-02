@@ -415,6 +415,7 @@ if ($currentEvent === null) {
                             const volunteerCountData = google.visualization.arrayToDataTable(<?php echo json_encode($volunteerCountData); ?>);
                             const volunteerCountChart = new google.charts.Bar(volunteerCountElement);
                             volunteerCountChart.draw(volunteerCountData, {
+                                chart: { title: 'Number of volunteers' },
                                 colors: [ '#0D47A1' ],
                                 height: 300,
                                 hAxes: { title: 'none' },
@@ -424,6 +425,7 @@ if ($currentEvent === null) {
                             const volunteerRetentionData = google.visualization.arrayToDataTable(<?php echo json_encode($volunteerRetentionData); ?>);
                             const volunteerRetentionChart = new google.charts.Line(volunteerRetentionElement);
                             volunteerRetentionChart.draw(volunteerRetentionData, google.charts.Line.convertOptions({
+                                chart: { title: 'Volunteer retention' },
                                 curveType: 'function',
                                 height: 300,
                                 vAxis: { format: 'percent' },
@@ -432,6 +434,7 @@ if ($currentEvent === null) {
                             const contributionHoursData = google.visualization.arrayToDataTable(<?php echo json_encode($contributionHoursData); ?>);
                             const contributionHoursChart = new google.charts.Bar(contributionHoursElement);
                             contributionHoursChart.draw(contributionHoursData, google.charts.Bar.convertOptions({
+                                chart: { title: 'Scheduled contributions (individual, in hours)' },
                                 colors: [ '#0D47A1' ],
                                 height: 300,
                                 stacked: true,
@@ -443,6 +446,7 @@ if ($currentEvent === null) {
                             const contributionAveragesData = google.visualization.arrayToDataTable(<?php echo json_encode($contributionAveragesData); ?>);
                             const contributionAveragesChart = new google.charts.Line(contributionAveragesElement);
                             contributionAveragesChart.draw(contributionAveragesData, {
+                                chart: { title: 'Scheduled contributions (team, in hours)' },
                                 curveType: 'function',
                                 height: 300,
                                 series: [
@@ -455,6 +459,7 @@ if ($currentEvent === null) {
                             const ageDistributionData = google.visualization.arrayToDataTable(<?php echo json_encode($ageDistributionData); ?>);
                             const ageDistributionChart = new google.charts.Bar(ageDistributionElement);
                             ageDistributionChart.draw(ageDistributionData, google.charts.Bar.convertOptions({
+                                chart: { title: 'Age demographics (individual)' },
                                 colors: [ '#0D47A1' ],
                                 height: 300,
                                 stacked: true,
@@ -466,6 +471,7 @@ if ($currentEvent === null) {
                             const ageAveragesData = google.visualization.arrayToDataTable(<?php echo json_encode($ageAveragesData); ?>);
                             const ageAveragesChart = new google.charts.Line(ageAveragesElement);
                             ageAveragesChart.draw(ageAveragesData, google.charts.Line.convertOptions({
+                                chart: { title: 'Age demographics (team)' },
                                 curveType: 'function',
                                 height: 300,
                             }));
@@ -473,6 +479,7 @@ if ($currentEvent === null) {
                             const genderDistributionData = google.visualization.arrayToDataTable(<?php echo json_encode($genderDistributionData); ?>);
                             const genderDistributionChart = new google.charts.Bar(genderDistributionElement);
                             genderDistributionChart.draw(genderDistributionData, {
+                                chart: { title: 'Gender demographics (individual)' },
                                 colors: [ '#2979FF', '#FF3D00', '#00E676', '#795548' ],
                                 height: 300,
                             });
@@ -480,6 +487,7 @@ if ($currentEvent === null) {
                             const genderAveragesData = google.visualization.arrayToDataTable(<?php echo json_encode($genderAveragesData); ?>);
                             const genderAveragesChart = new google.charts.Line(genderAveragesElement);
                             genderAveragesChart.draw(genderAveragesData, google.charts.Line.convertOptions({
+                                chart: { title: 'Gender demographics (team)' },
                                 curveType: 'function',
                                 height: 300,
                                 vAxis: { format: '#%' },
