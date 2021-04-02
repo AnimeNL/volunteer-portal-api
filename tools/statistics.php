@@ -12,11 +12,81 @@ $cache = \Anime\Cache::getInstance();
 $configuration = \Anime\Configuration::getInstance();
 $environment = \Anime\EnvironmentFactory::createForHostname($configuration, $_SERVER['HTTP_HOST']);
 
-function representationWithinRange($haystack, $minimum, $maximum) {
-    return array_reduce($haystack, function ($carry, $age) use ($minimum, $maximum) {
-        return $age >= $minimum && $age <= $maximum ? $carry + 1
-                                                    : $carry;
-    }, /* initial= */ 0) / count($haystack);
+// Computes |$bucketCount| buckets of ~roughly equal size based on the |$data|. This is by no means
+// supposed to be a solid algorithm for creating histogram buckets, but does the job for us.
+function computeDataBuckets(array $data, int $bucketCount = 5): array {
+    sort($data);
+
+    $values = [];
+    foreach ($data as $value) {
+        $flooredValue = floor($value);
+        if (!array_key_exists($flooredValue, $values))
+            $values[$flooredValue] = 1;
+        else
+            $values[$flooredValue]++;
+    }
+
+    $bucketSize = count($data) / $bucketCount;
+    $bucketStart = null;
+    $buckets = [];
+
+    $currentCount = 0;
+    foreach ($values as $value => $count) {
+        if ($bucketStart === null)
+            $bucketStart = $value;
+
+        $currentCount += $count;
+        if ($currentCount < $bucketSize)
+            continue;
+
+        $buckets[] = [
+            'minimum'   => $bucketStart,
+            'maximum'   => $value,
+            'label'     => $bucketStart . '–' . $value,
+        ];
+
+        $bucketStart = null;
+        $currentCount = 0;
+    }
+
+    if ($bucketStart !== null) {
+        $buckets[] = [
+            'minimum'   => $bucketStart,
+            'maximum'   => floor(max($data)),
+            'label'     => $bucketStart . '–' . floor(max($data)),
+        ];
+    }
+
+    return $buckets;
+}
+
+// Returns an array with distribution of the given |$data| over the given |$buckets|.
+function bucketData(array $buckets, array $data): array {
+    $distribution = array_map(fn() => 0, $buckets);
+    foreach ($data as $value) {
+        $normalizedValue = floor($value);
+
+        foreach ($buckets as $bucketIndex => $bucket) {
+            if ($normalizedValue < $bucket['minimum'])
+                continue;
+
+            if ($normalizedValue > $bucket['maximum'])
+                continue;
+
+            $distribution[$bucketIndex]++;
+        }
+    }
+
+    return array_map(function ($count) use ($data) {
+        return $count > 0 ? $count / count($data)
+                          : 0;
+
+    }, $distribution);
+}
+
+// Returns an array with the data labels for the given |$buckets|.
+function bucketLabels(array $buckets): array {
+    return array_map(function ($bucket) { return $bucket['label']; }, $buckets);
 }
 
 // -------------------------------------------------------------------------------------------------
@@ -66,6 +136,9 @@ if ($registrationDatabaseSettings) {
 
         foreach ($registration->getEvents() as $identifier => $participationData) {
             $participationRole = $participationData['role'];
+
+            if ($identifier === '2020-classic')
+                continue;  // TODO: Remove this exception
 
             if (in_array($participationRole, ['Cancelled', 'Registered', 'Rejected', 'Unregistered'])) {
                 $participatedPreviousEvent = false;
@@ -187,13 +260,22 @@ if ($currentEvent === null) {
     $genders = [];
     $roles = [];
 
+    $ageDistribution = [];
+    $contributionDistribution = [];
+
     foreach ($events as $eventInformation) {
+        foreach ($eventInformation['age'] as $age)
+            $ageDistribution[] = $age;
+
         foreach ($eventInformation['gender'] as $gender => $count) {
             if (!array_key_exists($gender, $genders))
                 $genders[$gender] = $count;
             else
                 $genders[$gender] += $count;
         }
+
+        foreach ($eventInformation['hours'] as $contribution)
+            $contributionDistribution[] = $contribution;
 
         foreach ($eventInformation['roles'] as $role => $count) {
             if (!array_key_exists($role, $roles))
@@ -206,13 +288,16 @@ if ($currentEvent === null) {
     arsort($genders);
     asort($roles);
 
+    $ageBuckets = computeDataBuckets($ageDistribution);
+    $contributionBuckets = computeDataBuckets($contributionDistribution);
+
     // (2) Prepare the chart data for each of the graphs by iterating over the event information
     //     again. Missing data values will default to zero - we populate all fields.
     $volunteerCountData = [ [ '', ...array_keys($roles) ] ];
     $volunteerRetentionData = [ [ '', 'Retained', 'Returned', 'Recruited' ] ];
-    $contributionHoursData = [ [ '', '< 6', '6—9', '10—13', '14—17', '18—21', '22 >' ] ];
+    $contributionHoursData = [ [ '', ...bucketLabels($contributionBuckets) ] ];
     $contributionAveragesData = [ [ '', 'Average', 'Mean', 'Total' ] ];
-    $ageDistributionData = [ [ '', '< 20', '20—24', '25—29', '30—34', '35—40', '40 >' ] ];
+    $ageDistributionData = [ [ '', ...bucketLabels($ageBuckets) ] ];
     $ageAveragesData = [ [ '', 'Average age', 'Median age' ] ];
     $genderDistributionData = [ [ '', ...array_keys($genders) ] ];
     $genderAveragesData = [ [ '', ...array_keys($genders) ] ];
@@ -241,12 +326,7 @@ if ($currentEvent === null) {
         if (count($eventInformation['hours'])) {
             $contributionHoursData[] = [
                 (string)$identifier,
-                representationWithinRange($eventInformation['hours'], 0, 5),
-                representationWithinRange($eventInformation['hours'], 6, 9),
-                representationWithinRange($eventInformation['hours'], 10, 13),
-                representationWithinRange($eventInformation['hours'], 14, 17),
-                representationWithinRange($eventInformation['hours'], 18, 21),
-                representationWithinRange($eventInformation['hours'], 22, 100),
+                ...bucketData($contributionBuckets, $eventInformation['hours']),
             ];
 
             $contributionAveragesData[] = [
@@ -258,22 +338,19 @@ if ($currentEvent === null) {
         }
 
         // (2d) Age distribution
-        $ageDistributionData[] = [
-            (string)$identifier,
-            representationWithinRange($eventInformation['age'], 0, 19),
-            representationWithinRange($eventInformation['age'], 20, 24),
-            representationWithinRange($eventInformation['age'], 25, 29),
-            representationWithinRange($eventInformation['age'], 30, 34),
-            representationWithinRange($eventInformation['age'], 35, 39),
-            representationWithinRange($eventInformation['age'], 40, 100),
-        ];
+        if (count($eventInformation['age'])) {
+            $ageDistributionData[] = [
+                (string)$identifier,
+                ...bucketData($ageBuckets, $eventInformation['age']),
+            ];
 
-        // (2e) Age averages
-        $ageAveragesData[] = [
-            (string)$identifier,
-            /* average= */ array_sum($eventInformation['age']) / count($eventInformation['age']),
-            /* median= */ $eventInformation['age'][floor(count($eventInformation['age']) / 2)],
-        ];
+            // (2e) Age averages
+            $ageAveragesData[] = [
+                (string)$identifier,
+                /* average= */ array_sum($eventInformation['age']) / count($eventInformation['age']),
+                /* median= */ $eventInformation['age'][floor(count($eventInformation['age']) / 2)],
+            ];
+        }
 
         // (2f) Gender distribution
         $genderDistributionData[] = [
@@ -354,11 +431,14 @@ if ($currentEvent === null) {
 
                             const contributionHoursData = google.visualization.arrayToDataTable(<?php echo json_encode($contributionHoursData); ?>);
                             const contributionHoursChart = new google.charts.Bar(contributionHoursElement);
-                            contributionHoursChart.draw(contributionHoursData, {
+                            contributionHoursChart.draw(contributionHoursData, google.charts.Bar.convertOptions({
                                 colors: [ '#0D47A1' ],
                                 height: 300,
                                 stacked: true,
-                            });
+                                vAxis: {
+                                    format: 'percent',
+                                },
+                            }));
 
                             const contributionAveragesData = google.visualization.arrayToDataTable(<?php echo json_encode($contributionAveragesData); ?>);
                             const contributionAveragesChart = new google.charts.Line(contributionAveragesElement);
@@ -374,11 +454,14 @@ if ($currentEvent === null) {
 
                             const ageDistributionData = google.visualization.arrayToDataTable(<?php echo json_encode($ageDistributionData); ?>);
                             const ageDistributionChart = new google.charts.Bar(ageDistributionElement);
-                            ageDistributionChart.draw(ageDistributionData, {
+                            ageDistributionChart.draw(ageDistributionData, google.charts.Bar.convertOptions({
                                 colors: [ '#0D47A1' ],
                                 height: 300,
                                 stacked: true,
-                            });
+                                vAxis: {
+                                    format: 'percent',
+                                },
+                            }));
 
                             const ageAveragesData = google.visualization.arrayToDataTable(<?php echo json_encode($ageAveragesData); ?>);
                             const ageAveragesChart = new google.charts.Line(ageAveragesElement);
@@ -399,7 +482,7 @@ if ($currentEvent === null) {
                             genderAveragesChart.draw(genderAveragesData, google.charts.Line.convertOptions({
                                 curveType: 'function',
                                 height: 300,
-                                vAxis: { format: 'percent' },
+                                vAxis: { format: '#%' },
                             }));
                         });
                     </script>
