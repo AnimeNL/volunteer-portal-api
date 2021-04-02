@@ -126,8 +126,10 @@ if ($registrationDatabaseSettings) {
         }
     }
 
-    foreach ($events as $identifier => $eventInformation)
+    foreach ($events as $identifier => $eventInformation) {
         sort($events[$identifier]['age']);
+        sort($events[$identifier]['hours']);
+    }
 }
 
 $currentEvent = null;
@@ -209,6 +211,7 @@ if ($currentEvent === null) {
     $volunteerCountData = [ [ '', ...array_keys($roles) ] ];
     $volunteerRetentionData = [ [ '', 'Retained', 'Returned', 'Recruited' ] ];
     $contributionHoursData = [ [ '', '< 6', '6—9', '10—13', '14—17', '18—21', '22 >' ] ];
+    $contributionAveragesData = [ [ '', 'Average', 'Mean', 'Total' ] ];
     $ageDistributionData = [ [ '', '< 20', '20—24', '25—29', '30—34', '35—40', '40 >' ] ];
     $ageAveragesData = [ [ '', 'Average age', 'Median age' ] ];
     $genderDistributionData = [ [ '', ...array_keys($genders) ] ];
@@ -244,6 +247,13 @@ if ($currentEvent === null) {
                 representationWithinRange($eventInformation['hours'], 14, 17),
                 representationWithinRange($eventInformation['hours'], 18, 21),
                 representationWithinRange($eventInformation['hours'], 22, 100),
+            ];
+
+            $contributionAveragesData[] = [
+                (string)$identifier,
+                array_sum($eventInformation['hours']) / count($eventInformation['hours']),
+                $eventInformation['hours'][floor(count($eventInformation['hours']) / 2)],
+                array_sum($eventInformation['hours']),
             ];
         }
 
@@ -299,6 +309,9 @@ if ($currentEvent === null) {
                         <div id="chart-contribution-hours" class="card shadow-sm p-4"></div>
                     </div>
                     <div class="col">
+                        <div id="chart-contribution-averages" class="card shadow-sm p-4"></div>
+                    </div>
+                    <div class="col">
                         <div id="chart-age-distribution" class="card shadow-sm p-4"></div>
                     </div>
                     <div class="col">
@@ -314,6 +327,7 @@ if ($currentEvent === null) {
                         const volunteerCountElement = document.getElementById('chart-volunteer-count');
                         const volunteerRetentionElement = document.getElementById('chart-volunteer-retention');
                         const contributionHoursElement = document.getElementById('chart-contribution-hours');
+                        const contributionAveragesElement = document.getElementById('chart-contribution-averages');
                         const ageDistributionElement = document.getElementById('chart-age-distribution');
                         const ageAveragesElement = document.getElementById('chart-age-averages');
                         const genderDistributionElement = document.getElementById('chart-gender-distribution');
@@ -346,6 +360,17 @@ if ($currentEvent === null) {
                                 stacked: true,
                             });
 
+                            const contributionAveragesData = google.visualization.arrayToDataTable(<?php echo json_encode($contributionAveragesData); ?>);
+                            const contributionAveragesChart = new google.charts.Line(contributionAveragesElement);
+                            contributionAveragesChart.draw(contributionAveragesData, {
+                                curveType: 'function',
+                                height: 300,
+                                series: [
+                                    /* average= */ { axis: 'Individual' },
+                                    /* mean= */ { axis: 'Individual' },
+                                    /* total= */ { axis: 'Total', color: '#90A4AE' },
+                                ],
+                            });
 
                             const ageDistributionData = google.visualization.arrayToDataTable(<?php echo json_encode($ageDistributionData); ?>);
                             const ageDistributionChart = new google.charts.Bar(ageDistributionElement);
