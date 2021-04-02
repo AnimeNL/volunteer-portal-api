@@ -131,15 +131,15 @@ class Api {
                 $composedName = $registration->getFirstName() . ' ' . $registration->getLastName();
                 $filteredEvents = [];
 
-                foreach ($registration->getEvents() as $eventIdentifier => $role) {
+                foreach ($registration->getEvents() as $eventIdentifier => $participationData) {
                     if (in_array($eventIdentifier, $events))
-                        $filteredEvents[$eventIdentifier] = $role;
+                        $filteredEvents[$eventIdentifier] = $participationData['role'];
                 }
 
                 return [
                     'administrator' => $registration->isAdministrator(),
                     'avatar'        => $avatarUrl,
-                    'events'        => $registration->getEvents(),
+                    'events'        => $filteredEvents,
                     'name'          => trim($composedName),
                 ];
             }

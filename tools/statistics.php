@@ -64,7 +64,9 @@ if ($registrationDatabaseSettings) {
         $participatedAnyEvent = false;
         $participatedPreviousEvent = false;
 
-        foreach ($registration->getEvents() as $identifier => $participationRole) {
+        foreach ($registration->getEvents() as $identifier => $participationData) {
+            $participationRole = $participationData['role'];
+
             if (in_array($participationRole, ['Cancelled', 'Registered', 'Rejected', 'Unregistered'])) {
                 $participatedPreviousEvent = false;
                 $first = false;
@@ -81,9 +83,10 @@ if ($registrationDatabaseSettings) {
                     'returned'      => 0,
                     'recruited'     => 0,
 
-                    // Demographics.
+                    // Specifics.
                     'age'           => [],
                     'gender'        => [],
+                    'hours'         => [],
                 ];
             }
 
@@ -114,6 +117,9 @@ if ($registrationDatabaseSettings) {
             if ($eventAge >= 12 && $eventAge <= 100)
                 $events[$identifier]['age'][] = $eventAge;
 
+            if ($participationData['hours'] !== null)
+                $events[$identifier]['hours'][] = $participationData['hours'];
+
             $participatedAnyEvent = true;
             $participatedPreviousEvent = true;
             $first = false;
@@ -131,12 +137,6 @@ if (array_key_exists('event', $_GET) && array_key_exists($_GET['event'], $events
 // -------------------------------------------------------------------------------------------------
 // Display the statistics on a page. Note that Bootstrap and ChartJS are used for styling.
 // -------------------------------------------------------------------------------------------------
-
-$colors = [
-    '#3366CC', '#DC3912', '#FF9900', '#109618', '#990099', '#3B3EAC', '#0099C6', '#DD4477',
-    '#66AA00', '#B82E2E', '#316395', '#994499', '#22AA99', '#AAAA11', '#6633CC', '#E67300',
-    '#8B0707', '#329262', '#5574A6', '#3B3EAC'
-];
 
 ?>
 <!doctype html>
@@ -208,6 +208,7 @@ if ($currentEvent === null) {
     //     again. Missing data values will default to zero - we populate all fields.
     $volunteerCountData = [ [ '', ...array_keys($roles) ] ];
     $volunteerRetentionData = [ [ '', 'Retained', 'Returned', 'Recruited' ] ];
+    $contributionHoursData = [ [ '', '< 6', '6—9', '10—13', '14—17', '18—21', '22 >' ] ];
     $ageDistributionData = [ [ '', '< 20', '20—24', '25—29', '30—34', '35—40', '40 >' ] ];
     $ageAveragesData = [ [ '', 'Average age', 'Median age' ] ];
     $genderDistributionData = [ [ '', ...array_keys($genders) ] ];
@@ -233,7 +234,20 @@ if ($currentEvent === null) {
             $eventInformation['recruited'] / $eventInformation['volunteers'],
         ];
 
-        // (2c) Age distribution
+        // (2c) Contribution distribution
+        if (count($eventInformation['hours'])) {
+            $contributionHoursData[] = [
+                (string)$identifier,
+                representationWithinRange($eventInformation['hours'], 0, 5),
+                representationWithinRange($eventInformation['hours'], 6, 9),
+                representationWithinRange($eventInformation['hours'], 10, 13),
+                representationWithinRange($eventInformation['hours'], 14, 17),
+                representationWithinRange($eventInformation['hours'], 18, 21),
+                representationWithinRange($eventInformation['hours'], 22, 100),
+            ];
+        }
+
+        // (2d) Age distribution
         $ageDistributionData[] = [
             (string)$identifier,
             representationWithinRange($eventInformation['age'], 0, 19),
@@ -244,14 +258,14 @@ if ($currentEvent === null) {
             representationWithinRange($eventInformation['age'], 40, 100),
         ];
 
-        // (2d) Age averages
+        // (2e) Age averages
         $ageAveragesData[] = [
             (string)$identifier,
             /* average= */ array_sum($eventInformation['age']) / count($eventInformation['age']),
             /* median= */ $eventInformation['age'][floor(count($eventInformation['age']) / 2)],
         ];
 
-        // (2e) Gender distribution
+        // (2f) Gender distribution
         $genderDistributionData[] = [
             (string)$identifier,
             ...array_map(function ($gender) use ($eventInformation) {
@@ -262,7 +276,7 @@ if ($currentEvent === null) {
             }, array_keys($genders)),
         ];
 
-        // (2f) Gender averages
+        // (2g) Gender averages
         $genderAveragesData[] = [
             (string)$identifier,
             ...array_map(function ($gender) use ($eventInformation) {
@@ -282,6 +296,9 @@ if ($currentEvent === null) {
                         <div id="chart-volunteer-retention" class="card shadow-sm p-4"></div>
                     </div>
                     <div class="col">
+                        <div id="chart-contribution-hours" class="card shadow-sm p-4"></div>
+                    </div>
+                    <div class="col">
                         <div id="chart-age-distribution" class="card shadow-sm p-4"></div>
                     </div>
                     <div class="col">
@@ -296,6 +313,7 @@ if ($currentEvent === null) {
                     <script>
                         const volunteerCountElement = document.getElementById('chart-volunteer-count');
                         const volunteerRetentionElement = document.getElementById('chart-volunteer-retention');
+                        const contributionHoursElement = document.getElementById('chart-contribution-hours');
                         const ageDistributionElement = document.getElementById('chart-age-distribution');
                         const ageAveragesElement = document.getElementById('chart-age-averages');
                         const genderDistributionElement = document.getElementById('chart-gender-distribution');
@@ -319,6 +337,15 @@ if ($currentEvent === null) {
                                 height: 300,
                                 vAxis: { format: 'percent' },
                             }));
+
+                            const contributionHoursData = google.visualization.arrayToDataTable(<?php echo json_encode($contributionHoursData); ?>);
+                            const contributionHoursChart = new google.charts.Bar(contributionHoursElement);
+                            contributionHoursChart.draw(contributionHoursData, {
+                                colors: [ '#0D47A1' ],
+                                height: 300,
+                                stacked: true,
+                            });
+
 
                             const ageDistributionData = google.visualization.arrayToDataTable(<?php echo json_encode($ageDistributionData); ?>);
                             const ageDistributionChart = new google.charts.Bar(ageDistributionElement);

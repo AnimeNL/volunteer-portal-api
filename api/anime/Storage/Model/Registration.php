@@ -25,6 +25,16 @@ const TRUTHY_VALUES = [ 'yes', 'true' ];
 // H: Administrator ("Yes", "True"; see TRUTHY_VALUES)
 // I, ...: Registration status for a particular event
 //
+// --> The Registration status can be one of the reserved values (Unregistered, Registered,
+//     Cancelled and Rejected), or another value which indicates that the volunteer has been part
+//     of the team in a role with the given title.
+//
+//     Optionally, the number of hours of shifts they had been scheduled for may be included,
+//     which must be at the end of the status, as a number surrounded by parenthesis.
+//
+//     "Steward" -> Role is "Steward", with no indication of hours worked,
+//     "Steward (14)" -> Role is "Steward", with 14 hours of performed work.
+//
 // Because an arbitrary number of events are supported in the same sheet, Registration objects can
 // only be created when the RegistrationSheet is known.
 class Registration {
@@ -59,9 +69,17 @@ class Registration {
         $this->events = [];
         foreach ($events as $eventIndex => $eventIdentifier) {
             $valueIndex = $eventIndex + Registration::DATA_COLUMN_COUNT;
-            $value = count($spreadsheetRow) > $valueIndex ? $spreadsheetRow[$valueIndex] : null;
+            $value = $spreadsheetRow[$valueIndex] ?? 'Unregistered';
 
-            $this->events[$eventIdentifier] = $value ?? 'Unregistered';
+            $matches = null;
+            if (preg_match('/^\s*(.*?)\s+\(([0-9]+(\.[0-9]{1,2})?)\)\s*$/s', $value, $matches)) {
+                $this->events[$eventIdentifier] = [
+                    'role' => $matches[1],
+                    'hours' => floatval($matches[2])
+                ];
+            } else {
+                $this->events[$eventIdentifier] = [ 'role' => $value, 'hours' => null ];
+            }
         }
 
         $this->authToken = SecurityToken::GenerateAuthToken($this->accessCode, $this->emailAddress);
@@ -103,7 +121,8 @@ class Registration {
         return $this->phoneNumber;
     }
 
-    // Returns the events through which this registration has a known status.
+    // Returns the events through which this registration has a known status. Each event is shared
+    // as an associative array with two keys: 'role' and 'hours' (which may be NULL).
     public function getEvents(): array {
         return $this->events;
     }
