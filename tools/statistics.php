@@ -183,6 +183,8 @@ if ($registrationDatabaseSettings) {
         }
     }
 
+    ksort($events);
+
     foreach ($events as $identifier => $eventInformation) {
         sort($events[$identifier]['age']);
         sort($events[$identifier]['hours']);
