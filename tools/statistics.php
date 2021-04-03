@@ -12,49 +12,31 @@ $cache = \Anime\Cache::getInstance();
 $configuration = \Anime\Configuration::getInstance();
 $environment = \Anime\EnvironmentFactory::createForHostname($configuration, $_SERVER['HTTP_HOST']);
 
-// Computes |$bucketCount| buckets of ~roughly equal size based on the |$data|. This is by no means
-// supposed to be a solid algorithm for creating histogram buckets, but does the job for us.
-function computeDataBuckets(array $data, int $bucketCount = 5): array {
+// Computes a number of buckets from the |$data|, appropriately sized for a roughly balanced normal
+// distribution. This holds for both contribution and age demographics in our event data.
+function computeDataBuckets(array $data, array $bucketSegmentation): array {
     sort($data);
 
-    $values = [];
-    foreach ($data as $value) {
-        $flooredValue = floor($value);
-        if (!array_key_exists($flooredValue, $values))
-            $values[$flooredValue] = 1;
-        else
-            $values[$flooredValue]++;
-    }
+    $dataMaximum = ceil(max($data));
+    $dataMinimum = floor(min($data));
+    $dataWidth = $dataMaximum - $dataMinimum;
 
-    $bucketSize = count($data) / $bucketCount;
-    $bucketStart = null;
+    $bucketStart = $dataMinimum;
+    $bucketStep = ($dataWidth - count($bucketSegmentation)) / array_sum($bucketSegmentation);
     $buckets = [];
 
-    $currentCount = 0;
-    foreach ($values as $value => $count) {
-        if ($bucketStart === null)
-            $bucketStart = $value;
-
-        $currentCount += $count;
-        if ($currentCount < $bucketSize)
-            continue;
+    foreach ($bucketSegmentation as $index => $bucketWidth) {
+        $bucketEnd = $bucketStart + ceil($bucketStep * $bucketWidth);
+        if ($index === count($bucketSegmentation) - 1)
+            $bucketEnd = $dataMaximum;
 
         $buckets[] = [
             'minimum'   => $bucketStart,
-            'maximum'   => $value,
-            'label'     => $bucketStart . '–' . $value,
+            'maximum'   => $bucketEnd,
+            'label'     => $bucketStart . '–' . $bucketEnd,
         ];
 
-        $bucketStart = null;
-        $currentCount = 0;
-    }
-
-    if ($bucketStart !== null) {
-        $buckets[] = [
-            'minimum'   => $bucketStart,
-            'maximum'   => floor(max($data)),
-            'label'     => $bucketStart . '–' . floor(max($data)),
-        ];
+        $bucketStart = $bucketEnd + 1;
     }
 
     return $buckets;
@@ -127,7 +109,7 @@ if ($registrationDatabaseSettings) {
 
     $registrations = $registrationDatabase->getRegistrations();
     foreach ($registrations as $registration) {
-        $dateOfBirth = strtotime($registration->getDateOfBirth());
+        $dateOfBirth = strtotime($registration->getDateOfBirth() ?? '0000-00-00');
         $gender = $registration->getGender();
 
         $first = true;
@@ -135,11 +117,10 @@ if ($registrationDatabaseSettings) {
         $participatedPreviousEvent = false;
 
         foreach ($registration->getEvents() as $identifier => $participationData) {
-            $participationRole = $participationData['role'];
-
             if ($identifier === '2020-classic')
                 continue;  // TODO: Remove this exception
 
+            $participationRole = $participationData['role'];
             if (in_array($participationRole, ['Cancelled', 'Registered', 'Rejected', 'Unregistered'])) {
                 $participatedPreviousEvent = false;
                 $first = false;
@@ -288,8 +269,8 @@ if ($currentEvent === null) {
     arsort($genders);
     asort($roles);
 
-    $ageBuckets = computeDataBuckets($ageDistribution);
-    $contributionBuckets = computeDataBuckets($contributionDistribution);
+    $ageBuckets = computeDataBuckets($ageDistribution, [ 1, 2, 2, 2, 2 ]);
+    $contributionBuckets = computeDataBuckets($contributionDistribution, [ 3, 2, 2, 2, 3 ]);
 
     // (2) Prepare the chart data for each of the graphs by iterating over the event information
     //     again. Missing data values will default to zero - we populate all fields.
@@ -500,18 +481,140 @@ if ($currentEvent === null) {
     // Display of statistics for a particular event.
     // ---------------------------------------------------------------------------------------------
 
-    // TODO
+    $event = $events[$currentEvent];
+
+    arsort($event['roles']);
+    arsort($event['gender']);
+
+    $roleDistributionData = [ [ 'Role', 'Volunteers' ] ];
+    $retentionData = [ [ 'Reason', 'Volunteers' ] ];
+    $contributionData = [ [ '', 'Volunteers' ] ];
+    $ageDistributionData = [ [ '', 'Volunteers' ] ];
+    $genderDistributionData = [ [ 'Gender', 'Volunteers' ] ];
+
+    // (1a) Role distribution
+    foreach ($event['roles'] as $role => $volunteers)
+        $roleDistributionData[] = [ $role, $volunteers ];
+
+    // (1b) Retention
+    $retentionData[] = [ 'Retained', $event['retained'] ];
+    $retentionData[] = [ 'Returned', $event['returned'] ];
+    $retentionData[] = [ 'Recruited', $event['recruited'] ];
+
+    $retentionTotal = $event['retained'] + $event['returned'] + $event['recruited'];
+
+    // (1c) Contribution (hours)
+    $contributionFrequencies = [];
+    foreach ($event['hours'] as $hours) {
+        if (!array_key_exists($hours, $contributionFrequencies))
+            $contributionFrequencies[$hours] = 1;
+        else
+            $contributionFrequencies[$hours]++;
+    }
+
+    foreach ($contributionFrequencies as $hours => $volunteers)
+        $contributionData[] = [ $hours, $volunteers ];
+
+    // (1d) Age distribution
+    $ageFrequencies = [];
+    foreach ($event['age'] as $age) {
+        if (!array_key_exists($age, $ageFrequencies))
+            $ageFrequencies[$age] = 1;
+        else
+            $ageFrequencies[$age]++;
+    }
+
+    foreach ($ageFrequencies as $hours => $volunteers)
+        $ageDistributionData[] = [ $hours, $volunteers ];
+
+    // (1e) Gender distribution
+    foreach ($event['gender'] as $gender => $volunteers)
+        $genderDistributionData[] = [ $gender, $volunteers ];
 
 ?>
                     <div class="col">
-                        <div id="chart-volunteer-roles" class="card shadow-sm p-4"></div>
+                        <div id="chart-role-distribution" class="card shadow-sm p-4"></div>
+                    </div>
+                    <div class="col">
+                        <div id="chart-retention" class="card shadow-sm p-4"></div>
+                    </div>
+                    <div class="col">
+                        <div id="chart-contribution" class="card shadow-sm p-4"></div>
+                    </div>
+                    <div class="col">
+                        <div id="chart-age-distribution" class="card shadow-sm p-4"></div>
+                    </div>
+                    <div class="col">
+                        <div id="chart-gender-distribution" class="card shadow-sm p-4"></div>
                     </div>
                     <script>
-                        const volunteerRolesElement = document.getElementById('chart-volunteer-roles');
+                        const roleDistributionElement = document.getElementById('chart-role-distribution');
+                        const retentionElement = document.getElementById('chart-retention');
+                        const contributionElement = document.getElementById('chart-contribution');
+                        const ageDistributionElement = document.getElementById('chart-age-distribution');
+                        const genderDistributionElement = document.getElementById('chart-gender-distribution');
 
                         google.charts.load('current', { packages: [ 'corechart', 'bar', 'line' ] });
                         google.charts.setOnLoadCallback(() => {
+                            const roleDistributionData = google.visualization.arrayToDataTable(<?php echo json_encode($roleDistributionData); ?>);
+                            const roleDistributionChart = new google.visualization.PieChart(roleDistributionElement);
+                            roleDistributionChart.draw(roleDistributionData, {
+                                chartArea: { left: '0%', top: 36, width: '100%', height: '100%' },
+                                colors: [ '#f4b400', '#4285f4', '#db4437', '#0f9d58' ],
+                                height: 300,
+                                pieHole: 0.5,
+                                pieSliceText: 'label',
+                                theme: 'material',
+                                title: 'Volunteer roles',
+                            });
 
+<?php
+if ($retentionTotal > 0) {
+?>
+                            const retentionData = google.visualization.arrayToDataTable(<?php echo json_encode($retentionData); ?>);
+                            const retentionChart = new google.visualization.PieChart(retentionElement);
+                            retentionChart.draw(retentionData, {
+                                chartArea: { left: '0%', top: 36, width: '100%', height: '100%' },
+                                colors: [ '#0f9d58', '#4285f4', '#f4b400' ],
+                                height: 300,
+                                pieHole: 0.5,
+                                pieSliceText: 'label',
+                                theme: 'material',
+                                title: 'Volunteer retention',
+                            });
+<?php
+} else {
+?>
+                            retentionElement.parentNode.remove();
+<?php
+}
+?>
+
+                            const contributionData = google.visualization.arrayToDataTable(<?php echo json_encode($contributionData); ?>);
+                            const contributionChart = new google.charts.Bar(contributionElement);
+                            contributionChart.draw(contributionData, {
+                                chart: { title: 'Scheduled contribution (hours)' },
+                                height: 300,
+                            });
+
+                            const ageDistributionData = google.visualization.arrayToDataTable(<?php echo json_encode($ageDistributionData); ?>);
+                            const ageDistributionChart = new google.charts.Bar(ageDistributionElement);
+                            ageDistributionChart.draw(ageDistributionData, {
+                                chart: { title: 'Age distribution (years)' },
+                                height: 300,
+                            });
+
+                            const genderDistributionData = google.visualization.arrayToDataTable(<?php echo json_encode($genderDistributionData); ?>);
+                            const genderDistributionChart = new google.visualization.PieChart(genderDistributionElement);
+                            genderDistributionChart.draw(genderDistributionData, {
+                                chartArea: { left: '0%', top: 36, width: '100%', height: '100%' },
+                                colors: [ '#f4b400', '#0f9d58', '#4285f4', '#db4437' ],
+                                height: 300,
+                                pieHole: 0.5,
+                                pieSliceText: 'label',
+                                theme: 'material',
+                                title: 'Gender distribution',
+                            });
                         });
                     </script>
 <?php

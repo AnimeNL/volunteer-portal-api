@@ -44,10 +44,10 @@ class Registration {
     private string $firstName;
     private string $lastName;
     private string $gender;
-    private string $dateOfBirth;
-    private string $emailAddress;
+    private ?string $dateOfBirth = null;
+    private ?string $emailAddress = null;
     private string $accessCode;
-    private string $phoneNumber;
+    private ?string $phoneNumber = null;
     private bool $administrator;
     private array $events;
 
@@ -60,10 +60,18 @@ class Registration {
         $this->firstName = $spreadsheetRow[0];
         $this->lastName = $spreadsheetRow[1];
         $this->gender = $spreadsheetRow[2];
-        $this->dateOfBirth = $spreadsheetRow[3];
-        $this->emailAddress = $spreadsheetRow[4];
+
+        if (strlen($spreadsheetRow[3]))
+            $this->dateOfBirth = $spreadsheetRow[3];
+
+        if (strlen($spreadsheetRow[4]))
+            $this->emailAddress = $spreadsheetRow[4];
+
         $this->accessCode = $spreadsheetRow[5];
-        $this->phoneNumber = $spreadsheetRow[6];
+
+        if (strlen($spreadsheetRow[6]))
+            $this->phoneNumber = $spreadsheetRow[6];
+
         $this->administrator = in_array(strtolower($spreadsheetRow[7]), TRUTHY_VALUES);
 
         $this->events = [];
@@ -102,12 +110,12 @@ class Registration {
     }
 
     // Returns the date of birth of this person, as a string formatted like YYYY-MM-DD.
-    public function getDateOfBirth(): string {
+    public function getDateOfBirth(): ?string {
         return $this->dateOfBirth;
     }
 
     // Returns the e-mail address associated with this volunteer registration.
-    public function getEmailAddress(): string {
+    public function getEmailAddress(): ?string {
         return $this->emailAddress;
     }
 
@@ -117,7 +125,7 @@ class Registration {
     }
 
     // Returns the phone number associated with this volunteer registration.
-    public function getPhoneNumnber(): string {
+    public function getPhoneNumnber(): ?string {
         return $this->phoneNumber;
     }
 
