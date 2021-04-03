@@ -17,7 +17,7 @@ namespace Anime\Storage;
 //   private to that volunteer.
 class SecurityToken {
     // Generates an eight character user token based on the given |$accessCode| and |$emailAddress|.
-    public static function GenerateUserToken(string $accessCode, string $emailAddress) : string {
+    public static function GenerateUserToken(string $accessCode, ?string $emailAddress) : string {
         $configuration = \Anime\Configuration::getInstance();
 
         $data = $accessCode . $emailAddress;
@@ -27,7 +27,7 @@ class SecurityToken {
     }
 
     // Generates an eight character auth token based on the given |$accessCode| and |$emailAddress|.
-    public static function GenerateAuthToken(string $accessCode, string $emailAddress) : string {
+    public static function GenerateAuthToken(string $accessCode, ?string $emailAddress) : string {
         $configuration = \Anime\Configuration::getInstance();
 
         $data = $accessCode . $emailAddress;

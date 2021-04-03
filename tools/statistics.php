@@ -15,6 +15,9 @@ $environment = \Anime\EnvironmentFactory::createForHostname($configuration, $_SE
 // Computes a number of buckets from the |$data|, appropriately sized for a roughly balanced normal
 // distribution. This holds for both contribution and age demographics in our event data.
 function computeDataBuckets(array $data, array $bucketSegmentation): array {
+    if (!count($data))
+        return [ /* cannot bucket an empty data-set */ ];
+
     sort($data);
 
     $dataMaximum = ceil(max($data));
@@ -582,12 +585,16 @@ if ($retentionTotal > 0) {
                                 theme: 'material',
                                 title: 'Volunteer retention',
                             });
+
 <?php
 } else {
 ?>
                             retentionElement.parentNode.remove();
+
 <?php
 }
+
+if (count($contributionFrequencies) > 0) {
 ?>
 
                             const contributionData = google.visualization.arrayToDataTable(<?php echo json_encode($contributionData); ?>);
@@ -596,6 +603,14 @@ if ($retentionTotal > 0) {
                                 chart: { title: 'Scheduled contribution (hours)' },
                                 height: 300,
                             });
+<?php
+} else {
+?>
+                            contributionElement.parentNode.remove();
+
+<?php
+}
+?>
 
                             const ageDistributionData = google.visualization.arrayToDataTable(<?php echo json_encode($ageDistributionData); ?>);
                             const ageDistributionChart = new google.charts.Bar(ageDistributionElement);
