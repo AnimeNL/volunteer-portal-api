@@ -61,6 +61,18 @@ class Api {
     }
 
     /**
+     * Allows static content to be obtained for the registration sub-application, as well as other
+     * pages that can be displayed on the portal. The <App> component is responsible for routing.
+     *
+     * @see https://github.com/AnimeNL/volunteer-portal/blob/main/API.md#apicontent
+     */
+    public function content() {
+        return [
+            'pages' => $this->environment->getContent(),
+        ];
+    }
+
+    /**
      * Allows information to be obtained for the environment the volunteer portal runs under. This
      * allows multiple events to be managed by the same instance.
      *
@@ -90,14 +102,19 @@ class Api {
     }
 
     /**
-     * Allows static content to be obtained for the registration sub-application, as well as other
-     * pages that can be displayed on the portal. The <App> component is responsible for routing.
+     * Allows full scheduling information to be requested about a particular event, indicated by the
+     * `event` request parameter. The returned data is expected to have been (pre)filtered based on
+     * the access level granted to the owner of the given `authToken`.
      *
-     * @see https://github.com/AnimeNL/volunteer-portal/blob/main/API.md#apicontent
+     * @param authToken The authentication token that was issued to this user.
+     * @param eventIdentifier The unique identifier for the event whose program to retrieve.
+     * @see https://github.com/AnimeNL/volunteer-portal/blob/main/API.md#apievent
      */
-    public function content() {
+    public function event(string $authToken, string $eventIdentifier): array {
         return [
-            'pages' => $this->environment->getContent(),
+            'events'        => [],
+            'locations'     => [],
+            'volunteers'    => [],
         ];
     }
 

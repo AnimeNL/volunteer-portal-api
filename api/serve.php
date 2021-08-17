@@ -44,6 +44,16 @@ switch ($endpoint) {
         echo json_encode($api->environment());
         break;
 
+    case '/api/event':
+        if (!array_key_exists('authToken', $parameters))
+            echo json_encode([ 'error' => 'Missing parameter: authToken' ]);
+        else if (!array_key_exists('event', $parameters))
+            echo json_encode([ 'error' => 'Missing parameter: event' ]);
+        else
+            echo json_encode($api->event($parameters['authToken'], $parameters['event']));
+
+        break;
+
     // https://github.com/AnimeNL/volunteer-portal/blob/main/API.md#apienvironment
     case '/api/user':
         if (!array_key_exists('authToken', $parameters))
