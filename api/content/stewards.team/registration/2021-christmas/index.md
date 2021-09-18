@@ -8,7 +8,7 @@ security and first aid teams, then we are looking for **you**!
     and are able to communicate clearly in both Dutch and English.
 
   * You're able to be present at the [Broodfabriek](https://de-broodfabriek.nl/) in Rijswijk from
-    9am on Saturday, all the way to 8pm on Sunday.
+    8:30am on Saturday, all the way to 8pm on Sunday.
   
   * You're able to help us out with about 15 hours of [shifts](schedule.html) during the festival.
     Any events that you _really_ want to attend as a visitor will of course be taken into account.
