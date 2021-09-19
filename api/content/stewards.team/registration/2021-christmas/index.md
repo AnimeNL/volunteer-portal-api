@@ -30,4 +30,4 @@ security and first aid teams, then we are looking for **you**!
 Please check out the [frequently asked questions](faq.html) in case anything is unclear, or reach
 out to us [by e-mail](mailto:security@animecon.nl).
 
-[1]: /registration-button
+<del>Apply to become a steward!</del>

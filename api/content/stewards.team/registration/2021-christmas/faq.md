@@ -13,9 +13,9 @@ You should receive a confirmation e-mail within a few days of your application. 
 able to join the team will be confirmed in two phases:
 
   * **Early registrations**, prior to October 10th, receive confirmation in the week of October 11,
-  * **Late registrations**, prior to November 8th, receive confirmation in the week of November 9.
+  * **Late registrations**, prior to October 31st, receive confirmation in the week of November 1.
 
-We do not expect to accept further registrations after November 8.
+We do not expect to accept further registrations after November 1st.
 
 ### When do I need to arrive at the Broodfabriek?
 We expect you to be present at the location at **8:30 in the morning** of Saturday, December 11.

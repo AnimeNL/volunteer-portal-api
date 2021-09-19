@@ -44,4 +44,4 @@ so you definitely won't be bored when there's nothing to attend.
 Please check out the [frequently asked questions](faq.html) in case anything is unclear, or reach
 out to us [by e-mail](mailto:gopherplanning@animecon.nl).
 
-[1]: /registration-button
+<del>Apply to become a gopher!</del>
