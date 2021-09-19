@@ -31,6 +31,34 @@ class Api {
     }
 
     /**
+     * Allows an application to be submitted to the system, for a particular event. We'll try to
+     * merge applications with previous events when sufficient information is available. All the
+     * parameters have been syntactically validated prior to hitting this code.
+     *
+     * @param firstName First name of the volunteer that's applying.
+     * @param lastName Last name of the volunteer that's applying.
+     * @param dateOfBirth Date of birth (YYYY-MM-DD) of that volunteer.
+     * @param emailAddress The e-mail address at which they can be contacted.
+     * @param phoneNumber Their phone number, only for use by the leadership.
+     * @param gender Their self-indicated gender, if any.
+     * @param shirtSize Their self-indicated t-shirt size, if any.
+     * @param preferences Their preferences for volunteering, if any.
+     * @param available Whether they are available during the entire festival.
+     * @param hotel Whether they would like to reserve a hotel room through our booking.
+     * @param whatsApp Whether they would like to be part of the WhatsApp group.
+     * @see https://github.com/AnimeNL/volunteer-portal/blob/main/API.md#apiapplication
+     */
+    public function application(string $firstName, string $lastName, string $dateOfBirth,
+                                string $emailAddress, string $phoneNumber, string $gender,
+                                string $shirtSize, string $preferences, bool $available,
+                                bool $hotel, bool $whatsApp) {
+        return [
+            'accessCode'    => '1234',
+            //'error'         => 'Message',
+        ];
+    }
+
+    /**
      * Allows an authentication token (authToken) to be obtained for given credentials. The token
      * may have an expiration time, which should be validated on both the client and server-side.
      *
