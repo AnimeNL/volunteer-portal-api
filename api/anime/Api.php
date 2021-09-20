@@ -86,15 +86,24 @@ class Api {
                         $phoneNumber);
             }
 
-            // TODO: Send an e-mail to the volunteering leads.
+            $message = new \Nette\Mail\Message;
+            $message->setFrom('anime@' . $this->environment->getHostname());
+            $message->addTo($this->environment->getApplicationAddress());
+
+            $message->setSubject('Volunteer application: ' . $firstName . ' ' . $lastName);
+            $message->setHtmlBody(ApplicationMessageGenerator::Generate(
+                $registration, $event, $firstName, $lastName, $dateOfBirth, $emailAddress,
+                $phoneNumber, $gender, $shirtSize, $preferences, $available, $hotel, $whatsApp));
+
+            $mailer = new \Nette\Mail\SendmailMailer;
+            $mailer->send($message);
+
             return [
-                //'accessCode'    => $registration->getAccessCode(),
-                'error'         => 'Access code: ' . $registration->getAccessCode(),
+                'accessCode'    => $registration->getAccessCode(),
             ];
         }
 
         return [
-            //'accessCode'    => '1234',
             'error'         => 'The database was not available...',
         ];
     }

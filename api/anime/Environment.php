@@ -18,6 +18,7 @@ class Environment {
 
     private string $contactName;
     private string $contactTarget;
+    private string $applicationAddress;
     private array $events;
     private string $title;
 
@@ -34,6 +35,7 @@ class Environment {
 
         $this->contactName = $settings['contactName'];
         $this->contactTarget = $settings['contactTarget'];
+        $this->applicationAddress = $settings['applicationAddress'];
         $this->events = $events;
         $this->hostname = $hostname;
         $this->title = $settings['title'];
@@ -58,6 +60,11 @@ class Environment {
     // Returns the link target of the person who can be contacted for questions.
     public function getContactTarget(): string {
         return $this->contactTarget;
+    }
+
+    // Returns the e-mail address to which new applications should be e-mailed.
+    public function getApplicationAddress(): string {
+        return $this->applicationAddress;
     }
 
     // Recursively loads all static content that has been made available for the current environment

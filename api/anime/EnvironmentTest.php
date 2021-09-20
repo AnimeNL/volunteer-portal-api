@@ -50,15 +50,16 @@ class EnvironmentTest extends \PHPUnit\Framework\TestCase {
         $configuration = Configuration::createForTests([
             'environments' => [
                 'example.com'   => [
-                    'contactName'   => 'Name',
-                    'contactTarget' => 'Target',
-                    'events'        => [
+                    'contactName'           => 'Name',
+                    'contactTarget'         => 'Target',
+                    'applicationAddress'    => 'info@example.com',
+                    'events'                => [
                         '2021-event'    => [
                             // Overrides the registration availability of the global event.
                             'enableRegistration'    => false,
                         ],
                     ],
-                    'title'         => 'Title',
+                    'title'                 => 'Title',
                 ]
             ],
 
@@ -80,6 +81,7 @@ class EnvironmentTest extends \PHPUnit\Framework\TestCase {
 
         $this->assertEquals('Name', $environment->getContactName());
         $this->assertEquals('Target', $environment->getContactTarget());
+        $this->assertEquals('info@example.com', $environment->getApplicationAddress());
         $this->assertEquals('Title', $environment->getTitle());
 
         $this->assertEquals(1, count($environment->getEvents()));

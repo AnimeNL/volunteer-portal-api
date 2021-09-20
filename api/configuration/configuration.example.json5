@@ -24,6 +24,9 @@
             },
             "title": "Volunteer Portal",
 
+            // E-mail address to which applications should be e-mailed.
+            "applicationAddress": "info@example.com",
+
             // Usernames and passwords that will be accepted for privileged tools, using HTTP Auth.
             "privilegedAccess": {
                 "admin": "PasswordGoesHere",

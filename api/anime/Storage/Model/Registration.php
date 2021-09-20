@@ -158,7 +158,7 @@ class Registration {
     }
 
     // Returns the phone number associated with this volunteer registration.
-    public function getPhoneNumnber(): ?string {
+    public function getPhoneNumber(): ?string {
         return $this->phoneNumber;
     }
 
