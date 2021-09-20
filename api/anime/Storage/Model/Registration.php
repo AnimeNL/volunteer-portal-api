@@ -54,6 +54,30 @@ class Registration {
     private string $authToken;
     private string $userToken;
 
+    // Creates the contents of a spreadsheet row for a new registration with the given information.
+    // Contained within this file to centralize the logic for the sheet's format.
+    public static function CreateSpreadsheetRow(
+            array $events, string $event, string $firstName, string $lastName, string $gender,
+            string $dateOfBirth, string $emailAddress, string $phoneNumber): array {
+        $spreadsheetRow = [
+            $firstName,
+            $lastName,
+            ucfirst($gender),
+            $dateOfBirth,
+            $emailAddress,
+            /* accessCode= */ strval(random_int(1000, 9999)),
+            $phoneNumber,
+            /* administrator= */ 'No',
+        ];
+
+        foreach ($events as $eventIndex => $eventIdentifier) {
+            $spreadsheetRow[] = $eventIdentifier === $event ? 'Registered'
+                                                            : 'Unregistered';
+        }
+
+        return $spreadsheetRow;
+    }
+
     // Initializes the Registration object. Should only be called by the RegistrationDatabase. It
     // is assumed that validity of the |$spreadsheetRow| has been asserted already.
     public function __construct(array $spreadsheetRow, array $events) {

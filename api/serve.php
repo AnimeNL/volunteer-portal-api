@@ -38,7 +38,9 @@ $api = new \Anime\Api($_SERVER['HTTP_HOST']);
 switch ($endpoint) {
     // https://github.com/AnimeNL/volunteer-portal/blob/main/API.md#apiapplication
     case '/api/application':
-        if (!array_key_exists('firstName', $_POST) || !strlen($_POST['firstName'])) {
+        if (!array_key_exists('event', $_POST) || !strlen($_POST['event'])) {
+            echo json_encode([ 'error' => 'No event to register for has been supplied.' ]);
+        } else if (!array_key_exists('firstName', $_POST) || !strlen($_POST['firstName'])) {
             echo json_encode([ 'error' => 'Please enter your first name.' ]);
         } else if (!array_key_exists('lastName', $_POST) || !strlen($_POST['lastName'])) {
             echo json_encode([ 'error' => 'Please enter your last name.' ]);
@@ -68,7 +70,7 @@ switch ($endpoint) {
             echo json_encode([ 'error' => 'You must agree with the GDPR requirements.' ]);
         } else {
             echo json_encode($api->application(
-                $_POST['firstName'], $_POST['lastName'], $_POST['dateOfBirth'],
+                $_POST['event'], $_POST['firstName'], $_POST['lastName'], $_POST['dateOfBirth'],
                 $_POST['emailAddress'], $_POST['phoneNumber'], $_POST['gender'],
                 $_POST['shirtSize'], $_POST['preferences'], toBool($_POST['available']),
                 toBool($_POST['hotel']), toBool($_POST['whatsApp'])));

@@ -18,6 +18,7 @@ class RegistrationDatabase {
 
     private ?array $events = null;
     private ?array $registrations = null;
+    private ?int $registrationRowCount = null;
 
     public function __construct(GoogleSheet $sheet) {
         $this->sheet = $sheet;
@@ -34,6 +35,29 @@ class RegistrationDatabase {
             $this->initializeDatabase();
 
         return $this->registrations;
+    }
+
+    // Creates a new registration in the database. All values are required. An access code for the
+    // new volunteer will be created automagically. The new Registration will be returned.
+    public function createRegistration(
+            string $event, string $firstName, string $lastName, string $gender, string $dateOfBirth,
+            string $emailAddress, string $phoneNumber): Registration {
+        if (!$this->registrations)
+            $this->initializeDatabase();
+
+        if (!$this->sheet->writable())
+            throw new \Error('Unable to write registrations to a read-only database.');
+
+        $spreadsheetRow = Registration::CreateSpreadsheetRow(
+                $this->events, $event, $firstName, $lastName, $gender, $dateOfBirth,
+                $emailAddress, $phoneNumber);
+
+        $registration = new Registration($spreadsheetRow, $this->events);
+
+        $this->sheet->writeRow('A' . (++$this->registrationRowCount), $spreadsheetRow);
+        $this->registrations[] = $registration;
+
+        return $registration;
     }
 
     // ---------------------------------------------------------------------------------------------
@@ -60,5 +84,7 @@ class RegistrationDatabase {
 
             $this->registrations[] = new Registration($registrationData[$rowIndex], $this->events);
         }
+
+        $this->registrationRowCount = count($registrationData);
     }
 }

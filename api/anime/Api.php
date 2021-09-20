@@ -35,6 +35,7 @@ class Api {
      * merge applications with previous events when sufficient information is available. All the
      * parameters have been syntactically validated prior to hitting this code.
      *
+     * @param event Identifier of the event that the volunteer is applying for.
      * @param firstName First name of the volunteer that's applying.
      * @param lastName Last name of the volunteer that's applying.
      * @param dateOfBirth Date of birth (YYYY-MM-DD) of that volunteer.
@@ -48,13 +49,29 @@ class Api {
      * @param whatsApp Whether they would like to be part of the WhatsApp group.
      * @see https://github.com/AnimeNL/volunteer-portal/blob/main/API.md#apiapplication
      */
-    public function application(string $firstName, string $lastName, string $dateOfBirth,
-                                string $emailAddress, string $phoneNumber, string $gender,
-                                string $shirtSize, string $preferences, bool $available,
-                                bool $hotel, bool $whatsApp) {
+    public function application(string $event, string $firstName, string $lastName,
+                                string $dateOfBirth, string $emailAddress, string $phoneNumber,
+                                string $gender, string $shirtSize, string $preferences,
+                                bool $available, bool $hotel, bool $whatsApp) {
+        $database = $this->getRegistrationDatabase(/* writable= */ true);
+        if ($database) {
+            // TODO: Update existing registrations when they exist.
+
+            // TODO: Validate the event.
+            $registration = $database->createRegistration(
+                    $event, $firstName, $lastName, $gender, $dateOfBirth, $emailAddress,
+                    $phoneNumber);
+
+            // TODO: Send an e-mail to the volunteering leads.
+            return [
+                //'accessCode'    => $registration->getAccessCode(),
+                'error'         => 'Access code: ' . $registration->getAccessCode(),
+            ];
+        }
+
         return [
-            'accessCode'    => '1234',
-            //'error'         => 'Message',
+            //'accessCode'    => '1234',
+            'error'         => 'The database was not available...',
         ];
     }
 
