@@ -57,7 +57,9 @@ class Api {
         if ($database) {
             // TODO: Update existing registrations when they exist.
 
-            // TODO: Validate the event.
+            if (!$database->isValidEvent($event))
+                return [ 'error' => 'The event "' . $event . '" is not known to the database.' ];
+
             $registration = $database->createRegistration(
                     $event, $firstName, $lastName, $gender, $dateOfBirth, $emailAddress,
                     $phoneNumber);

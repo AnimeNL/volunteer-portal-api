@@ -37,6 +37,14 @@ class RegistrationDatabase {
         return $this->registrations;
     }
 
+    // Returns whether the given |$event| is an event known to the database.
+    public function isValidEvent(string $event): bool {
+        if (!$this->registrations)
+            $this->initializeDatabase();
+
+        return in_array($event, $this->events);
+    }
+
     // Creates a new registration in the database. All values are required. An access code for the
     // new volunteer will be created automagically. The new Registration will be returned.
     public function createRegistration(
