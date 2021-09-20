@@ -41,6 +41,8 @@ class Registration {
     // Number of colums in the shreadsheet that contain fixed data rather than events.
     public const DATA_COLUMN_COUNT = 8;
 
+    private int $rowNumber;
+
     private string $firstName;
     private string $lastName;
     private string $gender;
@@ -80,7 +82,9 @@ class Registration {
 
     // Initializes the Registration object. Should only be called by the RegistrationDatabase. It
     // is assumed that validity of the |$spreadsheetRow| has been asserted already.
-    public function __construct(array $spreadsheetRow, array $events) {
+    public function __construct(array $spreadsheetRow, int $rowNumber, array $events) {
+        $this->rowNumber = $rowNumber;
+
         $this->firstName = $spreadsheetRow[0];
         $this->lastName = $spreadsheetRow[1];
         $this->gender = $spreadsheetRow[2];
@@ -116,6 +120,11 @@ class Registration {
 
         $this->authToken = SecurityToken::GenerateAuthToken($this->accessCode, $this->emailAddress);
         $this->userToken = SecurityToken::GenerateUserToken($this->accessCode, $this->emailAddress);
+    }
+
+    // Returns the number of the row on which this registration's information was written.
+    public function getRowNumber(): int {
+        return $this->rowNumber;
     }
 
     // Returns the first name of the person represented in this volunteer registration.

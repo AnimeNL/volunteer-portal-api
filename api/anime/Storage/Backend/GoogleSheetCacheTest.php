@@ -25,6 +25,13 @@ class GoogleSheetCacheTest extends \PHPUnit\Framework\TestCase {
 
         $this->assertEquals(GoogleSheetCache::determineGridPosition('1'), [ 0, 0 ]);
         $this->assertEquals(GoogleSheetCache::determineGridPosition('1', [ 0, 0 ]), [ 701, 0 ]);
+
+        $this->assertEquals(GoogleSheetCache::indexToColumn(0), 'A');
+        $this->assertEquals(GoogleSheetCache::indexToColumn(5), 'F');
+        $this->assertEquals(GoogleSheetCache::indexToColumn(25), 'Z');
+        $this->assertEquals(GoogleSheetCache::indexToColumn(26), 'AA');
+        $this->assertEquals(GoogleSheetCache::indexToColumn(701), 'ZZ');
+        $this->assertEquals(GoogleSheetCache::indexToColumn(702), 'AAA');
     }
 
     // Verifies that selection of particular items in the grid continues to work, even for cached

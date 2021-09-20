@@ -105,7 +105,7 @@ class GoogleSheetCache extends GoogleSheet {
     }
 
     // Returns the index associated with the given |$column|, which is in "AA"-like Sheet syntax.
-    private static function columnToIndex(string $column): int {
+    public static function columnToIndex(string $column): int {
         $normalizedColumn = strtoupper($column);
         $index = 0;
 
@@ -115,8 +115,21 @@ class GoogleSheetCache extends GoogleSheet {
         return $index - 1;
     }
 
+    // Returns the column ("AA") that is associated with the numeric |$index|, zero-based.
+    public static function indexToColumn(int $index): string {
+        $column = '';
+
+        while ($index >= 0) {
+            $remainder = $index % 26;
+            $column = chr($remainder + 64 + 1) . $column;
+            $index = ($index - $remainder - 1) / 26;
+        }
+
+        return $column;
+    }
+
     // Returns the index associated with the given |$row|, which is one-indexed.
-    private static function rowToIndex(string $row): int {
+    public static function rowToIndex(string $row): int {
         return intval($row, /* base= */ 10) - 1;
     }
 }

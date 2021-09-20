@@ -55,14 +55,30 @@ class Api {
                                 bool $available, bool $hotel, bool $whatsApp) {
         $database = $this->getRegistrationDatabase(/* writable= */ true);
         if ($database) {
-            // TODO: Update existing registrations when they exist.
-
             if (!$database->isValidEvent($event))
                 return [ 'error' => 'The event "' . $event . '" is not known to the database.' ];
 
-            $registration = $database->createRegistration(
-                    $event, $firstName, $lastName, $gender, $dateOfBirth, $emailAddress,
-                    $phoneNumber);
+            $registrations = $database->getRegistrations();
+            $registration = null;
+
+            foreach ($registrations as $candidate) {
+                if (strtolower($candidate->getEmailAddress()) !== strtolower($emailAddress))
+                    continue;  // non-matching e-mail address
+
+                if ($candidate->getDateOfBirth() !== $dateOfBirth)
+                    continue;  // non-matching date of birth
+
+                // TODO: Bail out if the |$candidate| already registered for the |$event|.
+
+                $registration = $database->createApplication($candidate, $event);
+                break;
+            }
+
+            if (!$registration) {
+                $registration = $database->createRegistration(
+                        $event, $firstName, $lastName, $gender, $dateOfBirth, $emailAddress,
+                        $phoneNumber);
+            }
 
             // TODO: Send an e-mail to the volunteering leads.
             return [

@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Anime\Storage;
 
 use Anime\Storage\Backend\GoogleSheet;
+use Anime\Storage\Backend\GoogleSheetCache;
 use Anime\Storage\Model\Registration;
 
 // Provides access to the volunteer registrations. These are unique per environment, but shared
@@ -60,11 +61,42 @@ class RegistrationDatabase {
                 $this->events, $event, $firstName, $lastName, $gender, $dateOfBirth,
                 $emailAddress, $phoneNumber);
 
-        $registration = new Registration($spreadsheetRow, $this->events);
+        $registrationRowNumber = ++$this->registrationRowCount;
+        $registration = new Registration($spreadsheetRow, $registrationRowNumber, $this->events);
 
-        $this->sheet->writeRow('A' . (++$this->registrationRowCount), $spreadsheetRow);
+        $this->sheet->writeRow('A' . $registrationRowNumber, $spreadsheetRow);
         $this->registrations[] = $registration;
 
+        return $registration;
+    }
+
+    // Updates the given |$registration| to include their application for the given |$event|. We
+    // will not automatically store the rest of the information in the database, differences will
+    // be flagged in an e-mail to volunteering leads instead.
+    public function createApplication(Registration $registration, string $event): Registration {
+        if (!$this->registrations)
+            $this->initializeDatabase();
+
+        if (!$this->sheet->writable())
+            throw new \Error('Unable to write applications to a read-only database.');
+
+        $rowNumber = $registration->getRowNumber();
+        $columnIndex = null;
+
+        foreach ($this->events as $eventIndex => $eventIdentifier) {
+            if ($eventIdentifier !== $event)
+                continue;
+
+            $columnIndex = Registration::DATA_COLUMN_COUNT + $eventIndex;
+            break;
+        }
+
+        if (!$columnIndex)
+            throw new \Error('Unable to locate the column for the given event: "' . $event . '".');
+
+        $column = GoogleSheetCache::indexToColumn($columnIndex);
+
+        $this->sheet->writeCell($column . $rowNumber, 'Registered');
         return $registration;
     }
 
@@ -90,7 +122,8 @@ class RegistrationDatabase {
             if (count($registrationData[$rowIndex]) < Registration::DATA_COLUMN_COUNT)
                 continue;  // ignore rows with invalid data
 
-            $this->registrations[] = new Registration($registrationData[$rowIndex], $this->events);
+            $this->registrations[] = new Registration(
+                    $registrationData[$rowIndex], $rowIndex + 1, $this->events);
         }
 
         $this->registrationRowCount = count($registrationData);
