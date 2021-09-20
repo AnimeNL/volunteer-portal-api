@@ -118,6 +118,8 @@ class Api {
      */
     public function auth(string $emailAddress, string $accessCode) {
         $database = $this->getRegistrationDatabase(/* writable= */ false);
+        $expirationMinutes = $this->configuration->get('authentication/sessionTimeoutMinutes');
+
         if ($database) {
             $registrations = $database->getRegistrations();
 
@@ -130,7 +132,7 @@ class Api {
 
                 return [
                     'authToken'             => $registration->getAuthToken(),
-                    'authTokenExpiration'   => time() + /* 30 minutes= */ 1800,
+                    'authTokenExpiration'   => time() + $expirationMinutes * 60,
                 ];
             }
         }
