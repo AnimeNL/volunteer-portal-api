@@ -69,7 +69,7 @@ class Api {
                     continue;  // non-matching date of birth
 
                 $events = $candidate->getEvents();
-                if (array_key_exists($event, $events)) {
+                if (array_key_exists($event, $events) && $events[$event]['role'] !== 'Unregistered') {
                     return [
                         'error' => 'You already have been registered for this event, and cannot ' .
                                            'register again! Reach out to a senior if this is wrong.'
