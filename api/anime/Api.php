@@ -68,7 +68,13 @@ class Api {
                 if ($candidate->getDateOfBirth() !== $dateOfBirth)
                     continue;  // non-matching date of birth
 
-                // TODO: Bail out if the |$candidate| already registered for the |$event|.
+                $events = $candidate->getEvents();
+                if (array_key_exists($event, $events)) {
+                    return [
+                        'error' => 'You already have been registered for this event, and cannot ' .
+                                           'register again! Reach out to a senior if this is wrong.'
+                    ];
+                }
 
                 $registration = $database->createApplication($candidate, $event);
                 break;
