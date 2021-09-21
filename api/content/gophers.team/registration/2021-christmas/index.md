@@ -8,7 +8,7 @@ Check out this page for more information, the perks and expectations, and to app
 ## What is expected of you?
 
   * You're able to be present at the [Broodfabriek](https://de-broodfabriek.nl/) in Rijswijk from
-    9am on Saturday, all the way to 8pm on Sunday.
+    9am on Saturday, December 12, all the way to 8pm on Sunday, December 13.
 
   * You're able to help us out with about 12 hours of shifts during the festival. Any events that
     you _really_ want to attend as a visitor will of course be taken into account.

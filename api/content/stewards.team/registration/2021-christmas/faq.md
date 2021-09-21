@@ -29,6 +29,15 @@ course, if you are around on Friday, you'll be most welcome to help setting ever
 Please [send us an e-mail](mailto:security@animecon.nl) prior to signing up in case this will be an
 issue, and we'll do our best to accommodate your needs.
 
+### Would I be able to help out on Friday or Monday too?
+Absolutely. We'll be in the venue preparing for the festival all day Friday, and will be tearing
+everything down again on Monday. This is a unique opportunity to get a glimpse behind the scenes of
+a festival such as AnimeCon. It's casual, a lot of fun, and a great way to meet the rest of the
+broader organisation.
+
+Let one of the seniors know if you're in the area and are keen to help out during one of those days.
+Any help will be greatly appreciated, and dinner will be taken care of.
+
 ### What are your plans surrounding the Coronavirus?
 All Staff, volunteers and visitors must meet the requirements of the Dutch government that apply
 during our festival, including any rule changes that are announced shortly before or during the

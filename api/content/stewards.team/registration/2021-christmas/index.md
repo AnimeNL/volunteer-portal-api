@@ -19,7 +19,7 @@ security and first aid teams, then we are looking for **you**!
     taking place next year.
 
   * A paid-for spot to participate in our [professional steward training](training.html). This
-    training will be **mandatory** for all stewards helping out this time.
+    training will be **required** for all stewards helping out this time.
 
   * Sandwiches, snacks, drinks and other nibbles during the festival, as well as a place to relax in
     our Volunteer Lounge and a free volunteering t-shirt.

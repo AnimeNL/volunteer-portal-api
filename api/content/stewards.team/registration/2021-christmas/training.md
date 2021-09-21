@@ -3,7 +3,8 @@ and first aid teams. In order to make sure that you're fully prepared, we provid
 **professional steward training** that we require volunteers to participate in every other year.
 
 ## When will the training take place?
-Dates for the trainings for AnimeCon 2021: Christmas Edition have not been announced yet.
+Dates for the trainings for AnimeCon 2021: Christmas Edition have not been announced yet, but we
+anticipate them to happen near the end of November.
 
 ## Where will they be taking place?
 The trainings are hosted by the [EHBO College](https://ehbocollege.nl/) in Amersfoort. Their venue
