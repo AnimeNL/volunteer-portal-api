@@ -152,6 +152,11 @@ class Registration {
         return $this->emailAddress;
     }
 
+    // Returns whether the registration has an e-mail address associated with it.
+    public function hasEmailAddress(): bool {
+        return is_string($this->emailAddress) && strlen($this->emailAddress) > 0;
+    }
+
     // Returns the access code through which this registration can be authenticated.
     public function getAccessCode(): string {
         return $this->accessCode;

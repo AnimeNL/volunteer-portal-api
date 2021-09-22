@@ -62,8 +62,10 @@ class Api {
             $registration = null;
 
             foreach ($registrations as $candidate) {
-                if (strtolower($candidate->getEmailAddress()) !== strtolower($emailAddress))
+                if ($candidate->hasEmailAddress() &&
+                        strtolower($candidate->getEmailAddress()) !== strtolower($emailAddress)) {
                     continue;  // non-matching e-mail address
+                }
 
                 if ($candidate->getDateOfBirth() !== $dateOfBirth)
                     continue;  // non-matching date of birth

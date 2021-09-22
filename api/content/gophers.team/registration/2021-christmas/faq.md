@@ -38,6 +38,12 @@ broader organisation.
 Let one of the seniors know if you're in the area and are keen to help out during one of those days.
 Any help will be greatly appreciated, even if it's just for a couple of hours.
 
+### Will you reimburse my travel expenses?
+The AnimeCon festivals aim to be as affordable as possible for our attendees, as a consequence of
+which we unfortunately cannot reimburse travel expenses, nor any other types of expenses. If there
+are cases in which you feel we should make an exception, please do
+[send us an e-mail](mailto:gopherplanning@animecon.nl) so that we can discuss in detail.
+
 ### What are your plans surrounding the Coronavirus?
 All Staff, volunteers and visitors must meet the requirements of the Dutch government that apply
 during our festival, including any rule changes that are announced shortly before or during the
