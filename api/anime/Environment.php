@@ -21,6 +21,7 @@ class Environment {
     private string $applicationAddress;
     private array $events;
     private string $title;
+    private string $themeColor;
 
     private ?array $privilegedAccess;
     private ?array $registrationDatabase;
@@ -39,6 +40,7 @@ class Environment {
         $this->events = $events;
         $this->hostname = $hostname;
         $this->title = $settings['title'];
+        $this->themeColor = $settings['themeColor'];
 
         if (array_key_exists('privilegedAccess', $settings))
             $this->privilegedAccess = $settings['privilegedAccess'];
@@ -113,6 +115,11 @@ class Environment {
     // Returns the name of the Volunteer Portal instance, e.g. Volunteer Portal.
     public function getTitle(): string {
         return $this->title;
+    }
+
+    // Returns the theme color in which the application should be themed.
+    public function getThemeColor(): string {
+        return $this->themeColor;
     }
 
     // Returns an associative array with username => password combinations for privileged access.

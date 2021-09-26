@@ -15,14 +15,17 @@
     "environments": {
         "hostname.com": {
             // https://github.com/AnimeNL/volunteer-portal/blob/main/API.md#response-ienvironmentresponse
-            "contactName": "Admin",
-            "contactTarget": "mailto:info@example.com",
+            "title": "Volunteer Portal",
+            "themeColor": "#558b2f",
+
             "events": {
                 "event-identifier": {
                     "enableRegistration": false,
                 },
             },
-            "title": "Volunteer Portal",
+
+            "contactName": "Admin",
+            "contactTarget": "mailto:info@example.com",
 
             // E-mail address to which applications should be e-mailed.
             "applicationAddress": "info@example.com",
