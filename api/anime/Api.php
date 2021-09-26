@@ -176,10 +176,13 @@ class Api {
         }
 
         return [
+            'title'         => $this->environment->getTitle(),
+            'themeColor'    => $this->environment->getThemeColor(),
+
+            'events'        => $events,
+
             'contactName'   => $this->environment->getContactName(),
             'contactTarget' => $this->environment->getContactTarget(),
-            'events'        => $events,
-            'title'         => $this->environment->getTitle(),
         ];
     }
 
