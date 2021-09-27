@@ -16,7 +16,9 @@
         "hostname.com": {
             // https://github.com/AnimeNL/volunteer-portal/blob/main/API.md#response-ienvironmentresponse
             "title": "Volunteer Portal",
+
             "themeColor": "#558b2f",
+            "themeTitle": "Volunteer Team",
 
             "events": {
                 "event-identifier": {

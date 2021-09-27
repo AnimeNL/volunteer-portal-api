@@ -177,7 +177,9 @@ class Api {
 
         return [
             'title'         => $this->environment->getTitle(),
+
             'themeColor'    => $this->environment->getThemeColor(),
+            'themeTitle'    => $this->environment->getThemeTitle(),
 
             'events'        => $events,
 

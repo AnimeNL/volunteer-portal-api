@@ -51,7 +51,9 @@ class EnvironmentTest extends \PHPUnit\Framework\TestCase {
             'environments' => [
                 'example.com'   => [
                     'title'                 => 'Title',
+
                     'themeColor'            => '#ffffff',
+                    'themeTitle'            => 'Volunteer Team',
 
                     'events'                => [
                         '2021-event'    => [
@@ -88,6 +90,7 @@ class EnvironmentTest extends \PHPUnit\Framework\TestCase {
         $this->assertEquals('info@example.com', $environment->getApplicationAddress());
         $this->assertEquals('Title', $environment->getTitle());
         $this->assertEquals('#ffffff', $environment->getThemeColor());
+        $this->assertEquals('Volunteer Team', $environment->getThemeTitle());
 
         $this->assertEquals(1, count($environment->getEvents()));
         {

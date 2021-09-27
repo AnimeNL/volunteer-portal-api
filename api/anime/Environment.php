@@ -22,6 +22,7 @@ class Environment {
     private array $events;
     private string $title;
     private string $themeColor;
+    private string $themeTitle;
 
     private ?array $privilegedAccess;
     private ?array $registrationDatabase;
@@ -40,7 +41,9 @@ class Environment {
         $this->events = $events;
         $this->hostname = $hostname;
         $this->title = $settings['title'];
+
         $this->themeColor = $settings['themeColor'];
+        $this->themeTitle = $settings['themeTitle'];
 
         if (array_key_exists('privilegedAccess', $settings))
             $this->privilegedAccess = $settings['privilegedAccess'];
@@ -120,6 +123,11 @@ class Environment {
     // Returns the theme color in which the application should be themed.
     public function getThemeColor(): string {
         return $this->themeColor;
+    }
+
+    // Returns the title of the theme, as should be displayed on the portal.
+    public function getThemeTitle(): string {
+        return $this->themeTitle;
     }
 
     // Returns an associative array with username => password combinations for privileged access.
