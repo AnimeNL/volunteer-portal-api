@@ -28,6 +28,10 @@ class Validation {
                 'type' => 'bool'
             ],
             [
+                'property' => 'dates',
+                'type' => 'array[dates]',
+            ],
+            [
                 'property' => 'timezone',
                 'type' => 'string'
             ],
@@ -56,6 +60,20 @@ class Validation {
 
             $value = $input[$field['property']];
             switch ($field['type']) {
+                case 'array[dates]':
+                    if (!is_array($value))
+                        throw new \Exception($prefix . ' was expected to be an array.');
+
+                    if (count($value) !== 2)
+                        throw new \Exception($prefix . ' was expected have two entries.');
+
+                    foreach ($value as $date) {
+                        if (!preg_match('/^\d{4}\-\d{2}\-\d{2}$/s', $date))
+                            throw new \Exception($prefix . ' was expected to contain YYYY-MM-DD values.');
+                    }
+
+                    break;
+
                 case 'bool':
                     if (!is_bool($value))
                         throw new \Exception($prefix . ' was expected to be a boolean.');

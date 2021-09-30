@@ -75,6 +75,8 @@ class EnvironmentTest extends \PHPUnit\Framework\TestCase {
                     'enableContent'         => true,
                     'enableRegistration'    => true,
                     'enableSchedule'        => false,
+
+                    'dates'                 => [ '2020-06-01', '2020-06-03' ],
                     'timezone'              => 'Europe/London',
                 ],
             ],

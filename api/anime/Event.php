@@ -30,6 +30,7 @@ class Event {
         $this->enableRegistration = $settings['enableRegistration'];
         $this->enableSchedule = $settings['enableSchedule'];
         $this->identifier = $identifier;
+        $this->dates = $settings['dates'];
         $this->timezone = $settings['timezone'];
         $this->website = $settings['website'] ?? null;
     }
@@ -62,6 +63,12 @@ class Event {
     // Returns an URL-safe representation of the event's name, e.g. portalcon-2021.
     public function getIdentifier(): string {
         return $this->identifier;
+    }
+
+    // Returns the dates during which the event will take place, as an array with two entries:
+    // [ /* start= */ "YYYY-MM-DD", /* end= */ "YYYY-MM-DD" ].
+    public function getDates(): array {
+        return $this->dates;
     }
 
     // Returns the timezone in which the event takes place, e.g. Europe/London.
