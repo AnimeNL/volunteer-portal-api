@@ -205,7 +205,7 @@ if (array_key_exists('event', $_GET) && array_key_exists($_GET['event'], $events
     <head>
         <meta charset="utf-8" />
         <title><?php echo $environment->getTitle(); ?> - Statistics</title>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" />
         <script src="https://www.gstatic.com/charts/loader.js"></script>
     </head>
     <body>
