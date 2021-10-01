@@ -177,7 +177,7 @@ if (!$currentEvent) {
 
 ?>
                     <div class="col">
-                        <div class="card shadow-sm p-4">
+                        <div class="card shadow-sm p-4" style="height: 100%">
                             <h3><?php echo $registration->getFirstName() . ' ' . $registration->getLastName(); ?></h3>
                             <p>
 <?php
