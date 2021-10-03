@@ -14,3 +14,4 @@ In order to run this service, you will need access to a server that supports PHP
   1. Create a `api/configuration/configuration.json5` file based on [the example](api/configuration/configuration.example.json5).
   1. Create a `api/configuration/google-credentials.json` file containing [Google authorization credentials](https://github.com/googleapis/google-api-php-client/blob/master/docs/oauth-web.md#create-authorization-credentials).
   1. Run `api/google-auth.php` on the CLI to establish an authorization token.
+  1. Set up `api/services/execute.php` to be executed every minute using a cronjob.
