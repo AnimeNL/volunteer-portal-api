@@ -12,6 +12,9 @@ interface ServiceLog {
     // Called when the service manager has flushed the execution queue.
     public function onFinish(): void;
 
+    // Called when a system error occurs within the services framework.
+    public function onSystemError(string $error): void;
+
     // Called when the service identified by |$identifier| has finished executing. The |$runtime|
     // indicates the time taken by the service's execution routine in milliseconds.
     public function onServiceExecuted(string $identifier, float $runtime): void;

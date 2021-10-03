@@ -1,5 +1,5 @@
 <?php
-// Copyright 2017 Peter Beverloo. All rights reserved.
+// Copyright 2021 Peter Beverloo. All rights reserved.
 // Use of this source code is governed by the MIT license, a copy of which can
 // be found in the LICENSE file.
 
@@ -20,8 +20,21 @@ $serviceManager = new ServiceManager($serviceLog);
 $serviceManager->loadState();
 
 // Register all the services known to the configuration file with the |$serviceManager|.
-foreach (Configuration::getInstance()->get('services') as $service)
-    $serviceManager->registerService(new $service['class']($service['options']));
+foreach (Configuration::getInstance()->get('services') as $service) {
+    if (!array_key_exists('class', $service) || !array_key_exists('frequency', $service)
+            || !array_key_exists('identifier', $service)) {
+        $serviceLog->onSystemError('Incomplete service configuration found, ignoring.');
+        continue;
+    }
+
+    $options = [];
+    if (array_key_exists('options', $service) && is_array($service['options']))
+        $options = $service['options'];
+
+    $class = __NAMESPACE__ . '\\' . $service['class'];
+    $serviceManager->registerService(
+            new $class($options, $service['frequency'], $service['identifier']));
+}
 
 $serviceManager->execute($force);
 $serviceManager->saveState();

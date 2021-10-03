@@ -18,6 +18,8 @@ class ServiceManagerTest extends \PHPUnit\Framework\TestCase {
                 $this->finished++;
             }
 
+            public function onSystemError(string $error): void { /* todo */ }
+
             public function onServiceExecuted(string $identifier, float $runtime) : void {
                 $this->log[] = ['executed', $identifier];
                 $runtime;  // unused

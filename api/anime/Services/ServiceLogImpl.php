@@ -17,7 +17,7 @@ use Nette\Mail\SendmailMailer;
 // sending e-mail alerts, will be done lazily after the service manager's execution queue is empty.
 class ServiceLogImpl implements ServiceLog {
     // File in which the service log will write error messages. Marked public for testing purposes.
-    public const ERROR_LOG = __DIR__ . '/../../configuration/error.log';
+    public const ERROR_LOG = __DIR__ . '/../../cache/error.log';
 
     private $isTest;
     private $mailer;
@@ -38,6 +38,11 @@ class ServiceLogImpl implements ServiceLog {
         return count($this->messages);
     }
 
+    // Called when a system error occurs within the services framework.
+    public function onSystemError(string $error): void {
+        $this->messages[] = $this->createMessage('SYSTEM', 0, $error);
+    }
+
     // Called when the service manager has flushed the execution queue. Log any new error messages
     // to the |ERROR_LOG| file and send an alert to the people configured to receive it.
     public function onFinish(): void {
@@ -56,20 +61,20 @@ class ServiceLogImpl implements ServiceLog {
         if ($this->failures == 0)
             return;
 
-        $configuration = Configuration::getInstance();
+        $configuration = Configuration::getInstance()->get('logging');
 
         // E-mail alerts can be disabled by the configuration, but force-enable them for tests.
-        if (!$configuration->get('services/logging/alerts') && !$this->isTest)
+        if (!$configuration['alerts'] && !$this->isTest)
             return;
 
         // Compose an e-mail message for sending out an alert message. The recipients of this
         // message are defined in the main configuration file.
         $alert = new Message();
-        $alert->setFrom($configuration->get('services/logging/alertSender'))
+        $alert->setFrom($configuration['alertSender'])
               ->setSubject('Service error occurred in the Volunteer Portal')
               ->setBody($contents);
 
-        foreach ($configuration->get('services/logging/alertRecipients') as $recipient)
+        foreach ($configuration['alertRecipients'] as $recipient)
             $alert->addTo($recipient);
 
         $this->mailer->send($alert);

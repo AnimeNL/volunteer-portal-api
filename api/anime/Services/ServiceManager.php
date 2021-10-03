@@ -12,7 +12,7 @@ namespace Anime\Services;
 class ServiceManager {
     // File in which the Service Manager will write the current state.
     // Marked as public for testing purposes only.
-    public const STATE_FILE = __DIR__ . '/../../configuration/state.json';
+    public const STATE_FILE = __DIR__ . '/../../cache/services.json';
 
     private $serviceLog;
     private $services;

@@ -10,6 +10,16 @@
         "sessionTimeoutMinutes": 43560,
     },
 
+    // Logging configuration for the portal, used for both API requests and the backend service
+    // infrastructure. E-mails will be sent when alerting has been enabled.
+    "logging": {
+        // Whether e-mail alerts should be send when an error occurs.
+        "alerts": true,
+
+        "alertRecipients": [ "info@example.com" ],
+        "alertSender": "services@example.com",
+    },
+
     // Object containing all the environments available for the volunteer portal. The key for each
     // entry is the hostname through which the content will be served.
     "environments": {
@@ -61,16 +71,17 @@
         }
     },
 
-    "services": {
-        "logging": {
-            // Whether e-mail alerts should be send when a service error occurs.
-            "alerts": false,
+    // Array of the services that should be running as part of the portal. These are actions that
+    // will be executed at a particular cadence, even when no visitors visit the portal.
+    "services": [
+        {
+            "class": "ExampleService",
+            "frequency": 30,  // in minutes
+            "identifier": "example-service",
 
-            // When enabled, list of e-mail addresses that should be receiving alerts.
-            "alertRecipients": [ "webmaster@example.com" ],
-
-            // When enabled, e-mail address from which alerts should originate.
-            "alertSender": "info@example.com",
+            "options": {
+                // Any additional options that should be made available go here.
+            }
         }
-    },
+    ]
 }
