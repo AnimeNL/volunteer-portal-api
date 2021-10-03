@@ -21,6 +21,15 @@ const VALUE_INPUT_OPTION_USER_ENTERED = 'USER_ENTERED';
 // class operates on the assumption that interaction is read-write, but a specialized class is
 // available for enabling cache-driven read-only interactions.
 class GoogleSheet {
+    // Maximum value to consider for the column in a spreadsheet, as a string.
+    protected const MAXIMUM_COLUMN = 'ZZ';
+
+    // Maximum value to consider for the row in a spreadsheet, as a string.
+    protected const MAXIMUM_ROW = '999';
+
+    // Maximum cell to consider in the spreadsheet. Aggregates the two aforementioned values.
+    private const MAXIMUM_CELL = self::MAXIMUM_COLUMN . self::MAXIMUM_ROW;
+
     protected Cache $cache;
     private Google_Service_Sheets $service;
     private string $spreadsheetId;
@@ -202,6 +211,16 @@ class GoogleSheet {
     // a private method, but not marked as such to enable testing.
     public function getCacheKey(): string {
         return 'GS.' . sha1($this->spreadsheetId . $this->sheet);
+    }
+
+    // Safely update the cached version of this GoogleSheet instance. This is done by fetching all
+    // contents from the spreadsheet, and updating the local item only when that was successful. An
+    // exception will be thrown when this operation could not be executed successfully.
+    public function updateCachedRepresentation(): void {
+        $cacheKey = $this->getCacheKey();
+        $cacheItem = $this->cache->getItem($cacheKey);
+
+        $this->cache->save($cacheItem->set(self::get('A1:' . self::MAXIMUM_CELL)));
     }
 
     // Returns whether the sheet has been opened in writable mode.

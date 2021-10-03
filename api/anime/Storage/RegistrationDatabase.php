@@ -25,6 +25,10 @@ class RegistrationDatabase {
         $this->sheet = $sheet;
     }
 
+    public function getSheet(): GoogleSheet {
+        return $this->sheet;
+    }
+
     // ---------------------------------------------------------------------------------------------
     // Registration Database API
     // ---------------------------------------------------------------------------------------------

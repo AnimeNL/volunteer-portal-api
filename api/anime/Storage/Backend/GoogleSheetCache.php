@@ -10,17 +10,6 @@ namespace Anime\Storage\Backend;
 // Cached version of the GoogleSheet that only allows read operations. May still connect with the
 // Google Sheet API in case the stored cache does not exist, and has to be established.
 class GoogleSheetCache extends GoogleSheet {
-    // Maximum value to consider for the column in a spreadsheet, as a string.
-    private const MAXIMUM_COLUMN = 'ZZ';
-
-    // Maximum value to consider for the row in a spreadsheet, as a string.
-    private const MAXIMUM_ROW = '999';
-
-    // Maximum cell to consider in the spreadsheet. Aggregates the two aforementioned values.
-    private const MAXIMUM_CELL = self::MAXIMUM_COLUMN . self::MAXIMUM_ROW;
-
-    // ---------------------------------------------------------------------------------------------
-
     protected function get(string $range): ?array {
         $cacheKey = $this->getCacheKey();
         $cacheItem = $this->cache->getItem($cacheKey);
@@ -29,7 +18,7 @@ class GoogleSheetCache extends GoogleSheet {
         // cache item. We will retrieve the intended sub-sections as a second step. We naively
         // assume that all data is contained in <=676 columns and <=999 rows.
         if (!$cacheItem->isHit())
-            $this->cache->save($cacheItem->set(parent::get('A1:' . self::MAXIMUM_CELL)));
+            $this->updateCachedRepresentation();
 
         $spreadsheet = $cacheItem->get();
 
@@ -94,9 +83,9 @@ class GoogleSheetCache extends GoogleSheet {
         if (!strlen($column) && !strlen($row))
             throw new \Exception('Unexpected matches for the given cell parameter: ' . $cell);
         else if (!strlen($column))
-            $column = $referenceCell ? self::MAXIMUM_COLUMN : 'A';
+            $column = $referenceCell ? GoogleSheet::MAXIMUM_COLUMN : 'A';
         else if (!strlen($row))
-            $row = $referenceCell ? self::MAXIMUM_ROW : '1';
+            $row = $referenceCell ? GoogleSheet::MAXIMUM_ROW : '1';
 
         return [
             self::columnToIndex($column),
