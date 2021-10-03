@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Anime\Storage\Backend;
 
+use Anime\Cache;
 use Anime\Configuration;
 
 // The GoogleClient class encapsulates authentication with the Google Cloud API, with a slightly
@@ -16,7 +17,7 @@ class GoogleClient {
     const AUTH_CONFIG_FILE = Configuration::CONFIGURATION_PATH . '/google-credentials.json';
 
     // File in which the access and refresh tokens will be stored.
-    const AUTH_TOKEN_FILE = Configuration::CONFIGURATION_PATH . '/google-credentials-token.json';
+    const AUTH_TOKEN_FILE = Cache::CACHE_PATH . '/google-credentials-token.json';
 
     // The client instance, potentially unauthenticated.
     private $client;

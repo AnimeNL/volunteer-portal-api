@@ -14,11 +14,14 @@ use Cache\Adapter\Filesystem\FilesystemCachePool;
 //
 // @see https://www.php-fig.org/psr/psr-6/
 class Cache extends FilesystemCachePool {
+    // Path to the cache directory on the filesystem.
+    public const CACHE_PATH = __DIR__ . '/../cache';
+
     private static $instance;
 
     public static function getInstance(): Cache {
         if (self::$instance === null) {
-            $adapter = new \League\Flysystem\Adapter\Local(__DIR__ . '/../cache/');
+            $adapter = new \League\Flysystem\Adapter\Local(self::CACHE_PATH);
             $filesystem = new \League\Flysystem\Filesystem($adapter);
 
             self::$instance = new static($filesystem);
