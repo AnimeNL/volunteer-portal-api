@@ -216,11 +216,16 @@ class GoogleSheet {
     // Safely update the cached version of this GoogleSheet instance. This is done by fetching all
     // contents from the spreadsheet, and updating the local item only when that was successful. An
     // exception will be thrown when this operation could not be executed successfully.
-    public function updateCachedRepresentation(): void {
+    public function updateCachedRepresentation(): array {
         $cacheKey = $this->getCacheKey();
         $cacheItem = $this->cache->getItem($cacheKey);
 
-        $this->cache->save($cacheItem->set(self::get('A1:' . self::MAXIMUM_CELL)));
+        $spreadsheet = self::get('A1:' . self::MAXIMUM_CELL);
+
+        $cacheItem->set($spreadsheet);
+        $this->cache->save($cacheItem);
+
+        return $spreadsheet;
     }
 
     // Returns whether the sheet has been opened in writable mode.

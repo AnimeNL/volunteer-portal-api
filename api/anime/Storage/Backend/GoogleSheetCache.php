@@ -14,13 +14,15 @@ class GoogleSheetCache extends GoogleSheet {
         $cacheKey = $this->getCacheKey();
         $cacheItem = $this->cache->getItem($cacheKey);
 
+        $spreadsheet = null;
+
         // If the cache is not available yet, fetch the full sheet contents and store it in the
         // cache item. We will retrieve the intended sub-sections as a second step. We naively
         // assume that all data is contained in <=676 columns and <=999 rows.
-        if (!$cacheItem->isHit())
-            $this->updateCachedRepresentation();
-
-        $spreadsheet = $cacheItem->get();
+        if ($cacheItem->isHit())
+            $spreadsheet = $cacheItem->get();
+        else
+            $spreadsheet = $this->updateCachedRepresentation();
 
         // Identify the exact properties of the |$range| of values that the caller wants to obtain.
         // This can be "A1" for a cell, "A:A" for a column, "A1:1" for a row or "A2:B4" for a range.
