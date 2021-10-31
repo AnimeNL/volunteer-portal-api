@@ -5,9 +5,9 @@
 
 namespace Anime\Services;
 
-use Anime\Configuration;
-
 require __DIR__ . '/../../../vendor/autoload.php';
+
+\Anime\ErrorHandler::Install();
 
 // Pass -f or --force to force immediate execution of all services.
 $force = count(getopt('f', [ 'force' ])) > 0;
@@ -20,7 +20,7 @@ $serviceManager = new ServiceManager($serviceLog);
 $serviceManager->loadState();
 
 // Register all the services known to the configuration file with the |$serviceManager|.
-foreach (Configuration::getInstance()->get('services') as $service) {
+foreach (\Anime\Configuration::getInstance()->get('services') as $service) {
     if (!array_key_exists('class', $service) || !array_key_exists('frequency', $service)
             || !array_key_exists('identifier', $service)) {
         $serviceLog->onSystemError('Incomplete service configuration found, ignoring.');

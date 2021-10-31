@@ -25,7 +25,7 @@ class ServiceManagerTest extends \PHPUnit\Framework\TestCase {
                 $runtime;  // unused
             }
 
-            public function onServiceException(string $identifier, float $runtime, $exception) : void {
+            public function onServiceFailed(string $identifier, float $runtime, $exception) : void {
                 $this->log[] = ['exception', $identifier, $exception->getMessage()];
                 $runtime;  // unused
             }

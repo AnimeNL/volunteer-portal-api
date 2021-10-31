@@ -19,7 +19,7 @@ interface ServiceLog {
     // indicates the time taken by the service's execution routine in milliseconds.
     public function onServiceExecuted(string $identifier, float $runtime): void;
 
-    // Called when the service identified by |$identifier| failed to execute because |$exception|
+    // Called when the service identified by |$identifier| failed to execute because an |$exception|
     // got thrown. The |$runtime| indicates the time taken by the service in milliseconds.
-    public function onServiceException(string $identifier, float $runtime, $exception): void;
+    public function onServiceFailed(string $identifier, float $runtime, $exception): void;
 }

@@ -7,12 +7,15 @@ declare(strict_types=1);
 
 namespace Anime\Services;
 
+use \Anime\Cache;
+use \Anime\ErrorHandler;
+
 // The Service Manager is responsible for tracking and executing services when their execution is
 // due. It will also keep state of failures, and inform the administrators of them.
 class ServiceManager {
     // File in which the Service Manager will write the current state.
     // Marked as public for testing purposes only.
-    public const STATE_FILE = __DIR__ . '/../../cache/services.json';
+    public const STATE_FILE = Cache::CACHE_PATH . '/services.json';
 
     private $serviceLog;
     private $services;
@@ -93,11 +96,14 @@ class ServiceManager {
                 $this->serviceLog->onServiceExecuted($identifier, $runtime);
 
             } catch (\Throwable $throwable) {
+                $runtime = microtime(true) - $startTime;
+
                 if (array_key_exists('TERM', $_SERVER))
                     echo $throwable;
+                else
+                    ErrorHandler::ReportException($throwable);
 
-                $runtime = microtime(true) - $startTime;
-                $this->serviceLog->onServiceException($identifier, $runtime, $throwable);
+                $this->serviceLog->onServiceFailed($identifier, $runtime, $throwable);
             }
 
             $this->state[$identifier] = $time;

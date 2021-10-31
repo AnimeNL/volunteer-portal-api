@@ -7,17 +7,17 @@ declare(strict_types=1);
 
 namespace Anime\Services;
 
+use Anime\Cache;
 use Anime\Configuration;
 
 use Nette\Mail\Message;
 use Nette\Mail\SendmailMailer;
 
-// Default implementation of the ServiceLog interface that will write failures to a |ERROR_LOG| and
-// inform a set of people of the failure by sending e-mail messages. Writing of the log, as well as
-// sending e-mail alerts, will be done lazily after the service manager's execution queue is empty.
+// Default implementation of the ServiceLog interface that will write execution information of the
+// services to a given service log. The portal's default error handler is used for services.
 class ServiceLogImpl implements ServiceLog {
     // File in which the service log will write error messages. Marked public for testing purposes.
-    public const ERROR_LOG = __DIR__ . '/../../cache/error.log';
+    public const SERVICE_LOG = Cache::CACHE_PATH . '/services.log';
 
     private $isTest;
     private $mailer;
@@ -54,30 +54,14 @@ class ServiceLogImpl implements ServiceLog {
         // Only write the |$contents| to the file when this is not ran as part of a unit test.
         // Ideally we would verify that the write was successful, but there's no good fallback.
         if (!$this->isTest)
-            file_put_contents(self::ERROR_LOG, $contents, FILE_APPEND);
+            file_put_contents(self::SERVICE_LOG, $contents, FILE_APPEND);
 
         // Early-return if there are no failures, because there is no need to send an alert message
         // for successful service execution.
         if ($this->failures == 0)
             return;
 
-        $configuration = Configuration::getInstance()->get('logging');
-
-        // E-mail alerts can be disabled by the configuration, but force-enable them for tests.
-        if (!$configuration['alerts'] && !$this->isTest)
-            return;
-
-        // Compose an e-mail message for sending out an alert message. The recipients of this
-        // message are defined in the main configuration file.
-        $alert = new Message();
-        $alert->setFrom($configuration['alertSender'])
-              ->setSubject('Service error occurred in the Volunteer Portal')
-              ->setBody($contents);
-
-        foreach ($configuration['alertRecipients'] as $recipient)
-            $alert->addTo($recipient);
-
-        $this->mailer->send($alert);
+        // TODO: Send e-mail updates when service execution could not be completed.
     }
 
     // Called when the service identified by |$identifier| has finished executing. The |$runtime|
@@ -87,9 +71,9 @@ class ServiceLogImpl implements ServiceLog {
         $this->messages[] = $this->createMessage($identifier, $runtime, 'Executed successfully.');
     }
 
-    // Called when the service identified by |$identifier| failed to execute because |$exception|
+    // Called when the service identified by |$identifier| failed to execute because an |$exception|
     // got thrown. The |$runtime| indicates the time taken by the service in milliseconds.
-    public function onServiceException(string $identifier, float $runtime, $exception): void {
+    public function onServiceFailed(string $identifier, float $runtime, $exception): void {
         $description  = $exception->getMessage();
         $description .= ' (' . basename($exception->getFile()) . ':' . $exception->getLine() . ')';
 

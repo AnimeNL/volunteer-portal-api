@@ -40,7 +40,7 @@ class ServiceLogTest extends \PHPUnit\Framework\TestCase {
         try {
             functionThatDoesNotExist();
         } catch (\Throwable $exception) {
-            $serviceLog->onServiceException('id-throws', 12.345, $exception);
+            $serviceLog->onServiceFailed('id-throws', 12.345, $exception);
         }
 
         $serviceLog->onFinish();

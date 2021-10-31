@@ -7,7 +7,7 @@ namespace Anime;
 
 use \Anime\Cache;
 use \Anime\Configuration;
-use \Error;
+use \Throwable;
 
 // Error handler for the AnimeCon Volunteer Portal system. Enables display of the errors to the
 // regular browser output or to the console (if applicable), as well as the ability to alert the
@@ -23,14 +23,22 @@ class ErrorHandler {
     // and will be in the format of "TIMESTAMP JSON". Entries will be appended to the file.
     public const ERROR_LOG = Cache::CACHE_PATH . '/error.log';
 
+    // Private instance of the error handler. There should only be one.
+    private static $instance;
+
     public static function Install() {
         ini_set('display_errors', self::ERROR_DISPLAY);
         ini_set('error_reporting', self::ERROR_REPORTING);
 
-        $handler = new self;
+        self::$instance = new self;
 
-        set_error_handler([ $handler, 'onError' ]);
-        set_exception_handler([ $handler, 'onException' ]);
+        set_error_handler([ self::$instance, 'onError' ]);
+        set_exception_handler([ self::$instance, 'onException' ]);
+    }
+
+    public static function ReportException(Throwable $error) {
+        if (self::$instance)
+            self::$instance->onException($error, /* $fatal= */ false);
     }
 
     // Called when a PHP error (at any level) occurs, with the given information. Not every error is
@@ -73,7 +81,7 @@ class ErrorHandler {
 
     // Called when a PHP exception occurs. Exceptions are always considered to be fatal, given that
     // invocation of this method implies that it hasn't been caught by code elsewhere.
-    public function onException($exception) {
+    public function onException($exception, bool $fatal = true) {
         $this->handleError([
             'type'      => 'E_EXCEPTION',
 
@@ -82,7 +90,7 @@ class ErrorHandler {
 
             'trace'     => $this->getFilteredTrace($exception),
 
-        ], /* $fatal = */ true);
+        ], $fatal);
     }
 
     // Handles an error that occurred, identified by the given |$context|. The |$fatal| argument
@@ -161,7 +169,7 @@ class ErrorHandler {
 
     // Generates a backtrace as an array based on the given |$exception|, or the current calling
     // stack when no exception has been given. Internal stack trace inputs may be omitted.
-    private function getFilteredTrace(?Error $exception): array {
+    private function getFilteredTrace(?Throwable $exception): array {
         $traceInput = $exception ? $exception->getTrace()
                                  : debug_backtrace();
 
