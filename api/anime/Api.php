@@ -30,6 +30,11 @@ class Api {
             throw new \Exception('The "' . $hostname . '" is not known as a valid environment.');
     }
 
+    // Returns the environment that's applicable to the current hostname.
+    public function getEnvironment(): Environment {
+        return $this->environment;
+    }
+
     /**
      * Allows an application to be submitted to the system, for a particular event. We'll try to
      * merge applications with previous events when sufficient information is available. All the
@@ -140,18 +145,6 @@ class Api {
         }
 
         return [ /* invalid credentials */ ];
-    }
-
-    /**
-     * Allows static content to be obtained for the registration sub-application, as well as other
-     * pages that can be displayed on the portal. The <App> component is responsible for routing.
-     *
-     * @see https://github.com/AnimeNL/volunteer-portal/blob/main/API.md#apicontent
-     */
-    public function content() {
-        return [
-            'pages' => $this->environment->getContent(),
-        ];
     }
 
     /**

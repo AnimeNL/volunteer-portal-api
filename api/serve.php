@@ -39,11 +39,11 @@ set_error_handler(function ($errno, $errstr, $errfile, $errline) {
     dispatchErrorMessage($errstr . ' (' . $errno . ') in ' . $errfile . ':' . $errline);
 }, E_ALL ^ E_NOTICE);
 
-$endpoint = $_SERVER['REQUEST_URI'];
+$requestUri = $_SERVER['REQUEST_URI'];
 $parameters = [];
 
-if (str_contains($endpoint, '?')) {
-    [ $endpoint, $parameterString ] = explode('?', $endpoint, 2);
+if (str_contains($requestUri, '?')) {
+    [ $requestUri, $parameterString ] = explode('?', $requestUri, 2);
 
     // Parse the |$parameterString| into |$parameters| as an associative array.
     parse_str($parameterString, $parameters);
@@ -63,7 +63,23 @@ function toBool(string $value): bool {
 }
 
 $api = new \Anime\Api($_SERVER['HTTP_HOST']);
-switch ($endpoint) {
+$endpoint = null;
+
+switch ($requestUri) {
+    case '/api/content':
+        $endpoint = new \Anime\Endpoints\ContentEndpoint;
+        break;
+}
+
+if ($endpoint) {
+    if (!$endpoint->validateInput($parameters, $_POST))
+        die();
+
+    echo json_encode($endpoint->execute($api, $parameters, $_POST));
+    die();
+}
+
+switch ($requestUri) {
     // https://github.com/AnimeNL/volunteer-portal/blob/main/API.md#apiapplication
     case '/api/application':
         if (!array_key_exists('event', $_POST) || !strlen($_POST['event'])) {
@@ -117,11 +133,6 @@ switch ($endpoint) {
         break;
 
     // https://github.com/AnimeNL/volunteer-portal/blob/main/API.md#apienvironment
-    case '/api/content':
-        echo json_encode($api->content());
-        break;
-
-    // https://github.com/AnimeNL/volunteer-portal/blob/main/API.md#apienvironment
     case '/api/environment':
         echo json_encode($api->environment());
         break;
@@ -146,6 +157,6 @@ switch ($endpoint) {
         break;
 
     default:
-        echo json_encode([ 'error' => 'Unknown API endpoint: ' . $endpoint ]);
+        echo json_encode([ 'error' => 'Unknown API endpoint: ' . $requestUri ]);
         break;
 }
