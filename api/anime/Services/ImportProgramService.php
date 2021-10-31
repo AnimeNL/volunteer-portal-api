@@ -1,11 +1,13 @@
 <?php
-// Copyright 2017 Peter Beverloo. All rights reserved.
+// Copyright 2021 Peter Beverloo. All rights reserved.
 // Use of this source code is governed by the MIT license, a copy of which can
 // be found in the LICENSE file.
 
 declare(strict_types=1);
 
 namespace Anime\Services;
+
+use Anime\Cache;
 
 // The import-program service is responsible for downloading the events and rooms in which events
 // will be taking place. The format of the input is entirely proprietary to AnimeCon, so an
@@ -14,10 +16,6 @@ namespace Anime\Services;
 // This service has the following configuration options that must be supplied:
 //
 //     'destination'  File to which the parsed program information should be written in JSON format.
-//
-//     'frequency'    Frequency at which to execute the service (in minutes). This value should most
-//                    likely be adjusted to run more frequently as the event comes closer.
-//
 //     'source'       Absolute URL to the JSON source document as described below.
 //
 // For the Anime 2017 conference, the JSON format has been chosen to serve as the input for this
@@ -31,7 +29,7 @@ namespace Anime\Services;
 //     'location'    Name of the location where the event will be taking place.
 //     'image'       Image describing the event. Relative to some base URL I haven't found yet.
 //     'comment'     Description of the event. May be NULL.
-//     'hidden'      Whether the event should be publicly visible.
+//     'hidden'      Whether the event should be publicly visible. (Integer)
 //     'locationId'  Internal id of the location in the AnimeCon database.
 //     'floor'       Floor on which the event takes place. Prefixed with 'floor-'. <digit>.
 //     'floorTitle'  Description of the floor on which the event takes place.
@@ -41,8 +39,8 @@ namespace Anime\Services;
 //
 // The current list of values used in the 'type' enumeration:
 //
-//     compo, concert, cosplaycompo, cosplayevent, event, event18, Internal, lecture, open,
-//     themevideolive, workshop
+//     compo, concert, cosplaycompo, cosplayevent, event, event18, eventplaza, gamecomp, gameevent,
+//     Internal, lecture, open, themevideolive, workshop
 //
 // A number of things have to be considered when considering this input format:
 //
@@ -53,7 +51,7 @@ namespace Anime\Services;
 // Because the input data may change from underneath us at any moment, a validation routing has been
 // included in this service that the input must pass before it will be considered for importing.
 // Failures will raise an exception, because they will need manual consideration.
-class ImportProgramService implements Service {
+class ImportProgramService extends ServiceBase {
     // Array containing the fields in a program entry that must be present for this importing
     // service to work correctly. The verification step will make sure that they're all present.
     // Marked as public for testing purposes only.
@@ -64,12 +62,11 @@ class ImportProgramService implements Service {
     private $ignoredTimeSlots;
 
     // Initializes the service with |$options|, defined in the website's configuration file.
-    public function __construct(array $options) {
+    public function __construct(array $options, ...$params) {
+        parent::__construct(...$params);
+
         if (!array_key_exists('destination', $options))
             throw new \Exception('The ImportProgramService requires a `destination` option.');
-
-        if (!array_key_exists('frequency', $options))
-            throw new \Exception('The ImportProgramService requires a `frequency` option.');
 
         if (!array_key_exists('source', $options))
             throw new \Exception('The ImportProgramService requires a `source` option.');
@@ -80,26 +77,11 @@ class ImportProgramService implements Service {
                                                              : [];
     }
 
-    // Returns a textual identifier for identifying this service.
-    public function getIdentifier() : string {
-        return 'import-program-service';
-    }
-
-    // Returns the frequency at which the service should run. This is defined in the configuration
-    // because we may want to run it more frequently as the event comes closer.
-    public function getFrequencyMinutes() : int {
-        return $this->options['frequency'];
-    }
-
     // Actually imports the program from the API endpoint defined in the options. The information
     // will be distilled per the class-level documentation block's quirks and written to the
     // destination file in accordance with our own intermediate format.
     public function execute() : void {
-        $sourceFile = $this->options['source'];
-
-        $inputData = file_get_contents($sourceFile);
-        if ($inputData === false)
-            throw new \Exception('Unable to load the source data: ' . $sourceFile);
+        $inputData = $this->fetchProgramSourceData();
 
         $input = json_decode($inputData, true);
         if ($input === null)
@@ -124,8 +106,26 @@ class ImportProgramService implements Service {
         $programData = json_encode($program);
 
         // Write the |$programData| to the destination file indicated in the configuration.
-        if (file_put_contents($this->options['destination'], $programData) != strlen($programData))
+        $destinationFile = Cache::CACHE_PATH . '/' . $this->options['destination'];
+
+        if (file_put_contents($destinationFile, $programData) != strlen($programData))
             throw new \Exception('Unable to write the program data to the destination file.');
+    }
+
+    // Fetches the program's source data from the source configured whilst running this service.
+    private function fetchProgramSourceData(): string {
+        $resource = curl_init();
+
+        curl_setopt($resource, CURLOPT_URL, $this->options['source']);
+        curl_setopt($resource, CURLOPT_RETURNTRANSFER, 1);
+
+        $response = curl_exec($resource);
+        curl_close($resource);
+
+        if ($resource === false)
+            throw new \Exception('Unable to load the source data: ' . $this->options['source']);
+
+        return $response;
     }
 
     // Filters events from |$input| that have a `tsId` value that's included on the ignore list for
