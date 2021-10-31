@@ -59,4 +59,7 @@ if ($validationResult !== true) {
     exit;
 }
 
-echo json_encode($endpoint->execute($api, $parameters, $_POST));
+$flags = array_key_exists('pretty', $parameters) ? JSON_PRETTY_PRINT : 0;
+
+echo json_encode($endpoint->execute($api, $parameters, $_POST), $flags);
+exit;
