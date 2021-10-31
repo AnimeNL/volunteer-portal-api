@@ -15,7 +15,7 @@ use \Anime\Endpoint;
 //
 // See https://github.com/AnimeNL/volunteer-portal/blob/main/API.md#apicontent
 class ContentEndpoint implements Endpoint {
-    public function validateInput(array $requestParameters, array $requestData): bool {
+    public function validateInput(array $requestParameters, array $requestData): bool | string {
         return true;  // no input is considered for this endpoint
     }
 

@@ -11,8 +11,9 @@ namespace Anime;
 // Split up in two methods: input validation, and endpoint activation.
 interface Endpoint {
     // Validates the given input data. Should check for required input, formatting, as well as
-    // length and syntax requirements. A default implementation is deliberately omitted.
-    public function validateInput(array $requestParameters, array $requestData): bool;
+    // length and syntax requirements. A default implementation is deliberately omitted. An error
+    // message may be returned, which will most likely be displayed to the client.
+    public function validateInput(array $requestParameters, array $requestData): bool | string;
 
     // Executes this endpoint considering the given |$api| and input data. An array should be
     // returned, which will be the response value of the API call.
