@@ -3,41 +3,12 @@
 // Use of this source code is governed by the MIT license, a copy of which can
 // be found in the LICENSE file.
 
-error_reporting((E_ALL | E_STRICT) & ~E_WARNING);
-ini_set('display_errors', 1);
-
 require __DIR__ . '/../vendor/autoload.php';
 
 Header('Access-Control-Allow-Origin: *');
 Header('Content-Type: application/json');
 
-function dispatchErrorMessage($errorMessage) {
-    $message = new \Nette\Mail\Message;
-    $message->setFrom('anime@' . $_SERVER['HTTP_HOST']);
-    $message->addTo('peter@animecon.nl');
-
-    ob_start();
-    var_dump($_POST);
-    $postContents = ob_get_clean();
-
-    $message->setSubject('Volunteer Portal Exception');
-    $message->setHtmlBody($errorMessage . '<br /><br /><pre>' . $postContents);
-
-    $mailer = new \Nette\Mail\SendmailMailer;
-    $mailer->send($message);
-}
-
-set_exception_handler(function ($exception) {
-    $message  = $exception->getMessage() . ' (' . $exception->getCode() . ') in ';
-    $message .= $exception->getFile() . ':' . $exception->getLine() . '<br /><br />';
-    $message .= $exception->getTraceAsString();
-
-    dispatchErrorMessage($message);
-});
-
-set_error_handler(function ($errno, $errstr, $errfile, $errline) {
-    dispatchErrorMessage($errstr . ' (' . $errno . ') in ' . $errfile . ':' . $errline);
-}, E_ALL ^ E_NOTICE);
+\Anime\ErrorHandler::Install();
 
 $requestUri = $_SERVER['REQUEST_URI'];
 $parameters = [];

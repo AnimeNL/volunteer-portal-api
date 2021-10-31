@@ -16,8 +16,14 @@
         // Whether e-mail alerts should be send when an error occurs.
         "alerts": true,
 
-        "alertRecipients": [ "info@example.com" ],
-        "alertSender": "services@example.com",
+        // Whether request data context ($_POST) should be included in the message.
+        "includePost": false,
+
+        // Who should receive the exception messages? Array of >=1 entries.
+        "recipients": [ "info@example.com" ],
+
+        // Who should be identified as the sender of exception messages?
+        "sender": "services@example.com",
     },
 
     // Object containing all the environments available for the volunteer portal. The key for each
