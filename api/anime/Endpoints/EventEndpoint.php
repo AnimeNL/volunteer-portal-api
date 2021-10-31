@@ -15,10 +15,20 @@ use \Anime\EnvironmentFactory;
 // `event` request parameter. The returned data is expected to have been (pre)filtered based on
 // the access level granted to the owner of the given `authToken`.
 //
-// TODO: Give environments a "privileged senior" bit or similar in configuration.json5
-//
 // See https://github.com/AnimeNL/volunteer-portal/blob/main/API.md#apievent
 class EventEndpoint implements Endpoint {
+    private const PRIVILEGE_NONE = 0;
+    private const PRIVILEGE_ALL = PHP_INT_MAX - 1;
+
+    // Privileges that can be assigned to individuals based on their access level, role, team and
+    // whether or not they've been marked as an administrator.
+    private const PRIVILEGE_ACCESS_CODES = 1;
+    private const PRIVILEGE_CROSS_ENVIRONMENT = 2;
+    private const PRIVILEGE_PHONE_NUMBERS = 4;
+
+    // List of hosts whose seniors have the ability to access volunteers of the other environments.
+    private const CROSS_ENVIRONMENT_HOSTS_ALLOWLIST = [ 'stewards.team '];
+
     public function validateInput(array $requestParameters, array $requestData): bool | string {
         if (!array_key_exists('authToken', $requestParameters))
             return 'Missing parameter: authToken';
@@ -33,8 +43,9 @@ class EventEndpoint implements Endpoint {
         $currentEnvironment = $api->getEnvironment();
         $currentEvent = $requestParameters['event'];
 
+        $userEnvironments = [ /* empty by default */ ];
+        $userPrivileges = self::PRIVILEGE_NONE;
         $userRegistration = null;
-        $userVisibility = [ $currentEnvironment ];
 
         // -----------------------------------------------------------------------------------------
         // (1) Find the |$userRegistration| based on the request variables.
@@ -46,27 +57,62 @@ class EventEndpoint implements Endpoint {
                 if ($registration->getAuthToken() !== $requestParameters['authToken'])
                     continue;  // non-matching authentication token
 
+                $userRegistration = $registration;
+
+                // Administrators have all access, so skip the additional access checks.
+                if ($registration->isAdministrator()) {
+                    $userPrivileges = self::PRIVILEGE_ALL;
+                    break;
+                }
+
                 $role = $registration->getEventAcceptedRole($currentEvent);
 
-                $userRegistration = $registration;
-                $userVisibility = $this->getEnvironmentsForRole($api, $role, $currentEvent);
+                // Access to phone numbers is limited to Staff and Senior members of our volunteer
+                // force, whereas cross-environment access is limited to an allowlist.
+                $isStaff = stripos($role, 'Staff') !== false;
+                $isSenior = stripos($role, 'Senior') !== false;
+
+                $isCrossEnvironmentAllowedHost = in_array(
+                        $currentEnvironment->getHostname(), self::CROSS_ENVIRONMENT_HOSTS_ALLOWLIST);
+
+                if ($isStaff || $isSenior)
+                    $userPrivileges |= self::PRIVILEGE_PHONE_NUMBERS;
+
+                if (($isStaff || $isSenior) && $isCrossEnvironmentAllowedHost)
+                    $userPrivileges |= self::PRIVILEGE_CROSS_ENVIRONMENT;
+
                 break;
+            }
+
+            // Assign the set of visible environments to |$userEnvironments| based on whether their
+            // registration was found, and whether they've got the CROSS_ENVIRONMENT privilege.
+            if ($userRegistration) {
+                $userEnvironments = [ $currentEnvironment ];
+
+                if ($userPrivileges & self::PRIVILEGE_CROSS_ENVIRONMENT) {
+                    foreach (EnvironmentFactory::getAll($api->getConfiguration()) as $environment) {
+                        if ($environment->getHostname() === $currentEnvironment->getHostname())
+                            continue;
+
+                        foreach ($environment->getEvents() as $environmentEvent) {
+                            if ($environmentEvent->getIdentifier() !== $currentEvent)
+                                continue;
+
+                            $userEnvironments[] = $environment;
+                            break;
+                        }
+                    }
+                }
             }
         }
 
         // -----------------------------------------------------------------------------------------
-        // (2) Load the program and list of events for the |$currentEnvironment|.
-        // -----------------------------------------------------------------------------------------
-
-        // TODO...
-
-        // -----------------------------------------------------------------------------------------
-        // (3) Iterate over the environments the |$userRegistration| has got access to.
+        // (2) Iterate over the environments the |$userRegistration| has got access to.
         // -----------------------------------------------------------------------------------------
 
         $volunteers = [];
 
-        foreach ($userVisibility as $environment) {
+        foreach ($userEnvironments as $environment) {
             $registrationDatabase = $currentEnvironmentRegistrationDatabase;
             if ($environment !== $currentEnvironment) {
                 $registrationDatabase =
@@ -88,19 +134,43 @@ class EventEndpoint implements Endpoint {
 
                 if (array_key_exists($token, $volunteers)) {
                     $volunteers[$token]['environments'][] = $environmentId;
-                } else {
-                    $volunteers[$token] = [
-                        'name'          => [
-                            $registration->getFirstName(),
-                            $registration->getLastName(),
-                        ],
-                        'identifier'    => $registration->getUserToken(),
-                        'environments'  => [ $environmentId ],
-                        'avatar'        => null,
-                    ];
+                    continue;
                 }
+
+                $information = [
+                    'name'          => [
+                        $registration->getFirstName(),
+                        $registration->getLastName(),
+                    ],
+                    'identifier'    => $registration->getUserToken(),
+                    'environments'  => [ $environmentId ],
+                ];
+
+                // Supplement privileged information to the volunteer's entry when allowed.
+                if ($userPrivileges & self::PRIVILEGE_ACCESS_CODES)
+                    $information['accessCode'] = $registration->getAccessCode();
+
+                if ($userPrivileges & self::PRIVILEGE_PHONE_NUMBERS)
+                    $information['phoneNumner'] = $registration->getPhoneNumber();
+
+                // Supplement information about the user's avatar when it can be found on the file-
+                // system. At some point we should optimize this check somehow.
+                $avatarFile = $registration->getUserToken() . '.jpg';
+                $avatarPath = Api::AVATAR_PATH . $avatarFile;
+
+                if (file_exists(Api::AVATAR_DIRECTORY . $avatarFile))
+                    $information['avatar'] = 'https://' . $environment->getHostname() . $avatarPath;
+
+                // Store the compiled |$information| structure for the current volunteer.
+                $volunteers[$token] = $information;
             }
         }
+
+        // -----------------------------------------------------------------------------------------
+        // (3) Load the program and list of events for the |$currentEnvironment|.
+        // -----------------------------------------------------------------------------------------
+
+        // TODO...
 
         // -----------------------------------------------------------------------------------------
         // (4) Sort, then return the formatted output to the API caller.
@@ -115,37 +185,5 @@ class EventEndpoint implements Endpoint {
             'locations'     => [],
             'volunteers'    => $volunteers,
         ];
-    }
-
-    // ---------------------------------------------------------------------------------------------
-
-    // Decides on the visible environments based on the given |$role|. Not all roles give access to
-    // cross-environment information, whereas others do. Environments which aren't configured for
-    // the given |$event| will be ignored.
-    private function getEnvironmentsForRole(Api $api, string $role, string $event): array {
-        $currentEnvironment = $api->getEnvironment();
-
-        $isStaff = stripos($role, 'Staff') !== false;
-        $isSenior = stripos($role, 'Senior') !== false;
-        $isStewards = $currentEnvironment->getHostname() === 'stewards.team';
-
-        // (Core) Staff and Senior Stewards have access to all environments. Filter the results from
-        // the factory by environments that have activity in the same |$event|.
-        if ($isStaff || ($isSenior && $isStewards)) {
-            $environments = [];
-            foreach (EnvironmentFactory::getAll($api->getConfiguration()) as $environment) {
-                foreach ($environment->getEvents() as $environmentEvent) {
-                    if ($environmentEvent->getIdentifier() !== $event)
-                        continue;
-
-                    $environments[] = $environment;
-                    break;
-                }
-            }
-
-            return $environments;
-        }
-
-        return [ $currentEnvironment ];
     }
 }
