@@ -173,6 +173,25 @@ class Registration {
         return $this->events;
     }
 
+    // Returns the role this volunteer has in the given |$event| when accepted. This will ignore any
+    // of the predetermined roles, such as just having registered.
+    public function getEventAcceptedRole(string $event): ?string {
+        if (!array_key_exists($event, $this->events))
+            return null;  // non-matching event identifier
+
+        $role = $this->events[$event]['role'];
+        switch ($role) {
+            case 'Unregistered':
+            case 'Registered':
+            case 'Cancelled':
+            case 'Rejected':
+            case '':
+                return null;
+        }
+
+        return $role;
+    }
+
     // Returns whether this registration represents an administrator on the Volunteer Portal.
     public function isAdministrator(): bool {
         return $this->administrator;

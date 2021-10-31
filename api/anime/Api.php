@@ -47,7 +47,14 @@ class Api {
     // Returns the RegistrationDatabase instance for the current environment. Immutable by default
     // unless the |$writable| argument has been set to TRUE.
     public function getRegistrationDatabase(bool $writable = false): ?RegistrationDatabase {
-        $settings = $this->environment->getRegistrationDatabaseSettings();
+        return $this->getRegistrationDatabaseForEnvironment($this->environment, $writable);
+    }
+
+    // Returns the RegistrationDatabase instance for a given |$environment|. Immutable by default
+    // unless the |$writable| argument has been set to TRUE.
+    public function getRegistrationDatabaseForEnvironment(
+            Environment $environment, bool $writable = false): ?RegistrationDatabase {
+        $settings = $environment->getRegistrationDatabaseSettings();
         if (!is_array($settings))
             return null;  // no data has been specified for this environment
 
