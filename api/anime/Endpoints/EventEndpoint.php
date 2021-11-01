@@ -14,6 +14,33 @@ use \Anime\EnvironmentFactory;
 use \Anime\Storage\Model\Registration;
 use \Anime\Storage\RegistrationDatabase;
 
+// Comparator for sorting IEventResponseEvent structures in ascending order by starting time.
+function CreateEventComparator() {
+    return function($lhs, $rhs) {
+        $result = $lhs['sessions'][0]['time'][0] - $rhs['sessions'][0]['time'][0];
+        if (!$result)
+            return $lhs['sessions'][0]['time'][1] - $rhs['sessions'][0]['time'][1];
+
+        return $result;
+    };
+}
+
+// Comperator for sorting x structures in ascending order by name.
+function CreateLocationComparator() {
+    return fn($lhs, $rhs) => strcmp($lhs['name'], $rhs['name']);
+}
+
+// Comparator for sorting IEventResponseVolunteer structures in ascending order by name.
+function CreateVolunteerComparator() {
+    return function($lhs, $rhs) {
+        $result = strcmp($lhs['name'][0], $rhs['name'][0]);
+        if (!$result)
+            return strcmp($lhs['name'][1], $rhs['name'][1]);
+
+        return $result;
+    };
+}
+
 // Allows full scheduling information to be requested about a particular event, indicated by the
 // `event` request parameter. The returned data is expected to have been (pre)filtered based on
 // the access level granted to the owner of the given `authToken`.
@@ -41,9 +68,13 @@ class EventEndpoint implements Endpoint {
     // The registration associated with the requesting user, if any.
     private Registration | null $registration;
 
+    // Cache of the location IDs that have already been assigned.
+    private array $locationCache;
+
     public function __construct() {
         $this->environments = [ /* empty by default */ ];
         $this->privileges = self::PRIVILEGE_NONE;
+        $this->locationCache = [];
     }
 
     public function validateInput(array $requestParameters, array $requestData): bool | string {
@@ -69,11 +100,13 @@ class EventEndpoint implements Endpoint {
         $volunteers = $this->populateVolunteers($event);
 
         $shifts = [];  // TODO: Assemble from the schedules, supplement |$events|
-        $locations = [];  // TODO: Assemble from |$events|
+        $locations = $this->populateLocations();
 
         // Sort each of the output arrays, and remove the associative keying since they should be
         // returned as lists, rather than indexed structures.
-        usort($volunteers, fn ($lhs, $rhs) => strcmp($lhs['name'][0], $rhs['name'][0]));
+        usort($events, CreateEventComparator());
+        usort($locations, CreateLocationComparator());
+        usort($volunteers, CreateVolunteerComparator());
 
         return [
             'events'        => $events,
@@ -181,15 +214,16 @@ class EventEndpoint implements Endpoint {
 
             foreach ($entry['sessions'] as $session) {
                 $sessions[] = [
-                    'location'  => '',  // TODO: Something chicken and egg?
+                    'location'  => $this->createLocationId($session['location'], $session['floor']),
                     'name'      => $session['name'],
                     'time'      => [ $session['begin'], $session['end'] ],
                 ];
             }
 
             $events[$entry['id']] = [
-                'hidden'    => !!$entry['hidden'],
-                'sessions'  => $sessions,
+                'hidden'        => !!$entry['hidden'],
+                'identifier'    => strval($entry['id']),
+                'sessions'      => $sessions,
             ];
         }
 
@@ -246,5 +280,37 @@ class EventEndpoint implements Endpoint {
         }
 
         return $volunteers;
+    }
+
+    // Populates the list of locations for the given event. This combines both the locations that
+    // are part of the main programme, as well as the ones introduced by the schedules.
+    private function populateLocations(): array {
+        $locations = [];
+
+        foreach ($this->locationCache as $name => [ 'area' => $area, 'hash' => $hash ]) {
+            $locations[] = [
+                'identifier'    => $hash,
+
+                'name'          => $name,
+                'area'          => $area,
+            ];
+        }
+
+        return $locations;
+    }
+
+    // Creates a hash of the given location |$name|. Cached results, so it's safe to call this
+    // method multiple times without worrying too much about performance.
+    private function createLocationId(string $name, mixed $area): string {
+        if (array_key_exists($name, $this->locationCache))
+            return $this->locationCache[$name]['hash'];
+
+        $hash = substr(base_convert(hash('fnv164', $name), 16, 32), 0, 8);
+        $this->locationCache[$name] = [
+            'area'      => strval($area),
+            'hash'      => $hash,
+        ];
+
+        return $hash;
     }
 }
