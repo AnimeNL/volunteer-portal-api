@@ -59,6 +59,9 @@ class EventEndpoint implements Endpoint {
     // List of hosts whose seniors have the ability to access volunteers of the other environments.
     private const CROSS_ENVIRONMENT_HOSTS_ALLOWLIST = [ 'stewards.team '];
 
+    // Salt used for hashing the location identifiers.
+    private const LOCATION_SALT = '3hhmgPw4';
+
     // The list of environments that the requesting user has access to.
     private array $environments;
 
@@ -344,7 +347,7 @@ class EventEndpoint implements Endpoint {
         if (array_key_exists($name, $this->locationCache))
             return $this->locationCache[$name]['hash'];
 
-        $hash = substr(base_convert(hash('fnv164', $name), 16, 32), 0, 8);
+        $hash = substr(base_convert(hash('fnv164', $name . self::LOCATION_SALT), 16, 32), 0, 8);
         $this->locationCache[$name] = [
             'area'      => strval($area),
             'hash'      => $hash,
