@@ -18,6 +18,7 @@ class Event {
     private string $identifier;
     private string $timezone;
     private string | null $program;
+    private array | null $areas;
     private string | null $website;
     private array | null $scheduleDatabase;
 
@@ -35,6 +36,7 @@ class Event {
         $this->dates = $settings['dates'];
         $this->timezone = $settings['timezone'];
         $this->program = $settings['program'] ?? null;
+        $this->areas = $settings['areas'] ?? null;
         $this->website = $settings['website'] ?? null;
 
         if (array_key_exists('scheduleDatabase', $settings))
@@ -85,6 +87,11 @@ class Event {
     // Returns the filename in which the event's program has been written down.
     public function getProgram(): ?string {
         return $this->program;
+    }
+
+    // Returns the mappings of area IDs to their names and icons.
+    public function getAreas(): ?array {
+        return $this->areas;
     }
 
     // Returns the URL to the website of the broader event.

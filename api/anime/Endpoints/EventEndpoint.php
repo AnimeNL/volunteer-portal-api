@@ -14,6 +14,11 @@ use \Anime\EnvironmentFactory;
 use \Anime\Storage\Model\Registration;
 use \Anime\Storage\RegistrationDatabase;
 
+// Comperator for sorting IEventResponse{Area,Location} structures in ascending order by name.
+function CreateAreaOrLocationComparator() {
+    return fn($lhs, $rhs) => strcmp($lhs['name'], $rhs['name']);
+}
+
 // Comparator for sorting IEventResponseEvent structures in ascending order by starting time.
 function CreateEventComparator() {
     return function($lhs, $rhs) {
@@ -23,11 +28,6 @@ function CreateEventComparator() {
 
         return $result;
     };
-}
-
-// Comperator for sorting x structures in ascending order by name.
-function CreateLocationComparator() {
-    return fn($lhs, $rhs) => strcmp($lhs['name'], $rhs['name']);
 }
 
 // Comparator for sorting IEventResponseVolunteer structures in ascending order by name.
@@ -100,15 +100,19 @@ class EventEndpoint implements Endpoint {
         $volunteers = $this->populateVolunteers($event);
 
         $shifts = [];  // TODO: Assemble from the schedules, supplement |$events|
+
+        $areas = $this->populateAreas($event);
         $locations = $this->populateLocations();
 
         // Sort each of the output arrays, and remove the associative keying since they should be
         // returned as lists, rather than indexed structures.
+        usort($areas, CreateAreaOrLocationComparator());
         usort($events, CreateEventComparator());
-        usort($locations, CreateLocationComparator());
+        usort($locations, CreateAreaOrLocationComparator());
         usort($volunteers, CreateVolunteerComparator());
 
         return [
+            'areas'         => $areas,
             'events'        => $events,
             'locations'     => $locations,
             'shifts'        => $shifts,
@@ -280,6 +284,41 @@ class EventEndpoint implements Endpoint {
         }
 
         return $volunteers;
+    }
+
+    // Populates a list of the areas present in the event. The areas are made available in the
+    // program's events, however, their names are contained in the portal's configuration.
+    private function populateAreas(string $event): array {
+        $currentEnvironment = $this->environments[/* first= */ 0][/* environment= */ 0];
+
+        $areas = [];
+        $mapping = [ /* empty by default */ ];
+
+        foreach ($currentEnvironment->getEvents() as $environmentEvent) {
+            if ($environmentEvent->getIdentifier() !== $event)
+                continue;  // unrelated event
+
+            $mapping = $environmentEvent->getAreas();
+            break;
+        }
+
+        foreach ($this->locationCache as [ 'area' => $area ]) {
+            if (array_key_exists($area, $areas))
+                continue;
+
+            if (array_key_exists($area, $mapping)) {
+                $areas[$area] = array_merge($mapping[$area], [
+                    'identifier'    => $area,
+                ]);
+            } else {
+                $areas[$area] = [
+                    'identifier'    => $area,
+                    'name'          => 'Area ' . $area,
+                ];
+            }
+        }
+
+        return $areas;
     }
 
     // Populates the list of locations for the given event. This combines both the locations that
