@@ -223,6 +223,7 @@ class EventEndpoint implements Endpoint {
                 $sessions[] = [
                     'location'  => $this->createLocationId($session['location'], $session['floor']),
                     'name'      => $session['name'],
+                    // TODO: description
                     'time'      => [ $session['begin'], $session['end'] ],
                 ];
             }
