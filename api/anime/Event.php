@@ -17,7 +17,9 @@ class Event {
     private bool $enableSchedule;
     private string $identifier;
     private string $timezone;
+    private string | null $program;
     private string | null $website;
+    private array | null $scheduleDatabase;
 
     public function __construct(string $identifier, array $settings) {
         $this->valid = Validation::validateEvent($settings);
@@ -32,7 +34,11 @@ class Event {
         $this->identifier = $identifier;
         $this->dates = $settings['dates'];
         $this->timezone = $settings['timezone'];
+        $this->program = $settings['program'] ?? null;
         $this->website = $settings['website'] ?? null;
+
+        if (array_key_exists('scheduleDatabase', $settings))
+            $this->scheduleDatabase = $settings['scheduleDatabase'];
     }
 
     // Returns whether the event's configuration is valid, and can be used.
@@ -76,8 +82,19 @@ class Event {
         return $this->timezone;
     }
 
+    // Returns the filename in which the event's program has been written down.
+    public function getProgram(): ?string {
+        return $this->program;
+    }
+
     // Returns the URL to the website of the broader event.
-    public function getWebsite(): string | null {
+    public function getWebsite(): ?string {
         return $this->website;
+    }
+
+    // Returns the schedule database settings for this event, likely specialized for a particular
+    // environment. There should be two keys in the returned object, { spreadsheet, sheet }.
+    public function getScheduleDatabaseSettings(): ?array {
+        return $this->scheduleDatabase;
     }
 }

@@ -72,6 +72,8 @@
             "enableRegistration": true,
             "enableSchedule": false,
 
+            "program": "json-file-in-the-cache-folder.json",
+
             "dates": [ "2020-06-01", "2020-06-03" ],
             "timezone": "Europe/London",
         }
