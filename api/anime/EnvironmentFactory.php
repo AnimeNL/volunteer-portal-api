@@ -13,6 +13,9 @@ class EnvironmentFactory {
     // invalid environment will be initialized when the configuration is not available.
     public static function createForHostname(
             Configuration $configuration, string $hostname): Environment {
+        if (str_starts_with($hostname, 'www.'))
+            $hostname = substr($hostname, 4);
+
         if (!preg_match('/^([a-z0-9]+\.?){2,3}/s', $hostname))
             return new Environment(false);  // invalid format for the |$hostname|.
 
