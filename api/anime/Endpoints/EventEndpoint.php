@@ -11,6 +11,7 @@ use \Anime\Api;
 use \Anime\Cache;
 use \Anime\Endpoint;
 use \Anime\EnvironmentFactory;
+use \Anime\Event;
 use \Anime\Storage\Model\Registration;
 use \Anime\Storage\RegistrationDatabase;
 
@@ -65,6 +66,9 @@ class EventEndpoint implements Endpoint {
     // The list of environments that the requesting user has access to.
     private array $environments;
 
+    // The Event instance in the portal's primary environment for this request.
+    private Event | null $environmentEvent;
+
     // The privileges associated with the user who's requesting the event information.
     private int $privileges;
 
@@ -76,6 +80,7 @@ class EventEndpoint implements Endpoint {
 
     public function __construct() {
         $this->environments = [ /* empty by default */ ];
+        $this->environmentEvent = null;
         $this->privileges = self::PRIVILEGE_NONE;
         $this->locationCache = [];
     }
@@ -115,6 +120,11 @@ class EventEndpoint implements Endpoint {
         usort($volunteers, CreateVolunteerComparator());
 
         return [
+            'meta'          => [
+                'name'      => $this->environmentEvent?->getName(),
+                'timezone'  => $this->environmentEvent?->getTimezone(),
+            ],
+
             'areas'         => $areas,
             'events'        => $events,
             'locations'     => $locations,
@@ -192,6 +202,14 @@ class EventEndpoint implements Endpoint {
             }
         }
 
+        foreach ($currentEnvironment->getEvents() as $environmentEvent) {
+            if ($environmentEvent->getIdentifier() !== $event)
+                continue;  // unrelated event
+
+            $this->environmentEvent = $environmentEvent;
+            break;
+        }
+
         return true;
     }
 
@@ -199,17 +217,7 @@ class EventEndpoint implements Endpoint {
     // is being used in. Other environments may provide their own JSON files, but this would be
     // rather uncommon, as our private events can be supplemented within the portal.
     private function populateEvents(string $event): array {
-        $currentEnvironment = $this->environments[/* first= */ 0][/* environment= */ 0];
-        $filename = null;
-
-        foreach ($currentEnvironment->getEvents() as $environmentEvent) {
-            if ($environmentEvent->getIdentifier() !== $event)
-                continue;  // unrelated event
-
-            $filename = $environmentEvent->getProgram();
-            break;
-        }
-
+        $filename = $this->environmentEvent?->getProgram();
         if (!$filename)
             return [];  // no program is available for the given |$event|
 
@@ -293,18 +301,8 @@ class EventEndpoint implements Endpoint {
     // Populates a list of the areas present in the event. The areas are made available in the
     // program's events, however, their names are contained in the portal's configuration.
     private function populateAreas(string $event): array {
-        $currentEnvironment = $this->environments[/* first= */ 0][/* environment= */ 0];
-
+        $mapping = $this->environmentEvent?->getAreas() ?? [];
         $areas = [];
-        $mapping = [ /* empty by default */ ];
-
-        foreach ($currentEnvironment->getEvents() as $environmentEvent) {
-            if ($environmentEvent->getIdentifier() !== $event)
-                continue;  // unrelated event
-
-            $mapping = $environmentEvent->getAreas();
-            break;
-        }
 
         foreach ($this->locationCache as [ 'area' => $area ]) {
             if (array_key_exists($area, $areas))
