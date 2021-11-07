@@ -256,13 +256,14 @@ class EventEndpoint implements Endpoint {
             $environmentId = $environment->getThemeTitle();
 
             foreach ($registrationDatabase->getRegistrations() as $registration) {
-                if (!$registration->getEventAcceptedRole($event))
+                $role = $registration->getEventAcceptedRole($event);
+                if (!$role)
                     continue;  // non-participating event identifier
 
                 $token = $registration->getUserToken();
 
                 if (array_key_exists($token, $volunteers)) {
-                    $volunteers[$token]['environments'][] = $environmentId;
+                    $volunteers[$token]['environments'][$environmentId] = $role;
                     continue;
                 }
 
@@ -272,7 +273,9 @@ class EventEndpoint implements Endpoint {
                         $registration->getLastName(),
                     ],
                     'identifier'    => $registration->getUserToken(),
-                    'environments'  => [ $environmentId ],
+                    'environments'  => [
+                        $environmentId => $role
+                    ],
                 ];
 
                 // Supplement privileged information to the volunteer's entry when allowed.
