@@ -36,6 +36,8 @@
             "themeColor": "#558b2f",
             "themeTitle": "Volunteer Team",
 
+            "shortName": "Volunteers",
+
             "events": {
                 "event-identifier": {
                     "enableRegistration": false,

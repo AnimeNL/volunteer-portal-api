@@ -23,6 +23,7 @@ class Environment {
     private string $title;
     private string $themeColor;
     private string $themeTitle;
+    private string $shortName;
 
     private ?array $privilegedAccess;
     private ?array $registrationDatabase;
@@ -44,6 +45,8 @@ class Environment {
 
         $this->themeColor = $settings['themeColor'];
         $this->themeTitle = $settings['themeTitle'];
+
+        $this->shortName = $settings['shortName'];
 
         if (array_key_exists('privilegedAccess', $settings))
             $this->privilegedAccess = $settings['privilegedAccess'];
@@ -128,6 +131,11 @@ class Environment {
     // Returns the title of the theme, as should be displayed on the portal.
     public function getThemeTitle(): string {
         return $this->themeTitle;
+    }
+
+    // Returns the short name of the environment, as should be displayed on the portal.
+    public function getShortName(): string {
+        return $this->shortName;
     }
 
     // Returns an associative array with username => password combinations for privileged access.

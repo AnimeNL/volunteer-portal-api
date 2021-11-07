@@ -252,8 +252,7 @@ class EventEndpoint implements Endpoint {
         $volunteers = [];
 
         foreach ($this->environments as [ $environment, $registrationDatabase ]) {
-            // TODO: We might want different labels here? ("Steward Team" vs. "Stewards"...)
-            $environmentId = $environment->getThemeTitle();
+            $environmentId = $environment->getShortName();
 
             foreach ($registrationDatabase->getRegistrations() as $registration) {
                 $role = $registration->getEventAcceptedRole($event);
