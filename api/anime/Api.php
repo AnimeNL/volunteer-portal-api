@@ -13,10 +13,6 @@ use \Anime\Storage\RegistrationDatabaseFactory;
 // Implementation of the actual API calls as methods whose input has been validated for syntax, and
 // for whom the appropriate environment is already available.
 class Api {
-    // Directory and request path in which avatar information has been stored.
-    public const AVATAR_DIRECTORY = __DIR__ . '/../../avatars/';
-    public const AVATAR_PATH = '/avatars/';
-
     private Cache $cache;
     private Configuration $configuration;
     private Environment $environment;

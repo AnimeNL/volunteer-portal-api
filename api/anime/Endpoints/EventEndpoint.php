@@ -286,11 +286,9 @@ class EventEndpoint implements Endpoint {
 
                 // Supplement information about the user's avatar when it can be found on the file-
                 // system. At some point we should optimize this check somehow.
-                $avatarFile = $registration->getUserToken() . '.jpg';
-                $avatarPath = Api::AVATAR_PATH . $avatarFile;
-
-                if (file_exists(Api::AVATAR_DIRECTORY . $avatarFile))
-                    $volunteer['avatar'] = 'https://' . $environment->getHostname() . $avatarPath;
+                $avatarUrl = $registration->getAvatarUrl($environment);
+                if ($avatarUrl !== null)
+                    $volunteer['avatar'] = $avatarUrl;
 
                 // Store the compiled |$volunteer| structure for the current volunteer.
                 $volunteers[$token] = $volunteer;

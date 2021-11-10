@@ -41,6 +41,10 @@ class Registration {
     // Number of colums in the shreadsheet that contain fixed data rather than events.
     public const DATA_COLUMN_COUNT = 8;
 
+    // Directory and request path in which avatar information has been stored.
+    public const AVATAR_FS_PATH = __DIR__ . '/../../../../avatars/';
+    public const AVATAR_URL_PATH = '/avatars/';
+
     private int $rowNumber;
 
     private string $firstName;
@@ -205,5 +209,24 @@ class Registration {
     // Returns the user token associated with this registration.
     public function getUserToken(): string {
         return $this->userToken;
+    }
+
+    // Returns the path on the server's filesystem where this registration's avatar should reside.
+    public function getAvatarFileSystemPath(): string {
+        return self::AVATAR_FS_PATH . $this->userToken . '.jpg';
+    }
+
+    // Returns the URL to this user's avatar, when it exists.
+    public function getAvatarUrl($environment): ?string {
+        $avatarPath = $this->getAvatarFileSystemPath();
+        $avatarMtime = @ filemtime($avatarPath);
+
+        if (!$avatarMtime)
+            return null;
+
+        $hostname = 'https://' . $environment->getHostname();
+        $pathname = self::AVATAR_URL_PATH . $this->userToken . '.jpg';
+
+        return  $hostname . $pathname . '?' . $avatarMtime;
     }
 }

@@ -36,14 +36,6 @@ class UserEndpoint implements Endpoint {
                 if ($registration->getAuthToken() !== $requestParameters['authToken'])
                     continue;  // non-matching authentication token
 
-                $avatarFile = $registration->getUserToken() . '.jpg';
-                $avatarPath = Api::AVATAR_PATH . $avatarFile;
-
-                $avatarUrl = '';  // no avatar specified
-
-                if (file_exists(Api::AVATAR_DIRECTORY . $avatarFile))
-                    $avatarUrl = 'https://' . $environment->getHostname() . $avatarPath;
-
                 $composedName = $registration->getFirstName() . ' ' . $registration->getLastName();
                 $filteredEvents = [];
 
@@ -54,7 +46,7 @@ class UserEndpoint implements Endpoint {
 
                 return [
                     'administrator' => $registration->isAdministrator(),
-                    'avatar'        => $avatarUrl,
+                    'avatar'        => $registration->getAvatarUrl($environment) ?? '',
                     'events'        => $filteredEvents,
                     'name'          => trim($composedName),
                 ];

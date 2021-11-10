@@ -83,11 +83,11 @@ class AvatarEndpoint implements Endpoint {
                 $avatarImage, $uploadedImage, 0, 0, 0, 0, 250, 250, ImageSX($uploadedImage),
                 ImageSY($uploadedImage));
 
-            $avatarFile = $subjectRegistration->getUserToken() . '.png';
-            $avatarPath = Api::AVATAR_DIRECTORY . $avatarFile;
-
-            if (!file_exists($avatarPath) || is_writable($avatarPath))
-                ImagePNG($avatarImage, $avatarPath);
+            $avatarPath = $subjectRegistration->getAvatarFileSystemPath();
+            if (!file_exists($avatarPath) || is_writable($avatarPath)) {
+                ImagePNG($avatarImage, str_replace('.jpg', '.png', $avatarPath));
+                ImageJPEG($avatarImage, $avatarPath, 90);
+            }
         }
 
         return [ 'success' => 'The avatar has been updated.' ];
