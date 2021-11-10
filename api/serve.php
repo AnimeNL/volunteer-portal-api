@@ -30,6 +30,9 @@ switch ($requestUri) {
     case '/api/auth':
         $endpoint = new \Anime\Endpoints\AuthEndpoint;
         break;
+    case '/api/avatar':
+        $endpoint = new \Anime\Endpoints\AvatarEndpoint;
+        break;
     case '/api/content':
         $endpoint = new \Anime\Endpoints\ContentEndpoint;
         break;
