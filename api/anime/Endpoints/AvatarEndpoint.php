@@ -9,6 +9,7 @@ namespace Anime\Endpoints;
 
 use \Anime\Api;
 use \Anime\Endpoint;
+use \Anime\EnvironmentFactory;
 
 // Allows an avatar to be uploaded. Whether this is allowed depends on the role of the person who
 // is uploading the avatar, as well as whose avatar is being uploaded.
@@ -33,6 +34,8 @@ class AvatarEndpoint implements Endpoint {
 
     public function execute(Api $api, array $requestParameters, array $requestData): array {
         $configuration = $api->getConfiguration();
+        $currentEnvironment = $api->getEnvironment();
+
         $database = $api->getRegistrationDatabase(/* writable= */ false);
 
         // Registration of the person requesting the edit.
@@ -53,19 +56,61 @@ class AvatarEndpoint implements Endpoint {
             }
         }
 
+        // If |$editorRegistration| is an administrator, there is a possibility that we have to
+        // check out the other environments to find the right |$subjectRegistration|.
+        if ($editorRegistration && !$subjectRegistration) {
+            $role = $editorRegistration->getEventAcceptedRole($requestData['event']) ?? 'none';
+
+            $isAdministrator = $editorRegistration->isAdministrator();
+
+            $isStaff = stripos($role, 'Staff') !== false;
+            $isSenior = stripos($role, 'Senior') !== false;
+
+            $isCrossEnvironmentAllowedHost = in_array(
+                $currentEnvironmentHostname, EventEndpoint::CROSS_ENVIRONMENT_HOSTS_ALLOWLIST);
+
+            // This follows the logic in the EventEndpoint to decide whether the volunteer is able
+            // to see the other environments. We really should abstract this in a function.
+            if ($isAdministrator || (($isStaff || $isSenior) && $isCrossEnvironmentAllowedHost)) {
+                foreach (EnvironmentFactory::getAll($configuration) as $environment) {
+                    if ($environment->getHostname() === $currentEnvironment->getHostname())
+                        continue;
+
+                    foreach ($environment->getEvents() as $environmentEvent) {
+                        if ($environmentEvent->getIdentifier() !== $requestData['event'])
+                            continue;  // unrelated event
+
+                        $environmentDatabase = $api->getRegistrationDatabaseForEnvironment(
+                                $environment, /* $writable= */ false);
+
+                        if (!$environmentDatabase)
+                            continue;  // no environment database
+
+                        foreach ($environmentDatabase->getRegistrations() as $registration) {
+                            if ($registration->getUserToken() !== $requestData['userToken'])
+                                continue;
+
+                            $subjectRegistration = $registration;
+                            break 3;
+                        }
+                    }
+                }
+            }
+        }
+
         // We require both |$editorRegistration| and |$subjectRegistration| to be available.
         if (!$editorRegistration || !$subjectRegistration)
             return [ 'error' => 'Unable to identify the affected registrations.' ];
 
-        $editorRole = $editorRegistration->getEventAcceptedRole($requestData['event']) ?? 'none';
+        $role = $editorRegistration->getEventAcceptedRole($requestData['event']) ?? 'none';
 
         // Access is granted when either:
         //     (1) The |$editorRegistration| is an administrator,
         $isAdministrator = $editorRegistration->isAdministrator();
 
         //     (2) The |$editorRegistration| is a senior or staff volunteer during this event,
-        $isSenior = str_contains($editorRole, 'Senior');
-        $isStaff = str_contains($editorRole, 'Staff');
+        $isStaff = stripos($role, 'Staff') !== false;
+        $isSenior = stripos($role, 'Senior') !== false;
 
         //     (3) The |$editorRegistration| and |$subjectRegistration| are the same person.
         $isSamePerson = $editorRegistration === $subjectRegistration;

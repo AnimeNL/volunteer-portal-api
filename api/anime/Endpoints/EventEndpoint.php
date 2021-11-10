@@ -58,7 +58,8 @@ class EventEndpoint implements Endpoint {
     private const PRIVILEGE_PHONE_NUMBERS = 4;
 
     // List of hosts whose seniors have the ability to access volunteers of the other environments.
-    private const CROSS_ENVIRONMENT_HOSTS_ALLOWLIST = [ 'stewards.team '];
+    // Shared with the AvatarEndpoint.
+    public const CROSS_ENVIRONMENT_HOSTS_ALLOWLIST = [ 'stewards.team '];
 
     // Salt used for hashing the location identifiers.
     private const LOCATION_SALT = '3hhmgPw4';
