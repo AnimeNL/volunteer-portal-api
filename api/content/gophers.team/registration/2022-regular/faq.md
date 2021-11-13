@@ -1,6 +1,6 @@
 Organising a festival such as AnimeCon 2022 is quite a feat, and we imagine that you may have many
 questions about your participation. We've collected some questions and answers on this page, but
-always feel free to ask us anything over WhatsApp, or by [sending us an e-mail](mailto:security@animecon.nl).
+always feel free to ask us anything over WhatsApp, or by [sending us an e-mail](mailto:gopherplanning@animecon.nl).
 
 ### What are your plans surrounding the Coronavirus?
 As the past two years have shown, the situation caused by the Coronavirus continues to be volatile
@@ -38,12 +38,12 @@ to any of our seniors if you're keen to learn more.
 The AnimeCon festivals aim to be as affordable as possible for our attendees, as a consequence of
 which we unfortunately cannot reimburse travel expenses, nor any other types of expenses. If there
 are cases in which you feel we should make an exception, please do
-[send us an e-mail](mailto:security@animecon.nl) so that we can discuss in detail.
+[send us an e-mail](mailto:gopherplanning@animecon.nl) so that we can discuss in detail.
 
-### What happens if I cannot help out as a steward?
+### What happens if I cannot help out as a gopher?
 There are two other volunteering teams that you're able to join during AnimeCon 2022: the
-[Gophers](https://gophers.team/registration/2022-regular) and the
-[Festival Hosts](https://hosts.team/registration/2022-regular). Check out their websites when you'd
+[Festival Hosts](https://hosts.team/registration/2022-regular) and the
+[Stewards](https://stewards.team/registration/2022-regular). Check out their websites when you'd
 like to learn more—we're confident there's a way for you to help out no matter what you bring to the
 table!
 
