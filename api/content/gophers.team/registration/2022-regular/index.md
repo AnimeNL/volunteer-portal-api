@@ -1,14 +1,14 @@
 Gophers are the largest, and possibly the most important group of volunteers during the
 [AnimeCon 2022](https://animecon.nl) festival, which will be taking place in Rijswijk in June.
 Together with the rest of the team, you'll be responsible for delivering an incredible experience to
-all our visitors by helping them our directly, as well as behind the scenes.
+all our visitors by helping them out directly, as well as behind the scenes.
 
 Check out this page for more information, the perks and expectations, and to apply straight away!
 
 ## What is expected of you?
 
   * You're able to be present at the [Broodfabriek](https://de-broodfabriek.nl/) in Rijswijk from
-    11:30am on Friday, all the way to 8pm on Sunday. (TBA: June 3-5 _or_ June 10-12)
+    11:30am on Friday, all the way to 8pm on Sunday. (June 10-12)
 
   * You're able to help us out with about 12 hours of shifts during the festival. Any events that
     you _really_ want to attend as a visitor will of course be taken into account.

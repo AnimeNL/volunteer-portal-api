@@ -5,7 +5,7 @@ efforts.
 
 ## What is expected of you?
 
-  * You're at least 18 years of age during AnimeCon 2022 (TBA: June 3-5 _or_ June 10-12), and are
+  * You're at least 18 years of age during AnimeCon 2022 (June 10-12), and are
     able to communicate clearly in both Dutch and English.
 
   * You're able to be present at the [Broodfabriek](https://de-broodfabriek.nl/) in Rijswijk from
