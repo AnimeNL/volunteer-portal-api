@@ -31,7 +31,7 @@ function toBool(string $value): bool {
 // See https://github.com/AnimeNL/volunteer-portal/blob/main/API.md#apiapplication
 class ApplicationEndpoint implements Endpoint {
     public function validateInput(array $requestParameters, array $requestData): bool | string {
-        if (!array_key_exists('event', $requestData) || !strlen($requestData['event']))
+        if (!array_key_exists('event', $requestParameters) || !strlen($requestParameters['event']))
             return 'No event to register for has been supplied.';
 
         if (!array_key_exists('firstName', $requestData) || !strlen($requestData['firstName']))
@@ -84,7 +84,8 @@ class ApplicationEndpoint implements Endpoint {
         $database = $api->getRegistrationDatabase(/* writable= */ true);
         $environment = $api->getEnvironment();
 
-        $event = $requestData['event'];
+        $event = $requestParameters['event'];
+
         $firstName = $requestData['firstName'];
         $lastName = $requestData['lastName'];
         $dateOfBirth = $requestData['dateOfBirth'];
