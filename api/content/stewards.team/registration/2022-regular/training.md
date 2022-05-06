@@ -3,8 +3,8 @@ and first aid teams. In order to make sure that you're fully prepared, we provid
 **professional steward training** that we require volunteers to participate in every other year.
 
 ## When will the training take place?
-Dates for the trainings for AnimeCon 2022 have not been announced yet. We expect to be able to share
-more information around **March 2022**.
+This year we've been able to schedule trainings on **Sunday, May 22nd**, **Saturday, June 4th** and
+on **Sunday, June 5th**.
 
 ## Where will they be taking place?
 The trainings are hosted by the [EHBO College](https://ehbocollege.nl/) in Amersfoort. Their venue
@@ -16,7 +16,7 @@ Stewards are required to participate in this training once every other year. Giv
 been able to host a festival for over two years now, all stewards are expected to participate.
 
 Unfortunately you will not be able to help out as a steward when you're not able to attend. We can,
-however, offer you a position in our _Festival Elves_ team, who make sure that all visitors are
+however, offer you a position in our _Festival Hosts_ team, who make sure that all visitors are
 able to find their way around the venue.
 
 [« Previous page](/registration/2022-regular/)
