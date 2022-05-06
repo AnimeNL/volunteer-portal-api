@@ -117,12 +117,12 @@ class ImportProgramService extends ServiceBase {
         $resource = curl_init();
 
         curl_setopt($resource, CURLOPT_URL, $this->options['source']);
-        curl_setopt($resource, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($resource, CURLOPT_RETURNTRANSFER, true);
 
         $response = curl_exec($resource);
         curl_close($resource);
 
-        if ($resource === false)
+        if (!$resource || !$response)
             throw new \Exception('Unable to load the source data: ' . $this->options['source']);
 
         return $response;

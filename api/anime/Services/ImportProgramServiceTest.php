@@ -25,9 +25,9 @@ class ImportProgramServiceTest extends \PHPUnit\Framework\TestCase {
     public function testFrequencyOption() {
         $service = new ImportProgramService([
             'destination'   => null,
-            'frequency'     => 1337,
-            'source'        => null
-        ]);
+            'source'        => null,
+
+        ], /* frequency= */ 1337, 'identifier');
 
         $this->assertEquals(1337, $service->getFrequencyMinutes());
     }
@@ -103,7 +103,6 @@ class ImportProgramServiceTest extends \PHPUnit\Framework\TestCase {
     public function testFilterIgnoredTimeSlotEvents() {
         $service = new ImportProgramService([
             'destination'           => null,
-            'frequency'             => 42,
             'source'                => null,
             'ignored_time_slots'    => [
                 [
@@ -111,7 +110,7 @@ class ImportProgramServiceTest extends \PHPUnit\Framework\TestCase {
                     'reason'    => 'This entry should be ignored for whatever reason.'
                 ]
             ]
-        ]);
+        ], /* frequency= */ 42, 'identifier');
 
         $entries = [
             [
@@ -442,9 +441,9 @@ class ImportProgramServiceTest extends \PHPUnit\Framework\TestCase {
     private function createDefaultService() : ImportProgramService {
         return new ImportProgramService([
             'destination'   => null,
-            'frequency'     => 42,
-            'source'        => null
-        ]);
+            'source'        => null,
+
+        ], /* frequency= */ 42, 'identifier');
     }
 
     // Writes |$data| as JSON to a file, then creates an ImportProgramService instance to parse it,
@@ -463,9 +462,9 @@ class ImportProgramServiceTest extends \PHPUnit\Framework\TestCase {
             // Create and execute the service using |$source| as the input data.
             $service = new ImportProgramService([
                 'destination'   => $destination,
-                'frequency'     => 0,
                 'source'        => $source
-            ]);
+
+            ], /* frequency= */ 0, 'identifier');
 
             $service->execute();
 

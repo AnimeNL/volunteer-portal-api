@@ -55,6 +55,8 @@ class EnvironmentTest extends \PHPUnit\Framework\TestCase {
                     'themeColor'            => '#ffffff',
                     'themeTitle'            => 'Volunteer Team',
 
+                    'shortName'             => 'Volunteers',
+
                     'events'                => [
                         '2021-event'    => [
                             // Overrides the registration availability of the global event.

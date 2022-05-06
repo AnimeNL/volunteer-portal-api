@@ -15,8 +15,8 @@ class ServiceLogTest extends \PHPUnit\Framework\TestCase {
         if (getenv('TRAVIS_CI') !== false)
             return;  // this test doesn't make sense when ran through Travis
 
-        $this->assertTrue(file_exists(ServiceLogImpl::ERROR_LOG));
-        $this->assertTrue(is_writable(ServiceLogImpl::ERROR_LOG));
+        $this->assertTrue(file_exists(ServiceLogImpl::SERVICE_LOG));
+        $this->assertTrue(is_writable(ServiceLogImpl::SERVICE_LOG));
     }
 
     // Verifies that error messages will generate alerts that are to be send to a configured list of
