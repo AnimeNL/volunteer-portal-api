@@ -17,14 +17,14 @@ use \Anime\EnvironmentFactory;
 // See https://github.com/AnimeNL/volunteer-portal/blob/main/API.md#apiavatar
 class AvatarEndpoint implements Endpoint {
     public function validateInput(array $requestParameters, array $requestData): bool | string {
-        if (!array_key_exists('authToken', $requestData) || !is_string($requestData['authToken']))
+        if (!array_key_exists('authToken', $requestParameters) || !is_string($requestParameters['authToken']))
             return 'Missing parameter: authToken';
+
+        if (!array_key_exists('event', $requestParameters) || !is_string($requestParameters['event']))
+            return 'Missing parameter: event';
 
         if (!array_key_exists('userToken', $requestData) || !is_string($requestData['userToken']))
             return 'Missing parameter: userToken';
-
-        if (!array_key_exists('event', $requestData) || !is_string($requestData['event']))
-            return 'Missing parameter: event';
 
         if (!array_key_exists('avatar', $_FILES) || $_FILES['avatar']['type'] !== 'image/png')
             return 'Missing parameter: avatar';
@@ -48,7 +48,7 @@ class AvatarEndpoint implements Endpoint {
             $registrations = $database->getRegistrations();
 
             foreach ($registrations as $registration) {
-                if ($registration->getAuthToken() === $requestData['authToken'])
+                if ($registration->getAuthToken() === $requestParameters['authToken'])
                     $editorRegistration = $registration;
 
                 if ($registration->getUserToken() === $requestData['userToken'])
@@ -59,7 +59,7 @@ class AvatarEndpoint implements Endpoint {
         // If |$editorRegistration| is an administrator, there is a possibility that we have to
         // check out the other environments to find the right |$subjectRegistration|.
         if ($editorRegistration && !$subjectRegistration) {
-            $role = $editorRegistration->getEventAcceptedRole($requestData['event']) ?? 'none';
+            $role = $editorRegistration->getEventAcceptedRole($requestParameters['event']) ?? 'none';
 
             $isAdministrator = $editorRegistration->isAdministrator();
 
@@ -102,7 +102,7 @@ class AvatarEndpoint implements Endpoint {
         if (!$editorRegistration || !$subjectRegistration)
             return [ 'error' => 'Unable to identify the affected registrations.' ];
 
-        $role = $editorRegistration->getEventAcceptedRole($requestData['event']) ?? 'none';
+        $role = $editorRegistration->getEventAcceptedRole($requestParameters['event']) ?? 'none';
 
         // Access is granted when either:
         //     (1) The |$editorRegistration| is an administrator,
