@@ -14,6 +14,7 @@ use \Anime\EnvironmentFactory;
 use \Anime\Event;
 use \Anime\Storage\Model\Registration;
 use \Anime\Storage\RegistrationDatabase;
+use \Anime\Storage\NotesDatabase;
 
 // Comperator for sorting IEventResponse{Area,Location} structures in ascending order by name.
 function CreateAreaOrLocationComparator() {
@@ -56,6 +57,7 @@ class EventEndpoint implements Endpoint {
     private const PRIVILEGE_ACCESS_CODES = 1;
     private const PRIVILEGE_CROSS_ENVIRONMENT = 2;
     private const PRIVILEGE_PHONE_NUMBERS = 4;
+    private const PRIVILEGE_USER_NOTES = 8;
 
     // List of hosts whose seniors have the ability to access volunteers of the other environments.
     // Shared with the AvatarEndpoint.
@@ -78,6 +80,9 @@ class EventEndpoint implements Endpoint {
 
     // Cache of the location IDs that have already been assigned.
     private array $locationCache;
+
+    // Array of all notes that are available for this event.
+    private array $notes;
 
     public function __construct() {
         $this->environments = [ /* empty by default */ ];
@@ -104,6 +109,8 @@ class EventEndpoint implements Endpoint {
         // |$environments|, |$privileges| and |$registration| class member variables.
         if (!$this->authenticateRequestUser($api, $authToken, $event))
             return [];
+
+        $this->notes = NotesDatabase::create($event)->all();
 
         $events = $this->populateEvents($event);
         $volunteers = $this->populateVolunteers($event);
@@ -169,8 +176,10 @@ class EventEndpoint implements Endpoint {
             $isCrossEnvironmentAllowedHost = in_array(
                     $currentEnvironmentHostname, self::CROSS_ENVIRONMENT_HOSTS_ALLOWLIST);
 
-            if ($isStaff || $isSenior)
+            if ($isStaff || $isSenior) {
                 $this->privileges |= self::PRIVILEGE_PHONE_NUMBERS;
+                $this->privileges |= self::PRIVILEGE_USER_NOTES;
+            }
 
             if (($isStaff || $isSenior) && $isCrossEnvironmentAllowedHost)
                 $this->privileges |= self::PRIVILEGE_CROSS_ENVIRONMENT;
@@ -232,7 +241,7 @@ class EventEndpoint implements Endpoint {
                 $sessions[] = [
                     'location'  => $this->createLocationId($session['location'], $session['floor']),
                     'name'      => $session['name'],
-                    // TODO: description
+                    // TODO: description(?)
                     'time'      => [ $session['begin'], $session['end'] ],
                 ];
             }
@@ -242,6 +251,11 @@ class EventEndpoint implements Endpoint {
                 'identifier'    => strval($entry['id']),
                 'sessions'      => $sessions,
             ];
+
+            if (array_key_exists('event', $this->notes)) {
+                if (array_key_exists($entry['id'], $this->notes['event']))
+                    $events[$entry['id']]['notes'] = $this->notes['event'][$entry['id']];
+            }
         }
 
         return $events;
@@ -272,7 +286,7 @@ class EventEndpoint implements Endpoint {
                         $registration->getFirstName(),
                         $registration->getLastName(),
                     ],
-                    'identifier'    => $registration->getUserToken(),
+                    'identifier'    => $token,
                     'environments'  => [
                         $environmentId => $role
                     ],
@@ -284,6 +298,13 @@ class EventEndpoint implements Endpoint {
 
                 if ($this->privileges & self::PRIVILEGE_PHONE_NUMBERS)
                     $volunteer['phoneNumber'] = $registration->getPhoneNumber();
+
+                if ($this->privileges & self::PRIVILEGE_USER_NOTES) {
+                    if (array_key_exists('volunteer', $this->notes)) {
+                        if (array_key_exists($token, $this->notes['volunteer']))
+                            $volunteer['notes'] = $this->notes['volunteer'][$token];
+                    }
+                }
 
                 // Supplement information about the user's avatar when it can be found on the file-
                 // system. At some point we should optimize this check somehow.
