@@ -25,8 +25,8 @@ class Environment {
     private string $themeTitle;
     private string $shortName;
 
-    private ?array $privilegedAccess;
-    private ?array $registrationDatabase;
+    private ?array $privilegedAccess = null;
+    private ?array $registrationDatabase = null;
 
     // Constructor for the Environment class. The |$valid| boolean must be set, and, when set to
     // true, the |$settings| array must be given with all intended options.
