@@ -331,13 +331,16 @@ class EventEndpoint implements Endpoint {
             string $event, Cache $cache, array &$areas, array &$events, array &$locations,
             array &$volunteers): array {
 
+        $eventsPendingSessions = [];
+
         // Event ID to use for event mapping entries that are misconfigured, for example by being
         // associated with an invalid event ID, or to be created in an area or location that does
         // not exist in the event configuration.
         $errorEventId = null;
 
         // Helper function to lazily get the error event to use for mapping having issues.
-        $getOrCreateErrorEventId = function() use (&$areas, &$events, &$locations, &$errorEventId) {
+        $getOrCreateErrorEventId = function() use (&$areas, &$events, &$locations, &$errorEventId,
+                                                   &$eventsPendingSessions) {
             if ($errorEventId)
                 return $errorEventId;
 
@@ -365,10 +368,19 @@ class EventEndpoint implements Endpoint {
                 ],
             ];
 
+            $eventsPendingSessions['schedule-error'] = [
+                'location'  => 'schedule-error-location',
+                'name'      => 'Schedule Errors',
+
+                'shifts'    => [],
+            ];
+
             return $errorEventId = 'schedule-error';
         };
 
         $shifts = [];
+
+        $scheduleDatabases = [];
         foreach ($this->environments as [ $environment, $registrationDatabase ]) {
             $scheduleDatabase = null;
 
@@ -386,15 +398,20 @@ class EventEndpoint implements Endpoint {
                 $scheduleSheet = $settings['scheduleSheet'];
                 $scheduleSheetStartDate = $settings['scheduleSheetStartDate'];
 
-                $scheduleDatabase = ScheduleDatabaseFactory::openReadOnly(
-                        $cache, $spreadsheetId, $mappingSheet, $scheduleSheet, $scheduleSheetStartDate);
+                $scheduleDatabaseId = $spreadsheetId . $mappingSheet . $scheduleSheet;
+                if (!array_key_exists($scheduleDatabaseId, $scheduleDatabases)) {
+                    $scheduleDatabases[$scheduleDatabaseId] = ScheduleDatabaseFactory::openReadOnly(
+                            $cache, $spreadsheetId, $mappingSheet, $scheduleSheet,
+                            $scheduleSheetStartDate);
+                }
+
+                $scheduleDatabase = $scheduleDatabases[$scheduleDatabaseId];
                 break;
             }
 
             if (!$scheduleDatabase)
                 continue;  // no schedule database could be located for this environment
 
-            $eventsPendingSessions = [];
             $identifierMapping = [];
 
             // (1) Process the |$scheduleDatabase|'s event mapping, and create events and locations
@@ -438,22 +455,17 @@ class EventEndpoint implements Endpoint {
                 // (c) Event ID is omitted, create a new event for this mapping.
                 $eventId = substr(md5($mapping['description'] . $locationId), 0, 8);
                 if (!array_key_exists($eventId, $events)) {
-                    $eventsPendingSessions[$identifier] = [
+                    $eventsPendingSessions[$eventId] = [
                         'location'  => $locationId,
+                        'name'      => $mapping['description'],
+
                         'shifts'    => [],
                     ];
 
                     $events[$eventId] = [
                         'hidden'        => true,
                         'identifier'    => $eventId,
-                        'sessions'      => [
-                            [
-                                // TODO: Delete this when session generation has been implemented.
-                                'location'      => $locationId,
-                                'name'          => 'Temporary session',
-                                'time'          => [ time() - 1, time() + 1 ],
-                            ],
-                        ],
+                        'sessions'      => [],
                     ];
                 }
 
@@ -486,6 +498,13 @@ class EventEndpoint implements Endpoint {
                             'time'      => [ $shift['start'], $shift['end'] ],
                         ];
 
+                        if (array_key_exists($eventId, $eventsPendingSessions)) {
+                            $eventsPendingSessions[$eventId]['shifts'][] = [
+                                $shift['start'],
+                                $shift['end']
+                            ];
+                        }
+
                     } else {
                         $volunteers[$volunteerToken]['shifts'][] = [
                             'type'      => ['unavailable', 'available'][$shift['type']],
@@ -494,10 +513,42 @@ class EventEndpoint implements Endpoint {
                     }
                 }
             }
+        }
 
-            // (3) For each of the entries in |$identifierPendingSessions|, calculate the actual
-            //     sessions and add them to the event to make it clear when people are scheduled.
-            // TODO
+        // (3) For each of the entries in |$identifierPendingSessions|, calculate the actual
+        //     sessions and add them to the event to make it clear when people are scheduled.
+        foreach ($eventsPendingSessions as $eventId => $eventInfo) {
+            // Remove events for which mappings existed, but no actual shifts were scheduled.
+            // There is no point in showing those to volunteers, as they carry no meaning.
+            if (!count($eventInfo['shifts'])) {
+                unset($events[$eventId]);
+                continue;
+            }
+
+            usort($eventInfo['shifts'], fn ($lhs, $rhs) => $lhs[0] - $rhs[0]);
+
+            // Iterate through all of the shifts, which are now sorted by the time at which they
+            // start, and eagerly combine them in a lower number of individual sessions.
+            for ($index = 0; $index < count($eventInfo['shifts']); ++$index) {
+                $session = [
+                    'location'      => $eventInfo['location'],
+                    'name'          => $eventInfo['name'],
+                    'time'          => [
+                        $eventInfo['shifts'][$index][0],
+                        $eventInfo['shifts'][$index][1],
+                    ],
+                ];
+
+                for ($next = $index + 1; $next < count($eventInfo['shifts']); ++$next) {
+                    if ($eventInfo['shifts'][$next][0] > $session['time'][1])
+                        continue;
+
+                    $session['time'][1] = max($session['time'][1], $eventInfo['shifts'][$next][1]);
+                    $index++;
+                }
+
+                $events[$eventId]['sessions'][] = $session;
+            }
         }
 
         return [];
