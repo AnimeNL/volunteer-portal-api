@@ -42,20 +42,28 @@ class RefreshScheduleCacheService extends ServiceBase {
                 if (!is_array($settings))
                     continue;  // no data has been specified for this environment
 
-                if (!array_key_exists('spreadsheet', $settings) || !array_key_exists('sheet', $settings))
+                if (!array_key_exists('spreadsheet', $settings) ||
+                        !array_key_exists('mappingSheet', $settings) ||
+                        !array_key_exists('scheduleSheet', $settings)) {
                     continue;  // invalid data has been specified for this environment
+                }
 
                 $spreadsheetId = $settings['spreadsheet'];
-                $sheet = $settings['sheet'];
 
-                $sheetIdentifier = $spreadsheetId . $sheet;
+                $mappingSheet = $settings['mappingSheet'];
+                $scheduleSheet = $settings['scheduleSheet'];
+
+                $sheetIdentifier = $spreadsheetId . $mappingSheet . $scheduleSheet;
                 if (in_array($sheetIdentifier, $updated))
                     continue;  // already updated
                 else
                     $updated[] = $sheetIdentifier;
 
-                $database = ScheduleDatabaseFactory::openReadOnly($cache, $spreadsheetId, $sheet);
-                $database->getSheet()->updateCachedRepresentation();
+                $database = ScheduleDatabaseFactory::openReadOnly(
+                        $cache, $spreadsheetId, $mappingSheet, $scheduleSheet);
+
+                $database->getMappingSheet()->updateCachedRepresentation();
+                $database->getScheduleSheet()->updateCachedRepresentation();
             }
         }
     }

@@ -14,14 +14,20 @@ use Anime\Storage\Backend\GoogleSheetCache;
 // Multiple environments may share a single sheet, so lookups generally should be done based on the
 // name of the volunteer.
 class ScheduleDatabase {
-    private GoogleSheet $sheet;
+    private GoogleSheet $mappingSheet;
+    private GoogleSheet $scheduleSheet;
 
-    public function __construct(GoogleSheet $sheet) {
-        $this->sheet = $sheet;
+    public function __construct(GoogleSheet $mappingSheet, GoogleSheet $scheduleSheet) {
+        $this->mappingSheet = $mappingSheet;
+        $this->scheduleSheet = $scheduleSheet;
     }
 
-    public function getSheet(): GoogleSheet {
-        return $this->sheet;
+    public function getMappingSheet(): GoogleSheet {
+        return $this->mappingSheet;
+    }
+
+    public function getScheduleSheet(): GoogleSheet {
+        return $this->scheduleSheet;
     }
 
     // ---------------------------------------------------------------------------------------------
