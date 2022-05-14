@@ -14,12 +14,14 @@ use Anime\Storage\Backend\GoogleSpreadsheet;
 // where the difference is whether cached data will be used.
 class ScheduleDatabaseFactory {
     // Opens the database stored in |$spreadsheetId| in read-only mode.
-    public static function openReadOnly(Cache $cache, string $spreadsheetId, string $mappingSheetId, string $scheduleSheetId) {
+    public static function openReadOnly(
+            Cache $cache, string $spreadsheetId, string $mappingSheetId, string $scheduleSheetId,
+            string $scheduleSheetStartDate) {
         $spreadsheet = new GoogleSpreadsheet(new GoogleClient(), $cache, $spreadsheetId);
 
         $mappingSheet = $spreadsheet->getSheet($mappingSheetId, /* writable= */ false);
         $scheduleSheet = $spreadsheet->getSheet($scheduleSheetId, /* writable= */ false);
 
-        return new ScheduleDatabase($mappingSheet, $scheduleSheet);
+        return new ScheduleDatabase($mappingSheet, $scheduleSheet, $scheduleSheetStartDate);
     }
 }

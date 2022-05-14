@@ -41,6 +41,16 @@
             "events": {
                 "event-identifier": {
                     "enableRegistration": false,
+
+                    // This has to be a link to a Google Spreadsheet containing Mapping and Schedule
+                    // tables. Send an e-mail for an example database.
+                    "scheduleDatabase": {
+                        "spreadsheet": "googlesheetId",
+
+                        "mappingSheet": "Mapping",
+                        "scheduleSheet": "Schedule",
+                        "scheduleSheetStartDate": "2022-06-10T11:00:00",
+                    },
                 },
             },
 

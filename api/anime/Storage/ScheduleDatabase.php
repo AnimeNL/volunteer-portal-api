@@ -16,10 +16,13 @@ use Anime\Storage\Backend\GoogleSheetCache;
 class ScheduleDatabase {
     private GoogleSheet $mappingSheet;
     private GoogleSheet $scheduleSheet;
+    private string $scheduleSheetStartDate;
 
-    public function __construct(GoogleSheet $mappingSheet, GoogleSheet $scheduleSheet) {
+    public function __construct(
+            GoogleSheet $mappingSheet, GoogleSheet $scheduleSheet, string $scheduleSheetStartDate) {
         $this->mappingSheet = $mappingSheet;
         $this->scheduleSheet = $scheduleSheet;
+        $this->scheduleSheetStartDate = $scheduleSheetStartDate;
     }
 
     public function getMappingSheet(): GoogleSheet {
