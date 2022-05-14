@@ -16,6 +16,7 @@ use \Anime\Storage\Model\Registration;
 use \Anime\Storage\NotesDatabase;
 use \Anime\Storage\RegistrationDatabase;
 use \Anime\Storage\ScheduleDatabaseFactory;
+use \Anime\Storage\ScheduleDatabase;
 
 // Comperator for sorting IEventResponse{Area,Location} structures in ascending order by name.
 function CreateAreaOrLocationComparator() {
@@ -118,9 +119,10 @@ class EventEndpoint implements Endpoint {
         $areas = $this->populateAreas($event);
         $locations = $this->populateLocations();
 
-        // Shifts have the ability to modify the list of events, areas and locations, so have to
-        // be processed after each of the other entities are known.
-        $shifts = $this->populateShifts($event, $api->getCache(), $areas, $events, $locations);
+        // Shifts have the ability to modify the list of areas, events, locations *and* volunteers,
+        // so have to be processed after each of the other entities are known.
+        $this->populateShifts(
+                $event, $api->getCache(), $areas, $events, $locations, $volunteers);
 
         // Sort each of the output arrays, and remove the associative keying since they should be
         // returned as lists, rather than indexed structures.
@@ -138,7 +140,6 @@ class EventEndpoint implements Endpoint {
             'areas'         => $areas,
             'events'        => $events,
             'locations'     => $locations,
-            'shifts'        => $shifts,
             'volunteers'    => $volunteers,
         ];
     }
@@ -292,6 +293,7 @@ class EventEndpoint implements Endpoint {
                     'environments'  => [
                         $environmentId => $role
                     ],
+                    'shifts'        => [],
                 ];
 
                 // Supplement privileged information to the volunteer's entry when allowed.
@@ -326,7 +328,8 @@ class EventEndpoint implements Endpoint {
     // locations, as not all shifts can be associated with events on the programme, which is why
     // the associated properties are passed to this function by reference.
     private function populateShifts(
-            string $event, Cache $cache, array &$areas, array &$events, array &$locations): array {
+            string $event, Cache $cache, array &$areas, array &$events, array &$locations,
+            array &$volunteers): array {
 
         // Event ID to use for event mapping entries that are misconfigured, for example by being
         // associated with an invalid event ID, or to be created in an area or location that does
@@ -457,9 +460,40 @@ class EventEndpoint implements Endpoint {
                 $identifierMapping[$identifier] = $eventId;
             }
 
-            // (2) Iterate over all the shifts, and include the ones for whom volunteers are known
+            // (2) Iterate over all the volunteers, and include the ones for whom shifts are known
             //     in the |$shifts|. Store sessions in the |$identifierPendingSessions| as well.
-            // TODO
+            $scheduledShifts = $scheduleDatabase->getScheduledShifts();
+
+            foreach ($volunteers as $volunteerToken => $volunteerInfo) {
+                $volunteerName = trim(implode(' ', $volunteerInfo['name']));
+                if (!array_key_exists($volunteerName, $scheduledShifts))
+                    continue;  // their shifts are not included in this programme
+
+                if (count($volunteerInfo['shifts']) > 0)
+                    continue;  // this volunteer already has shifts?!
+
+                foreach ($scheduledShifts[$volunteerName] as $shift) {
+                    if ($shift['type'] === ScheduleDatabase::STATE_SHIFT) {
+                        $eventId = null;
+                        if (array_key_exists($shift['shift'], $identifierMapping))
+                            $eventId = $identifierMapping[$shift['shift']];
+                        else
+                            $eventId = $getOrCreateErrorEventId();
+
+                        $volunteers[$volunteerToken]['shifts'][] = [
+                            'type'      => 'shift',
+                            'event'     => $eventId,
+                            'time'      => [ $shift['start'], $shift['end'] ],
+                        ];
+
+                    } else {
+                        $volunteers[$volunteerToken]['shifts'][] = [
+                            'type'      => ['unavailable', 'available'][$shift['type']],
+                            'time'      => [ $shift['start'], $shift['end'] ],
+                        ];
+                    }
+                }
+            }
 
             // (3) For each of the entries in |$identifierPendingSessions|, calculate the actual
             //     sessions and add them to the event to make it clear when people are scheduled.
