@@ -18,6 +18,8 @@ class ScheduleDatabase {
     private GoogleSheet $scheduleSheet;
     private string $scheduleSheetStartDate;
 
+    private ?array $mapping = null;
+
     public function __construct(
             GoogleSheet $mappingSheet, GoogleSheet $scheduleSheet, string $scheduleSheetStartDate) {
         $this->mappingSheet = $mappingSheet;
@@ -37,11 +39,42 @@ class ScheduleDatabase {
     // Schedule Database API
     // ---------------------------------------------------------------------------------------------
 
-    // ..
+    // Retrieves the event mapping to apply for the shifts. Each shift identifier is represented in
+    // the returned array, remaining shifts are dropped.
+    public function getEventMapping(): array {
+        $this->initializeIfNeeded();
+        return $this->mapping;
+    }
 
     // ---------------------------------------------------------------------------------------------
     // Internal functionality
     // ---------------------------------------------------------------------------------------------
 
-    // ..
+    // Initializes the schedule database if needed. Will be a no-op when already initialized.
+    private function initializeIfNeeded(): void {
+        if (!$this->mapping)
+            $this->initializeMapping();
+    }
+
+    // Initializes the event mapping contained within the mapping sheet. It's a simple sheet that
+    // contains a list of shift identifiers, to the shift's name, event ID and/or location ID.
+    private function initializeMapping(): void {
+        $mappingData = $this->mappingSheet->getRange('A3:F100');
+        if (!is_array($mappingData) || !count($mappingData))
+            throw new \Exception('Unable to read mapping data from the schedule database.');
+
+        $this->mapping = [];
+        foreach ($mappingData as $mappingEntry) {
+            if (count($mappingEntry) < 6)
+                $mappingEntry += array_fill(0, 6 - count($mappingEntry), /* empty string= */ '');
+
+            $this->mapping[$mappingEntry[0]] = [
+                'description'   => $mappingEntry[1],
+                'eventId'       => strval($mappingEntry[2]),
+                'areaId'        => strval($mappingEntry[3]),
+                'locationId'    => strval($mappingEntry[4]),
+                'locationName'  => $mappingEntry[5],
+            ];
+        }
+    }
 }

@@ -28,6 +28,11 @@ class Api {
 
     // ---------------------------------------------------------------------------------------------
 
+    // Returns the cache that should be used.
+    public function getCache(): Cache {
+        return $this->cache;
+    }
+
     // Returns the configuration instance for the entire volunteer portal.
     public function getConfiguration(): Configuration {
         return $this->configuration;

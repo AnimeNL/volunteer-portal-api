@@ -13,8 +13,9 @@ use \Anime\Endpoint;
 use \Anime\EnvironmentFactory;
 use \Anime\Event;
 use \Anime\Storage\Model\Registration;
-use \Anime\Storage\RegistrationDatabase;
 use \Anime\Storage\NotesDatabase;
+use \Anime\Storage\RegistrationDatabase;
+use \Anime\Storage\ScheduleDatabaseFactory;
 
 // Comperator for sorting IEventResponse{Area,Location} structures in ascending order by name.
 function CreateAreaOrLocationComparator() {
@@ -114,11 +115,12 @@ class EventEndpoint implements Endpoint {
 
         $events = $this->populateEvents($event);
         $volunteers = $this->populateVolunteers($event);
-
-        $shifts = [];  // TODO: Assemble from the schedules, supplement |$events|
-
         $areas = $this->populateAreas($event);
         $locations = $this->populateLocations();
+
+        // Shifts have the ability to modify the list of events, areas and locations, so have to
+        // be processed after each of the other entities are known.
+        $shifts = $this->populateShifts($event, $api->getCache(), $areas, $events, $locations);
 
         // Sort each of the output arrays, and remove the associative keying since they should be
         // returned as lists, rather than indexed structures.
@@ -235,26 +237,26 @@ class EventEndpoint implements Endpoint {
         $events = [];
 
         foreach ($program as $entry) {
+            $identifier = strval($entry['id']);
             $sessions = [];
 
             foreach ($entry['sessions'] as $session) {
                 $sessions[] = [
                     'location'  => $this->createLocationId($session['location'], $session['floor']),
                     'name'      => $session['name'],
-                    // TODO: description(?)
                     'time'      => [ $session['begin'], $session['end'] ],
                 ];
             }
 
-            $events[$entry['id']] = [
+            $events[$identifier] = [
                 'hidden'        => !!$entry['hidden'],
-                'identifier'    => strval($entry['id']),
+                'identifier'    => $identifier,
                 'sessions'      => $sessions,
             ];
 
             if (array_key_exists('event', $this->notes)) {
-                if (array_key_exists($entry['id'], $this->notes['event']))
-                    $events[$entry['id']]['notes'] = $this->notes['event'][$entry['id']];
+                if (array_key_exists($identifier, $this->notes['event']))
+                    $events[$identifier]['notes'] = $this->notes['event'][$identifier];
             }
         }
 
@@ -320,6 +322,153 @@ class EventEndpoint implements Endpoint {
         return $volunteers;
     }
 
+    // Populates the shifts specific to this event. Shift mapping has the ability to create new
+    // locations, as not all shifts can be associated with events on the programme, which is why
+    // the associated properties are passed to this function by reference.
+    private function populateShifts(
+            string $event, Cache $cache, array &$areas, array &$events, array &$locations): array {
+
+        // Event ID to use for event mapping entries that are misconfigured, for example by being
+        // associated with an invalid event ID, or to be created in an area or location that does
+        // not exist in the event configuration.
+        $errorEventId = null;
+
+        // Helper function to lazily get the error event to use for mapping having issues.
+        $getOrCreateErrorEventId = function() use (&$areas, &$events, &$locations, &$errorEventId) {
+            if ($errorEventId)
+                return $errorEventId;
+
+            // (1) Crete an area, location and event for aggregating faulty configuration.
+            $areas['schedule-error-area'] = [
+                'name'          => 'Schedule Errors',
+                'identifier'    => 'schedule-error-area',
+            ];
+
+            $locations[] = [
+                'identifier'    => 'schedule-error-location',
+                'name'          => 'Schedule Errors',
+                'area'          => 'schedule-error-area',
+            ];
+
+            $events['schedule-error'] = [
+                'hidden'        => true,
+                'identifier'    => 'schedule-error',
+                'sessions'      => [
+                    [
+                        'location'      => 'schedule-error-location',
+                        'name'          => 'Schedule Errors',
+                        'time'          => [ time() - 1, time() + 1 ],
+                    ],
+                ],
+            ];
+
+            return $errorEventId = 'schedule-error';
+        };
+
+        $shifts = [];
+        foreach ($this->environments as [ $environment, $registrationDatabase ]) {
+            $scheduleDatabase = null;
+
+            foreach ($environment->getEvents() as $environmentEvent) {
+                if ($environmentEvent->getIdentifier() !== $event)
+                    continue;  // unrelated event
+
+                $settings = $environmentEvent->getScheduleDatabaseSettings();
+                if (!is_array($settings))
+                    continue;  // no data has been specified for this environment
+
+                $spreadsheetId = $settings['spreadsheet'];
+
+                $mappingSheet = $settings['mappingSheet'];
+                $scheduleSheet = $settings['scheduleSheet'];
+                $scheduleSheetStartDate = $settings['scheduleSheetStartDate'];
+
+                $scheduleDatabase = ScheduleDatabaseFactory::openReadOnly(
+                        $cache, $spreadsheetId, $mappingSheet, $scheduleSheet, $scheduleSheetStartDate);
+                break;
+            }
+
+            if (!$scheduleDatabase)
+                continue;  // no schedule database could be located for this environment
+
+            $eventsPendingSessions = [];
+            $identifierMapping = [];
+
+            // (1) Process the |$scheduleDatabase|'s event mapping, and create events and locations
+            //     as appropriate. Each of the identifiers will be added to |$identifierMapping|.
+            foreach ($scheduleDatabase->getEventMapping() as $identifier => $mapping) {
+                // (a) Event ID is given, attach the |$mapping| to that event.
+                if (strlen($mapping['eventId'])) {
+                    if (array_key_exists($mapping['eventId'], $events))
+                        $identifierMapping[$identifier] = $mapping['eventId'];
+                    else
+                        $identifierMapping[$identifier] = $getOrCreateErrorEventId();
+
+                    continue;
+                }
+
+                $locationId = $mapping['locationId'];
+
+                // (b) Location ID is omitted, create a new location for the mapping. Both the area
+                //     and location name must be provided, and the area must exist.
+                if (!strlen($locationId)) {
+                    if (!strlen($mapping['areaId']) || !strlen($mapping['locationName'])) {
+                        $identifierMapping[$identifier] = $getOrCreateErrorEventId();
+                        continue;
+                    }
+
+                    if (!array_key_exists($mapping['areaId'], $areas)) {
+                        $identifierMapping[$identifier] = $getOrCreateErrorEventId();
+                        continue;
+                    }
+
+                    $locationId = substr(md5($mapping['areaId'] . $mapping['locationName']), 0, 8);
+                    if (!array_key_exists($locationId, $locations)) {
+                        $locations[$locationId] = [
+                            'identifier'    => $locationId,
+                            'name'          => $mapping['locationName'],
+                            'area'          => $mapping['areaId'],
+                        ];
+                    }
+                }
+
+                // (c) Event ID is omitted, create a new event for this mapping.
+                $eventId = substr(md5($mapping['description'] . $locationId), 0, 8);
+                if (!array_key_exists($eventId, $events)) {
+                    $eventsPendingSessions[$identifier] = [
+                        'location'  => $locationId,
+                        'shifts'    => [],
+                    ];
+
+                    $events[$eventId] = [
+                        'hidden'        => true,
+                        'identifier'    => $eventId,
+                        'sessions'      => [
+                            [
+                                // TODO: Delete this when session generation has been implemented.
+                                'location'      => $locationId,
+                                'name'          => 'Temporary session',
+                                'time'          => [ time() - 1, time() + 1 ],
+                            ],
+                        ],
+                    ];
+                }
+
+                $identifierMapping[$identifier] = $eventId;
+            }
+
+            // (2) Iterate over all the shifts, and include the ones for whom volunteers are known
+            //     in the |$shifts|. Store sessions in the |$identifierPendingSessions| as well.
+            // TODO
+
+            // (3) For each of the entries in |$identifierPendingSessions|, calculate the actual
+            //     sessions and add them to the event to make it clear when people are scheduled.
+            // TODO
+        }
+
+        return [];
+    }
+
     // Populates a list of the areas present in the event. The areas are made available in the
     // program's events, however, their names are contained in the portal's configuration.
     private function populateAreas(string $event): array {
@@ -351,7 +500,7 @@ class EventEndpoint implements Endpoint {
         $locations = [];
 
         foreach ($this->locationCache as $name => [ 'area' => $area, 'hash' => $hash ]) {
-            $locations[] = [
+            $locations[$hash] = [
                 'identifier'    => $hash,
 
                 'name'          => $name,
