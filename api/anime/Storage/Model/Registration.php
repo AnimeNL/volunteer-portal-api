@@ -219,8 +219,10 @@ class Registration {
     // Returns the URL to this user's avatar, when it exists.
     public function getAvatarUrl($environment): ?string {
         $avatarPath = $this->getAvatarFileSystemPath();
-        $avatarMtime = @ filemtime($avatarPath);
+        if (!file_exists($avatarPath))
+            return null;
 
+        $avatarMtime = @ filemtime($avatarPath);
         if (!$avatarMtime)
             return null;
 

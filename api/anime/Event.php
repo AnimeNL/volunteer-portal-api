@@ -74,7 +74,7 @@ class Event {
     }
 
     // Returns the dates during which the event will take place, as an array with two entries:
-    // [ /* start= */ "YYYY-MM-DD", /* end= */ "YYYY-MM-DD" ].
+    // [ /* start= */ "YYYY-MM-DD HH:II:ss", /* end= */ "YYYY-MM-DD HH:II:ss" ].
     public function getDates(): array {
         return $this->dates;
     }

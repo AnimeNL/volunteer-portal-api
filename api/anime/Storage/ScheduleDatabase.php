@@ -92,10 +92,10 @@ class ScheduleDatabase {
 
             $this->mapping[$mappingEntry[0]] = [
                 'description'   => $mappingEntry[1],
-                'eventId'       => strval($mappingEntry[2]),
-                'areaId'        => strval($mappingEntry[3]),
-                'locationId'    => strval($mappingEntry[4]),
-                'locationName'  => $mappingEntry[5],
+                'eventId'       => strval($mappingEntry[2] ?? ''),
+                'areaId'        => strval($mappingEntry[3] ?? ''),
+                'locationId'    => strval($mappingEntry[4] ?? ''),
+                'locationName'  => $mappingEntry[5] ?? '',
             ];
         }
     }

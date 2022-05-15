@@ -135,6 +135,8 @@ class EventEndpoint implements Endpoint {
             'meta'          => [
                 'name'      => $this->environmentEvent?->getName(),
                 'timezone'  => $this->environmentEvent?->getTimezone(),
+                'time'      => array_map(fn ($timeString) => strtotime($timeString),
+                                         $this->environmentEvent?->getDates()),
             ],
 
             'areas'         => $areas,

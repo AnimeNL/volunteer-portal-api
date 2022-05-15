@@ -86,7 +86,7 @@
 
             "program": "json-file-in-the-cache-folder.json",
 
-            "dates": [ "2020-06-01", "2020-06-03" ],
+            "dates": [ "2020-06-01 14:00:00", "2020-06-03 20:00:00" ],
             "timezone": "Europe/London",
         }
     },

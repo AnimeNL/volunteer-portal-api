@@ -68,8 +68,8 @@ class Validation {
                         throw new \Exception($prefix . ' was expected have two entries.');
 
                     foreach ($value as $date) {
-                        if (!preg_match('/^\d{4}\-\d{2}\-\d{2}$/s', $date))
-                            throw new \Exception($prefix . ' was expected to contain YYYY-MM-DD values.');
+                        if (!preg_match('/^\d{4}\-\d{2}\-\d{2} \d{2}:\d{2}:\d{2}$/s', $date))
+                            throw new \Exception($prefix . ' was expected to contain `YYYY-MM-DD HH:II:ss` values.');
                     }
 
                     break;
