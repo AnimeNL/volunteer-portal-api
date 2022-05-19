@@ -59,7 +59,10 @@ class EventEndpoint implements Endpoint {
     private const PRIVILEGE_ACCESS_CODES = 1;
     private const PRIVILEGE_CROSS_ENVIRONMENT = 2;
     private const PRIVILEGE_PHONE_NUMBERS = 4;
-    private const PRIVILEGE_USER_NOTES = 8;
+    private const PRIVILEGE_UPDATE_AVATAR_ANY = 8;
+    private const PRIVILEGE_UPDATE_AVATAR_ENVIRONMENT = 16;
+    private const PRIVILEGE_UPDATE_EVENT_NOTES = 32;
+    private const PRIVILEGE_USER_NOTES = 64;
 
     // List of hosts whose seniors have the ability to access volunteers of the other environments.
     // Shared with the AvatarEndpoint.
@@ -131,18 +134,40 @@ class EventEndpoint implements Endpoint {
         usort($locations, CreateAreaOrLocationComparator());
         usort($volunteers, CreateVolunteerComparator());
 
+        // Populate the |$userPrivileges| based on the privileges that have already been assigned
+        // while authenticating and preparing the event.
+        $userPrivileges = [];
+
+        // ['update-avatar-*'] Ability to update the avatar for oneself, or multiple volunteers.
+        if ($this->privileges & self::PRIVILEGE_UPDATE_AVATAR_ANY)
+            $userPrivileges[] = 'update-avatar-any';
+        else if ($this->privileges & self::PRIVILEGE_UPDATE_AVATAR_ENVIRONMENT)
+            $userPrivileges[] = 'update-avatar-environment';
+        else
+            $userPrivileges[] = 'update-avatar-self';
+
+        // ['update-event-notes'] Ability to update the notes for events on the programme.
+        if ($this->privileges & self::PRIVILEGE_UPDATE_EVENT_NOTES)
+            $userPrivileges[] = 'update-event-notes';
+
+        // ['update-user-notes'] Ability to see and edit notes for all the volunteers.
+        if ($this->privileges & self::PRIVILEGE_USER_NOTES)
+            $userPrivileges[] = 'update-user-notes';
+
+        // Finally, return the populated event information.
         return [
-            'meta'          => [
-                'name'      => $this->environmentEvent?->getName(),
-                'timezone'  => $this->environmentEvent?->getTimezone(),
-                'time'      => array_map(fn ($timeString) => strtotime($timeString),
-                                         $this->environmentEvent?->getDates()),
+            'meta'              => [
+                'name'          => $this->environmentEvent?->getName(),
+                'timezone'      => $this->environmentEvent?->getTimezone(),
+                'time'          => array_map(fn ($timeString) => strtotime($timeString),
+                                             $this->environmentEvent?->getDates()),
             ],
 
-            'areas'         => $areas,
-            'events'        => $events,
-            'locations'     => $locations,
-            'volunteers'    => $volunteers,
+            'areas'             => $areas,
+            'events'            => $events,
+            'locations'         => $locations,
+            'userPrivileges'    => $userPrivileges,
+            'volunteers'        => $volunteers,
         ];
     }
 
@@ -183,11 +208,16 @@ class EventEndpoint implements Endpoint {
 
             if ($isStaff || $isSenior) {
                 $this->privileges |= self::PRIVILEGE_PHONE_NUMBERS;
+                $this->privileges |= self::PRIVILEGE_UPDATE_EVENT_NOTES;
                 $this->privileges |= self::PRIVILEGE_USER_NOTES;
-            }
 
-            if (($isStaff || $isSenior) && $isCrossEnvironmentAllowedHost)
-                $this->privileges |= self::PRIVILEGE_CROSS_ENVIRONMENT;
+                if ($isCrossEnvironmentAllowedHost) {
+                    $this->privileges |= self::PRIVILEGE_CROSS_ENVIRONMENT;
+                    $this->privileges |= self::PRIVILEGE_UPDATE_AVATAR_ANY;
+                } else {
+                    $this->privileges |= self::PRIVILEGE_UPDATE_AVATAR_ENVIRONMENT;
+                }
+            }
 
             break;
         }
