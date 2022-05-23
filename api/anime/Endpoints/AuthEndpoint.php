@@ -33,12 +33,13 @@ class AuthEndpoint implements Endpoint {
         $database = $api->getRegistrationDatabase(/* writable= */ false);
 
         $expirationMinutes = $configuration->get('authentication/sessionTimeoutMinutes');
+        $normalizedEmailAddress = strtolower($requestData['emailAddress']);
 
         if ($database) {
             $registrations = $database->getRegistrations();
 
             foreach ($registrations as $registration) {
-                if ($registration->getEmailAddress() !== $requestData['emailAddress'])
+                if ($registration->getEmailAddress() !== $normalizedEmailAddress)
                     continue;  // non-matching e-mail address
 
                 if ($registration->getAccessCode() !== $requestData['accessCode'])
