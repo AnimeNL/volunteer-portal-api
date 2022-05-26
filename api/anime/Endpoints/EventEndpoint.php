@@ -460,6 +460,10 @@ class EventEndpoint implements Endpoint {
                 }
 
                 $locationId = $mapping['locationId'];
+                if (!array_key_exists($locationId, $locations)) {
+                    $identifierMapping[$identifier] = $getOrCreateErrorEventId();
+                    continue;
+                }
 
                 // (b) Location ID is omitted, create a new location for the mapping. Both the area
                 //     and location name must be provided, and the area must exist.
