@@ -2,6 +2,10 @@ Stewards are the hosts of our festival, the first line of defense when trouble a
 eager to help out with crowd management, safety checks, escorting special guests and assisting our
 security and first aid teams, then we are looking for **you**!
 
+>> Unfortuantely we cannot accept any further registrations for **AnimeCon 2022: Regular Edition**.
+>> Please [reach out by e-mail](mailto:security@animecon.nl) if you have any further questions, or
+>> wait for AnimeCon 2022: Classic Edition registration to open in the next few days.
+
 ## What is expected of you?
 
   * You're at least 18 years of age during AnimeCon 2022 (June 10-12), and are
