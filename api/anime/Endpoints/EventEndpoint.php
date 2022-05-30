@@ -183,6 +183,7 @@ class EventEndpoint implements Endpoint {
         if (!$registrationDatabase)
             return false;  // no registration database is available
 
+        $foundRegistration = false;
         foreach ($registrationDatabase->getRegistrations() as $registration) {
             if ($registration->getAuthToken() !== $authToken)
                 continue;  // non-matching authentication token
@@ -192,6 +193,7 @@ class EventEndpoint implements Endpoint {
                 continue;  // non-participating authentication token
 
             $this->registration = $registration;
+            $foundRegistration = true;
 
             // Administrators have all access, so skip the additional access checks.
             if ($registration->isAdministrator()) {
@@ -223,7 +225,7 @@ class EventEndpoint implements Endpoint {
             break;
         }
 
-        if (!$this->registration)
+        if (!$foundRegistration)
             return false;  // no registration could be identified
 
         $this->environments = [[ $currentEnvironment, $registrationDatabase ]];
