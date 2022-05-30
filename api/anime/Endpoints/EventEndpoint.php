@@ -66,7 +66,8 @@ class EventEndpoint implements Endpoint {
 
     // List of hosts whose seniors have the ability to access volunteers of the other environments.
     // Shared with the AvatarEndpoint.
-    public const CROSS_ENVIRONMENT_HOSTS_ALLOWLIST = [ 'stewards.team '];
+    public const CROSS_ENVIRONMENT_HOSTS_ALLOWLIST =
+        [ 'gophers.team', 'hosts.team', 'stewards.team '];
 
     // Salt used for hashing the location identifiers.
     private const LOCATION_SALT = '3hhmgPw4';
@@ -502,6 +503,11 @@ class EventEndpoint implements Endpoint {
                         'identifier'    => $eventId,
                         'sessions'      => [],
                     ];
+
+                    if (array_key_exists('event', $this->notes)) {
+                        if (array_key_exists($eventId, $this->notes['event']))
+                            $events[$eventId]['notes'] = $this->notes['event'][$eventId];
+                    }
                 }
 
                 $identifierMapping[$identifier] = $eventId;
