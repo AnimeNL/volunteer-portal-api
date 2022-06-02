@@ -23,11 +23,8 @@ class Privileges {
     public const PRIVILEGE_UPDATE_AVATAR_ANY = 32;
     public const PRIVILEGE_UPDATE_AVATAR_ENVIRONMENT = 64;
     public const PRIVILEGE_UPDATE_EVENT_NOTES = 128;
-    public const PRIVILEGE_USER_NOTES = 256;
-
     public const PRIVILEGE_USER_NOTES_ANY = 256;
-    public const PRIVILEGE_USER_NOTES_ENVIRONMENT = 512;  // TODO: Not yet supported
-
+    public const PRIVILEGE_USER_NOTES_ENVIRONMENT = 512;
     public const PRIVILEGE_NARDO = 1024;
 
     // List of hosts and which environments they have access to. This is to enable hosts and

@@ -130,9 +130,11 @@ class EventEndpoint implements Endpoint {
         if ($this->privileges->can(Privileges::PRIVILEGE_UPDATE_EVENT_NOTES))
             $userPrivileges[] = 'update-event-notes';
 
-        // ['update-user-notes'] Ability to see and edit notes for all the volunteers.
-        if ($this->privileges->can(Privileges::PRIVILEGE_USER_NOTES))
-            $userPrivileges[] = 'update-user-notes';  // TODO: split up {any, environment}
+        // ['update-user-notes-*'] Ability to see and edit notes for all the volunteers.
+        if ($this->privileges->can(Privileges::PRIVILEGE_USER_NOTES_ANY))
+            $userPrivileges[] = 'update-user-notes-any';
+        else if ($this->privileges->can(Privileges::PRIVILEGE_USER_NOTES_ENVIRONMENT))
+            $userPrivileges[] = 'update-user-notes-environment';
 
         // Finally, return the populated event information.
         $response = [
