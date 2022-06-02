@@ -61,6 +61,8 @@ class Privileges {
             $environments = self::CROSS_ENVIRONMENT_LIST;
 
             $privileges |= self::PRIVILEGE_PHONE_NUMBERS_ANY;
+            $privileges |= self::PRIVILEGE_PHONE_NUMBERS_ENVIRONMENT;
+
             $privileges |= self::PRIVILEGE_UPDATE_EVENT_NOTES;
 
             $privileges |= self::PRIVILEGE_ACCESS_CODES_ENVIRONMENT;
