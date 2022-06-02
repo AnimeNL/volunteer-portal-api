@@ -346,7 +346,8 @@ class EventEndpoint implements Endpoint {
 
                 // After all other checks, verify that the |$registration| is not more senior than
                 // the authenticated user, in which case we'll want to delete the access code.
-                if (array_key_exists('accessCode', $volunteer)) {
+                if (array_key_exists('accessCode', $volunteer) &&
+                        $this->registration->getUserToken() !== $token) {
                     $selfStaff = stripos($this->registrationEventRole, 'Staff') !== false;
 
                     if (($registrationStaff || $registrationSenior) && !$selfStaff)
