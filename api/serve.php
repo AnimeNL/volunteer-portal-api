@@ -42,6 +42,9 @@ switch ($requestUri) {
     case '/api/event':
         $endpoint = new \Anime\Endpoints\EventEndpoint;
         break;
+    case '/api/nardo':
+        $endpoint = new \Anime\Endpoints\NardoEndpoint;
+        break;
     case '/api/notes':
         $endpoint = new \Anime\Endpoints\NotesEndpoint;
         break;

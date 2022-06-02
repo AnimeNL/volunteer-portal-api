@@ -10,6 +10,7 @@ namespace Anime\Endpoints;
 use \Anime\Api;
 use \Anime\Endpoint;
 use \Anime\EnvironmentFactory;
+use \Anime\Privileges;
 
 // Allows an avatar to be uploaded. Whether this is allowed depends on the role of the person who
 // is uploading the avatar, as well as whose avatar is being uploaded.
@@ -37,85 +38,88 @@ class AvatarEndpoint implements Endpoint {
         $currentEnvironment = $api->getEnvironment();
 
         $database = $api->getRegistrationDatabase(/* writable= */ false);
+        if (!$database)
+            return [ 'error' => 'The registration database is not available.' ];
 
         // Registration of the person requesting the edit.
+        $editorEnvironment = null;
         $editorRegistration = null;
 
         // Subject of the editing request. It's possible for this to be the same as the editor.
+        $subjectEnvironment = null;
         $subjectRegistration = null;
 
-        if ($database) {
-            $registrations = $database->getRegistrations();
+        foreach ($database->getRegistrations() as $registration) {
+            if ($registration->getAuthToken() === $requestParameters['authToken']) {
+                $editorEnvironment = $currentEnvironment;
+                $editorRegistration = $registration;
+            }
 
-            foreach ($registrations as $registration) {
-                if ($registration->getAuthToken() === $requestParameters['authToken'])
-                    $editorRegistration = $registration;
-
-                if ($registration->getUserToken() === $requestData['userToken'])
-                    $subjectRegistration = $registration;
+            if ($registration->getUserToken() === $requestData['userToken']) {
+                $subjectEnvironment = $currentEnvironment;
+                $subjectRegistration = $registration;
             }
         }
 
-        // If |$editorRegistration| is an administrator, there is a possibility that we have to
-        // check out the other environments to find the right |$subjectRegistration|.
-        if ($editorRegistration && !$subjectRegistration) {
-            $role = $editorRegistration->getEventAcceptedRole($requestParameters['event']) ?? 'none';
+        if (!$editorRegistration)
+            return [ 'error' => 'Unable to authenticate the uploader.' ];
 
-            $isAdministrator = $editorRegistration->isAdministrator();
+        // Establish the privileges that have been assigned to the |$editorRegistration|, which
+        // control their ability to change avatars for certain groups of volunteers.
+        $privileges = Privileges::forRegistration(
+            $currentEnvironment, $editorRegistration, $requestParameters['event']);
 
-            $isStaff = stripos($role, 'Staff') !== false;
-            $isSenior = stripos($role, 'Senior') !== false;
+        // If |$subjectRegistration| could not be identified, it's possible that the editor has the
+        // privilege to alter avatars of volunteers in other environments. Verify.
+        foreach ($privileges->getEnvironments() as $environmentHostname) {
+            if ($privileges->isOwnEnvironment($environmentHostname))
+                continue;  // already consulted
 
-            $isCrossEnvironmentAllowedHost = in_array(
-                $currentEnvironmentHostname, EventEndpoint::CROSS_ENVIRONMENT_HOSTS_ALLOWLIST);
+            $environment = EnvironmentFactory::createForHostname(
+                    $api->getConfiguration(), $environmentHostname);
 
-            // This follows the logic in the EventEndpoint to decide whether the volunteer is able
-            // to see the other environments. We really should abstract this in a function.
-            if ($isAdministrator || (($isStaff || $isSenior) && $isCrossEnvironmentAllowedHost)) {
-                foreach (EnvironmentFactory::getAll($configuration) as $environment) {
-                    if ($environment->getHostname() === $currentEnvironment->getHostname())
+            if (!$environment->isValid())
+                continue;  // the |$environment| is invalid for some reason
+
+            foreach ($environment->getEvents() as $environmentEvent) {
+                if ($environmentEvent->getIdentifier() !== $requestParameters['event'])
+                    continue;  // unrelated event
+
+                $environmentRegistrationDatabase = $api->getRegistrationDatabaseForEnvironment(
+                        $environment, /* $writable= */ false);
+
+                if (!$environmentRegistrationDatabase)
+                    continue;  // no registration database is available
+
+                foreach ($environmentRegistrationDatabase->getRegistrations() as $registration) {
+                    if ($registration->getUserToken() !== $requestData['userToken'])
                         continue;
 
-                    foreach ($environment->getEvents() as $environmentEvent) {
-                        if ($environmentEvent->getIdentifier() !== $requestData['event'])
-                            continue;  // unrelated event
-
-                        $environmentDatabase = $api->getRegistrationDatabaseForEnvironment(
-                                $environment, /* $writable= */ false);
-
-                        if (!$environmentDatabase)
-                            continue;  // no environment database
-
-                        foreach ($environmentDatabase->getRegistrations() as $registration) {
-                            if ($registration->getUserToken() !== $requestData['userToken'])
-                                continue;
-
-                            $subjectRegistration = $registration;
-                            break 3;
-                        }
-                    }
+                    $subjectEnvironment = $environment;
+                    $subjectRegistration = $registration;
+                    break 3;
                 }
             }
         }
 
         // We require both |$editorRegistration| and |$subjectRegistration| to be available.
         if (!$editorRegistration || !$subjectRegistration)
-            return [ 'error' => 'Unable to identify the affected registrations.' ];
+            return [ 'error' => 'Unable to identify the affected registration.' ];
 
-        $role = $editorRegistration->getEventAcceptedRole($requestParameters['event']) ?? 'none';
+        // Decide whether the |$editorRegistration| has the ability to update the avatar owned by
+        // the |$subjectRegistration|. This is verified through granted privileges.
+        $allowed = false;
 
-        // Access is granted when either:
-        //     (1) The |$editorRegistration| is an administrator,
-        $isAdministrator = $editorRegistration->isAdministrator();
+        if ($editorRegistration === $subjectRegistration) {
+            $allowed = true;
+        } else {
+            if ($editorEnvironment === $subjectEnvironment)
+                $allowed = $privileges->can(Privileges::PRIVILEGE_UPDATE_AVATAR_ENVIRONMENT);
+            else
+                $allowed = $privileges->can(Privileges::PRIVILEGE_UPDATE_AVATAR_ANY);
+        }
 
-        //     (2) The |$editorRegistration| is a senior or staff volunteer during this event,
-        $isStaff = stripos($role, 'Staff') !== false;
-        $isSenior = stripos($role, 'Senior') !== false;
-
-        //     (3) The |$editorRegistration| and |$subjectRegistration| are the same person.
-        $isSamePerson = $editorRegistration === $subjectRegistration;
-
-        if (!($isAdministrator || ($isSenior || $isStaff) || $isSamePerson))
+        if (!$allowed)
             return [ 'error' => 'You are not allowed to update this avatar.' ];
 
         // Now that we know the |$editorRegistration| is allowed to change the subject's avatar, do

@@ -12,6 +12,7 @@ use \Anime\Cache;
 use \Anime\Endpoint;
 use \Anime\EnvironmentFactory;
 use \Anime\Event;
+use \Anime\Privileges;
 use \Anime\Storage\Model\Registration;
 use \Anime\Storage\NotesDatabase;
 use \Anime\Storage\RegistrationDatabase;
@@ -51,51 +52,26 @@ function CreateVolunteerComparator() {
 //
 // See https://github.com/AnimeNL/volunteer-portal/blob/main/API.md#apievent
 class EventEndpoint implements Endpoint {
-    private const PRIVILEGE_NONE = 0;
-    private const PRIVILEGE_ALL = PHP_INT_MAX;
-
-    // Privileges that can be assigned to individuals based on their access level, role, team and
-    // whether or not they've been marked as an administrator.
-    private const PRIVILEGE_ACCESS_CODES = 1;
-    private const PRIVILEGE_CROSS_ENVIRONMENT = 2;
-    private const PRIVILEGE_PHONE_NUMBERS = 4;
-    private const PRIVILEGE_UPDATE_AVATAR_ANY = 8;
-    private const PRIVILEGE_UPDATE_AVATAR_ENVIRONMENT = 16;
-    private const PRIVILEGE_UPDATE_EVENT_NOTES = 32;
-    private const PRIVILEGE_USER_NOTES = 64;
-
-    // List of hosts whose seniors have the ability to access volunteers of the other environments.
-    // Shared with the AvatarEndpoint.
-    public const CROSS_ENVIRONMENT_HOSTS_ALLOWLIST =
-        [ 'gophers.team', 'hosts.team', 'stewards.team '];
-
     // Salt used for hashing the location identifiers.
     private const LOCATION_SALT = '3hhmgPw4';
 
     // The list of environments that the requesting user has access to.
-    private array $environments;
+    private array $environments = [ /* empty by default */ ];
 
     // The Event instance in the portal's primary environment for this request.
-    private Event | null $environmentEvent;
+    private Event | null $environmentEvent = null;
 
     // The privileges associated with the user who's requesting the event information.
-    private int $privileges;
+    private Privileges | null $privileges = null;
 
     // The registration associated with the requesting user, if any.
-    private Registration | null $registration;
+    private Registration | null $registration = null;
 
     // Cache of the location IDs that have already been assigned.
-    private array $locationCache;
+    private array $locationCache = [];
 
     // Array of all notes that are available for this event.
-    private array $notes;
-
-    public function __construct() {
-        $this->environments = [ /* empty by default */ ];
-        $this->environmentEvent = null;
-        $this->privileges = self::PRIVILEGE_NONE;
-        $this->locationCache = [];
-    }
+    private array $notes = [];
 
     public function validateInput(array $requestParameters, array $requestData): bool | string {
         if (!array_key_exists('authToken', $requestParameters))
@@ -140,23 +116,23 @@ class EventEndpoint implements Endpoint {
         $userPrivileges = [];
 
         // ['update-avatar-*'] Ability to update the avatar for oneself, or multiple volunteers.
-        if ($this->privileges & self::PRIVILEGE_UPDATE_AVATAR_ANY)
+        if ($this->privileges->can(Privileges::PRIVILEGE_UPDATE_AVATAR_ANY))
             $userPrivileges[] = 'update-avatar-any';
-        else if ($this->privileges & self::PRIVILEGE_UPDATE_AVATAR_ENVIRONMENT)
+        else if ($this->privileges->can(Privileges::PRIVILEGE_UPDATE_AVATAR_ENVIRONMENT))
             $userPrivileges[] = 'update-avatar-environment';
         else
             $userPrivileges[] = 'update-avatar-self';
 
         // ['update-event-notes'] Ability to update the notes for events on the programme.
-        if ($this->privileges & self::PRIVILEGE_UPDATE_EVENT_NOTES)
+        if ($this->privileges->can(Privileges::PRIVILEGE_UPDATE_EVENT_NOTES))
             $userPrivileges[] = 'update-event-notes';
 
         // ['update-user-notes'] Ability to see and edit notes for all the volunteers.
-        if ($this->privileges & self::PRIVILEGE_USER_NOTES)
-            $userPrivileges[] = 'update-user-notes';
+        if ($this->privileges->can(Privileges::PRIVILEGE_USER_NOTES))
+            $userPrivileges[] = 'update-user-notes';  // TODO: split up {any, environment}
 
         // Finally, return the populated event information.
-        return [
+        $response = [
             'meta'              => [
                 'name'          => $this->environmentEvent?->getName(),
                 'timezone'      => $this->environmentEvent?->getTimezone(),
@@ -170,6 +146,16 @@ class EventEndpoint implements Endpoint {
             'userPrivileges'    => $userPrivileges,
             'volunteers'        => $volunteers,
         ];
+
+        if ($this->privileges->can(Privileges::PRIVILEGE_NARDO)
+                && is_readable(NardoEndpoint::NARDO_PATH)) {
+            $requests = json_decode(file_get_contents(NardoEndpoint::NARDO_PATH), true);
+            arsort($requests);  // sort by value in descending order, maintain index association
+
+            $response['nardo'] = array_slice($requests, 0, 5, /* $preserve_keys= */ true);
+        }
+
+        return $response;
     }
 
     // Authenticates the user's authentication token and event information against the registration
@@ -193,60 +179,36 @@ class EventEndpoint implements Endpoint {
                 continue;  // non-participating authentication token
 
             $this->registration = $registration;
-            $foundRegistration = true;
-
-            // Administrators have all access, so skip the additional access checks.
-            if ($registration->isAdministrator()) {
-                $this->privileges = self::PRIVILEGE_ALL;
-                break;
-            }
-
-            // Access to phone numbers is limited to Staff and Senior members of our volunteer
-            // force, whereas cross-environment access is limited to an allowlist.
-            $isStaff = stripos($role, 'Staff') !== false;
-            $isSenior = stripos($role, 'Senior') !== false;
-
-            $isCrossEnvironmentAllowedHost = in_array(
-                    $currentEnvironmentHostname, self::CROSS_ENVIRONMENT_HOSTS_ALLOWLIST);
-
-            if ($isStaff || $isSenior) {
-                $this->privileges |= self::PRIVILEGE_PHONE_NUMBERS;
-                $this->privileges |= self::PRIVILEGE_UPDATE_EVENT_NOTES;
-                $this->privileges |= self::PRIVILEGE_USER_NOTES;
-
-                if ($isCrossEnvironmentAllowedHost) {
-                    $this->privileges |= self::PRIVILEGE_CROSS_ENVIRONMENT;
-                    $this->privileges |= self::PRIVILEGE_UPDATE_AVATAR_ANY;
-                } else {
-                    $this->privileges |= self::PRIVILEGE_UPDATE_AVATAR_ENVIRONMENT;
-                }
-            }
-
-            break;
+            $this->privileges = Privileges::forRegistration(
+                    $currentEnvironment, $registration, $event);
         }
 
-        if (!$foundRegistration)
+        if (!$this->privileges || !$this->registration)
             return false;  // no registration could be identified
 
         $this->environments = [[ $currentEnvironment, $registrationDatabase ]];
+        foreach ($this->privileges->getEnvironments() as $environmentHostname) {
+            if ($this->privileges->isOwnEnvironment($environmentHostname))
+                continue;  // already included in |$this->environments|
 
-        if ($this->privileges & self::PRIVILEGE_CROSS_ENVIRONMENT) {
-            foreach (EnvironmentFactory::getAll($api->getConfiguration()) as $environment) {
-                if ($environment->getHostname() === $currentEnvironmentHostname)
-                    continue;
+            $environment = EnvironmentFactory::createForHostname(
+                    $api->getConfiguration(), $environmentHostname);
 
-                foreach ($environment->getEvents() as $environmentEvent) {
-                    if ($environmentEvent->getIdentifier() !== $event)
-                        continue;  // unrelated event
+            if (!$environment->isValid())
+                continue;  // the |$environment| is invalid for some reason
 
-                    $environmentRegistrationDatabase = $api->getRegistrationDatabaseForEnvironment(
-                            $environment, /* $writable= */ false);
-                    if (!$environmentRegistrationDatabase)
-                        continue;  // no registration database is available
+            foreach ($environment->getEvents() as $environmentEvent) {
+                if ($environmentEvent->getIdentifier() !== $event)
+                    continue;  // unrelated event
 
-                    $this->environments[] = [ $environment, $environmentRegistrationDatabase ];
-                    break;
-                }
+                $environmentRegistrationDatabase = $api->getRegistrationDatabaseForEnvironment(
+                        $environment, /* $writable= */ false);
+
+                if (!$environmentRegistrationDatabase)
+                    continue;  // no registration database is available
+
+                $this->environments[] = [ $environment, $environmentRegistrationDatabase ];
+                break;
             }
         }
 
@@ -307,6 +269,8 @@ class EventEndpoint implements Endpoint {
         foreach ($this->environments as [ $environment, $registrationDatabase ]) {
             $environmentId = $environment->getShortName();
 
+            $isOwnEnvironment = $this->privileges->isOwnEnvironment($environment);
+
             foreach ($registrationDatabase->getRegistrations() as $registration) {
                 $role = $registration->getEventAcceptedRole($event);
                 if (!$role)
@@ -326,19 +290,39 @@ class EventEndpoint implements Endpoint {
                     ],
                     'identifier'    => $token,
                     'environments'  => [
-                        $environmentId => $role
+                        $environmentId => $role,
                     ],
                     'shifts'        => [],
                 ];
 
                 // Supplement privileged information to the volunteer's entry when allowed.
-                if ($this->privileges & self::PRIVILEGE_ACCESS_CODES)
-                    $volunteer['accessCode'] = $registration->getAccessCode();
+                if ($isOwnEnvironment) {
+                    if ($this->privileges->can(Privileges::PRIVILEGE_ACCESS_CODES_ENVIRONMENT))
+                        $volunteer['accessCode'] = $registration->getAccessCode();
 
-                if ($this->privileges & self::PRIVILEGE_PHONE_NUMBERS)
-                    $volunteer['phoneNumber'] = $registration->getPhoneNumber();
+                    if ($this->privileges->can(Privileges::PRIVILEGE_PHONE_NUMBERS_ENVIRONMENT))
+                        $volunteer['phoneNumber'] = $registration->getPhoneNumber();
 
-                if ($this->privileges & self::PRIVILEGE_USER_NOTES) {
+                } else {
+                    if ($this->privileges->can(Privileges::PRIVILEGE_ACCESS_CODES_ANY))
+                        $volunteer['accessCode'] = $registration->getAccessCode();
+
+                    if ($this->privileges->can(Privileges::PRIVILEGE_PHONE_NUMBERS_ANY))
+                        $volunteer['phoneNumber'] = $registration->getPhoneNumber();
+                }
+
+                // Phone numbers of Senior and Staff volunteers can be included in more cases,
+                // making it easy for volunteers to contact someone in case of emergency.
+                if (!array_key_exists('phoneNumber', $volunteer)) {
+                    $isStaff = stripos($role, 'Staff') !== false;
+                    $isSenior = stripos($role, 'Senior') !== false;
+
+                    if ($this->privileges->can(Privileges::PRIVILEGE_PHONE_NUMBERS_SENIORS))
+                        $volunteer['phoneNumber'] = $registration->getPhoneNumber();
+                }
+
+                // TODO: Support limited visibility for user notes.
+                if ($this->privileges->can(Privileges::PRIVILEGE_USER_NOTES)) {
                     if (array_key_exists('volunteer', $this->notes)) {
                         if (array_key_exists($token, $this->notes['volunteer']))
                             $volunteer['notes'] = $this->notes['volunteer'][$token];
