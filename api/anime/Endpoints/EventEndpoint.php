@@ -332,22 +332,21 @@ class EventEndpoint implements Endpoint {
                     }
                 }
 
+                $registrationStaff = stripos($role, 'Staff') !== false;
+                $registrationSenior = stripos($role, 'Senior') !== false;
+
                 // Phone numbers of Senior and Staff volunteers can be included in more cases,
                 // making it easy for volunteers to contact someone in case of emergency.
-                if (!array_key_exists('phoneNumber', $volunteer)) {
-                    $isStaff = stripos($role, 'Staff') !== false;
-                    $isSenior = stripos($role, 'Senior') !== false;
+                if ($this->privileges->can(Privileges::PRIVILEGE_PHONE_NUMBERS_SENIORS) &&
+                        !array_key_exists('phoneNumber', $volunteer)) {
 
-                    if ($this->privileges->can(Privileges::PRIVILEGE_PHONE_NUMBERS_SENIORS))
+                    if ($registrationStaff || $registrationSenior)
                         $volunteer['phoneNumber'] = $registration->getPhoneNumber();
                 }
 
                 // After all other checks, verify that the |$registration| is not more senior than
                 // the authenticated user, in which case we'll want to delete the access code.
                 if (array_key_exists('accessCode', $volunteer)) {
-                    $registrationStaff = stripos($role, 'Staff') !== false;
-                    $registrationSenior = stripos($role, 'Senior') !== false;
-
                     $selfStaff = stripos($this->registrationEventRole, 'Staff') !== false;
 
                     if (($registrationStaff || $registrationSenior) && !$selfStaff)
