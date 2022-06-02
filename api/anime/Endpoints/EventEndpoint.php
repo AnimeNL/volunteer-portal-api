@@ -67,6 +67,9 @@ class EventEndpoint implements Endpoint {
     // The registration associated with the requesting user, if any.
     private Registration | null $registration = null;
 
+    // The role the |$registration| has been granted in the current event, if any.
+    private string | null $registrationEventRole = null;
+
     // Cache of the location IDs that have already been assigned.
     private array $locationCache = [];
 
@@ -179,6 +182,8 @@ class EventEndpoint implements Endpoint {
                 continue;  // non-participating authentication token
 
             $this->registration = $registration;
+            $this->registrationEventRole = $role;
+
             $this->privileges = Privileges::forRegistration(
                     $currentEnvironment, $registration, $event);
         }
@@ -303,12 +308,26 @@ class EventEndpoint implements Endpoint {
                     if ($this->privileges->can(Privileges::PRIVILEGE_PHONE_NUMBERS_ENVIRONMENT))
                         $volunteer['phoneNumber'] = $registration->getPhoneNumber();
 
+                    if ($this->privileges->can(Privileges::PRIVILEGE_USER_NOTES_ENVIRONMENT)) {
+                        if (array_key_exists('volunteer', $this->notes)) {
+                            if (array_key_exists($token, $this->notes['volunteer']))
+                                $volunteer['notes'] = $this->notes['volunteer'][$token];
+                        }
+                    }
+
                 } else {
                     if ($this->privileges->can(Privileges::PRIVILEGE_ACCESS_CODES_ANY))
                         $volunteer['accessCode'] = $registration->getAccessCode();
 
                     if ($this->privileges->can(Privileges::PRIVILEGE_PHONE_NUMBERS_ANY))
                         $volunteer['phoneNumber'] = $registration->getPhoneNumber();
+
+                    if ($this->privileges->can(Privileges::PRIVILEGE_USER_NOTES_ANY)) {
+                        if (array_key_exists('volunteer', $this->notes)) {
+                            if (array_key_exists($token, $this->notes['volunteer']))
+                                $volunteer['notes'] = $this->notes['volunteer'][$token];
+                        }
+                    }
                 }
 
                 // Phone numbers of Senior and Staff volunteers can be included in more cases,
@@ -321,12 +340,16 @@ class EventEndpoint implements Endpoint {
                         $volunteer['phoneNumber'] = $registration->getPhoneNumber();
                 }
 
-                // TODO: Support limited visibility for user notes.
-                if ($this->privileges->can(Privileges::PRIVILEGE_USER_NOTES)) {
-                    if (array_key_exists('volunteer', $this->notes)) {
-                        if (array_key_exists($token, $this->notes['volunteer']))
-                            $volunteer['notes'] = $this->notes['volunteer'][$token];
-                    }
+                // After all other checks, verify that the |$registration| is not more senior than
+                // the authenticated user, in which case we'll want to delete the access code.
+                if (array_key_exists('accessCode', $volunteer)) {
+                    $registrationStaff = stripos($role, 'Staff') !== false;
+                    $registrationSenior = stripos($role, 'Senior') !== false;
+
+                    $selfStaff = stripos($this->registrationEventRole, 'Staff') !== false;
+
+                    if (($registrationStaff || $registrationSenior) && !$selfStaff)
+                        unset($volunteer['accessCode']);
                 }
 
                 // Supplement information about the user's avatar when it can be found on the file-

@@ -55,13 +55,15 @@ class Privileges {
 
         // Access to phone numbers and access codes is limited to staff and senior volunteers, where
         // the distinction between the levels influences multi-environment access.
+        $role = $registration->getEventAcceptedRole($event);
+
         $isStaff = stripos($role, 'Staff') !== false;
         $isSenior = stripos($role, 'Senior') !== false;
 
         if ($isStaff || $isSenior) {
             $environments = self::CROSS_ENVIRONMENT_LIST;
 
-            $privileges |= self::PRIVILEGE_PHONE_NUMBERS;
+            $privileges |= self::PRIVILEGE_PHONE_NUMBERS_ANY;
             $privileges |= self::PRIVILEGE_UPDATE_EVENT_NOTES;
 
             $privileges |= self::PRIVILEGE_ACCESS_CODES_ENVIRONMENT;
