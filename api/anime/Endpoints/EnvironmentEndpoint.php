@@ -36,15 +36,16 @@ class EnvironmentEndpoint implements Endpoint {
         }
 
         return [
-            'title'         => $environment->getTitle(),
+            'title'                 => $environment->getTitle(),
 
-            'themeColor'    => $environment->getThemeColor(),
-            'themeTitle'    => $environment->getThemeTitle(),
+            'themeColor'            => $environment->getThemeColor(),
+            'themeColorDarkMode'    => $environment->getThemeColorDarkMode(),
+            'themeTitle'            => $environment->getThemeTitle(),
 
-            'events'        => $events,
+            'events'                => $events,
 
-            'contactName'   => $environment->getContactName(),
-            'contactTarget' => $environment->getContactTarget(),
+            'contactName'           => $environment->getContactName(),
+            'contactTarget'         => $environment->getContactTarget(),
         ];
     }
 }

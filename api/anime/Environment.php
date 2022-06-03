@@ -22,6 +22,7 @@ class Environment {
     private array $events;
     private string $title;
     private string $themeColor;
+    private string $themeColorDarkMode;
     private string $themeTitle;
     private string $shortName;
 
@@ -44,6 +45,7 @@ class Environment {
         $this->title = $settings['title'];
 
         $this->themeColor = $settings['themeColor'];
+        $this->themeColorDarkMode = $settings['themeColorDarkMode'];
         $this->themeTitle = $settings['themeTitle'];
 
         $this->shortName = $settings['shortName'];
@@ -126,6 +128,11 @@ class Environment {
     // Returns the theme color in which the application should be themed.
     public function getThemeColor(): string {
         return $this->themeColor;
+    }
+
+    // Returns the theme color in which the application should be themed when in dark mode.
+    public function getThemeColorDarkMode(): string {
+        return $this->themeColorDarkMode;
     }
 
     // Returns the title of the theme, as should be displayed on the portal.
