@@ -101,6 +101,8 @@ if (!array_key_exists($_SERVER['PHP_AUTH_USER'], $credentials) ||
 // Gather the statistics for the current environment
 // -------------------------------------------------------------------------------------------------
 
+$eventsToIgnore = [ '2020-classic', '2021-christmas' ];
+
 $events = [];
 $roles = [];
 
@@ -120,8 +122,8 @@ if ($registrationDatabaseSettings) {
         $participatedPreviousEvent = false;
 
         foreach ($registration->getEvents() as $identifier => $participationData) {
-            if ($identifier === '2020-classic')
-                continue;  // TODO: Remove this exception
+            if (in_array($identifier, $eventsToIgnore))
+                continue;
 
             $participationRole = $participationData['role'];
             if (in_array($participationRole, ['Cancelled', 'Registered', 'Rejected', 'Unregistered'])) {
@@ -183,7 +185,11 @@ if ($registrationDatabaseSettings) {
         }
     }
 
-    ksort($events);
+
+    foreach ($ignore as $identifier) {
+        if (array_key_exists($identifier, $events))
+            unset($events[$identifier]);
+    }
 
     foreach ($events as $identifier => $eventInformation) {
         sort($events[$identifier]['age']);
