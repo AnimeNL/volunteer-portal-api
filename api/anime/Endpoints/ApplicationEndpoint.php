@@ -59,11 +59,20 @@ class ApplicationEndpoint implements Endpoint {
         if (!array_key_exists('shirtSize', $requestData) || !strlen($requestData['shirtSize']))
             return 'Please enter your preferred t-shirt size.';
 
+        if (!array_key_exists('commitmentHours', $requestData) || !strlen($requestData['commitmentHours']))
+            return 'Please enter your preferred hours of commitment.';
+
+        if (!array_key_exists('commitmentTiming', $requestData) || !strlen($requestData['commitmentTiming']))
+            return 'Please enter your preferred timing of commitment.';
+
         if (!array_key_exists('preferences', $requestData))
             return 'Please enter your volunteering preferences.';
 
         if (!array_key_exists('available', $requestData) || !isBool($requestData['available']))
             return 'Please enter whether you are available.';
+
+        if (!array_key_exists('credits', $requestData) || !isBool($requestData['credits']))
+            return 'Please enter whether you would like to be included in the credit reel.';
 
         if (!array_key_exists('hotel', $requestData) || !isBool($requestData['hotel']))
             return 'Please enter whether you would like a hotel.';
@@ -93,8 +102,11 @@ class ApplicationEndpoint implements Endpoint {
         $phoneNumber = $requestData['phoneNumber'];
         $gender = $requestData['gender'];
         $shirtSize = $requestData['shirtSize'];
+        $commitmentHours = $requestData['commitmentHours'];
+        $commitmentTiming = $requestData['commitmentTiming'];
         $preferences = $requestData['preferences'];
         $available = toBool($requestData['available']);
+        $credits = toBool($requestData['credits']);
         $hotel = toBool($requestData['hotel']);
         $whatsApp = toBool($requestData['whatsApp']);
 
@@ -136,10 +148,11 @@ class ApplicationEndpoint implements Endpoint {
             $message->setFrom('anime@' . $environment->getHostname());
             $message->addTo($environment->getApplicationAddress());
 
-            $message->setSubject('Volunteer application: ' . $firstName . ' ' . $lastName);
+            $message->setSubject('[' . $event . '] Volunteer application: ' . $firstName . ' ' . $lastName);
             $message->setHtmlBody(ApplicationMessageGenerator::Generate(
                 $registration, $event, $firstName, $lastName, $dateOfBirth, $emailAddress,
-                $phoneNumber, $gender, $shirtSize, $preferences, $available, $hotel, $whatsApp));
+                $phoneNumber, $gender, $shirtSize, $commitmentHours, $commitmentTiming,
+                $preferences, $available, $credits, $hotel, $whatsApp));
 
             $mailer = new \Nette\Mail\SendmailMailer;
             $mailer->send($message);

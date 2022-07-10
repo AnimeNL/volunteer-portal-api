@@ -15,8 +15,9 @@ class ApplicationMessageGenerator {
     public static function Generate(
             Registration $registration, string $event, string $firstName, string $lastName,
             string $dateOfBirth, string $emailAddress, string $phoneNumber,
-            string $gender, string $shirtSize, string $preferences,
-            bool $available, bool $hotel, bool $whatsApp) {
+            string $gender, string $shirtSize, string $commitmentHours,
+            string $commitmentTiming, string $preferences, bool $available, bool $credits,
+            bool $hotel, bool $whatsApp) {
 
         $message  = self::GenerateHeader($event);
         $message .= self::GenerateTableHeader();
@@ -32,9 +33,12 @@ class ApplicationMessageGenerator {
                 'Phone number', $phoneNumber, $registration->getPhoneNumber());
 
         $message .= self::TextualRow('T-shirt size', $shirtSize, null);
+        $message .= self::TextualRow('Commitment (hours)', $commitmentHours, null);
+        $message .= self::TextualRow('Commitment (timing)', $commitmentTiming, null);
         $message .= self::TextualRow('Preferences', $preferences, null);
 
         $message .= self::BooleanRow('Fully available?', $available);
+        $message .= self::BooleanRow('Name in credit reel?', $credits);
         $message .= self::BooleanRow('Hotel reservation?', $hotel);
         $message .= self::BooleanRow('WhatsApp group?', $whatsApp);
 
