@@ -4,7 +4,7 @@ security and first aid teams, then we are looking for **you**!
 
 >> Unfortuantely we cannot accept any further registrations for **AnimeCon 2022: Regular Edition**.
 >> Please [reach out by e-mail](mailto:security@animecon.nl) if you have any further questions, or
->> wait for AnimeCon 2022: Classic Edition registration to open in the next few days.
+>> apply to join us during for [AnimeCon 2022: Classic Edition](/registration/2022-classic/).
 
 ## What is expected of you?
 

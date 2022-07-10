@@ -3,6 +3,10 @@ smoothly all at the same time. During your shift you will feel a great deal of f
 perform your tasks. The performance of the individual member will greatly contribute to the team's
 efforts.
 
+>> Unfortuantely we cannot accept any further registrations for **AnimeCon 2022: Regular Edition**.
+>> Please [reach out by e-mail](mailto:security@animecon.nl) if you have any further questions, or
+>> apply to join us during for [AnimeCon 2022: Classic Edition](/registration/2022-classic/).
+
 ## What is expected of you?
 
   * You're at least 18 years of age during AnimeCon 2022 (June 10-12), and are

@@ -3,6 +3,10 @@ Gophers are the largest, and possibly the most important group of volunteers dur
 Together with the rest of the team, you'll be responsible for delivering an incredible experience to
 all our visitors by helping them out directly, as well as behind the scenes.
 
+>> Unfortuantely we cannot accept any further registrations for **AnimeCon 2022: Regular Edition**.
+>> Please [reach out by e-mail](mailto:gopherplanning@animecon.nl) if you have any further questions, or
+>> apply to join us during for [AnimeCon 2022: Classic Edition](/registration/2022-classic/).
+
 Check out this page for more information, the perks and expectations, and to apply straight away!
 
 ## What is expected of you?
