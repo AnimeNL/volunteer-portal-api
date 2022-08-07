@@ -41,9 +41,11 @@ definitely won't be bored when there's nothing to attend.
   * Sandwiches, snacks, drinks and other nibbles during the festival, as well as a place to relax in
     our **Volunteer Lounge**, a free volunteering t-shirt & a special badge.
 
-  * Access to the **Gopher forums** on the [AnimeCon forums](https://forum.animecon.nl/), our
-    private **Discord channels** and access to our **WhatsApp group** where we discuss anything and
-    everything about our festival.
+  * Access to our private **Discord channels** and access to our **WhatsApp group** where we discuss
+    anything and everything about our festival.
+
+  * Depending on your participation, the ability to [reserve a discounted hotel room](hotels.html)
+    in the festival's venue, the Theaterhotel.
 
 Please check out the [frequently asked questions](faq.html) in case anything is unclear, or reach
 out to us [by e-mail](mailto:gopherplanning@animecon.nl).

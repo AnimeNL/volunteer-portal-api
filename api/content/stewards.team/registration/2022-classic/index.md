@@ -21,8 +21,8 @@ security and first aid teams, then we are looking for **you**!
   * Sandwiches, snacks, drinks and other nibbles during the festival, as well as a place to relax in
     our Volunteer Lounge and a free volunteering t-shirt.
 
-  * The ability to book [a hotel room](hotels.html) in the Best Western at a discounted rate, right
-    across the corner from the venue.
+  * The ability to book [a hotel room](hotels.html) in the Theaterhotel at a discounted rate, the
+    very building that the festival will be hosted in.
 
 Please check out the [frequently asked questions](faq.html) in case anything is unclear, or reach
 out to us [by e-mail](mailto:security@animecon.nl).

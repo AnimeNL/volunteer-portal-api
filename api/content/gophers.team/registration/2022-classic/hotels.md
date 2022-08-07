@@ -1,7 +1,13 @@
 We have reserved a block of hotel rooms in the [Theaterhotel](https://www.theaterhotel.nl/) that
-will be made available to our volunteers at discounted rates. Because the rooms are in high demand,
-we ask that you share the room with another volunteers. Please reach out to us if you would prefer
-not to, and we'll do our best to accomodate.
+will be made available to our volunteers at discounted rates. We're glad to be able to offer some
+of these rooms to Gophers helping out during AnimeCon 2022: Classic.
+
+## Requirements for reserving a room
+Unfortunately we won't be able to reserve a room for all of our volunteers, so we've identified two
+requirements for Gophers who would like to apply for one:
+
+  1. Be willing to help us out with at least 16 hours of shifts during the festival,
+  1. Be willing to help us out during the night shifts (18:00–07:00).
 
 ## Theaterhotel
 The following prices are based on a stay from Friday until Sunday (two nights), assuming two people
