@@ -35,7 +35,7 @@ class Privileges {
     ];
 
     // List of all environments that are enabled through this endpoint at the moment.
-    private const CROSS_ENVIRONMENT_LIST = [ 'gophers.team', 'hosts.team', 'stewards.team' ];
+    public const CROSS_ENVIRONMENT_LIST = [ 'gophers.team', 'hosts.team', 'stewards.team' ];
 
     // Allows construction of a Privileges instance for the given |$registration| and |$event|.
     static function forRegistration(Environment $environment,

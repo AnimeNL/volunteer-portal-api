@@ -103,5 +103,15 @@
                 // Any additional options that should be made available go here.
             }
         }
-    ]
+    ],
+
+    // Object of display configuration objects, each identified by a unique string, to a configured
+    // event to which volunteers can be scheduled.
+    "displays": {
+        "my-display": {
+            "event": "event-identifier",
+            "eventId": "123abc",
+            "title": "My Display!",
+        }
+    },
 }

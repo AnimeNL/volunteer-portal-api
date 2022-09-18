@@ -9,6 +9,9 @@ requirements for Gophers who would like to apply for one:
   1. Be willing to help us out with at least 16 hours of shifts during the festival,
   1. Be willing to help us out during the night shifts (18:00–07:00).
 
+We ask that you share this room with another volunteer, and keep in mind that only a limited number
+of rooms will be made available for this. First come, first serve!
+
 ## Theaterhotel
 The following prices are based on a stay from Friday until Sunday (two nights), assuming two people
 per room. They exclude a €3 tourism tax per person per night, to be paid on site. Each room is

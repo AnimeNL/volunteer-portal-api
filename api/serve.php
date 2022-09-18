@@ -36,6 +36,9 @@ switch ($requestUri) {
     case '/api/content':
         $endpoint = new \Anime\Endpoints\ContentEndpoint;
         break;
+    case '/api/display':
+        $endpoint = new \Anime\Endpoints\DisplayEndpoint;
+        break;
     case '/api/environment':
         $endpoint = new \Anime\Endpoints\EnvironmentEndpoint;
         break;

@@ -141,6 +141,11 @@ class Registration {
         return $this->lastName;
     }
 
+    // Returns the full name of the person represented in this volunteer registration.
+    public function getFullName(): string {
+        return trim($this->firstName . ' ' . $this->lastName);
+    }
+
     // Returns the gender of this person. This is a freeform string.
     public function getGender(): string {
         return $this->gender;
