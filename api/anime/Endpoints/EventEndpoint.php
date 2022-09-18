@@ -19,8 +19,13 @@ use \Anime\Storage\RegistrationDatabase;
 use \Anime\Storage\ScheduleDatabaseFactory;
 use \Anime\Storage\ScheduleDatabase;
 
-// Comperator for sorting IEventResponse{Area,Location} structures in ascending order by name.
-function CreateAreaOrLocationComparator() {
+// Comperator for sorting IEventResponseArea structures in ascending order by identifier.
+function CreateAreaComparator() {
+    return fn($lhs, $rhs) => strcmp($lhs['identifier'], $rhs['identifier']);
+}
+
+// Comperator for sorting IEventResponseLocation structures in ascending order by name.
+function CreateLocationComparator() {
     return fn($lhs, $rhs) => strcmp($lhs['name'], $rhs['name']);
 }
 
@@ -109,9 +114,9 @@ class EventEndpoint implements Endpoint {
 
         // Sort each of the output arrays, and remove the associative keying since they should be
         // returned as lists, rather than indexed structures.
-        usort($areas, CreateAreaOrLocationComparator());
+        usort($areas, CreateAreaComparator());
         usort($events, CreateEventComparator());
-        usort($locations, CreateAreaOrLocationComparator());
+        usort($locations, CreateLocationComparator());
         usort($volunteers, CreateVolunteerComparator());
 
         // Populate the |$userPrivileges| based on the privileges that have already been assigned
@@ -654,6 +659,9 @@ class EventEndpoint implements Endpoint {
         if (array_key_exists($name, $this->locationCache))
             return $this->locationCache[$name]['hash'];
 
+        // TODO: Remove this hack if/when the Theaterhotel no longer is our venue.
+        $area = $this->overrideAreaIfNeededForClassicEdition($name, $area);
+
         $hash = substr(base_convert(hash('fnv164', $name . self::LOCATION_SALT), 16, 32), 0, 8);
         $this->locationCache[$name] = [
             'area'      => strval($area),
@@ -661,5 +669,49 @@ class EventEndpoint implements Endpoint {
         ];
 
         return $hash;
+    }
+
+    // Area override for AnimeCon 2022: Classic Edition. The area mapping used in AnPlan doesn't
+    // really make sense for an overview in this app, so we maintain our own mapping instead.
+    private function overrideAreaIfNeededForClassicEdition(string $name, mixed $area): string {
+        if ($this->environmentEvent?->getIdentifier() !== '2022-classic')
+            return $area;
+
+        // Floors are named according to British English rules, in other words, the "first floor"
+        // matches the Dutch "eerste verdieping", unlike American English.
+
+        switch ($name) {
+            case 'Amadeus':  // Game Room
+            case 'Archonia Theater / Archonia Theater':
+            case 'Beethoven foyer':
+            case 'Beethovenzaal':
+            case 'De Brug':  // Karaoke
+            case 'De Oude Societeit':  // Tastings
+            case 'Hotel lounge':  // Registration Desk
+            case 'Ravel bar':  // Speakeasy Bar
+            case 'Ravelzaal':  // Dancing events
+            case 'Theater foyer':
+            case 'Verdizaal':  // DDR
+                return '0';
+
+            case '1st Theater foyer':
+                return '1';
+
+            case '2nd Theater foyer':
+            case 'Kanzaal 1':  // Events
+            case 'Kanzaal 2':  // Events
+                return '2';
+
+            case 'Brederozaal / Crew Lounge':
+            case 'Heyermanszaal / Crunchyroll Video Room':
+            case 'Vondelzaal / MangaKissa':
+                return '3';
+
+            case 'Mysteriezaal':  // Bag Room
+                return '4';
+
+            default:
+                return '5';  // "Other locations"
+        }
     }
 }
