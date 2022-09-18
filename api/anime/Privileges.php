@@ -70,7 +70,7 @@ class Privileges {
             $privileges |= self::PRIVILEGE_USER_NOTES_ENVIRONMENT;
 
             if ($isStaff) {
-                $privileges |= self::ACCESS_CODES_ANY;
+                $privileges |= self::PRIVILEGE_ACCESS_CODES_ANY;
                 $privileges |= self::PRIVILEGE_UPDATE_AVATAR_ANY;
                 $privileges |= self::PRIVILEGE_USER_NOTES_ANY;
             }
