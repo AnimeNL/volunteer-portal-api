@@ -18,7 +18,7 @@ use \Anime\Storage\ScheduleDatabase;
 // which powers physical devices that can be placed around the convention's venue.
 class DisplayEndpoint implements Endpoint {
     public function validateInput(array $requestParameters, array $requestData): bool | string {
-        if (!array_key_exists('identifier', $requestParameters))
+        if (!array_key_exists('identifier', $requestData))
             return 'Missing parameter: identifier';
 
         return true;  // no further input is considered for this endpoint
@@ -26,7 +26,7 @@ class DisplayEndpoint implements Endpoint {
 
     public function execute(Api $api, array $requestParameters, array $requestData): array {
         $configuration = $api->getConfiguration();
-        $display = $configuration->get('displays/' . $requestParameters['identifier']);
+        $display = $configuration->get('displays/' . $requestData['identifier']);
 
         if (!is_array($display) || !array_key_exists('event', $display))
             return [ 'error' => 'Invalid display specified' ];
@@ -34,6 +34,8 @@ class DisplayEndpoint implements Endpoint {
         $scheduleDatabases = [];
 
         $registrations = [];
+        $roles = [];
+
         $shifts = [];
 
         // Aggregate all the registrations and shifts for the appropriate event. Information from
@@ -66,10 +68,15 @@ class DisplayEndpoint implements Endpoint {
                 continue;  // this |$environment| does not have any registrations
 
             foreach ($registrationDatabase->getRegistrations() as $registration) {
-                if (!$registration->getEventAcceptedRole($display['event']))
+                $role = $registration->getEventAcceptedRole($display['event']);
+                if (!$role)
                     continue;  // the |$registration| does not participate in the |$event|
 
+                if ($role === 'Senior' || $role === 'Staff')
+                    $role .= ' ' . rtrim($environment->getShortName(), 's');
+
                 $registrations[$registration->getFullName()] = $registration;
+                $roles[$registration->getFullName()] = $role;
             }
 
             // (c) Prepare all of the scheduled shifts for this particular event, and add them to an
@@ -135,20 +142,23 @@ class DisplayEndpoint implements Endpoint {
 
         // Map each of the shifts to complement them with information about the volunteer that will
         // be running the shift if available, or else information derived from the environment.
-        $complementedShifts = array_map(function ($shift) use ($api, $display, $registrations) {
+        $complementedShifts = array_map(function ($shift) use ($api, $display, $registrations, $roles) {
             $shared = [
-                'start' => $shift['start'],
-                'end'   => $shift['end'],
+                'time'  => [ $shift['start'], $shift['end'] ],
             ];
 
             if (array_key_exists($shift['volunteer'], $registrations)) {
                 $registration = $registrations[$shift['volunteer']];
+                $avatar = $registration->getAvatarUrl($api->getEnvironment());
+
+                $avatarData = !empty($avatar) ? [ 'avatar' => $avatar ]
+                                              : [];
 
                 return [
-                    'name'      => $registration->getFullName(),
-                    'avatar'    => $registration->getAvatarUrl($api->getEnvironment()),
-                    'role'      => $shift['environment'],
+                    'name'      => $registration->getFirstName(),
+                    'role'      => $roles[$shift['volunteer']],
 
+                    ...$avatarData,
                     ...$shared,
                 ];
             } else {
