@@ -675,7 +675,7 @@ class EventEndpoint implements Endpoint {
     // really make sense for an overview in this app, so we maintain our own mapping instead.
     private function overrideAreaIfNeededForClassicEdition(string $name, mixed $area): string {
         if ($this->environmentEvent?->getIdentifier() !== '2022-classic')
-            return $area;
+            return strval($area);
 
         // Floors are named according to British English rules, in other words, the "first floor"
         // matches the Dutch "eerste verdieping", unlike American English.
