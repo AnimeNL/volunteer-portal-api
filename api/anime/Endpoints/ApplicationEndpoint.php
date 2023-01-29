@@ -80,9 +80,6 @@ class ApplicationEndpoint implements Endpoint {
         if (!array_key_exists('whatsApp', $requestData) || !isBool($requestData['whatsApp']))
             return 'Please indicate whether to join the WhatsApp group.';
 
-        if (!array_key_exists('covidRequirements', $requestData) || !$requestData['covidRequirements'])
-            return 'You must agree with the COVID-19 requirements.';
-
         if (!array_key_exists('gdprRequirements', $requestData) || !$requestData['gdprRequirements'])
             return 'You must agree with the GDPR requirements.';
 
