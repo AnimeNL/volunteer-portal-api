@@ -38,7 +38,7 @@ won't be bored when there's nothing to attend.
   * Sandwiches, snacks, drinks and other nibbles during the festival, as well as a place to relax in
     our **Volunteer Lounge**, a free volunteering t-shirt & a special badge.
 
-  * Access to the **Gopher forums** on the [AnimeCon forums](https://forum.animecon.nl/), and access
+  * Access to the **Crew channel** on the [AnimeCon Discord](https://discord.gg/yvYH9MK), and access
     to our **WhatsApp group** where we discuss anything and everything about our festival.
 
 Please check out the [frequently asked questions](faq.html) in case anything is unclear, or reach

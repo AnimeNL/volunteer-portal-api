@@ -22,6 +22,9 @@ efforts.
   * Sandwiches, snacks, drinks and other nibbles during the festival, as well as a place to relax in
     our Volunteer Lounge and a free volunteering t-shirt.
 
+  * Access to the **Crew channel** on the [AnimeCon Discord](https://discord.gg/yvYH9MK), and access
+    to our **WhatsApp group** where we discuss anything and everything about our festival.
+
   * The ability to book [a hotel room](hotels.html) in the Best Western at a discounted rate, right
     across the corner from the venue.
 

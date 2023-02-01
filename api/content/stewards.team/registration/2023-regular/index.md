@@ -1,10 +1,11 @@
-Stewards are the hosts of our festival, the first line of defense when trouble arises. If you're
-eager to help out with crowd management, safety checks, escorting special guests and assisting our
-security and first aid teams, then we are looking for **you**!
+Stewards are the first line of our defense when trouble arises, and often among the first people
+approached by our visitors in case of questions or need. If you're eager to help out with crowd
+management, safety checks, escorting special guests and assisting our security and first aid teams,
+then we are looking for **you**!
 
 ## What is expected of you?
 
-  * You're at least 18 years of age during AnimeCon 2022 (June 9-11), and are able to communicate
+  * You're at least 18 years of age during AnimeCon 2023 (June 9-11), and are able to communicate
     clearly in both Dutch and English.
 
   * You're able to be present at the [Broodfabriek](https://de-broodfabriek.nl/) in Rijswijk from
@@ -23,6 +24,9 @@ security and first aid teams, then we are looking for **you**!
 
   * Sandwiches, snacks, drinks and other nibbles during the festival, as well as a place to relax in
     our Volunteer Lounge and a free volunteering t-shirt.
+
+  * Access to the **Crew & steward channels** on the [AnimeCon Discord](https://discord.gg/yvYH9MK),
+    and access to our **WhatsApp group** where we discuss anything and everything about our festival.
 
   * The ability to book [a hotel room](hotels.html) in the Best Western at a discounted rate, right
     across the corner from the venue.

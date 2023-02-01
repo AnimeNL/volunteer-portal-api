@@ -1,4 +1,4 @@
-Organising a festival such as AnimeCon 2022 is quite a feat, and we imagine that you may have many
+Organising a festival such as AnimeCon 2023 is quite a feat, and we imagine that you may have many
 questions about your participation. We've collected some questions and answers on this page, but
 always feel free to ask us anything over WhatsApp, or by [sending us an e-mail](mailto:security@animecon.nl).
 
