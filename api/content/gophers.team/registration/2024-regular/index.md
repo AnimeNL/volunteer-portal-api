@@ -1,17 +1,21 @@
 Gophers are the largest, and possibly the most important group of volunteers during the
-[AnimeCon 2023](https://animecon.nl) festival, which will be taking place in Rijswijk in June.
+[AnimeCon 2024](https://animecon.nl) festival, which will be taking place in Rijswijk in June.
 Together with the rest of the team, you'll be responsible for delivering an incredible experience to
 all our visitors by helping them out directly, as well as behind the scenes.
 
 Check out this page for more information, the perks and expectations, and to apply straight away!
 
->> We are no longer recruiting volunteers for AnimeCon 2023: Under the Sea. Please reach out to
->> us by [e-mail](mailto:gopherplanning@animecon.nl) in case you have any questions.
+>> Details about AnimeCon 2024, including its dates and location, will be added once they have been
+>> announced. Please apply to join if you're interested in joining the Crew and we'll be in touch
+>> with more information as soon as possible—no commitments yet!
 
 ## What is expected of you?
 
-  * You're able to be present at the [Broodfabriek](https://de-broodfabriek.nl/) in Rijswijk from
-    11:30am on Friday, all the way to 8pm on Sunday. (June 9-11)
+  * You're at least 13 years of age during AnimeCon 2024, and are able to communicate clearly in
+    both Dutch and English.
+
+  * You're able to be present at the festival from about 11am on Friday, all the way to 8pm on
+    Sunday.
 
   * You're able to help us out with about 12 hours of shifts during the festival. Any events that
     you _really_ want to attend as a visitor will of course be taken into account.
@@ -30,12 +34,12 @@ Check out this page for more information, the perks and expectations, and to app
   * Helping out at the **bring & buy** means that you're helping our visitors sell their memorabilia
     for a little bit of money, in the heart of the dealer room.
 
-AnimeCon 2023 will have a huge number of activities going on throughout the day, so you definitely
+AnimeCon 2024 will have a huge number of activities going on throughout the day, so you definitely
 won't be bored when there's nothing to attend.
 
 ## What do you get from us?
 
-  * A free ticket to the festival; we'll either refund your AnimeCon 2023 ticket, or issue you a
+  * A free ticket to the festival; we'll either refund your AnimeCon 2024 ticket, or issue you a
     free one for one of our future events.
 
   * Sandwiches, snacks, drinks and other nibbles during the festival, as well as a place to relax in
